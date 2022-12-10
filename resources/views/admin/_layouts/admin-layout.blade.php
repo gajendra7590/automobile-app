@@ -4,9 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{env('APP_NAME')}}</title>
+    <title>{{ env('APP_NAME') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/backend-plugin.min.css') }}">
@@ -15,39 +14,29 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
+    @stack('aftercss')
 </head>
 
-<body class=" ">
+<body class="  ">
     <!-- loader Start -->
     <div id="loading">
         <div id="loading-center">
         </div>
     </div>
     <!-- loader END -->
+    <!-- Wrapper Start -->
     <div class="wrapper">
-        <section class="login-content">
-            <div class="container">
-                <div class="row align-items-center justify-content-center height-self-center">
-                    <div class="col-lg-8">
-                        <div class="card auth-card">
-                            <div class="card-body p-0">
-                                <div class="d-flex align-items-center auth-content">
-                                    <div class="col-lg-7 align-self-center">
-                                        @yield('content')
-                                    </div>
-                                    <div class="col-lg-5 content-right">
-                                        <img src="{{ asset('assets/images/login/01.png') }}"
-                                            class="img-fluid image-right" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
+        @include('admin._layouts.sharable.sidebar')
+
+        @include('admin._layouts.sharable.header')
+
+        <div class="content-page">
+            @yield('content')
+        </div>
     </div>
 
+    @include('admin._layouts.sharable.footer')
     <!-- Backend Bundle JavaScript -->
     <script src="{{ asset('assets/js/backend-bundle.min.js') }}"></script>
 
@@ -63,11 +52,14 @@
     <!-- app JavaScript -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
+
     <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script>
         var app_url = "{{ config('app.url') }}";
     </script>
+
+    @stack('afterjs')
 
 </body>
 

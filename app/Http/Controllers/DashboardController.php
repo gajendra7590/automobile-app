@@ -10,7 +10,7 @@ class DashboardController extends Controller
      * Function for load dashboard view
      * @method GET
     */
-    public function dashboardGet() {
+    public function dashboardIndex() {
         return view('admin.dashboard.index');
     }
 

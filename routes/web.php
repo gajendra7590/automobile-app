@@ -23,6 +23,7 @@ Route::get('forgotPassword', 'AuthController@forgotPasswordGet')->name('forgotPa
 Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgotPasswordPost');
 
 Route::prefix('/')->middleware('auth')->group(function () {
-
-    Route::get('dashboard', 'DashboardController@dashboardGet')->name('dashboardGet');
+    Route::get('logout', 'AuthController@logout')->name('logout');
+    Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');
+    Route::resource('categories','BikeCategoryController');
 });
