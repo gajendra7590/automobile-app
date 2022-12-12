@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datatable.min.css') }}">
     @stack('aftercss')
 </head>
 
@@ -52,9 +53,12 @@
     <!-- app JavaScript -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-
     <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/datatable.min.js') }}"></script>
+
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+
     <script>
         var app_url = "{{ config('app.url') }}";
     </script>

@@ -47,7 +47,7 @@
                     </a>
                     <ul id="setting" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                         <li class="">
-                            <a href="{{route('categories.index')}}">
+                            <a href="{{route('brands.index')}}">
                                 <i class="las la-minus"></i><span>Categories</span>
                             </a>
                         </li>
