@@ -60,6 +60,23 @@ var CRUD = (function ($, l, m) {
             },
         });
     };
+    Operations.AJAXMODAL = function (URL, METHOD, DATA = {}) {
+        return $.ajax({
+            url: URL,
+            data: DATA,
+            // cache: false,
+            type: METHOD,
+            // dataType: "JSON",
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                return res;
+            },
+            error: function (res) {
+                return res;
+            },
+        });
+    };
     return Operations;
 })($, LOADER, null);
 
@@ -89,15 +106,15 @@ $(document).ready(function () {
         var url = $(this).attr("href");
         var modal_title = $(this).data("modal_title");
         $(".ajaxModalTitle").html(modal_title);
+        $(".ajaxModalBody").html(
+            `<div style="text-align: center;min-height: 174px;padding: 57px;"><i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true" style="color: #ea6d09;"></i></div>`
+        );
         $("#ajaxModalCommon").modal("show");
-        CRUD.AJAXSUBMIT(url, "GET", null).then(function (result) {
+        CRUD.AJAXMODAL(url, "GET", null).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
-                if (redirect != "undefined") {
-                    //window.location.href = redirect;
-                } else {
-                    // window.location.href = "";
-                }
+                $(".ajaxModalBody").html(result.data);
             } else {
+                toastr.error("Something went wrong");
                 // to do
             }
         });

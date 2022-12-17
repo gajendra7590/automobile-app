@@ -37,7 +37,12 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.roles.ajaxModal')->render()
+        ]);
     }
 
     /**

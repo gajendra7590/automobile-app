@@ -86,9 +86,7 @@
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title ajaxModalTitle"></h4>
                 </div>
-                <div class="modal-body ajaxModalBody">
-                    <div>Loading...</div>
-                </div>
+                <div class="modal-body ajaxModalBody"></div>
             </div>
             <!-- /.modal-content -->
         </div>
