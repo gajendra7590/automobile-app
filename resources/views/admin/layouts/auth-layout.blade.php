@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/AdminLTE.min.css') }}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/iCheck/square/blue.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/dist/css/toastr.min.css') }}">
+
     <!-- Google Font -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
@@ -48,6 +51,8 @@
     <script src="{{ asset('assets/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
     <script src="{{ asset('assets/dist/js/custom.js') }}"></script>
+
+    <script src="{{ asset('assets/dist/js/toastr.min.js') }}"></script>
 
     @stack('after-script')
 </body>
