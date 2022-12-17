@@ -11,6 +11,7 @@ class DashboardController extends Controller
      * @method GET
     */
     public function dashboardIndex() {
+
         return view('admin.dashboard.index');
     }
 

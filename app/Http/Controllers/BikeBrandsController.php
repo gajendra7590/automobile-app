@@ -26,7 +26,7 @@ class BikeBrandsController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('admin.bikeCategory.index');
+            return view('admin.bikeBrands.index');
         }
     }
 

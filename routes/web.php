@@ -24,6 +24,7 @@ Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgot
 
 Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('logout', 'AuthController@logout')->name('logout');
+    Route::get('profile', 'AuthController@profile')->name('profile');
     Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');
     Route::resource('brands','BikeBrandsController');
 });

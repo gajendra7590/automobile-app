@@ -76,6 +76,11 @@ class AuthController extends Controller
         }
     }
 
+    public function profile(Request $request) {
+        return 'ndnfdf';
+    }
+
+
 
     /**
      * Function for load forgotPassword view
