@@ -122,4 +122,28 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on("click", ".deleteRow", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("href");
+        var id = $(this).data("id");
+        var method = 'DELETE'
+        var data = [];
+        var redirect = $(this).data("redirect");
+        console.log(redirect);
+        CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                if (redirect == "ajaxModalCommon") {
+                    $("#ajaxModalCommon").modal("hide");
+                    window.location.href = "";
+                } else if (redirect != "undefined") {
+                    window.location.href = redirect;
+                } else {
+                    window.location.href = "";
+                }
+            } else {
+                // to do
+            }
+        });
+    });
 });

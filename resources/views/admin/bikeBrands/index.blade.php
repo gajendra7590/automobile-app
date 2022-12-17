@@ -5,13 +5,13 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Data Tables
-                <small>advanced tables</small>
+                Bike Brands
+                <small>List</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="#">Tables</a></li>
-                <li class="active">Data tables</li>
+                <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{route('brands.index')}}">Bike Brand</a></li>
+                <li class="active">List</li>
             </ol>
         </section>
 
@@ -21,7 +21,12 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Hover Data Table</h3>
+                            <h3 class="box-title">Bike Brands List</h3>
+                            <div class="pull-right">
+                                <a href="{{ route('brands.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Brand">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                </a>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
