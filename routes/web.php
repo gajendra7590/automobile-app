@@ -26,5 +26,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('logout', 'AuthController@logout')->name('logout');
     Route::get('profile', 'AuthController@profile')->name('profile');
     Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');
-    Route::resource('brands','BikeBrandsController');
+    //Brands
+    Route::resource('brands', 'BikeBrandsController');
+    //Roles
+    Route::resource('roles', 'RoleController');
+    //Users
+    Route::resource('users', 'UsersController');
 });

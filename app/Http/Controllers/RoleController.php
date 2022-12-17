@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
@@ -13,7 +15,19 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        if (!request()->ajax()) {
+            return view('admin.roles.index');
+        } else {
+
+            $data = Role::select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return $this->getActions($row);
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**
@@ -80,5 +94,14 @@ class RoleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getActions()
+    {
+        return '<div class="action-btn-container">
+        <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>' .
+            '<a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>' .
+            '<a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            </div>';
     }
 }

@@ -24,10 +24,10 @@
 
             <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a> </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-snowflake-o"></i> <span>Roles</span></a>
+            <li><a href="{{ route('roles.index') }}"><i class="fa fa-snowflake-o"></i> <span>Roles</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-address-card"></i> <span>Users</span></a>
+            <li><a href="{{ route('users.index') }}"><i class="fa fa-address-card"></i> <span>Users</span></a>
             </li>
 
             <li><a href="{{ route('brands.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>

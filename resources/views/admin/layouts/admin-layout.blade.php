@@ -59,6 +59,10 @@
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
         }
+
+        .action-btn-container a {
+            margin-left: 2px !important;
+        }
     </style>
 
 </head>
