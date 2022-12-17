@@ -20,7 +20,7 @@ class BikeBrandsController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = action_buttons();
+                    $btn = $this->getActions($row['id']);
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -94,5 +94,14 @@ class BikeBrandsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getActions($id)
+    {
+        return '<div class="action-btn-container">
+            <a href="'. route('brands.show',['brand' => $id]) .'" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>' .
+            '<a href="'. route('brands.edit',['brand' => $id]) .'" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>' .
+            '<a href="'. route('brands.destroy',['brand' => $id]) .'" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                </div>';
     }
 }
