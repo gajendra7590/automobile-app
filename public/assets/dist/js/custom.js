@@ -90,7 +90,10 @@ $(document).ready(function () {
         var data = new FormData($(this)[0]);
         CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
-                if (redirect != "undefined") {
+                if (redirect == "ajaxModalCommon") {
+                    $("#ajaxModalCommon").modal("hide");
+                    window.location.href = "";
+                } else if (redirect != "undefined") {
                     window.location.href = redirect;
                 } else {
                     window.location.href = "";

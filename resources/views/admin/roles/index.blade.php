@@ -32,11 +32,12 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover">
+                            <table id="ajaxDataTable" data-url="{{ route('roles.index') }}"
+                                class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
+                                        <th>Role Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -54,53 +55,6 @@
     </div>
 @endsection
 
-
-
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            const tableObj = $('#ajaxDataTable').DataTable({
-                processing: false,
-                serverSide: true,
-                cache: true,
-                type: 'GET',
-                ajax: {
-                    url: '{!! route('roles.index') !!}',
-                    method: 'GET',
-                    beforeSend: function() {
-                        loaderShow();
-                    },
-                    complete: function() {
-                        loaderHide();
-                    }
-                },
-                searchDelay: 350,
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": []
-                    },
-                    {
-                        "searchable": false,
-                        "targets": []
-                    }
-                ],
-                order: [
-                    [0, "asc"]
-                ]
-            });
-        })
-    </script>
+    <script src="{{ asset('assets/modules/roles.js') }}"></script>
 @endpush
