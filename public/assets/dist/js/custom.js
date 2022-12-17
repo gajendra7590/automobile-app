@@ -27,7 +27,7 @@ var LOADER = (function () {
 var CRUD = (function ($, l, m) {
     const Operations = {};
     // Common function for POST Operations
-    Operations.AJAXSUBMIT = function (URL,METHOD,DATA = {}) {
+    Operations.AJAXSUBMIT = function (URL, METHOD, DATA = {}) {
         return $.ajax({
             url: URL,
             data: DATA,
@@ -41,18 +41,21 @@ var CRUD = (function ($, l, m) {
             },
             success: function (res) {
                 loaderHide();
-                if((typeof(res.status) != 'undefined') && (res.status == true) ) {
-                    toastr.success(res.message,'Success!')
-                }else if((typeof(res.status) != 'undefined') && (res.status == false) ) {
-                    toastr.error(res.message,'Error!')
-                }else{
-                    toastr.error('Something went wrong','Error!');
+                if (typeof res.status != "undefined" && res.status == true) {
+                    toastr.success(res.message, "Success!");
+                } else if (
+                    typeof res.status != "undefined" &&
+                    res.status == false
+                ) {
+                    toastr.error(res.message, "Error!");
+                } else {
+                    toastr.error("Something went wrong", "Error!");
                 }
                 return res;
             },
             error: function (res) {
                 loaderHide();
-                toastr.error(res.message,'Error!')
+                toastr.error(res.message, "Error!");
                 return res;
             },
         });
@@ -62,25 +65,41 @@ var CRUD = (function ($, l, m) {
 
 $(document).ready(function () {
     /*-----ADD & UPDATE DATA--------*/
-    $(document).on("submit", '.ajaxFormSubmit', function (e) {
-        e.preventDefault()
-        var url =$(this).attr("action");
+    $(document).on("submit", ".ajaxFormSubmit", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("action");
         var method = $(this).attr("method");
         var redirect = $(this).data("redirect");
         var data = new FormData($(this)[0]);
-        CRUD.AJAXSUBMIT(url,method,data).then(function (result){
-            if(typeof(result.status) != 'undefined' && result.status == true){
-                if(redirect != 'undefined') {
+        CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                if (redirect != "undefined") {
                     window.location.href = redirect;
-                }else{
-                    window.location.href = '';
+                } else {
+                    window.location.href = "";
                 }
-            }else{
+            } else {
+                // to do
+            }
+        });
+    });
+
+    $(document).on("click", ".ajaxModalPopup", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("href");
+        var modal_title = $(this).data("modal_title");
+        $(".ajaxModalTitle").html(modal_title);
+        $("#ajaxModalCommon").modal("show");
+        CRUD.AJAXSUBMIT(url, "GET", null).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                if (redirect != "undefined") {
+                    //window.location.href = redirect;
+                } else {
+                    // window.location.href = "";
+                }
+            } else {
                 // to do
             }
         });
     });
 });
-
-
-

@@ -24,7 +24,8 @@
                                 <h3 class="box-title">User Roles List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-sm btn-success">
+                                <a href="{{ route('roles.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Role">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
