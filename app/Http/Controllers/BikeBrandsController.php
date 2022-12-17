@@ -20,7 +20,7 @@ class BikeBrandsController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+                    $btn = action_buttons();
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -37,7 +37,7 @@ class BikeBrandsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.bikeCategory.create');
     }
 
     /**

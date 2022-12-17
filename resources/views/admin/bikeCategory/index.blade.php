@@ -8,13 +8,12 @@
                         <h4 class="mb-3">Bike Categories List</h4>
                         <p class="mb-0">Bike Categories List</p>
                     </div>
-                    <a href="#" class="btn btn-primary add-list"><i class="las la-plus mr-3"></i>Add
-                        Bike Categories</a>
+                    <a href="{{route('')}}" class="btn btn-primary add-list"><i class="las la-plus mr-3"></i>Add Bike Categories</a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="table-responsive rounded mb-3">
-                    <table id="ajaxDataTable" class="data-table table mb-0 tbl-server-info">
+                    <table id="ajaxDataTable" class="table mb-0 tbl-server-info">
                         <thead class="bg-white text-uppercase">
                             <tr class="ligth ligth-data">
                                 <th>
@@ -80,12 +79,12 @@
                 ajax: {
                     url: '{!! route('brands.index') !!}',
                     method: 'GET',
-                    // beforeSend: function() {
-                    //     loaderShow();
-                    // },
-                    // complete: function() {
-                    //     loaderHide();
-                    // }
+                    beforeSend: function() {
+                        loaderShow();
+                    },
+                    complete: function() {
+                        loaderHide();
+                    }
                 },
                 searchDelay: 350,
                 columns: [{
