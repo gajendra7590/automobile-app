@@ -4,7 +4,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>AKS</b></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Aakash</b> AutoMobile</span>
+        <span class="logo-lg"><b>Aakash</b> AutoMobiles</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -30,7 +30,8 @@
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+                            <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle"
+                                alt="User Image">
                             <p>
                                 @if (Auth::user())
                                     {{ Auth::user()->name }}

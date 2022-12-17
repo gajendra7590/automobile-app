@@ -6,8 +6,9 @@
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
-            <form class="ajaxFormSubmit" method="POST" action="{{route('loginPost')}}" enctype="multipart/form-data" data-redirect="{{route('dashboardIndex')}}">
+            <p class="login-box-msg">Login Your Account</p>
+            <form class="ajaxFormSubmit" method="POST" action="{{ route('loginPost') }}" enctype="multipart/form-data"
+                data-redirect="{{ route('dashboardIndex') }}">
                 <div class="form-group has-feedback">
                     <input type="email" class="form-control" placeholder="Email" name='email' />
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
