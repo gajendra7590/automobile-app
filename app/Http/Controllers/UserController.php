@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -19,13 +22,30 @@ class UserController extends Controller
             return view('admin.users.index');
         } else {
 
-            $data = Role::select('*');
+            $data = User::with('roles')->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('role', function ($row) {
+                    if (isset($row->roles) && count($row->roles)) {
+                        return $row->roles[0]->name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
+                ->addColumn('created_at', function ($row) {
+                    return date('Y-m-d', strtotime($row->created_at));
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status', 'created_at', 'action'])
                 ->make(true);
         }
     }
@@ -37,7 +57,13 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::where('id', '!=', '1')->get();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.users.ajaxModal', ['action' => route('users.store'), 'roles' => $roles])->render()
+        ]);
     }
 
     /**
@@ -48,7 +74,43 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $postData = $request->all();
+        $validator = Validator::make($postData, [
+            'name'     => "required",
+            'email'    => "required|unique:users,email",
+            'password' => "required|min:6",
+            'status'   => "required|in:0,1",
+            'role'     => "required|exists:roles,id"
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
+
+        //Create New Role
+        $userModel = User::create([
+            'name' => $postData['name'],
+            'email' => $postData['email'],
+            'password' => Hash::make($postData['password']),
+            'status' => $postData['status']
+        ]);
+
+        //Assign Role
+        if ($userModel) {
+            $userModel->assignRole($postData['role']);
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Created Successfully."
+        ]);
     }
 
     /**
@@ -70,7 +132,22 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $roles = Role::where('id', '!=', '1')->get();
+        $userModel = User::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.users.ajaxModal', [
+                'action' => route(
+                    'users.update',
+                    ['user' => $id]
+                ),
+                'data' => $userModel,
+                'method' => 'PUT',
+                'roles' => $roles
+            ])->render()
+        ]);
     }
 
     /**
@@ -82,7 +159,51 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $postData = $request->all();
+        $validator = Validator::make($postData, [
+            'name'     => "required",
+            'email'    => "required|unique:users,email," . $id,
+            'password' => "nullable|min:6",
+            'status'   => "required|in:0,1",
+            'role'     => "required|exists:roles,id"
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
+
+        $userModel = User::find($id);
+        if (!$userModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Opps! user does not exist."
+            ]);
+        }
+
+
+        $userModel->name = $postData['name'];
+        $userModel->email = $postData['email'];
+        $userModel->status = $postData['status'];
+        if (!empty($postData['password'])) {
+            $userModel->password = Hash::make($postData['password']);
+        }
+
+        if (!empty($postData['role'])) {
+            $userModel->syncRoles($postData['role']);
+        }
+        $userModel->save();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Updated Successfully."
+        ]);
     }
 
     /**
@@ -94,5 +215,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getActions($row)
+    {
+        return '<div class="action-btn-container">
+                <a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+               </div>';
+        // return '<div class="action-btn-container">
+        //         <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+        //         <a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        //         <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+        //        </div>';
     }
 }

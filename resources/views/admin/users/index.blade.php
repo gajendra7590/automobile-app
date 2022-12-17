@@ -24,20 +24,24 @@
                                 <h3 class="box-title">User List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('roles.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New Role">
+                                <a href="{{ route('users.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New User">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('roles.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('users.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>User Name</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -56,5 +60,5 @@
 @endsection
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/roles.js') }}"></script>
+    <script src="{{ asset('assets/modules/users.js') }}"></script>
 @endpush
