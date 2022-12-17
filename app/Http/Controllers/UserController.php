@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -13,7 +15,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        if (!request()->ajax()) {
+            return view('admin.users.index');
+        } else {
+
+            $data = Role::select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return $this->getActions($row);
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**

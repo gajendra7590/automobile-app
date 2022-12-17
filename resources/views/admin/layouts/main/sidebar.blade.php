@@ -22,33 +22,44 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
 
-            <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a> </li>
-
-            <li><a href="{{ route('roles.index') }}"><i class="fa fa-snowflake-o"></i> <span>Roles</span></a>
+            <li class="{{ Request::is('dashboard*') ? 'active' : '' }}">
+                <a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
             </li>
 
-            <li><a href="{{ route('users.index') }}"><i class="fa fa-address-card"></i> <span>Users</span></a>
+            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                <a href="{{ route('roles.index') }}"><i class="fa fa-snowflake-o"></i> <span>Roles</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>
+            <li class="{{ Request::is('users*') ? 'active' : '' }}">
+                <a href="{{ route('users.index') }}"><i class="fa fa-address-card"></i> <span>Users</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Agents</span></a>
+            <li class="{{ Request::is('branches*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Dealers</span></a>
+            <li class="{{ Request::is('agents*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Agents</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-list-alt"></i> <span>Brands</span></a>
+            <li class="{{ Request::is('dealers*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Dealers</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
+            <li class="{{ Request::is('brands*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-list-alt"></i> <span>Brands</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
+            <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
             </li>
 
-            <li><a href="{{ route('brands.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
+            <li class="{{ Request::is('sales*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
+            </li>
+
+            <li class="{{ Request::is('rto*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
             </li>
             <li class="treeview">
                 <a href="#">

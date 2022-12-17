@@ -31,5 +31,5 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Roles
     Route::resource('roles', 'RoleController');
     //Users
-    Route::resource('users', 'UsersController');
+    Route::resource('users', 'UserController');
 });
