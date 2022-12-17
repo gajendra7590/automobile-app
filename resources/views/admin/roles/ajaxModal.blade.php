@@ -1,5 +1,4 @@
-<form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}"
-    enctype="multipart/form-data" data-redirect="ajaxModalCommon">
+<form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
     @if (isset($method) && $method == 'PUT')
         @method('PUT')
