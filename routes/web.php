@@ -29,7 +29,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Bike - Make/Model/Colors
     Route::resource('brands', 'BikeBrandsController');
+
+    Route::resource('branches', 'BranchController');
+
     Route::resource('models', 'BikeModelController');
+
     Route::resource('colors', 'BikeColorController');
 
     Route::resource('dealers', 'BikeDealerController');
@@ -38,6 +42,15 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('states', 'StateController');
     Route::resource('districts', 'DistrictController');
     Route::resource('cities', 'CityController');
+
+    // Purchases
+    Route::resource('purchases', 'PurchaseController');
+
+    // Sales
+    Route::resource('sales', 'SaleController');
+
+    // RTO
+    Route::resource('rto', 'RtoController');
 
     //Users Module
     // Agents

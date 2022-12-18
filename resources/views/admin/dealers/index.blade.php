@@ -10,7 +10,7 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('agents.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
+                <li><a href="{{route('dealers.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
                 <li class="active">List</li>
             </ol>
         </section>
@@ -103,7 +103,7 @@
                 ],
                 columnDefs: [{
                         "orderable": false,
-                        "targets": []
+                        "targets": [-1]
                     },
                     {
                         "searchable": false,

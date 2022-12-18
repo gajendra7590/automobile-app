@@ -95,7 +95,10 @@ $(document).ready(function () {
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
                 } else if (redirect != "undefined") {
-                    window.location.href = redirect;
+                    if(result.data?.id){
+                        redirect = redirect.replace("{id}",result.data.id);
+                    }
+                    window.location.href = redirect ;
                 } else {
                     window.location.href = "";
                 }

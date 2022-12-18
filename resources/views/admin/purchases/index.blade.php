@@ -10,7 +10,7 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('agents.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
+                <li><a href="{{route('purchases.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
                 <li class="active">List</li>
             </ol>
         </section>
@@ -23,7 +23,7 @@
                         <div class="box-header">
                             <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('agents.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Agent">
+                                <a href="{{ route('purchases.create') }}" class="btn btn-sm btn-success">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
@@ -34,24 +34,21 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Agent Name</th>
-                                        <th>Agent Email</th>
-                                        <th>Mobile Number</th>
-                                        <th>Date Of Birth</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Varient</th>
+                                        <th>Color Code</th>
+                                        <th>Quantity</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
-                        <!-- /.box-body -->
                     </div>
-                    <!-- /.box -->
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
         </section>
-        <!-- /.content -->
     </div>
 @endsection
 
@@ -66,7 +63,7 @@
                 cache: true,
                 type: 'GET',
                 ajax: {
-                    url: '{!! route('agents.index') !!}',
+                    url: '{!! route('purchases.index') !!}',
                     method: 'GET',
                     beforeSend: function() {
                         loaderShow();
@@ -81,20 +78,32 @@
                         name: 'id'
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'first_name',
+                        name: 'first_name',
+                        render: function (data,type,row){
+                            return data + '  ' + row['last_name']
+                        }
+
                     },
                     {
                         data: 'email',
                         name: 'email'
                     },
                     {
-                        data: 'mobile_number',
-                        name: 'mobile_number'
+                        data: 'phone',
+                        name: 'phone'
                     },
                     {
-                        data: 'date_of_birth',
-                        name: 'date_of_birth'
+                        data: 'varient',
+                        name: 'varient'
+                    },
+                    {
+                        data: 'color_code',
+                        name: 'color_code'
+                    },
+                    {
+                        data: 'quantity',
+                        name: 'quantity'
                     },
                     {
                         data: 'action',

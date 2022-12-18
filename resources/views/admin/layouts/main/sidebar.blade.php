@@ -35,7 +35,7 @@
             </li>
 
             <li class="{{ Request::is('branches*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>
+                <a href="{{ route('branches.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>
             </li>
 
             <li class="{{ Request::is('agents*') ? 'active' : '' }}">
@@ -47,15 +47,15 @@
             </li>
 
             <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
+                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
             </li>
 
             <li class="{{ Request::is('sales*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
+                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
             </li>
 
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
+                <a href="{{ route('rto.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
             </li>
             <li
                 class="treeview {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'menu-open' : '' }}">

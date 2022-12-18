@@ -156,16 +156,40 @@ class BikeDealerController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_dealers,name,".$id
+            'company_name' => 'required|string',
+            'company_email' => 'required|string',
+            'company_office_phone' => 'required|string',
+            'company_address' => 'nullable|string',
+            'company_gst_no' => 'nullable|string',
+            'company_more_detail' => 'nullable|string',
+            'contact_person' => 'nullable|string',
+            'contact_person_email' => 'nullable|string',
+            'contact_person_phone' => 'nullable|string',
+            'contact_person_phone2' => 'nullable|string',
+            'contact_person_address' => 'nullable|string',
+            'contact_person_document_file' => 'file|max:10000',
         ]);
         if ($validator->fails()) {
             return response()->json(['status'=> false,'statusCode' => 419,'message' => $validator->errors()->first(),'errors' => $validator->errors()]);
         }
-        $bikeDealer = BikeDealer::find($id);
-        if(!$bikeDealer){
+        $branch = BikeDealer::find($id);
+        if(!$branch){
             return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
         }
-        $bikeDealer->update($request->all());
+        $createData = $request->only([
+            'company_name',
+            'company_email',
+            'company_office_phone',
+            'company_address',
+            'company_gst_no',
+            'company_more_detail',
+            'contact_person',
+            'contact_person_email',
+            'contact_person_phone',
+            'contact_person_phone2',
+            'contact_person_address',
+        ]);
+        $branch->update($createData);
         return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Updated Successfully',],200);
     }
 
