@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
@@ -154,18 +155,45 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $roleModel = Role::find($id);
+        if (!$roleModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+
+
+        $userCounts = User::role($id)->count();
+        if ($userCounts) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! You can`t delete role, before delete all users first."
+            ]);
+        }
+
+        //Delete
+        $roleModel->delete();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Deleted Successfully."
+        ]);
     }
 
     public function getActions($row)
     {
-        return '<div class="action-btn-container">
-                <a href="' . route('roles.edit', ['role' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Role"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-               </div>';
-        // return '<div class="action-btn-container">
-        //         <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
-        //         <a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-        //         <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-        //        </div>';
+        $action = '<div class="action-btn-container">';
+        if ($row->id != 1 || $row->name != 'admin') {
+            $action .= '<a href="' . route('roles.edit', ['role' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Role"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        }
+
+        if ($row->is_default == '0') {
+            $action .= '<a href="' . route('roles.destroy', ['role' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Role"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        }
+        $action .= '</div>';
+        return $action;
     }
 }
