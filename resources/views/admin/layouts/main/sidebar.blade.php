@@ -67,6 +67,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a></li>
+                    <li><a href="{{ route('models.index') }}"><i class="fa fa-circle-o"></i>Models</a></li>
                     <li><a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a></li>
                     <li><a href="{{ route('states.index') }}"><i class="fa fa-circle-o"></i> States</a></li>
                     <li><a href="{{ route('districts.index') }}"><i class="fa fa-circle-o"></i>Districts</a></li>
