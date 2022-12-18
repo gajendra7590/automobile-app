@@ -19,7 +19,7 @@ class BikeModelController extends Controller
     public function index()
     {
         if (!request()->ajax()) {
-            return view('admin.models.index');
+            return view('admin.districts.index');
         } else {
 
             $data = BikeModel::with([

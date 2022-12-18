@@ -20,4 +20,13 @@ class District extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    /**
+     * Relation with states
+     */
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
 }

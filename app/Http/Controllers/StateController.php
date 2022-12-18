@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -188,6 +189,15 @@ class StateController extends Controller
                 'status'     => false,
                 'statusCode' => 419,
                 'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+
+
+        if (District::where(['state_id' => $id])->count()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! You can`t delete state, before delete all districts first."
             ]);
         }
 

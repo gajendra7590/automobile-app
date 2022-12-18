@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\District;
+use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class DistrictController extends Controller
 {
@@ -13,7 +18,23 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        //
+        if (!request()->ajax()) {
+            return view('admin.districts.index');
+        } else {
+
+            $data = District::with([
+                'state' => function ($model) {
+                    $model->select('id', 'state_name');
+                }
+            ])->select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return $this->getActions($row);
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**
@@ -23,7 +44,13 @@ class DistrictController extends Controller
      */
     public function create()
     {
-        //
+        $states = State::select('id', 'state_name')->get();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.districts.ajaxModal', ['action' => route('districts.store'), 'states' => $states])->render()
+        ]);
     }
 
     /**
@@ -34,7 +61,34 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $postData = $request->all();
+        $validator = Validator::make($postData, [
+            'state_id' => "required|exists:u_states,id",
+            'district_name' => "required|unique:u_districts,district_name",
+            'district_code' => "nullable"
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
+
+        //Create New Role
+        District::create([
+            'state_id' => $postData['state_id'],
+            'district_name' => $postData['district_name'],
+            'district_code' => $postData['district_code']
+        ]);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Created Successfully."
+        ]);
     }
 
     /**
@@ -56,7 +110,30 @@ class DistrictController extends Controller
      */
     public function edit($id)
     {
-        //
+        $states = State::select('id', 'state_name')->get();
+        $districtModel = District::find($id);
+        if (!$districtModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.districts.ajaxModal', [
+                'action' => route(
+                    'districts.update',
+                    ['district' => $id]
+                ),
+                'data' => $districtModel,
+                'method' => 'PUT',
+                'states' => $states
+
+            ])->render()
+        ]);
     }
 
     /**
@@ -68,7 +145,42 @@ class DistrictController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $postData = $request->all();
+        $districtModel = District::find($id);
+        if (!$districtModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+        $validator = Validator::make($postData, [
+            'state_id' => "required|exists:u_states,id",
+            'district_name' => "required|unique:u_districts,district_name," . $id . ",id",
+            'district_code' => "nullable"
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
+
+        //Create New Role
+        District::where(['id' => $id])->update([
+            'state_id' => $postData['state_id'],
+            'district_name' => $postData['district_name'],
+            'district_code' => $postData['district_code']
+        ]);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Updated Successfully."
+        ]);
     }
 
     /**
@@ -79,6 +191,43 @@ class DistrictController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $districtModel = District::find($id);
+        if (!$districtModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+
+        if (City::where(['district_id' => $id])->count()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! You can`t delete district, before delete all cities first."
+            ]);
+        }
+
+        //Delete
+        $districtModel->delete();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Deleted Successfully."
+        ]);
+    }
+
+
+    public function getActions($row)
+    {
+        return '<div class="action-btn-container">
+                <a href="' . route('districts.edit', ['district' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update District"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                <a href="' . route('districts.destroy', ['district' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete District"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                </div>';
+        // return '<div class="action-btn-container">
+        //         <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
+        //         <a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        //         <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+        //        </div>';
     }
 }
