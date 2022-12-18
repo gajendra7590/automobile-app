@@ -32,6 +32,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('models', 'BikeModelController');
     Route::resource('colors', 'BikeColorController');
 
+    Route::resource('dealers', 'BikeDealerController');
+
     //Address Module
     Route::resource('states', 'StateController');
     Route::resource('districts', 'DistrictController');

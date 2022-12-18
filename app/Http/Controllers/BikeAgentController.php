@@ -166,10 +166,9 @@ class BikeAgentController extends Controller
 
     public function getActions($id)
     {
-        return '<div class="action-btn-container">
-            <a href="'. route('agents.show',['agent' => $id]) .'" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>' .
+        return '<div class="action-btn-container">'.
             '<a href="'. route('agents.edit',['agent' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
-            '<a href="'. route('agents.destroy',['agent' => $id]) .'" class="btn btn-sm btn-danger deleteRow"  data-id="'.$id.'" data-redirect="'.route('agents.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>
-            </div>';
+            '<a href="'. route('agents.destroy',['agent' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('agents.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
+            '</div>';
     }
 }

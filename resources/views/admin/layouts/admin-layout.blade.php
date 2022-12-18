@@ -91,7 +91,6 @@
         @include('admin.layouts.main.navbar')
 
         <!-- Left side column. contains the logo and sidebar -->
-
         @include('admin.layouts.main.sidebar')
 
         @yield('container')
