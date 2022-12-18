@@ -26,10 +26,18 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('logout', 'AuthController@logout')->name('logout');
     Route::get('profile', 'AuthController@profile')->name('profile');
     Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');
-    //Brands
+
+    //Bike - Make/Model/Colors
     Route::resource('brands', 'BikeBrandsController');
-    //Roles
-    Route::resource('roles', 'RoleController');
-    //Users
+    Route::resource('models', 'BikeModelController');
+    Route::resource('colors', 'BikeColorController');
+
+    //Address Module
+    Route::resource('states', 'StateController');
+    Route::resource('districts', 'DistrictController');
+    Route::resource('cities', 'CityController');
+
+    //Users Module
     Route::resource('users', 'UserController');
+    Route::resource('roles', 'RoleController');
 });

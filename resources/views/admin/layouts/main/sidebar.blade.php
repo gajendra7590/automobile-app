@@ -46,10 +46,6 @@
                 <a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Dealers</span></a>
             </li>
 
-            <li class="{{ Request::is('brands*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-list-alt"></i> <span>Brands</span></a>
-            </li>
-
             <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
                 <a href="{{ route('brands.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
             </li>
@@ -60,6 +56,22 @@
 
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
                 <a href="{{ route('brands.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span>Common Setting</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a></li>
+                    <li><a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a></li>
+                    <li><a href="{{ route('states.index') }}"><i class="fa fa-circle-o"></i> States</a></li>
+                    <li><a href="{{ route('districts.index') }}"><i class="fa fa-circle-o"></i>Districts</a></li>
+                    <li><a href="{{ route('cities.index') }}"><i class="fa fa-circle-o"></i>Cities</a></li>
+                </ul>
             </li>
             <li class="treeview">
                 <a href="#">

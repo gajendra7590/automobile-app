@@ -22,7 +22,7 @@ class UserController extends Controller
             return view('admin.users.index');
         } else {
 
-            $data = User::with('roles')->select('*');
+            $data = User::with('roles')->where('id', '!=', '1')->select('id', 'name', 'email', 'status', 'is_default', 'created_at');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($row) {
