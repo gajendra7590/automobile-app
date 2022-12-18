@@ -7,17 +7,17 @@
     <div class="box-body">
         <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name"
+            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name" required
                 name="name" value='{{ isset($data) && $data ? $data->name : '' }}' />
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type='email' class="form-control my-colorpicker1 colorpicker-element" placeholder="Email"
+            <input type='email' class="form-control my-colorpicker1 colorpicker-element" placeholder="Email" required
                 name="email" value="{{ isset($data) && $data ? $data->email : '' }}" />
         </div>
         <div class="form-group">
             <label>Mobile Number</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Mobile Number"
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Mobile Number" required
                 name="mobile_number" value="{{ isset($data) && $data ? $data->mobile_number : '' }}" />
         </div>
         <div class="form-group">
@@ -60,6 +60,11 @@
             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                 placeholder="Highest Qualification" name="address_line"
                 value="{{ isset($data) && $data->address_line ? $data->address_line : '' }}" />
+        </div>
+        <div class="form-group">
+            <label>Country</label>
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="country"
+                name="state" value="1" />
         </div>
         <div class="form-group">
             <label>State</label>
