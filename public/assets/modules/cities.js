@@ -22,8 +22,20 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "name",
-                    name: "name",
+                    data: "district.state.state_name",
+                    name: "district.state.state_name",
+                },
+                {
+                    data: "district.district_name",
+                    name: "district.district_name",
+                },
+                {
+                    data: "city_name",
+                    name: "city_name",
+                },
+                {
+                    data: "city_code",
+                    name: "city_code",
                 },
                 {
                     data: "action",

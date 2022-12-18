@@ -20,4 +20,10 @@ class City extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
 }
