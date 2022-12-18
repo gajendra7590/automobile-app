@@ -29,7 +29,7 @@ class BikePurchaseController extends Controller
         $data = array(
             'branches' => Branch::select('id', 'branch_name')->get(),
             'dealers' => BikeDealer::select('id', 'company_name')->get(),
-            'brands' => BikeBrand::select('id', 'brand_name')->get(),
+            'brands' => BikeBrand::select('id', 'name')->get(),
             'branches' => Branch::select('id', 'branch_name')->get()
         );
         return view('admin.purchases.create');
