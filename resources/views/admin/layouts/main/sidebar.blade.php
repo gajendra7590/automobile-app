@@ -57,7 +57,8 @@
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
                 <a href="{{ route('brands.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
             </li>
-            <li class="treeview">
+            <li
+                class="treeview {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'menu-open' : '' }}">
                 <a href="#">
                     <i class="fa fa-cog"></i>
                     <span>Common Setting</span>
@@ -65,7 +66,8 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="treeview-menu"
+                    {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'display:"block"' : '' }}>
                     <li><a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a></li>
                     <li><a href="{{ route('models.index') }}"><i class="fa fa-circle-o"></i>Models</a></li>
                     <li><a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a></li>
