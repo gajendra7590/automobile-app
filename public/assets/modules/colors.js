@@ -22,8 +22,12 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "name",
-                    name: "name",
+                    data: "color_name",
+                    name: "color_name",
+                },
+                {
+                    data: "color_code",
+                    name: "color_code",
                 },
                 {
                     data: "action",
