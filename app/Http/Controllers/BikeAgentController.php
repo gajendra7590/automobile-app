@@ -30,7 +30,7 @@ class BikeAgentController extends Controller
             $formDetails = [
                 'title' => 'Bike Agent',
             ];
-            return view('admin.bikeAgents.index',$formDetails);
+            return view('admin.agents.index',$formDetails);
         }
     }
 
@@ -45,7 +45,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bikeAgents.ajaxModal',['action' => route('agents.store'),'method' => 'POST'])->render()
+            'data'       => view('admin.agents.ajaxModal',['action' => route('agents.store'),'method' => 'POST'])->render()
         ]);
     }
 
@@ -103,7 +103,7 @@ class BikeAgentController extends Controller
     public function show($id)
     {
         $bikeAgent = BikeAgent::find($id);
-        return view('admin.bikeAgents.show', ['bikeBrand' => $bikeAgent]);
+        return view('admin.agents.show', ['bikeBrand' => $bikeAgent]);
     }
 
     /**
@@ -119,7 +119,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bikeAgents.ajaxModal',['data' => $bikeAgent,'action' => route('agents.update',['brand' => $id]),'method' => 'PUT'])->render()
+            'data'       => view('admin.agents.ajaxModal',['data' => $bikeAgent,'action' => route('agents.update',['agent' => $id]),'method' => 'PUT'])->render()
         ]);
     }
 
@@ -144,7 +144,7 @@ class BikeAgentController extends Controller
             return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
         }
         $bikeAgent->update($request->all());
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Created Successfully',],200);
+        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Updated Successfully',],200);
     }
 
     /**

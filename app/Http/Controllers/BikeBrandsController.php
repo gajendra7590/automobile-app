@@ -27,7 +27,7 @@ class BikeBrandsController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('admin.bikeBrands.index');
+            return view('admin.brands.index');
         }
     }
 
@@ -42,7 +42,7 @@ class BikeBrandsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bikeBrands.ajaxModal',['action' => route('brands.store'),'method' => 'POST'])->render()
+            'data'       => view('admin.brands.ajaxModal',['action' => route('brands.store'),'method' => 'POST'])->render()
         ]);
     }
 
@@ -87,7 +87,7 @@ class BikeBrandsController extends Controller
     public function show($id)
     {
         $bikeBrand = BikeBrand::find($id);
-        return view('admin.bikeBrands.show', ['bikeBrand' => $bikeBrand]);
+        return view('admin.brands.show', ['bikeBrand' => $bikeBrand]);
     }
 
     /**
@@ -103,7 +103,7 @@ class BikeBrandsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bikeBrands.ajaxModal',['bikeBrand' => $bikeBrand,'action' => route('brands.update',['brand' => $id]),'method' => 'PUT'])->render()
+            'data'       => view('admin.brands.ajaxModal',['bikeBrand' => $bikeBrand,'action' => route('brands.update',['brand' => $id]),'method' => 'PUT'])->render()
         ]);
     }
 
