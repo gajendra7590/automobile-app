@@ -69,7 +69,7 @@ class BikeBrandsController extends Controller
             ]);
         }
 
-        BikeBrand::create($request->all());
+        BikeBrand::create($request->only('name','description','code'));
 
         return response()->json([
             'status'     => true,
@@ -127,7 +127,7 @@ class BikeBrandsController extends Controller
         if(!$bikeBrand){
             return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
         }
-        $bikeBrand->update($request->all());
+        $bikeBrand->update($request->only('name','descrption','code'));
         return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Created Successfully',],200);
     }
 

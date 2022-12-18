@@ -38,6 +38,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('cities', 'CityController');
 
     //Users Module
-    Route::resource('users', 'UserController');
+    // Agents
+    Route::resource('agents', 'BikeAgentController');
+    //Roles
     Route::resource('roles', 'RoleController');
+    //Users
+    Route::resource('users', 'UserController');
 });

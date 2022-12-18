@@ -11,6 +11,11 @@
                 name="name" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->name : '' }}' />
         </div>
         <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Code"
+                name="code" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->code : '' }}' />
+        </div>
+        <div class="form-group">
             <label>Description</label>
             <textarea class="form-control my-colorpicker1 colorpicker-element" placeholder="Description" name="description"> {{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->description : '' }} </textarea>
         </div>

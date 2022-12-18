@@ -39,7 +39,7 @@
             </li>
 
             <li class="{{ Request::is('agents*') ? 'active' : '' }}">
-                <a href="{{ route('brands.index') }}"><i class="fa fa-users"></i> <span>Agents</span></a>
+                <a href="{{ route('agents.index') }}"><i class="fa fa-users"></i> <span>Agents</span></a>
             </li>
 
             <li class="{{ Request::is('dealers*') ? 'active' : '' }}">

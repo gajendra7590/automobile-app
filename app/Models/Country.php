@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BikeBrand extends Model
+class District extends Model
 {
     use HasFactory;
 
-    protected $table = 'bike_brands';
+    protected $table = 'u_countries';
 
     protected $fillable = [
-        'name',
-        'description',
-        'code'
+        'country_name',
+        'country_code',
     ];
 
     protected  $hidden = [];
