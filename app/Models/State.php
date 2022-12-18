@@ -17,7 +17,16 @@ class State extends Model
         'state_code',
     ];
 
+
     protected  $hidden = [];
 
     protected $casts = [];
+
+    /**
+     * Relation with Country
+     */
+    public function country()
+    {
+        return $this->hasOne(Country::class, 'id', 'country_id');
+    }
 }

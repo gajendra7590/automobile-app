@@ -22,8 +22,16 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "name",
-                    name: "name",
+                    data: "country.country_name",
+                    name: "country.country_name",
+                },
+                {
+                    data: "state_name",
+                    name: "state_name",
+                },
+                {
+                    data: "state_code",
+                    name: "state_code",
                 },
                 {
                     data: "action",
