@@ -44,7 +44,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('cities', 'CityController');
 
     // Purchases
-    Route::resource('purchases', 'PurchaseController');
+    Route::resource('purchases', 'BikePurchaseController');
 
     // Sales
     Route::resource('sales', 'SaleController');

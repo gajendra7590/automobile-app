@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BikeBrand;
+use App\Models\BikeDealer;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 
 class BikePurchaseController extends Controller
@@ -13,7 +16,7 @@ class BikePurchaseController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.purchases.index');
     }
 
     /**
@@ -23,7 +26,13 @@ class BikePurchaseController extends Controller
      */
     public function create()
     {
-        //
+        $data = array(
+            'branches' => Branch::select('id', 'branch_name')->get(),
+            'dealers' => BikeDealer::select('id', 'company_name')->get(),
+            'brands' => BikeBrand::select('id', 'brand_name')->get(),
+            'branches' => Branch::select('id', 'branch_name')->get()
+        );
+        return view('admin.purchases.create');
     }
 
     /**
