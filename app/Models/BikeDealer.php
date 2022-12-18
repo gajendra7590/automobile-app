@@ -30,4 +30,8 @@ class BikeDealer extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public function getContactPersonDocumentFileAttribute($value){
+        return env('APP_URL').'/storage'.'/' . $value;
+    }
 }
