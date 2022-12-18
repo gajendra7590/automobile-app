@@ -201,7 +201,7 @@ class BranchController extends Controller
     public function getActions($id)
     {
         return '<div class="action-btn-container">'.
-            '<a href="'. route('branches.edit',['branch' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
+            '<a href="'. route('branches.edit',['branch' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Branch"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
             '<a href="'. route('branches.destroy',['branch' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('branches.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
             '</div>';
     }

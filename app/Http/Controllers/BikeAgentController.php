@@ -65,7 +65,7 @@ class BikeAgentController extends Controller
             'mobile_number2' => 'string|min:10|max:13',
             'aadhar_card' => 'string|min:12|max:12',
             'pan_card' => 'string|min:10|max:10',
-            'date_of_birth' => 'date_format:d-m-Y',
+            'date_of_birth' => 'date_format:Y-m-d',
             'highest_qualification' => 'string',
             'gender' => 'string|in:male,female',
             'address_line' => 'string',
@@ -134,7 +134,20 @@ class BikeAgentController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_agents,name,".$id
+            'name' => "nullable|string",
+            'email' => "nullable|email",
+            'mobile_number' => 'nullable|string|min:10|max:13',
+            'mobile_number2' => 'nullable|string|min:10|max:13',
+            'aadhar_card' => 'nullable|string|min:12|max:12',
+            'pan_card' => 'nullable|string|min:10|max:10',
+            'date_of_birth' => 'nullable|date_format:Y-m-d',
+            'highest_qualification' => 'nullable|string',
+            'gender' => 'nullable|string|in:male,female',
+            'address_line' => 'nullable|string',
+            'state' => 'nullable|string',
+            'district' => 'nullable|string',
+            'city' => 'nullable|string',
+            'more_details' => 'nullable|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['status'=> false,'statusCode' => 419,'message' => $validator->errors()->first(),'errors' => $validator->errors()]);
@@ -167,7 +180,7 @@ class BikeAgentController extends Controller
     public function getActions($id)
     {
         return '<div class="action-btn-container">'.
-            '<a href="'. route('agents.edit',['agent' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
+            '<a href="'. route('agents.edit',['agent' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
             '<a href="'. route('agents.destroy',['agent' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('agents.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
             '</div>';
     }

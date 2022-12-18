@@ -23,7 +23,7 @@
                         <div class="box-header">
                             <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
                             <div class="pull-right">
-                                <a href="{{route('branches.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Dealer">
+                                <a href="{{route('branches.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Branch">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>

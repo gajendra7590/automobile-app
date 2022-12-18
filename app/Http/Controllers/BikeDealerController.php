@@ -213,7 +213,7 @@ class BikeDealerController extends Controller
     public function getActions($id)
     {
         return '<div class="action-btn-container">'.
-            '<a href="'. route('dealers.edit',['dealer' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
+            '<a href="'. route('dealers.edit',['dealer' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Dealer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
             '<a href="'. route('dealers.destroy',['dealer' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('dealers.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
             '</div>';
     }

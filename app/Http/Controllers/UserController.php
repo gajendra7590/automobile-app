@@ -214,14 +214,20 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Not Found']);
+        }
+        $user->delete();
+        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Deleted Successfully',],200);
     }
 
     public function getActions($row)
     {
         return '<div class="action-btn-container">
-                <a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-               </div>';
+                <a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
+                '<a href="'. route('users.destroy',['user' => $row->id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$row->id.'" data-redirect="'.route('users.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
+                '</div>';
         // return '<div class="action-btn-container">
         //         <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
         //         <a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
