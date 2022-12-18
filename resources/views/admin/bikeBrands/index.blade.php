@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Bike Brands
+                Brands
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('brands.index')}}">Bike Brand</a></li>
+                <li><a href="{{route('brands.index')}}">Brand</a></li>
                 <li class="active">List</li>
             </ol>
         </section>
@@ -21,7 +21,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Bike Brands List</h3>
+                            <h3 class="box-title">Brands List</h3>
                             <div class="pull-right">
                                 <a href="{{ route('brands.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Brand">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
@@ -30,12 +30,12 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover">
+                            <table id="ajaxDataTable"  class="table table-bordered table-hover" data-url="{{ route('brands.index') }}">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Category</th>
-                                        <th>Description</th>
+                                        <th>Brand Name</th>
+                                        <th>Brand Code</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -53,58 +53,7 @@
     </div>
 @endsection
 
-
-
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            const tableObj = $('#ajaxDataTable').DataTable({
-                processing: false,
-                serverSide: true,
-                cache: true,
-                type: 'GET',
-                ajax: {
-                    url: '{!! route('brands.index') !!}',
-                    method: 'GET',
-                    beforeSend: function() {
-                        loaderShow();
-                    },
-                    complete: function() {
-                        loaderHide();
-                    }
-                },
-                searchDelay: 350,
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": []
-                    },
-                    {
-                        "searchable": false,
-                        "targets": []
-                    }
-                ],
-                order: [
-                    [0, "desc"]
-                ]
-            });
-        })
-    </script>
+    <script src="{{ asset('assets/modules/brands.js') }}"></script>
 @endpush
 

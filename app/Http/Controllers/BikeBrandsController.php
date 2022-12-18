@@ -143,6 +143,9 @@ class BikeBrandsController extends Controller
         if(!$bikeBrand){
             return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
         }
+        if($bikeBrand->bike_modals()->count()){
+            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
+        }
         $bikeBrand->delete();
         return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Deleted Successfully',],200);
 
@@ -150,10 +153,9 @@ class BikeBrandsController extends Controller
 
     public function getActions($id)
     {
-        return '<div class="action-btn-container">
-            <a href="'. route('brands.show',['brand' => $id]) .'" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>' .
+        return '<div class="action-btn-container">' .
             '<a href="'. route('brands.edit',['brand' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
-            '<a href="'. route('brands.destroy',['brand' => $id]) .'" class="btn btn-sm btn-danger deleteRow"  data-id="'.$id.'" data-redirect="'.route('brands.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>
+            '<a href="'. route('brands.destroy',['brand' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-modal_title="" data-redirect="'.route('brands.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>
             </div>';
     }
 }

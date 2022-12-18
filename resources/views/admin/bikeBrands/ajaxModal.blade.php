@@ -6,12 +6,12 @@
     @endif
     <div class="box-body">
         <div class="form-group">
-            <label>Name</label>
+            <label>Brand Name</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name"
                 name="name" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->name : '' }}' />
         </div>
         <div class="form-group">
-            <label>Name</label>
+            <label>Brand Code</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Code"
                 name="code" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->code : '' }}' />
         </div>

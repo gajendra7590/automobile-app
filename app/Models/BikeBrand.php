@@ -17,6 +17,10 @@ class BikeBrand extends Model
         'code'
     ];
 
+    public function bike_modals(){
+        return $this->hasMany(BikeModel::class,'brand_id');
+    }
+
     protected  $hidden = [];
 
     protected $casts = [];
