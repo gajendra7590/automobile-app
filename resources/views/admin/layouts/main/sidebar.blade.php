@@ -58,7 +58,7 @@
                 <a href="{{ route('rto.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
             </li>
             <li
-                class="treeview {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'menu-open' : '' }}">
+                class="treeview {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-cog"></i>
                     <span>Common Setting</span>
@@ -68,12 +68,25 @@
                 </a>
                 <ul class="treeview-menu"
                     {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'display:"block"' : '' }}>
-                    <li><a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a></li>
-                    <li><a href="{{ route('models.index') }}"><i class="fa fa-circle-o"></i>Models</a></li>
-                    <li><a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a></li>
-                    <li><a href="{{ route('states.index') }}"><i class="fa fa-circle-o"></i> States</a></li>
-                    <li><a href="{{ route('districts.index') }}"><i class="fa fa-circle-o"></i>Districts</a></li>
-                    <li><a href="{{ route('cities.index') }}"><i class="fa fa-circle-o"></i>Cities</a></li>
+
+                    <li class="{{ Request::is('brands*') ? 'active' : '' }}">
+                        <a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a>
+                    </li>
+                    <li class="{{ Request::is('models*') ? 'active' : '' }}">
+                        <a href="{{ route('models.index') }}"><i class="fa fa-circle-o"></i>Models</a>
+                    </li>
+                    <li class="{{ Request::is('colors*') ? 'active' : '' }}">
+                        <a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a>
+                    </li>
+                    <li class="{{ Request::is('states*') ? 'active' : '' }}">
+                        <a href="{{ route('states.index') }}"><i class="fa fa-circle-o"></i> States</a>
+                    </li>
+                    <li class="{{ Request::is('districts*') ? 'active' : '' }}">
+                        <a href="{{ route('districts.index') }}"><i class="fa fa-circle-o"></i>Districts</a>
+                    </li>
+                    <li class="{{ Request::is('cities*') ? 'active' : '' }}">
+                        <a href="{{ route('cities.index') }}"><i class="fa fa-circle-o"></i>Cities</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview">
