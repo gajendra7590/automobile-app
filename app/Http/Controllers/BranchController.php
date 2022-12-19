@@ -30,7 +30,7 @@ class BranchController extends Controller
             $formDetails = [
                 'title' => 'Branch',
             ];
-            return view('admin.branches.index',$formDetails);
+            return view('admin.branches.index', $formDetails);
         }
     }
 
@@ -45,7 +45,7 @@ class BranchController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.branches.ajaxModal',['action' => route('branches.store'),'method' => 'POST'])->render()
+            'data'       => view('admin.branches.ajaxModal', ['action' => route('branches.store'), 'method' => 'POST'])->render()
         ]);
     }
 
@@ -102,7 +102,7 @@ class BranchController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'Created Successfully'
-        ],200);
+        ], 200);
     }
 
     /**
@@ -130,7 +130,7 @@ class BranchController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.branches.ajaxModal',['data' => $branch,'action' => route('branches.update',['branch' => $id]),'method' => 'PUT'])->render()
+            'data'       => view('admin.branches.ajaxModal', ['data' => $branch, 'action' => route('branches.update', ['branch' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -158,11 +158,11 @@ class BranchController extends Controller
             'branch_more_detail',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => $validator->errors()->first(),'errors' => $validator->errors()]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
         $branch = Branch::find($id);
-        if(!$branch){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$branch) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $createData = $request->only([
             'branch_manager_name',
@@ -178,7 +178,7 @@ class BranchController extends Controller
             'branch_more_detail',
         ]);
         $branch->update($createData);
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Updated Successfully',],200);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**
@@ -190,19 +190,20 @@ class BranchController extends Controller
     public function destroy($id)
     {
         $branch = Branch::find($id);
-        if(!$branch){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$branch) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $branch->delete();
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Deleted Successfully',],200);
-
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)
     {
-        return '<div class="action-btn-container">'.
-            '<a href="'. route('branches.edit',['branch' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Branch"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
-            '<a href="'. route('branches.destroy',['branch' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('branches.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
-            '</div>';
+        //data-modal_size="modal-lg"
+        $action = '<div class="action-btn-container">';
+        $action .= '<a href="' . route('branches.edit', ['branch' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Branch" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('branches.destroy', ['branch' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('branches.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '</div>';
+        return $action;
     }
 }

@@ -1,5 +1,5 @@
 <div class="modal fade" id="ajaxModalCommon" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
+    <div class="modal-dialog" id="ajaxModalSize">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

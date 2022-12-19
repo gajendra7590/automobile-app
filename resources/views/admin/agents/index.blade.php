@@ -5,13 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{isset($title) && $title ? $title : ''}}
+                All Agents
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('agents.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
-                <li class="active">List</li>
+                <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Agents List</li>
             </ol>
         </section>
 
@@ -21,23 +20,24 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
+                            <h3 class="box-title"> All Agents List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('agents.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Agent">
+                                <a href="{{ route('agents.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Agent" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover">
+                            <table id="ajaxDataTable" data-url="{{ route('agents.index') }}"
+                                class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Agent Name</th>
-                                        <th>Agent Email</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
                                         <th>Mobile Number</th>
-                                        <th>Date Of Birth</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -58,63 +58,5 @@
 
 
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            const tableObj = $('#ajaxDataTable').DataTable({
-                processing: false,
-                serverSide: true,
-                cache: true,
-                type: 'GET',
-                ajax: {
-                    url: '{!! route('agents.index') !!}',
-                    method: 'GET',
-                    beforeSend: function() {
-                        loaderShow();
-                    },
-                    complete: function() {
-                        loaderHide();
-                    }
-                },
-                searchDelay: 350,
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'mobile_number',
-                        name: 'mobile_number'
-                    },
-                    {
-                        data: 'date_of_birth',
-                        name: 'date_of_birth'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": [-1]
-                    },
-                    {
-                        "searchable": false,
-                        "targets": []
-                    }
-                ],
-                order: [
-                    [0, "desc"]
-                ]
-            });
-        })
-    </script>
+    <script src="{{ asset('assets/modules/agents.js') }}"></script>
 @endpush
-

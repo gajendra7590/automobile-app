@@ -30,7 +30,7 @@ class BikeAgentController extends Controller
             $formDetails = [
                 'title' => 'Bike Agent',
             ];
-            return view('admin.agents.index',$formDetails);
+            return view('admin.agents.index', $formDetails);
         }
     }
 
@@ -45,7 +45,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal',['action' => route('agents.store'),'method' => 'POST'])->render()
+            'data'       => view('admin.agents.ajaxModal', ['action' => route('agents.store'), 'method' => 'POST'])->render()
         ]);
     }
 
@@ -85,13 +85,13 @@ class BikeAgentController extends Controller
             ]);
         }
 
-        BikeAgent::create($request->only(['name','email','mobile_number','mobile_number2','aadhar_card','pan_card','date_of_birth','highest_qualification','gender','address_line','state','district','city','more_details']));
+        BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details']));
 
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'Created Successfully',
-        ],200);
+        ], 200);
     }
 
     /**
@@ -119,7 +119,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal',['data' => $bikeAgent,'action' => route('agents.update',['agent' => $id]),'method' => 'PUT'])->render()
+            'data'       => view('admin.agents.ajaxModal', ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -150,14 +150,14 @@ class BikeAgentController extends Controller
             'more_details' => 'nullable|string',
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => $validator->errors()->first(),'errors' => $validator->errors()]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
         $bikeAgent = BikeAgent::find($id);
-        if(!$bikeAgent){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$bikeAgent) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $bikeAgent->update($request->all());
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Updated Successfully',],200);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**
@@ -169,19 +169,19 @@ class BikeAgentController extends Controller
     public function destroy($id)
     {
         $bikeAgent = BikeAgent::find($id);
-        if(!$bikeAgent){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$bikeAgent) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $bikeAgent->delete();
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Deleted Successfully',],200);
-
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)
     {
-        return '<div class="action-btn-container">'.
-            '<a href="'. route('agents.edit',['agent' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
-            '<a href="'. route('agents.destroy',['agent' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-redirect="'.route('agents.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>'.
-            '</div>';
+        $action = '<div class="action-btn-container">';
+        $action .= '<a href="' . route('agents.edit', ['agent' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('agents.destroy', ['agent' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '</div>';
+        return $action;
     }
 }

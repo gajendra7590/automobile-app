@@ -4,7 +4,8 @@
     @if (isset($method) && $method == 'PUT')
         @method('PUT')
     @endif
-    <div class="box-body">
+
+    <div class="row">
         <div class="form-group col-md-6">
             <label>Branch Manager Name</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element"
@@ -63,8 +64,9 @@
             <textarea type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch More Detail"
                 name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>
         </div>
-
-        <div class="form-group">
+    </div>
+    <div class="row">
+        <div class="form-group col-md-12">
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
                     <?php if(isset($method) && $method == 'PUT'): ?>
@@ -75,4 +77,7 @@
                 </button>
             </div>
         </div>
+    </div>
+
+
 </form>
