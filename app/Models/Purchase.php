@@ -13,35 +13,41 @@ class Purchase extends Model
     protected $table = 'purchases';
 
     protected $fillable = [
-        'addressed',
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'gst_no',
-        'booking_type',
-        'state',
-        'district',
-        'city',
-        'address_line1',
-        'address_line2',
-        'pin_code',
-        'age',
-        'gender',
-        'occupation',
-        'model_in_inters',
-        'varient',
-        'color_code',
-        'quantity',
-        'existing_customer',
-        'exchange_enquiry',
-        'finance_requirement',
-        'loyalty_customer',
-        'enquiry_date',
-        'expected_date_of_purchase',
-        'next_follow_date',
-        'dse_name',
-        'order_number',
+        'uuid',
+        'bike_branch',
+        'bike_dealer',
+        'bike_brand',
+        'bike_model',
+        'bike_model_color',
+        'bike_type',
+        'bike_fuel_type',
+        'break_type',
+        'wheel_type',
+        'dc_number',
+        'dc_date',
+        'vin_number',
+        'vin_physical_status',
+        'sku',
+        'sku_description',
+        'hsn_number',
+        'model_number',
+        'engine_number',
+        'key_number',
+        'service_book_number',
+        'tyre_brand_name',
+        'tyre_front_number',
+        'tyre_rear_number',
+        'battery_brand',
+        'battery_number',
+        'purchase_invoice_number',
+        'purchase_invoice_amount',
+        'purchase_invoice_date',
+        'final_price',
+        'sale_price',
+        'bike_description',
+        'status',
+        'created_by',
+        'updated_by'
     ];
 
     protected  $hidden = [];
@@ -52,56 +58,3 @@ class Purchase extends Model
         return $this->first_name . ' ' . $this->last_name;
     }
 }
-
-
-
-// Customer
-// --------------------
-
-//         Mr / Ms
-//         First Name
-//         Last Name
-//         Email
-//         Phone
-//         GST No
-//         Booking Type
-
-//         Address
-// ---------------
-
-//         State
-//         District
-//         Tehsil
-//         City / Town / village
-//         Address Line 1
-//         Address Line 2
-//         Pin Code
-
-//         Customer Profile
-// ----------------------------
-//         Age -
-//         Gender
-//         Occupation
-
-//         Vehicle Information
-// ------------
-//         Model in inters
-//         Variant
-//         Color Code
-//         Quantity
-
-//         Existing Customer
-// -------------------
-//         Exising Customer - Yes / No
-
-
-//         Enquiry Information
-// ----------------------------
-//         Exchange Enquiry - Yes / No ( If Yes - Description )
-//         Finace Requirement - Yes / No ( If Yes - Description )
-//         Loyalty customer ( Yes / No )
-//         Enquiry Date -
-//         Expected Date Of Purchase -
-//         Next Follow Date -
-//         DSE Name( Employee ) -
-//         Order Number -
