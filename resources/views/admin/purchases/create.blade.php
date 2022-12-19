@@ -40,7 +40,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group col-md-3">
-                                    <label>Branch Name</label>
+                                    <label>Branch</label>
                                     <select name="bike_branch" class="form-control">
                                         <option value="">---Select Branch---</option>
                                         @if (isset($branches))
