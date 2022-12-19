@@ -77,6 +77,28 @@ var CRUD = (function ($, l, m) {
             },
         });
     };
+    Operations.AJAXDATA = function (URL, METHOD, DATA = {}) {
+        return $.ajax({
+            url: URL,
+            data: DATA,
+            // cache: false,
+            type: METHOD,
+            // dataType: "JSON",
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                loaderShow();
+            },
+            success: function (res) {
+                loaderHide();
+                return res;
+            },
+            error: function (res) {
+                loaderHide();
+                return res;
+            },
+        });
+    };
     return Operations;
 })($, LOADER, null);
 
@@ -95,10 +117,10 @@ $(document).ready(function () {
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
                 } else if (redirect != "undefined") {
-                    if(result.data?.id){
-                        redirect = redirect.replace("{id}",result.data.id);
+                    if (result.data?.id) {
+                        redirect = redirect.replace("{id}", result.data.id);
                     }
-                    window.location.href = redirect ;
+                    window.location.href = redirect;
                 } else {
                     window.location.href = "";
                 }
@@ -127,11 +149,10 @@ $(document).ready(function () {
         });
     });
 
-
     $(document).on("click", ".ajaxModalDelete", function (e) {
         e.preventDefault();
         var url = $(this).attr("href");
         $("#ajaxModalDialog").modal("show");
-        $('#ajaxModalDialogForm').attr('action',url);
+        $("#ajaxModalDialogForm").attr("action", url);
     });
 });

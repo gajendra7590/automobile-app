@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{isset($title) && $title ? $title : ''}}
+                {{ isset($title) && $title ? $title : '' }}
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('purchases.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
+                <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{ route('purchases.index') }}"> {{ isset($title) && $title ? $title : '' }} </a></li>
                 <li class="active">List</li>
             </ol>
         </section>
@@ -21,7 +21,7 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
+                            <h3 class="box-title"> {{ isset($title) && $title ? $title : '' }} List</h3>
                             <div class="pull-right">
                                 <a href="{{ route('purchases.create') }}" class="btn btn-sm btn-success">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
@@ -80,7 +80,7 @@
                     {
                         data: 'first_name',
                         name: 'first_name',
-                        render: function (data,type,row){
+                        render: function(data, type, row) {
                             return data + '  ' + row['last_name']
                         }
 
@@ -126,4 +126,3 @@
         })
     </script>
 @endpush
-

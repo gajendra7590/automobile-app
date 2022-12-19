@@ -26,6 +26,14 @@
                     <div>
                         <div class="box-header with-border">
                             <h3 class="box-title">Purchase Detail</h3>
+
+                            <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit">
+                                @if (isset($method) && $method == 'PUT')
+                                    UPDATE PURCHASE
+                                @else
+                                    CREATE PURCHASE
+                                @endif
+                            </button>
                         </div>
                     </div>
                     <div class="box-body">
@@ -34,25 +42,46 @@
                                 <div class="form-group col-md-3">
                                     <label>Branch Name</label>
                                     <select name="bike_branch" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Branch---</option>
+                                        @if (isset($branches))
+                                            @foreach ($branches as $branch)
+                                                <option
+                                                    {{ isset($data['bike_branch']) && $data['bike_branch'] == $branch->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Bike Dealer</label>
                                     <select name="bike_dealer" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Dealer---</option>
+                                        @if (isset($dealers))
+                                            @foreach ($dealers as $dealer)
+                                                <option
+                                                    {{ isset($data['bike_dealer']) && $data['bike_dealer'] == $dealer->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Brand Name</label>
                                     <select name="bike_brand" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Brand---</option>
+                                        @if (isset($brands))
+                                            @foreach ($brands as $brand)
+                                                <option
+                                                    {{ isset($data['bike_brand']) && $data['bike_brand'] == $brand->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Model Name</label>
                                     <select name="bike_model" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Model---</option>
                                     </select>
                                 </div>
                             </div>
@@ -60,31 +89,66 @@
                                 <div class="form-group col-md-3">
                                     <label>Model Color</label>
                                     <select name="bike_model_color" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Model Color---</option>
+                                        @if (isset($colors))
+                                            @foreach ($colors as $color)
+                                                <option
+                                                    {{ isset($data['bike_color']) && $data['bike_color'] == $color->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $color->id }}">{{ $color->color_name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Vehicle Type</label>
                                     <select name="bike_type" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Vehicle Type---</option>
+                                        @if (isset($bike_types))
+                                            @foreach ($bike_types as $key => $name)
+                                                <option
+                                                    {{ isset($data['bike_type']) && $data['bike_type'] == $key ? 'selected="selected"' : '' }}
+                                                    value="{{ $key }}">{{ $name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Fuel Type</label>
                                     <select name="bike_fuel_type" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Fuel Type---</option>
+                                        @if (isset($bike_fuel_types))
+                                            @foreach ($bike_fuel_types as $key => $name)
+                                                <option
+                                                    {{ isset($data['bike_fuel_type']) && $data['bike_fuel_type'] == $key ? 'selected="selected"' : '' }}
+                                                    value="{{ $key }}">{{ $name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Break Type</label>
                                     <select name="break_type" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Break Type---</option>
+                                        @if (isset($break_types))
+                                            @foreach ($break_types as $key => $name)
+                                                <option
+                                                    {{ isset($data['break_type']) && $data['break_type'] == $key ? 'selected="selected"' : '' }}
+                                                    value="{{ $key }}">{{ $name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label>Wheal Type</label>
                                     <select name="wheel_type" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select Break Type---</option>
+                                        @if (isset($wheel_types))
+                                            @foreach ($wheel_types as $key => $name)
+                                                <option
+                                                    {{ isset($data['wheel_type']) && $data['wheel_type'] == $key ? 'selected="selected"' : '' }}
+                                                    value="{{ $key }}">{{ $name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
@@ -96,7 +160,7 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>DC Date</label>
-                                    <input type="text" class="form-control" placeholder="DC Date" name="dc_date" />
+                                    <input type="date" class="form-control" placeholder="DC Date" name="dc_date" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>VIN Number(Chasis Number)</label>
@@ -105,17 +169,24 @@
                                 <div class="form-group col-md-3">
                                     <label>VIN Physical Status</label>
                                     <select name="vin_physical_status" class="form-control">
-                                        <option value="">Test</option>
+                                        <option value="">---Select VIN Physical Status---</option>
+                                        @if (isset($vin_physical_statuses))
+                                            @foreach ($vin_physical_statuses as $key => $name)
+                                                <option
+                                                    {{ isset($data['vin_physical_status']) && $data['vin_physical_status'] == $key ? 'selected="selected"' : '' }}
+                                                    value="{{ $key }}">{{ $name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label>SKU</label>
                                     <input type="text" class="form-control" placeholder="SKU" name="sku" />
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-9">
                                     <label>SKU Description</label>
                                     <input type="text" class="form-control" placeholder="SKU Description"
                                         name="sku_description" />
@@ -125,7 +196,8 @@
                             <div class="col-md-12">
                                 <div class="form-group col-md-4">
                                     <label>HSN Number</label>
-                                    <input type="text" class="form-control" placeholder="HSN Number" name="hsn_number" />
+                                    <input type="text" class="form-control" placeholder="HSN Number"
+                                        name="hsn_number" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Model Number</label>
@@ -206,7 +278,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Purchase Invoice Date</label>
-                                    <input type="text" class="form-control" placeholder="Purchase Invoice Date"
+                                    <input type="date" class="form-control" placeholder="Purchase Invoice Date"
                                         name="purchase_invoice_date" />
                                 </div>
                             </div>
@@ -224,11 +296,11 @@
                 {{-- submit button --}}
                 <div class="form-group">
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
+                        <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit">
                             @if (isset($method) && $method == 'PUT')
-                                UPDATE
+                                UPDATE PURCHASE
                             @else
-                                SAVE
+                                CREATE PURCHASE
                             @endif
                         </button>
                     </div>
@@ -237,3 +309,17 @@
         </section>
     </div>
 @endsection
+
+@push('after-script')
+    <script>
+        $(document).ready(function() {
+            $('select[name="bike_brand"]').change(function() {
+                let id = $(this).val();
+                let URL = "{{ url('getModelsList') }}/" + id;
+                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
+                    $('select[name="bike_model"]').html(res.data);
+                });
+            });
+        });
+    </script>
+@endpush

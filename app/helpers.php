@@ -15,3 +15,71 @@ if (!function_exists('action_buttons')) {
         </div>';
     }
 }
+
+
+if (!function_exists('bike_types')) {
+    function bike_types()
+    {
+        return [
+            'Bike' => "Bike",
+            'Scooter' => "Scooter"
+        ];
+    }
+}
+
+if (!function_exists('bike_fuel_types')) {
+    function bike_fuel_types()
+    {
+        return [
+            'Petrol' => "Petrol",
+            'Electric' => "Electric",
+            'CNG' => "CNG",
+            'Diesel' => "Diesel"
+        ];
+    }
+}
+
+if (!function_exists('break_types')) {
+    function break_types()
+    {
+        return [
+            'Normal' => "Normal",
+            'Disk' => "Disk"
+        ];
+    }
+}
+
+if (!function_exists('wheel_types')) {
+    function wheel_types()
+    {
+        return [
+            'Alloy' => "Alloy",
+            'Spoke' => "Spoke"
+        ];
+    }
+}
+
+if (!function_exists('vin_physical_statuses')) {
+    function vin_physical_statuses()
+    {
+        return [
+            'Good' => "Good",
+            'Damaged' => "Damaged",
+            'Not Recieved' => "Not Recieved"
+        ];
+    }
+}
+
+
+if (!function_exists('models_list')) {
+    function models_list($models)
+    {
+        $options = "<option value=''>---Select Model---</option>";
+        if (count($models)) {
+            foreach ($models as $model) {
+                $options .= "<option value='" . $model['id'] . "'>" . $model['model_name'] . "</option>";
+            }
+        }
+        return $options;
+    }
+}
