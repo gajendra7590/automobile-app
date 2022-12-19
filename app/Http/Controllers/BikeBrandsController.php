@@ -42,7 +42,7 @@ class BikeBrandsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.brands.ajaxModal',['action' => route('brands.store'),'method' => 'POST'])->render()
+            'data'       => view('admin.brands.ajaxModal', ['action' => route('brands.store'), 'method' => 'POST'])->render()
         ]);
     }
 
@@ -69,13 +69,13 @@ class BikeBrandsController extends Controller
             ]);
         }
 
-        BikeBrand::create($request->only('name','description','code'));
+        BikeBrand::create($request->only('name', 'description', 'code'));
 
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'Created Successfully',
-        ],200);
+        ], 200);
     }
 
     /**
@@ -103,7 +103,7 @@ class BikeBrandsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.brands.ajaxModal',['bikeBrand' => $bikeBrand,'action' => route('brands.update',['brand' => $id]),'method' => 'PUT'])->render()
+            'data'       => view('admin.brands.ajaxModal', ['bikeBrand' => $bikeBrand, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -118,17 +118,17 @@ class BikeBrandsController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_brands,name,".$id
+            'name' => "required|unique:bike_brands,name," . $id
         ]);
         if ($validator->fails()) {
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => $validator->errors()->first(),'errors' => $validator->errors()]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
         $bikeBrand = BikeBrand::find($id);
-        if(!$bikeBrand){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$bikeBrand) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bikeBrand->update($request->only('name','descrption','code'));
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Created Successfully',],200);
+        $bikeBrand->update($request->only('name', 'descrption', 'code'));
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Created Successfully',], 200);
     }
 
     /**
@@ -140,22 +140,22 @@ class BikeBrandsController extends Controller
     public function destroy($id)
     {
         $bikeBrand = BikeBrand::find($id);
-        if(!$bikeBrand){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Brand Not Found']);
+        if (!$bikeBrand) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        if($bikeBrand->bike_modals()->count()){
-            return response()->json(['status'=> false,'statusCode' => 419,'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
+        if ($bikeBrand->bike_modals()->count()) {
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
         }
         $bikeBrand->delete();
-        return response()->json(['status'=> true,'statusCode' => 200,'message'=> 'Deleted Successfully',],200);
-
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)
     {
-        return '<div class="action-btn-container">' .
-            '<a href="'. route('brands.edit',['brand' => $id]). '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>'.
-            '<a href="'. route('brands.destroy',['brand' => $id]) .'" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="'.$id.'" data-modal_title="" data-redirect="'.route('brands.index').'"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>
-            </div>';
+        $action = '<div class="action-btn-container">';
+        $action .= '<a href="' . route('brands.edit', ['brand' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('brands.destroy', ['brand' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-modal_title="" data-redirect="' . route('brands.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '</div>';
+        return $action;
     }
 }

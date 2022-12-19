@@ -5,13 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{isset($title) && $title ? $title : ''}}
+                Dealers
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('dealers.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
-                <li class="active">List</li>
+                <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dealers List</li>
             </ol>
         </section>
 
@@ -21,16 +20,18 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
+                            <h3 class="box-title"> All Dealers List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('dealers.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Dealer">
+                                <a href="{{ route('dealers.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Dealer" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover">
+                            <table id="ajaxDataTable" data-url="{{ route('dealers.index') }}"
+                                class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -58,63 +59,5 @@
 
 
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            const tableObj = $('#ajaxDataTable').DataTable({
-                processing: false,
-                serverSide: true,
-                cache: true,
-                type: 'GET',
-                ajax: {
-                    url: '{!! route('dealers.index') !!}',
-                    method: 'GET',
-                    beforeSend: function() {
-                        loaderShow();
-                    },
-                    complete: function() {
-                        loaderHide();
-                    }
-                },
-                searchDelay: 350,
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'company_name',
-                        name: 'company_name'
-                    },
-                    {
-                        data: 'company_email',
-                        name: 'company_email'
-                    },
-                    {
-                        data: 'company_office_phone',
-                        name: 'company_office_phone'
-                    },
-                    {
-                        data: 'company_address',
-                        name: 'company_address'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": [-1]
-                    },
-                    {
-                        "searchable": false,
-                        "targets": []
-                    }
-                ],
-                order: [
-                    [0, "desc"]
-                ]
-            });
-        })
-    </script>
+    <script src="{{ asset('assets/modules/dealers.js') }}"></script>
 @endpush
-

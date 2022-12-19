@@ -17,8 +17,9 @@ class BikeModel extends Model
         'model_code'
     ];
 
-    public function bike_brand(){
-        return $this->belongsTo(BikeBrand::class,'brand_id');
+    public function bike_brand()
+    {
+        return $this->belongsTo(BikeBrand::class, 'brand_id');
     }
 
     protected  $hidden = [];

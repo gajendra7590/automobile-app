@@ -1,4 +1,8 @@
 <?php
+
+use Illuminate\Support\Str;
+
+
 if (!function_exists('action_buttons')) {
     function action_buttons()
     {
@@ -72,14 +76,23 @@ if (!function_exists('vin_physical_statuses')) {
 
 
 if (!function_exists('models_list')) {
-    function models_list($models)
+    function models_list($models, $selected_id = 0)
     {
         $options = "<option value=''>---Select Model---</option>";
         if (count($models)) {
             foreach ($models as $model) {
-                $options .= "<option value='" . $model['id'] . "'>" . $model['model_name'] . "</option>";
+                $selected = ($model['id'] == $selected_id) ? 'selected="selected"' : '';
+
+                $options .= "<option value='" . $model['id'] . "' " . $selected . ">" . $model['model_name'] . "</option>";
             }
         }
         return $options;
+    }
+}
+
+if (!function_exists('random_uuid')) {
+    function random_uuid($module = "purc")
+    {
+        return strtolower($module . '-' . Str::random(12));
     }
 }

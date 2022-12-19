@@ -12,6 +12,7 @@ class BikePurchased extends Model
     protected $table = 'bike_purchased';
 
     protected $fillable = [
+        'uuid',
         'bike_branch',
         'bike_dealer',
         'bike_brand',
@@ -43,10 +44,53 @@ class BikePurchased extends Model
         'final_price',
         'sale_price',
         'bike_description',
-        'status'
+        'status',
+        'created_by',
+        'updated_by'
     ];
 
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    /**
+     * Mapping with branch
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'bike_branch');
+    }
+
+    /**
+     * Mapping with dealers
+     */
+    public function dealer()
+    {
+        return $this->belongsTo(BikeDealer::class, 'bike_dealer');
+    }
+
+    /**
+     * Mapping with brand
+     */
+    public function brand()
+    {
+        return $this->belongsTo(BikeBrand::class, 'bike_brand');
+    }
+
+    /**
+     * Mapping with model
+     */
+    public function model()
+    {
+        return $this->belongsTo(BikeModel::class, 'bike_model');
+    }
+
+    /**
+     * Mapping with color
+     */
+    public function modelColor()
+    {
+        return $this->belongsTo(BikeColor::class, 'bike_model_color');
+    }
 }
