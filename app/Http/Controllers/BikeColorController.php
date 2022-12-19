@@ -194,14 +194,10 @@ class BikeColorController extends Controller
 
     public function getActions($row)
     {
-        return '<div class="action-btn-container">
-                <a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Color"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                <a href="' . route('colors.destroy', ['color' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Color"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                </div>';
-        // return '<div class="action-btn-container">
-        //         <a href="" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>
-        //         <a href="" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-        //         <a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-        //        </div>';
+        $action = '<div class="action-btn-container"';
+        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Color"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('colors.destroy', ['color' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Color"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action .= '</div>';
+        return $action;
     }
 }
