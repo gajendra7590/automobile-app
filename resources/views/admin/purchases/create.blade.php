@@ -5,7 +5,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Purchase <small>Create</small>
+                Purchase <small>{{ isset($method) && $method == 'PUT' ? 'Update' : 'Create' }}</small>
             </h1>
         </section>
 
@@ -20,7 +20,7 @@
                 <ol class="breadcrumb">
                     <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li><a href="{{ route('purchases.index') }}">Purchase</a></li>
-                    <li class="active">Create</li>
+                    <li class="active">{{ isset($method) && $method == 'PUT' ? 'Update' : 'Create' }}</li>
                 </ol>
                 <div class="box box-default">
                     <div>
@@ -46,7 +46,7 @@
                                         @if (isset($branches))
                                             @foreach ($branches as $branch)
                                                 <option
-                                                    {{ isset($data['bike_branch']) && $data['bike_branch'] == $branch->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : '' }}
                                                     value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                             @endforeach
                                         @endif
@@ -59,7 +59,7 @@
                                         @if (isset($dealers))
                                             @foreach ($dealers as $dealer)
                                                 <option
-                                                    {{ isset($data['bike_dealer']) && $data['bike_dealer'] == $dealer->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : '' }}
                                                     value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
                                             @endforeach
                                         @endif
@@ -72,7 +72,7 @@
                                         @if (isset($brands))
                                             @foreach ($brands as $brand)
                                                 <option
-                                                    {{ isset($data['bike_brand']) && $data['bike_brand'] == $brand->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
                                                     value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
                                         @endif
@@ -81,7 +81,11 @@
                                 <div class="form-group col-md-3">
                                     <label>Model Name</label>
                                     <select name="bike_model" class="form-control">
-                                        <option value="">---Select Model---</option>
+                                        @if (isset($editModelsHtml))
+                                            {!! $editModelsHtml !!}
+                                        @else
+                                            <option value="">---Select Model---</option>
+                                        @endif
                                     </select>
                                 </div>
                             </div>
@@ -93,7 +97,7 @@
                                         @if (isset($colors))
                                             @foreach ($colors as $color)
                                                 <option
-                                                    {{ isset($data['bike_color']) && $data['bike_color'] == $color->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : '' }}
                                                     value="{{ $color->id }}">{{ $color->color_name }}</option>
                                             @endforeach
                                         @endif
@@ -106,7 +110,7 @@
                                         @if (isset($bike_types))
                                             @foreach ($bike_types as $key => $name)
                                                 <option
-                                                    {{ isset($data['bike_type']) && $data['bike_type'] == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : '' }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -119,7 +123,7 @@
                                         @if (isset($bike_fuel_types))
                                             @foreach ($bike_fuel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data['bike_fuel_type']) && $data['bike_fuel_type'] == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : '' }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -132,7 +136,7 @@
                                         @if (isset($break_types))
                                             @foreach ($break_types as $key => $name)
                                                 <option
-                                                    {{ isset($data['break_type']) && $data['break_type'] == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : '' }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -145,7 +149,7 @@
                                         @if (isset($wheel_types))
                                             @foreach ($wheel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data['wheel_type']) && $data['wheel_type'] == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : '' }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -156,15 +160,18 @@
                             <div class="col-md-12">
                                 <div class="form-group col-md-3">
                                     <label>DC Number</label>
-                                    <input type="text" class="form-control" placeholder="DC Number" name="dc_number" />
+                                    <input type="text" class="form-control" placeholder="DC Number" name="dc_number"
+                                        value="{{ isset($data->dc_number) ? $data->dc_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>DC Date</label>
-                                    <input type="date" class="form-control" placeholder="DC Date" name="dc_date" />
+                                    <input type="date" class="form-control" placeholder="DC Date" name="dc_date"
+                                        value="{{ isset($data->dc_date) ? $data->dc_date : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>VIN Number(Chasis Number)</label>
-                                    <input type="text" class="form-control" placeholder="DC Number" name="vin_number" />
+                                    <input type="text" class="form-control" placeholder="DC Number" name="vin_number"
+                                        value="{{ isset($data->vin_number) ? $data->vin_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>VIN Physical Status</label>
@@ -173,7 +180,7 @@
                                         @if (isset($vin_physical_statuses))
                                             @foreach ($vin_physical_statuses as $key => $name)
                                                 <option
-                                                    {{ isset($data['vin_physical_status']) && $data['vin_physical_status'] == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->vin_physical_status) && $data->vin_physical_status == $key ? 'selected="selected"' : '' }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -184,12 +191,14 @@
                             <div class="col-md-12">
                                 <div class="form-group col-md-3">
                                     <label>SKU</label>
-                                    <input type="text" class="form-control" placeholder="SKU" name="sku" />
+                                    <input type="text" class="form-control" placeholder="SKU" name="sku"
+                                        value="{{ isset($data->sku) ? $data->sku : '' }}" />
                                 </div>
                                 <div class="form-group col-md-9">
                                     <label>SKU Description</label>
                                     <input type="text" class="form-control" placeholder="SKU Description"
-                                        name="sku_description" />
+                                        name="sku_description"
+                                        value="{{ isset($data->sku_description) ? $data->sku_description : '' }}" />
                                 </div>
                             </div>
 
@@ -197,17 +206,20 @@
                                 <div class="form-group col-md-4">
                                     <label>HSN Number</label>
                                     <input type="text" class="form-control" placeholder="HSN Number"
-                                        name="hsn_number" />
+                                        name="hsn_number"
+                                        value="{{ isset($data->hsn_number) ? $data->hsn_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Model Number</label>
                                     <input type="text" class="form-control" placeholder="Model Number"
-                                        name="model_number" />
+                                        name="model_number"
+                                        value="{{ isset($data->model_number) ? $data->model_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Engine Number</label>
                                     <input type="text" class="form-control" placeholder="Engine Number"
-                                        name="engine_number" />
+                                        name="engine_number"
+                                        value="{{ isset($data->engine_number) ? $data->engine_number : '' }}" />
                                 </div>
                             </div>
 
@@ -215,12 +227,14 @@
                                 <div class="form-group col-md-6">
                                     <label>Key Number</label>
                                     <input type="text" class="form-control" placeholder="Key Number"
-                                        name="key_number" />
+                                        name="key_number"
+                                        value="{{ isset($data->key_number) ? $data->key_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Service Book Number</label>
                                     <input type="text" class="form-control" placeholder="Service Book Number"
-                                        name="service_book_number" />
+                                        name="service_book_number"
+                                        value="{{ isset($data->service_book_number) ? $data->service_book_number : '' }}" />
                                 </div>
                             </div>
 
@@ -228,17 +242,20 @@
                                 <div class="form-group col-md-4">
                                     <label>Tyre Brand Name</label>
                                     <input type="text" class="form-control" placeholder="Tyre Brand Name"
-                                        name="tyre_brand_name" />
+                                        name="tyre_brand_name"
+                                        value="{{ isset($data->tyre_brand_name) ? $data->tyre_brand_name : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Tyre Front Number</label>
                                     <input type="text" class="form-control" placeholder="Tyre Front Number"
-                                        name="tyre_front_number" />
+                                        name="tyre_front_number"
+                                        value="{{ isset($data->tyre_front_number) ? $data->tyre_front_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Tyre Rear Number</label>
                                     <input type="text" class="form-control" placeholder="Tyre Rear Number"
-                                        name="tyre_rear_number" />
+                                        name="tyre_rear_number"
+                                        value="{{ isset($data->tyre_rear_number) ? $data->tyre_rear_number : '' }}" />
                                 </div>
                             </div>
 
@@ -246,22 +263,26 @@
                                 <div class="form-group col-md-3">
                                     <label>Battery Brand Name</label>
                                     <input type="text" class="form-control" placeholder="Battery Brand Name"
-                                        name="battery_brand" />
+                                        name="battery_brand"
+                                        value="{{ isset($data->battery_brand) ? $data->battery_brand : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Battery Number</label>
                                     <input type="text" class="form-control" placeholder="Battery Number"
-                                        name="battery_number" />
+                                        name="battery_number"
+                                        value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Sale Price(₹)</label>
                                     <input type="text" class="form-control" placeholder="Sale Price(₹)"
-                                        name="sale_price" />
+                                        name="sale_price"
+                                        value="{{ isset($data->sale_price) ? $data->sale_price : '' }}" />
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Final Price(₹)</label>
                                     <input type="text" class="form-control" placeholder="Final Price(₹)"
-                                        name="final_price" />
+                                        name="final_price"
+                                        value="{{ isset($data->final_price) ? $data->final_price : '' }}" />
                                 </div>
                             </div>
 
@@ -269,23 +290,26 @@
                                 <div class="form-group col-md-4">
                                     <label>Purchase Invoice Amount(₹)</label>
                                     <input type="text" class="form-control" placeholder="Purchase Invoice Amount(₹)"
-                                        name="purchase_invoice_amount" />
+                                        name="purchase_invoice_amount"
+                                        value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Purchase Invoice Number</label>
                                     <input type="text" class="form-control" placeholder="Purchase Invoice Number"
-                                        name="purchase_invoice_number" />
+                                        name="purchase_invoice_number"
+                                        value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>Purchase Invoice Date</label>
                                     <input type="date" class="form-control" placeholder="Purchase Invoice Date"
-                                        name="purchase_invoice_date" />
+                                        name="purchase_invoice_date"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : '' }}" />
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group col-md-12">
                                     <label>Vehicle Description</label>
-                                    <textarea name="bike_description" rows="5" class="form-control"></textarea>
+                                    <textarea name="bike_description" rows="5" class="form-control">{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
                                 </div>
                             </div>
 
