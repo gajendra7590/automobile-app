@@ -5,13 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{isset($title) && $title ? $title : ''}}
+                Dealers
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="{{route('dashboardIndex')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{{route('dealers.index')}}"> {{isset($title) && $title ? $title : ''}} </a></li>
-                <li class="active">List</li>
+                <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dealers List</li>
             </ol>
         </section>
 
@@ -21,9 +20,10 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> {{isset($title) && $title ? $title : ''}} List</h3>
+                            <h3 class="box-title"> All Dealers List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('dealers.create') }}" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Add New Dealer">
+                                <a href="{{ route('dealers.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Dealer" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
@@ -117,4 +117,3 @@
         })
     </script>
 @endpush
-
