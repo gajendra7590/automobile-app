@@ -9,7 +9,9 @@ use App\Models\BikeModel;
 use App\Models\BikePurchased;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class BikePurchaseController extends Controller
 {
@@ -20,7 +22,77 @@ class BikePurchaseController extends Controller
      */
     public function index()
     {
-        return view('admin.purchases.index');
+        if (!request()->ajax()) {
+            return view('admin.purchases.index');
+        } else {
+
+            $data = BikePurchased::select('*')
+                ->with([
+                    'branch' => function ($model) {
+                        $model->select('id', 'branch_name');
+                    },
+                    'dealer' => function ($model) {
+                        $model->select('id', 'company_name');
+                    },
+                    'brand' => function ($model) {
+                        $model->select('id', 'name');
+                    },
+                    'model' => function ($model) {
+                        $model->select('id', 'model_name');
+                    },
+                    'modelColor' => function ($model) {
+                        $model->select('id', 'color_name');
+                    }
+                ]);
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return $this->getActions($row);
+                })
+                ->addColumn('purchase_id', function ($row) {
+                    return $row->uuid;
+                })
+                ->addColumn('branch.branch_name', function ($row) {
+                    if ($row->branch) {
+                        return $row->branch->branch_name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->addColumn('dealer.company_name', function ($row) {
+                    if ($row->dealer) {
+                        return $row->dealer->company_name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->addColumn('brand.name', function ($row) {
+                    if ($row->brand) {
+                        return $row->brand->name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->addColumn('model.model_name', function ($row) {
+                    if ($row->model) {
+                        return $row->model->model_name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->addColumn('model_color.color_name', function ($row) {
+                    if ($row->model_color) {
+                        return $row->model_color->color_name;
+                    } else {
+                        return 'N/A';
+                    }
+                })
+                ->rawColumns([
+                    'action', 'purchase_id', 'branch.branch_name', 'dealer.company_name', 'brand.name',
+                    'model.model_name', 'model_color.color_name'
+                ])
+                ->make(true);
+        }
     }
 
     /**
@@ -89,7 +161,7 @@ class BikePurchaseController extends Controller
             'purchase_invoice_date'     => "required|date",
             'final_price'               => "required|numeric",
             'sale_price'                => "required|numeric",
-            'bike_description'          => "required|numeric",
+            'bike_description'          => "required",
             'status'                    => "nullable|in:1,2"
         ]);
 
@@ -102,6 +174,10 @@ class BikePurchaseController extends Controller
                 'errors'     => $validator->errors()
             ]);
         }
+
+
+        $postData['uuid'] = random_uuid('purc');
+        $postData['created_by'] = Auth::user()->id;
 
         //Create New Role
         BikePurchased::create($postData);
@@ -155,6 +231,15 @@ class BikePurchaseController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getActions($row)
+    {
+        $action = '<div class="action-btn-container">';
+        $action .= '<a href="' . route('districts.edit', ['district' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update District"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('districts.destroy', ['district' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete District"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action .= '</div>';
+        return $action;
     }
 
     public function getModelsList($id)

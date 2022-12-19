@@ -1,4 +1,8 @@
 <?php
+
+use Illuminate\Support\Str;
+
+
 if (!function_exists('action_buttons')) {
     function action_buttons()
     {
@@ -81,5 +85,12 @@ if (!function_exists('models_list')) {
             }
         }
         return $options;
+    }
+}
+
+if (!function_exists('random_uuid')) {
+    function random_uuid($module = "purc")
+    {
+        return strtolower($module . '-' . Str::random(12));
     }
 }
