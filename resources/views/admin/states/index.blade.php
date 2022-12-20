@@ -40,6 +40,7 @@
                                         <th>Country Name</th>
                                         <th>State Name</th>
                                         <th>State Code</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

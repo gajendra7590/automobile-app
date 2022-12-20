@@ -23,10 +23,17 @@ class BikeColorController extends Controller
             $data = BikeColor::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         }
     }
@@ -54,10 +61,11 @@ class BikeColorController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->only('color_name', 'color_code', 'active_status');
         $validator = Validator::make($postData, [
             'color_name' => "required|unique:bike_colors,color_name",
-            'color_code' => 'nullable'
+            'color_code' => 'nullable',
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -71,7 +79,7 @@ class BikeColorController extends Controller
         }
 
         //Create New Role
-        BikeColor::create(['color_name' => $postData['color_name'], 'color_code' => $postData['color_code']]);
+        BikeColor::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -130,7 +138,7 @@ class BikeColorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
+        $postData = $request->only('color_name', 'color_code', 'active_status');
         $colorModel = BikeColor::find($id);
         if (!$colorModel) {
             return response()->json([
@@ -141,7 +149,8 @@ class BikeColorController extends Controller
         }
         $validator = Validator::make($postData, [
             'color_name' => "required|unique:bike_colors,color_name," . $id,
-            'color_code' => "nullable"
+            'color_code' => "nullable",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -155,10 +164,7 @@ class BikeColorController extends Controller
         }
 
         //Create New Role
-        BikeColor::where(['id' => $id])->update([
-            'color_name' => $postData['color_name'],
-            'color_code' => $postData['color_code']
-        ]);
+        BikeColor::where(['id' => $id])->update($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -194,9 +200,9 @@ class BikeColorController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container"';
-        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Color"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('colors.destroy', ['color' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Color"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action = '<div class="action-btn-container">';
+        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Model Color" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('colors.destroy', ['color' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('colors.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }

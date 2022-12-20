@@ -20,11 +20,18 @@ class BikeBrandsController extends Controller
             $data = BikeBrand::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         } else {
             return view('admin.brands.index');
@@ -56,7 +63,8 @@ class BikeBrandsController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_brands,name"
+            'name' => "required|unique:bike_brands,name",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -69,7 +77,7 @@ class BikeBrandsController extends Controller
             ]);
         }
 
-        BikeBrand::create($request->only('name', 'description', 'code'));
+        BikeBrand::create($request->only('name', 'description', 'code', 'active_status'));
 
         return response()->json([
             'status'     => true,
@@ -103,7 +111,7 @@ class BikeBrandsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.brands.ajaxModal', ['bikeBrand' => $bikeBrand, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.brands.ajaxModal', ['data' => $bikeBrand, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -116,9 +124,10 @@ class BikeBrandsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
+        $postData = $request->only('name', 'code', 'description', 'active_status');
         $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_brands,name," . $id
+            'name' => "required|unique:bike_brands,name," . $id,
+            'active_status'      => 'required|in:0,1'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
@@ -127,8 +136,9 @@ class BikeBrandsController extends Controller
         if (!$bikeBrand) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bikeBrand->update($request->only('name', 'descrption', 'code'));
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Created Successfully',], 200);
+
+        $bikeBrand->update($postData);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**

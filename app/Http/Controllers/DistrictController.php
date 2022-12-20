@@ -29,10 +29,17 @@ class DistrictController extends Controller
             ])->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         }
     }
@@ -44,7 +51,7 @@ class DistrictController extends Controller
      */
     public function create()
     {
-        $states = State::select('id', 'state_name')->get();
+        $states = State::where(['active_status' => '1'])->select('id', 'state_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -61,11 +68,12 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
         $validator = Validator::make($postData, [
             'state_id' => "required|exists:u_states,id",
             'district_name' => "required|unique:u_districts,district_name",
-            'district_code' => "nullable"
+            'district_code' => "nullable",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -79,11 +87,7 @@ class DistrictController extends Controller
         }
 
         //Create New Role
-        District::create([
-            'state_id' => $postData['state_id'],
-            'district_name' => $postData['district_name'],
-            'district_code' => $postData['district_code']
-        ]);
+        District::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -110,7 +114,7 @@ class DistrictController extends Controller
      */
     public function edit($id)
     {
-        $states = State::select('id', 'state_name')->get();
+        $states = State::where(['active_status' => '1'])->select('id', 'state_name')->get();
         $districtModel = District::find($id);
         if (!$districtModel) {
             return response()->json([
@@ -145,7 +149,7 @@ class DistrictController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
+        $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
         $districtModel = District::find($id);
         if (!$districtModel) {
             return response()->json([
@@ -157,7 +161,8 @@ class DistrictController extends Controller
         $validator = Validator::make($postData, [
             'state_id' => "required|exists:u_states,id",
             'district_name' => "required|unique:u_districts,district_name," . $id . ",id",
-            'district_code' => "nullable"
+            'district_code' => "nullable",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -171,11 +176,7 @@ class DistrictController extends Controller
         }
 
         //Create New Role
-        District::where(['id' => $id])->update([
-            'state_id' => $postData['state_id'],
-            'district_name' => $postData['district_name'],
-            'district_code' => $postData['district_code']
-        ]);
+        District::where(['id' => $id])->update($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

@@ -27,10 +27,17 @@ class StateController extends Controller
             ])->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         }
     }
@@ -58,11 +65,12 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
         $validator = Validator::make($postData, [
             'country_id' => "required",
             'state_name' => "required|unique:u_states,state_name",
-            'state_code' => "required"
+            'state_code' => "required",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -76,11 +84,7 @@ class StateController extends Controller
         }
 
         //Create New Role
-        State::create([
-            'country_id' => $postData['country_id'],
-            'state_name' => $postData['state_name'],
-            'state_code' => $postData['state_code']
-        ]);
+        State::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -139,7 +143,7 @@ class StateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
+        $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
         $stateModel = State::find($id);
         if (!$stateModel) {
             return response()->json([
@@ -150,7 +154,8 @@ class StateController extends Controller
         }
         $validator = Validator::make($postData, [
             'state_name' => "required|unique:u_states,state_name," . $id . ",id",
-            'state_code' => "required"
+            'state_code' => "required",
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -164,10 +169,7 @@ class StateController extends Controller
         }
 
         //Create New Role
-        State::where(['id' => $id])->update([
-            'state_name' => $postData['state_name'],
-            'state_code' => $postData['state_code']
-        ]);
+        State::where(['id' => $id])->update($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

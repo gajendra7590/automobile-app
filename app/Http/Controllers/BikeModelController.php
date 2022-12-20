@@ -26,13 +26,21 @@ class BikeModelController extends Controller
                 'bike_brand' => function ($model) {
                     $model->select('id', 'name');
                 }
-            ])->select('*');
+            ])
+                ->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         }
     }
@@ -63,9 +71,10 @@ class BikeModelController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'brand_id' => "required|exists:bike_brands,id",
-            'model_name' => "required",
-            'model_code' => "nullable"
+            'brand_id'      => "required|exists:bike_brands,id",
+            'model_name'    => "required",
+            'model_code'    => "nullable",
+            'active_status' => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -80,9 +89,10 @@ class BikeModelController extends Controller
 
         //Create New Role
         BikeModel::create([
-            'brand_id' => $postData['brand_id'],
-            'model_name' => $postData['model_name'],
-            'model_code' => $postData['model_code']
+            'brand_id'      => $postData['brand_id'],
+            'model_name'    => $postData['model_name'],
+            'model_code'    => $postData['model_code'],
+            'active_status' => $postData['active_status']
         ]);
         return response()->json([
             'status'     => true,
@@ -155,9 +165,10 @@ class BikeModelController extends Controller
             ]);
         }
         $validator = Validator::make($postData, [
-            'brand_id' => "required|exists:bike_brands,id",
-            'model_name' => "required",
-            'model_code' => "nullable"
+            'brand_id'      => "required|exists:bike_brands,id",
+            'model_name'    => "required",
+            'model_code'    => "nullable",
+            'active_status' => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -172,9 +183,10 @@ class BikeModelController extends Controller
 
         //Create New Role
         BikeModel::where(['id' => $id])->update([
-            'brand_id' => $postData['brand_id'],
-            'model_name' => $postData['model_name'],
-            'model_code' => $postData['model_code']
+            'brand_id'      => $postData['brand_id'],
+            'model_name'    => $postData['model_name'],
+            'model_code'    => $postData['model_code'],
+            'active_status' => $postData['active_status']
         ]);
         return response()->json([
             'status'     => true,

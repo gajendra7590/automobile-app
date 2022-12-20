@@ -40,6 +40,7 @@
                                         <th>Brand Name</th>
                                         <th>Model Name</th>
                                         <th>Model Code</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

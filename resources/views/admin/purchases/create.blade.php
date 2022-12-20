@@ -46,7 +46,7 @@
                                         @if (isset($branches))
                                             @foreach ($branches as $key => $branch)
                                                 <option
-                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                             @endforeach
                                         @endif
@@ -59,7 +59,7 @@
                                         @if (isset($dealers))
                                             @foreach ($dealers as $key => $dealer)
                                                 <option
-                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
                                             @endforeach
                                         @endif
@@ -72,7 +72,7 @@
                                         @if (isset($brands))
                                             @foreach ($brands as $key => $brand)
                                                 <option
-                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
                                         @endif
@@ -97,7 +97,7 @@
                                         @if (isset($colors))
                                             @foreach ($colors as $key => $color)
                                                 <option
-                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $color->id }}">{{ $color->color_name }}</option>
                                             @endforeach
                                         @endif
@@ -110,7 +110,7 @@
                                         @if (isset($bike_types))
                                             @foreach ($bike_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -123,7 +123,7 @@
                                         @if (isset($bike_fuel_types))
                                             @foreach ($bike_fuel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -136,7 +136,7 @@
                                         @if (isset($break_types))
                                             @foreach ($break_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -149,7 +149,7 @@
                                         @if (isset($wheel_types))
                                             @foreach ($wheel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -180,7 +180,7 @@
                                         @if (isset($vin_physical_statuses))
                                             @foreach ($vin_physical_statuses as $key => $name)
                                                 <option
-                                                    {{ isset($data->vin_physical_status) && $data->vin_physical_status == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
+                                                    {{ isset($data->vin_physical_status) && $data->vin_physical_status == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -312,7 +312,20 @@
                                     <textarea name="bike_description" rows="5" class="form-control">{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
                                 </div>
                             </div>
-
+                            <div class="form-group col-md-12">
+                                <label>Status : </label>
+                                <select class="form-control" name="active_status">
+                                    <option value="1"
+                                        {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                                        Active
+                                    </option>
+                                    <option value="0"
+                                        {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                                        In
+                                        Active
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

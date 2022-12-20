@@ -165,7 +165,8 @@ class PurchaseController extends Controller
             'final_price'               => "required|numeric",
             'sale_price'                => "required|numeric",
             'bike_description'          => "required",
-            'status'                    => "nullable|in:1,2"
+            'status'                    => "nullable|in:1,2",
+            'active_status'             => "required|in:0,1"
         ]);
 
         //If Validation failed
@@ -292,7 +293,8 @@ class PurchaseController extends Controller
             'final_price'               => "required|numeric",
             'sale_price'                => "required|numeric",
             'bike_description'          => "required",
-            'status'                    => "nullable|in:1,2"
+            'status'                    => "nullable|in:1,2",
+            'active_status'             => "required|in:0,1"
         ]);
 
         //If Validation failed
@@ -305,7 +307,6 @@ class PurchaseController extends Controller
             ]);
         }
 
-        $postData['uuid'] = random_uuid('purc');
         $postData['updated_by'] = Auth::user()->id;
         unset($postData['_token']);
         unset($postData['_method']);

@@ -34,6 +34,10 @@ $(document).ready(function () {
                     name: "state_code",
                 },
                 {
+                    data: "active_status",
+                    name: "active_status",
+                },
+                {
                     data: "action",
                     name: "action",
                 },

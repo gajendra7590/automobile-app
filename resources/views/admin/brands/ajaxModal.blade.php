@@ -8,16 +8,30 @@
         <div class="form-group">
             <label>Brand Name</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name"
-                name="name" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->name : '' }}' />
+                name="name" value='{{ isset($data) && $data ? $data->name : '' }}' />
         </div>
         <div class="form-group">
             <label>Brand Code</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Code"
-                name="code" value='{{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->code : '' }}' />
+                name="code" value='{{ isset($data) && $data ? $data->code : '' }}' />
         </div>
         <div class="form-group">
             <label>Description</label>
-            <textarea class="form-control my-colorpicker1 colorpicker-element" placeholder="Description" name="description"> {{ isset($bikeBrand) && $bikeBrand ? $bikeBrand->description : '' }} </textarea>
+            <textarea class="form-control my-colorpicker1 colorpicker-element" placeholder="Description" name="description"> {{ isset($data) && $data ? $data->description : '' }} </textarea>
+        </div>
+        <div class="form-group">
+            <label>Status : </label>
+            <select class="form-control" name="active_status">
+                <option value="1"
+                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                    Active
+                </option>
+                <option value="0"
+                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                    In
+                    Active
+                </option>
+            </select>
         </div>
         <div class="form-group">
             <div class="box-footer">
