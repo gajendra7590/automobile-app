@@ -65,7 +65,7 @@ class BankFinancerController extends Controller
     public function store(Request $request)
     {
         $validateArray = [
-            'bank_name' => 'required|string|unique:bank_financers:bank_name',
+            'bank_name' => 'required|string|unique:bank_financers,bank_name',
             'bank_branch_code' => 'nullable|string',
             'bank_contact_number' => 'nullable|string|min:10|max:13',
             'bank_email_address' => 'nullable|email',
@@ -144,7 +144,7 @@ class BankFinancerController extends Controller
     {
         $postData = $request->all();
         $validateArray = [
-            'bank_name' => 'required|string|unique:bank_financers:bank_name,'. $id .',id',
+            'bank_name' => 'required|string|unique:bank_financers,bank_name,'. $id .',id',
             'bank_branch_code' => 'nullable|string',
             'bank_contact_number' => 'nullable|string|min:10|max:13',
             'bank_email_address' => 'nullable|email',
