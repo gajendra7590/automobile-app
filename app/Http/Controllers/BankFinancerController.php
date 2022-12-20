@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BikeAgent;
+use App\Models\BankFinancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-class BikeAgentController extends Controller
+class BankFinancerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class BikeAgentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = BikeAgent::select('*');
+            $data = BankFinancer::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -35,9 +35,9 @@ class BikeAgentController extends Controller
                 ->make(true);
         } else {
             $formDetails = [
-                'title' => 'Bike Agent',
+                'title' => 'Bank Financer',
             ];
-            return view('admin.agents.index', $formDetails);
+            return view('admin.bankFinancers.index', $formDetails);
         }
     }
 
@@ -52,7 +52,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal', ['action' => route('agents.store'), 'method' => 'POST'])->render()
+            'data'       => view('admin.bankFinancers.ajaxModal', ['action' => route('bankFinancers.store'), 'method' => 'POST'])->render()
         ]);
     }
 
@@ -64,24 +64,26 @@ class BikeAgentController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "required|string",
-            'email' => "required|email",
-            'mobile_number' => 'required|string|min:10|max:13',
-            'mobile_number2' => 'string|min:10|max:13',
-            'aadhar_card' => 'string|min:12|max:12',
-            'pan_card' => 'string|min:10|max:10',
-            'date_of_birth' => 'date_format:Y-m-d',
-            'highest_qualification' => 'string',
-            'gender' => 'string|in:male,female',
-            'address_line' => 'string',
-            'state' => 'string',
-            'district' => 'string',
-            'city' => 'string',
+        $validateArray = [
+            'bank_name' => 'required|string|unique:bank_financers:bank_name',
+            'bank_branch_code' => 'nullable|string',
+            'bank_contact_number' => 'nullable|string|min:10|max:13',
+            'bank_email_address' => 'nullable|email',
+            'bank_full_address' => 'nullable|string',
+            'bank_manager_name' => 'nullable|string',
+            'bank_manager_contact' => 'nullable|string|min:10|max:13',
+            'bank_manager_email' => 'nullable|string|email',
+            'bank_financer_name' => 'nullable|string',
+            'bank_financer_contact' => 'nullable|string|min:10|max:13',
+            'bank_financer_email' => 'nullable|string|email',
+            'bank_financer_address' => 'nullable|string',
+            'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
+            'bank_financer_pan_card' => 'nullable|string',
             'more_details' => 'string',
-            'active_status'      => 'required|in:0,1'
-        ]);
+            'active_status' => 'required|in:0,1'
+        ];
+        $postData = $request->all();
+        $validator = Validator::make($postData, $validateArray);
 
         //If Validation failed
         if ($validator->fails()) {
@@ -93,7 +95,7 @@ class BikeAgentController extends Controller
             ]);
         }
 
-        BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details', 'active_status']));
+        BankFinancer::create(array_keys($validateArray));
 
         return response()->json([
             'status'     => true,
@@ -110,8 +112,8 @@ class BikeAgentController extends Controller
      */
     public function show($id)
     {
-        $bikeAgent = BikeAgent::find($id);
-        return view('admin.agents.show', ['agents' => $bikeAgent]);
+        $bikeAgent = BankFinancer::find($id);
+        return view('admin.bankFinancers.show', ['bankFinance' => $bikeAgent]);
     }
 
     /**
@@ -122,12 +124,12 @@ class BikeAgentController extends Controller
      */
     public function edit($id)
     {
-        $bikeAgent = BikeAgent::find($id);
+        $bikeAgent = BankFinancer::find($id);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal', ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.bankFinancers.ajaxModal', ['data' => $bikeAgent, 'action' => route('bankFinancers.update', ['bankFicancer' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -141,31 +143,33 @@ class BikeAgentController extends Controller
     public function update(Request $request, $id)
     {
         $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "nullable|string",
-            'email' => "nullable|email",
-            'mobile_number' => 'nullable|string|min:10|max:13',
-            'mobile_number2' => 'nullable|string|min:10|max:13',
-            'aadhar_card' => 'nullable|string|min:12|max:12',
-            'pan_card' => 'nullable|string|min:10|max:10',
-            'date_of_birth' => 'nullable|date_format:Y-m-d',
-            'highest_qualification' => 'nullable|string',
-            'gender' => 'nullable|string|in:male,female',
-            'address_line' => 'nullable|string',
-            'state' => 'nullable|string',
-            'district' => 'nullable|string',
-            'city' => 'nullable|string',
-            'more_details' => 'nullable|string',
-            'active_status'      => 'required|in:0,1'
-        ]);
+        $validateArray = [
+            'bank_name' => 'required|string|unique:bank_financers:bank_name,'. $id .',id',
+            'bank_branch_code' => 'nullable|string',
+            'bank_contact_number' => 'nullable|string|min:10|max:13',
+            'bank_email_address' => 'nullable|email',
+            'bank_full_address' => 'nullable|string',
+            'bank_manager_name' => 'nullable|string',
+            'bank_manager_contact' => 'nullable|string|min:10|max:13',
+            'bank_manager_email' => 'nullable|string|email',
+            'bank_financer_name' => 'nullable|string',
+            'bank_financer_contact' => 'nullable|string|min:10|max:13',
+            'bank_financer_email' => 'nullable|string|email',
+            'bank_financer_address' => 'nullable|string',
+            'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
+            'bank_financer_pan_card' => 'nullable|string',
+            'more_details' => 'string',
+            'active_status' => 'required|in:0,1'
+        ];
+        $validator = Validator::make($postData, $validateArray);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
-        $bikeAgent = BikeAgent::find($id);
+        $bikeAgent = BankFinancer::find($id);
         if (!$bikeAgent) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bikeAgent->update($request->all());
+        $bikeAgent->update(array_keys($validateArray));
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
@@ -177,7 +181,7 @@ class BikeAgentController extends Controller
      */
     public function destroy($id)
     {
-        $bikeAgent = BikeAgent::find($id);
+        $bikeAgent = BankFinancer::find($id);
         if (!$bikeAgent) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
@@ -188,8 +192,8 @@ class BikeAgentController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('agents.edit', ['agent' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('agents.destroy', ['agent' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '<a href="' . route('bankFinancers.edit', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('bankFinancers.destroy', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('bankFinancers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }

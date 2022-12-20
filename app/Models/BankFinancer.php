@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FinanceBank extends Model
+class BankFinancer extends Model
 {
     use HasFactory;
 
-    protected $table = 'finance_banks';
+    protected $table = 'bank_financers';
 
     protected $fillable = [
         'bank_name',
@@ -26,7 +26,7 @@ class FinanceBank extends Model
         'bank_financer_address',
         'bank_financer_aadhar_card',
         'bank_financer_pan_card',
-        'active_status'
+        'active_status',
     ];
 
     protected  $hidden = [];
