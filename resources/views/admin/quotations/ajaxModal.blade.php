@@ -1,3 +1,8 @@
+@php
+    $action_type = isset($method) && $method == 'PUT' ? 'update' : 'create';
+    $is_disabled = isset($method) && $method == 'PUT' ? 'disabled' : '';
+    $is_readonly = isset($method) && $method == 'PUT' ? 'readonly' : '';
+@endphp
 <form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
@@ -52,6 +57,13 @@
                     data-dep_dd_name="customer_city" data-url="{{ url('getAjaxDropdown') . '?req=cities' }}"
                     data-dep_dd2_name="">
                     <option value="">---Select District---</option>
+                    @isset($districts)
+                        @foreach ($districts as $district)
+                            <option
+                                {{ isset($data['customer_district']) && $data['customer_district'] == $district->id ? 'selected="selected"' : '' }}
+                                value="{{ $district->id }}">{{ $district->district_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
@@ -59,6 +71,13 @@
                             href=""><i class="fa fa-plus-circle" aria-hidden="true"></i></a></span> </label>
                 <select name="customer_city" class="form-control">
                     <option value="">---Select City/Village----</option>
+                    @isset($cities)
+                        @foreach ($cities as $city)
+                            <option
+                                {{ isset($data['customer_city']) && $data['customer_city'] == $city->id ? 'selected="selected"' : '' }}
+                                value="{{ $city->id }}">{{ $city->city_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
@@ -80,7 +99,19 @@
                     value="{{ isset($data['customer_email_address']) ? $data['customer_email_address'] : '' }}"
                     placeholder="Customer Email..">
             </div>
-
+            <div class="form-group col-md-3">
+                <label>Is Exchange</label>
+                <select class="form-control" name="is_exchange_avaliable">
+                    <option value="No"
+                        {{ isset($data['is_exchange_avaliable']) && $data['is_exchange_avaliable'] == 'No' ? 'selected="selected"' : '' }}>
+                        No
+                    </option>
+                    <option value="Yes"
+                        {{ isset($data['is_exchange_avaliable']) && $data['is_exchange_avaliable'] == 'Yes' ? 'selected="selected"' : '' }}>
+                        Yes
+                    </option>
+                </select>
+            </div>
             <div class="form-group col-md-3">
                 <label>Payment Type</label>
                 <select class="form-control" name="payment_type">
@@ -92,29 +123,19 @@
                         {{ isset($data['payment_type']) && $data['payment_type'] == 'Finance' ? 'selected="selected"' : '' }}>
                         Finance
                     </option>
-                    <option value="Both"
-                        {{ isset($data['payment_type']) && $data['payment_type'] == 'Both' ? 'selected="selected"' : '' }}>
-                        Both(Cash & Finance)
-                    </option>
-                </select>
-            </div>
-            <div class="form-group col-md-3">
-                <label>Is Exchange</label>
-                <select class="form-control" name="payment_type">
-                    <option value="No"
-                        {{ isset($data['is_exchange_avaliable']) && $data['is_exchange_avaliable'] == 'No' ? 'selected="selected"' : '' }}>
-                        No
-                    </option>
-                    <option value="Finance"
-                        {{ isset($data['is_exchange_avaliable']) && $data['is_exchange_avaliable'] == 'Yes' ? 'selected="selected"' : '' }}>
-                        Yes
-                    </option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label>Hypothecation Financer</label>
-                <select name="customer_city" class="form-control">
+                <select name="hyp_financer" class="form-control">
                     <option value="">---Select Hypothecation Financer----</option>
+                    @isset($bank_financers)
+                        @foreach ($bank_financers as $bank_financer)
+                            <option
+                                {{ isset($data['hyp_financer']) && $data['hyp_financer'] == $bank_financer->id ? 'selected="selected"' : '' }}
+                                value="{{ $bank_financer->id }}">{{ $bank_financer->bank_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-12">
@@ -133,7 +154,7 @@
                     @isset($brands)
                         @foreach ($brands as $brand)
                             <option
-                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $state->id ? 'selected="selected"' : '' }}
+                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $brand->id ? 'selected="selected"' : '' }}
                                 value="{{ $brand->id }}">{{ $brand->name }}</option>
                         @endforeach
                     @endisset
@@ -145,65 +166,73 @@
                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
                     class="form-control ajaxChangeCDropDown">
                     <option value="">---Select Model----</option>
+                    @isset($models)
+                        @foreach ($models as $model)
+                            <option
+                                {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected="selected"' : '' }}
+                                value="{{ $model->id }}">{{ $model->model_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-4">
                 <label>Bike Color</label>
                 <select name="bike_color" class="form-control">
                     <option value="">---Select Color----</option>
+                    @isset($colors)
+                        @foreach ($colors as $color)
+                            <option
+                                {{ isset($data['bike_color']) && $data['bike_color'] == $color->id ? 'selected="selected"' : '' }}
+                                value="{{ $color->id }}">{{ $color->color_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>Ex Showroom Price</label>
-                <input name="ex_showroom_price" type="text" class="form-control"
+                <input name="ex_showroom_price" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}"
                     placeholder="₹ XXXX">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>Registration Amount</label>
-                <input name="registration_amount" type="text" class="form-control"
+                <input name="registration_amount" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['registration_amount']) ? $data['registration_amount'] : '' }}"
                     placeholder="₹ XXXX">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>Insurance Amount</label>
-                <input name="insurance_amount" type="text" class="form-control"
-                    value="{{ isset($data['insurance_amount']) ? $data['insurance_amount'] : '' }}"
-                    placeholder="₹ XXXX">
-            </div>
-            <div class="form-group col-md-3">
-                <label>Insurance Amount</label>
-                <input name="insurance_amount" type="text" class="form-control"
+                <input name="insurance_amount" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['insurance_amount']) ? $data['insurance_amount'] : '' }}"
                     placeholder="₹ XXXX">
             </div>
             <div class="form-group col-md-3">
                 <label>Hypothecation Amount</label>
-                <input name="hypothecation_amount" type="text" class="form-control"
+                <input name="hypothecation_amount" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['hypothecation_amount']) ? $data['hypothecation_amount'] : '' }}"
                     placeholder="₹ XXXX">
             </div>
             <div class="form-group col-md-3">
                 <label>Accessories Amount</label>
-                <input name="accessories_amount" type="text" class="form-control"
+                <input name="accessories_amount" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['accessories_amount']) ? $data['accessories_amount'] : '' }}"
                     placeholder="₹ XXXX">
             </div>
             <div class="form-group col-md-3">
                 <label>Other Amount</label>
-                <input name="other_charges" type="text" class="form-control"
+                <input name="other_charges" type="text" class="form-control totalAmountCal"
                     value="{{ isset($data['other_charges']) ? $data['other_charges'] : '' }}" placeholder="₹ XXXX">
             </div>
             <div class="form-group col-md-3">
                 <label>Total Amount</label>
-                <input name="total_amount" type="text" class="form-control"
+                <input name="total_amount" type="text" class="form-control" readonly
                     value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}" placeholder="₹ XXXX">
             </div>
 
             <div class="form-group col-md-6">
                 <label>Purchase Visit Date</label>
-                <input name="purchase_visit_date" type="date" class="form-control"
+                <input name="purchase_visit_date" type="date" class="form-control" {{ $is_readonly }}
                     value="{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : '' }}"
                     placeholder="0000-00-00">
             </div>

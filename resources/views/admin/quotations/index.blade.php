@@ -38,6 +38,13 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Customer Name</th>
+                                        <th>Customer Email</th>
+                                        <th>Bike Purchase</th>
+                                        <th>Payment Type</th>
+                                        <th>Exchange</th>
+                                        <th>Total Amount</th>
+                                        <th>Visit Date</th>
+                                        <th>Est Purchase Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

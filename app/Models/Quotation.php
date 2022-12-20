@@ -47,4 +47,39 @@ class Quotation extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'customer_state');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'customer_district');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'customer_city');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(BikeBrand::class, 'bike_brand');
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(BikeModel::class, 'bike_model');
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(BikeColor::class, 'bike_color');
+    }
+
+    public function financer()
+    {
+        return $this->belongsTo(BankFinancer::class, 'hyp_financer');
+    }
 }
