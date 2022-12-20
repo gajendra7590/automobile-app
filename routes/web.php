@@ -48,9 +48,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
     //getPurchaseModels
 
+    //Quotations
+    Route::resource('quotations', 'QuotationController');
     // Sales
     Route::resource('sales', 'SaleController');
-
     // RTO
     Route::resource('rto', 'RtoController');
 

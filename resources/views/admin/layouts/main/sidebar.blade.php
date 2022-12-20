@@ -50,6 +50,11 @@
                 <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
             </li>
 
+            <li class="{{ Request::is('quotations*') ? 'active' : '' }}">
+                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i>
+                    <span>Qoutations/Enquiries</span></a>
+            </li>
+
             <li class="{{ Request::is('sales*') ? 'active' : '' }}">
                 <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
             </li>

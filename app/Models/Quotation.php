@@ -12,21 +12,36 @@ class Quotation extends Model
     protected $table = 'quotations';
 
     protected $fillable = [
-        'customer_name',
+        'bike_purchase_id',
+        'customer_first_name',
+        'customer_middle_name',
+        'customer_last_name',
+        'customer_address_line',
+        'customer_state',
+        'customer_district',
+        'customer_city',
+        'customer_zipcode',
         'customer_mobile_number',
-        'customer_address',
-        'hyp',
-        'model',
-        'color',
+        'customer_email_address',
+        'payment_type',
+        'is_exchange_avaliable',
+        'hyp_financer',
+        'hyp_financer_description',
+        'purchase_visit_date',
+        'purchase_est_date',
+        'bike_brand',
+        'bike_model',
+        'bike_color',
         'ex_showroom_price',
         'registration_amount',
         'insurance_amount',
-        'hypothecation',
+        'hypothecation_amount',
         'accessories_amount',
-        'other',
+        'other_charges',
         'total_amount',
-        'bank_info',
-        'active_status'
+        'active_status',
+        'created_by',
+        'updated_by'
     ];
 
     protected  $hidden = [];

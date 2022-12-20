@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BikeBrand;
+use App\Models\Quotation;
+use App\Models\State;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class QuotationController extends Controller
 {
@@ -13,7 +17,26 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        //
+        if (!request()->ajax()) {
+            return view('admin.quotations.index');
+        } else {
+
+            $data = Quotation::select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return $this->getActions($row);
+                })
+                ->rawColumns(['active_status', 'action'])
+                ->make(true);
+        }
     }
 
     /**
@@ -23,7 +46,18 @@ class QuotationController extends Controller
      */
     public function create()
     {
-        //
+
+        $formData = array(
+            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
+            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
+            'action' => route('quotations.store')
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.quotations.ajaxModal', $formData)->render()
+        ]);
     }
 
     /**
