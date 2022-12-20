@@ -305,6 +305,7 @@ class BikePurchaseController extends Controller
             ]);
         }
 
+        $postData['uuid'] = random_uuid('purc');
         $postData['updated_by'] = Auth::user()->id;
         //Create New Role
         BikePurchased::create($postData);
