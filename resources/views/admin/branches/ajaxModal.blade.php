@@ -60,6 +60,20 @@
                 value="{{ isset($data) && $data->branch_pincode ? $data->branch_pincode : '' }}" />
         </div>
         <div class="form-group col-md-12">
+            <label>Status : </label>
+            <select class="form-control" name="active_status">
+                <option value="1"
+                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                    Active
+                </option>
+                <option value="0"
+                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                    In
+                    Active
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-12">
             <label>Branch More Detail</label>
             <textarea type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch More Detail"
                 name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>

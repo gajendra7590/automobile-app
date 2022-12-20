@@ -38,6 +38,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Mobile Number</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -54,7 +55,6 @@
         <!-- /.content -->
     </div>
 @endsection
-
 
 
 @push('after-script')

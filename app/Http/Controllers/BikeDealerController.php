@@ -21,11 +21,18 @@ class BikeDealerController extends Controller
             $data = BikeDealer::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['active_status', 'action'])
                 ->make(true);
         } else {
             $formDetails = [
@@ -60,6 +67,7 @@ class BikeDealerController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
+            'dealer_code' => 'required|string',
             'company_name' => 'required|string',
             'company_email' => 'required|string',
             'company_office_phone' => 'required|string',
@@ -72,6 +80,8 @@ class BikeDealerController extends Controller
             'contact_person_phone2' => 'nullable|string',
             'contact_person_address' => 'nullable|string',
             'contact_person_document_file' => 'file|max:10000',
+            'active_status'      => 'required|in:0,1'
+
         ]);
 
         //If Validation failed
@@ -85,6 +95,7 @@ class BikeDealerController extends Controller
         }
 
         $createData = $request->only([
+            'dealer_code',
             'company_name',
             'company_email',
             'company_office_phone',
@@ -96,6 +107,7 @@ class BikeDealerController extends Controller
             'contact_person_phone',
             'contact_person_phone2',
             'contact_person_address',
+            'active_status'
         ]);
 
         if (request()->hasFile('contact_person_document_file')) {
@@ -156,6 +168,7 @@ class BikeDealerController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
+            'dealer_code' => 'required|string',
             'company_name' => 'required|string',
             'company_email' => 'required|string',
             'company_office_phone' => 'required|string',
@@ -168,6 +181,7 @@ class BikeDealerController extends Controller
             'contact_person_phone2' => 'nullable|string',
             'contact_person_address' => 'nullable|string',
             'contact_person_document_file' => 'file|max:10000',
+            'active_status'      => 'required|in:0,1'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
@@ -177,6 +191,7 @@ class BikeDealerController extends Controller
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $createData = $request->only([
+            'dealer_code',
             'company_name',
             'company_email',
             'company_office_phone',
@@ -188,6 +203,7 @@ class BikeDealerController extends Controller
             'contact_person_phone',
             'contact_person_phone2',
             'contact_person_address',
+            'active_status'
         ]);
         $branch->update($createData);
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);

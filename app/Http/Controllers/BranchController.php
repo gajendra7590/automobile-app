@@ -20,11 +20,18 @@ class BranchController extends Controller
             $data = Branch::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'active_status'])
                 ->make(true);
         } else {
             $formDetails = [
@@ -70,6 +77,7 @@ class BranchController extends Controller
             'branch_county' => 'nullable|string',
             'branch_pincode' => 'nullable|string',
             'branch_more_detail' => 'nullable|string',
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -94,6 +102,7 @@ class BranchController extends Controller
             'branch_county',
             'branch_pincode',
             'branch_more_detail',
+            'active_status'
         ]);
 
         Branch::create($createData);
@@ -156,6 +165,8 @@ class BranchController extends Controller
             'branch_county' => 'nullable|string',
             'branch_pincode' => 'nullable|string',
             'branch_more_detail' => 'nullable|string',
+            'branch_more_detail' => 'nullable|string',
+            'active_status'      => 'required|in:0,1'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
@@ -176,6 +187,7 @@ class BranchController extends Controller
             'branch_county',
             'branch_pincode',
             'branch_more_detail',
+            'active_status'
         ]);
         $branch->update($createData);
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);

@@ -22,16 +22,20 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "name",
-                    name: "name",
+                    data: "branch_name",
+                    name: "branch_name",
                 },
                 {
-                    data: "email",
-                    name: "email",
+                    data: "branch_phone",
+                    name: "branch_phone",
                 },
                 {
-                    data: "mobile_number",
-                    name: "mobile_number",
+                    data: "branch_manager_name",
+                    name: "branch_manager_name",
+                },
+                {
+                    data: "branch_manager_phone",
+                    name: "branch_manager_phone",
                 },
                 {
                     data: "active_status",
@@ -45,7 +49,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [],
                 },
                 {
                     searchable: false,

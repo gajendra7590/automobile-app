@@ -17,6 +17,19 @@
                 value="{{ isset($data['state_code']) ? $data['state_code'] : '' }}"
                 placeholder="Please enter state code..">
         </div>
+        <div class="form-group">
+            <label>Status : </label>
+            <select class="form-control" name="active_status">
+                <option value="1"
+                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                    Active
+                </option>
+                <option value="0"
+                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>In
+                    Active
+                </option>
+            </select>
+        </div>
     </div>
     <!-- /.box-body -->
     <div class="box-footer">

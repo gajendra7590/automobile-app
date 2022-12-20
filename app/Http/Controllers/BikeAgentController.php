@@ -20,11 +20,18 @@ class BikeAgentController extends Controller
             $data = BikeAgent::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">In Active</span>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'active_status'])
                 ->make(true);
         } else {
             $formDetails = [
@@ -73,6 +80,7 @@ class BikeAgentController extends Controller
             'district' => 'string',
             'city' => 'string',
             'more_details' => 'string',
+            'active_status'      => 'required|in:0,1'
         ]);
 
         //If Validation failed
@@ -85,7 +93,7 @@ class BikeAgentController extends Controller
             ]);
         }
 
-        BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details']));
+        BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details', 'active_status']));
 
         return response()->json([
             'status'     => true,
@@ -148,6 +156,7 @@ class BikeAgentController extends Controller
             'district' => 'nullable|string',
             'city' => 'nullable|string',
             'more_details' => 'nullable|string',
+            'active_status'      => 'required|in:0,1'
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);

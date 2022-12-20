@@ -21,18 +21,20 @@
                 required name="mobile_number" value="{{ isset($data) && $data ? $data->mobile_number : '' }}" />
         </div>
         <div class="form-group col-md-3">
-            <label>Mobile Number 2</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Mobile Number 2"
-                name="mobile_number2" value="{{ isset($data) && $data ? $data->mobile_number2 : '' }}" />
+            <label>Mobile Number Alternate</label>
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
+                placeholder="Mobile Number Alternate" name="mobile_number2"
+                value="{{ isset($data) && $data ? $data->mobile_number2 : '' }}" />
         </div>
         <div class="form-group col-md-3">
-            <label>Aadhar Card</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Aadhar Card"
-                name="aadhar_card" value="{{ isset($data) && $data ? $data->aadhar_card : '' }}" />
+            <label>Aadhar Card Number(12 digits)</label>
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
+                placeholder="Aadhar Card Number" name="aadhar_card"
+                value="{{ isset($data) && $data ? $data->aadhar_card : '' }}" />
         </div>
         <div class="form-group col-md-3">
-            <label>Pan Card</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Pan Card"
+            <label>Pancard Number(10 digits)</label>
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Pancard Number"
                 name="pan_card" value="{{ isset($data) && $data ? $data->pan_card : '' }}" />
         </div>
         <div class="form-group col-md-4">
@@ -57,9 +59,8 @@
         </div>
         <div class="form-group col-md-12">
             <label>Address Line</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Highest Qualification" name="address_line"
-                value="{{ isset($data) && $data->address_line ? $data->address_line : '' }}" />
+            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Address Line"
+                name="address_line" value="{{ isset($data) && $data->address_line ? $data->address_line : '' }}" />
         </div>
         <div class="form-group col-md-3">
             <label>State</label>
@@ -80,6 +81,20 @@
             <label>Zipcode</label>
             <input type='number' class="form-control my-colorpicker1 colorpicker-element" placeholder="Zipcode"
                 name="zipcode" value="{{ isset($data) && $data->zipcode ? $data->zipcode : '' }}" />
+        </div>
+        <div class="form-group col-md-12">
+            <label>Status : </label>
+            <select class="form-control" name="active_status">
+                <option value="1"
+                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                    Active
+                </option>
+                <option value="0"
+                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                    In
+                    Active
+                </option>
+            </select>
         </div>
         <div class="form-group col-md-12">
             <label>More Details</label>

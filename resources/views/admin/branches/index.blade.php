@@ -29,7 +29,8 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover">
+                            <table id="ajaxDataTable" data-url="{{ route('branches.index') }}"
+                                class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -37,6 +38,7 @@
                                         <th>Branch Phone</th>
                                         <th>Branch Manager Name</th>
                                         <th>Branch Manager Phone</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -50,62 +52,5 @@
 @endsection
 
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            const tableObj = $('#ajaxDataTable').DataTable({
-                processing: false,
-                serverSide: true,
-                cache: true,
-                type: 'GET',
-                ajax: {
-                    url: "{!! route('branches.index') !!}",
-                    method: 'GET',
-                    beforeSend: function() {
-                        loaderShow();
-                    },
-                    complete: function() {
-                        loaderHide();
-                    }
-                },
-                searchDelay: 350,
-                columns: [{
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'branch_name',
-                        name: 'branch_name'
-                    },
-                    {
-                        data: 'branch_phone',
-                        name: 'branch_phone'
-                    },
-                    {
-                        data: 'branch_manager_name',
-                        name: 'branch_manager_name'
-                    },
-                    {
-                        data: 'branch_manager_phone',
-                        name: 'branch_manager_phone'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": []
-                    },
-                    {
-                        "searchable": false,
-                        "targets": []
-                    }
-                ],
-                order: [
-                    [0, "desc"]
-                ]
-            });
-        })
-    </script>
+    <script src="{{ asset('assets/modules/branches.js') }}"></script>
 @endpush

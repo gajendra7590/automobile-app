@@ -22,6 +22,10 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "dealer_code",
+                    name: "dealer_code",
+                },
+                {
                     data: "company_name",
                     name: "company_name",
                 },
@@ -36,6 +40,10 @@ $(document).ready(function () {
                 {
                     data: "company_address",
                     name: "company_address",
+                },
+                {
+                    data: "active_status",
+                    name: "active_status",
                 },
                 {
                     data: "action",
