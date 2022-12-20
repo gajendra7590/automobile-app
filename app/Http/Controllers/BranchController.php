@@ -61,8 +61,8 @@ class BranchController extends Controller
         $validator = Validator::make($postData, [
             'branch_manager_name' => 'nullable|string',
             'branch_manager_phone' => 'nullable|string|min:10|max:13',
-            'branch_name' => 'required|string',
-            'branch_phone' => 'nullable|string|min:10|max:13',
+            'branch_name' => 'required|string|unique:branches,branch_name,NULL,id',
+            'branch_phone' => 'required|string|min:10|max:13',
             'branch_address_line' => 'nullable|string',
             'branch_city' => 'nullable|string',
             'branch_district' => 'nullable|string',
@@ -145,17 +145,17 @@ class BranchController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'branch_manager_name',
-            'branch_manager_phone',
-            'branch_name',
-            'branch_phone',
-            'branch_address_line',
-            'branch_city',
-            'branch_district',
-            'branch_state',
-            'branch_county',
-            'branch_pincode',
-            'branch_more_detail',
+            'branch_manager_name' => 'nullable|string',
+            'branch_manager_phone' => 'nullable|string|min:10|max:13',
+            'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
+            'branch_phone' => 'required|string|min:10|max:13',
+            'branch_address_line' => 'nullable|string',
+            'branch_city' => 'nullable|string',
+            'branch_district' => 'nullable|string',
+            'branch_state' => 'nullable|string',
+            'branch_county' => 'nullable|string',
+            'branch_pincode' => 'nullable|string',
+            'branch_more_detail' => 'nullable|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
