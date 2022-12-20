@@ -28,7 +28,8 @@ class RtoRegistration extends Model
         'customer_given_date',
         'bike_number',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'active_status'
     ];
 
     protected  $hidden = [];

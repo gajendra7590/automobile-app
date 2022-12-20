@@ -28,7 +28,8 @@ class FinanceHistory extends Model
         'payment_collected_by',
         'payment_collection_handover_to',
         'payment_collection_handover_date',
-        'payment_verification_status'
+        'payment_verification_status',
+        'active_status'
     ];
 
     protected  $hidden = [];

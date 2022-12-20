@@ -15,6 +15,7 @@ class State extends Model
         'country_id',
         'state_name',
         'state_code',
+        'active_status'
     ];
 
 

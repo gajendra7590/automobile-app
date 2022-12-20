@@ -22,7 +22,8 @@ class Branch extends Model
         'branch_state',
         'branch_county',
         'branch_pincode',
-        'branch_more_detail'
+        'branch_more_detail',
+        'active_status'
     ];
 
     protected  $hidden = [];

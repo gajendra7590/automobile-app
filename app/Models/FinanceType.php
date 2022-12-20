@@ -15,6 +15,7 @@ class FinanceType extends Model
         'name',
         'display_name',
         'description',
+        'active_status'
     ];
 
     protected  $hidden = [];

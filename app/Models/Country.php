@@ -14,6 +14,7 @@ class Country extends Model
     protected $fillable = [
         'country_name',
         'country_code',
+        'active_status'
     ];
 
     protected  $hidden = [];

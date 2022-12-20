@@ -13,7 +13,8 @@ class FinancePaymentMode extends Model
 
     protected $fillable = [
         'name',
-        'display_name'
+        'display_name',
+        'active_status'
     ];
 
     protected  $hidden = [];

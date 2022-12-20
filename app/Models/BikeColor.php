@@ -13,7 +13,8 @@ class BikeColor extends Model
 
     protected $fillable = [
         'color_name',
-        'color_code'
+        'color_code',
+        'active_status'
     ];
 
     protected  $hidden = [];

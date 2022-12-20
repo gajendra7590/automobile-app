@@ -22,7 +22,7 @@ class UserController extends Controller
             return view('admin.users.index');
         } else {
 
-            $data = User::with('roles')->select('id', 'name', 'email', 'status', 'is_default', 'created_at');
+            $data = User::with('roles')->select('id', 'name', 'email', 'active_status', 'is_default', 'created_at');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($row) {
@@ -32,8 +32,8 @@ class UserController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('status', function ($row) {
-                    if ($row->status == '1') {
+                ->addColumn('active_status', function ($row) {
+                    if ($row->active_status == '1') {
                         return '<span class="label label-success">Active</span>';
                     } else {
                         return '<span class="label label-warning">In Active</span>';
@@ -45,7 +45,7 @@ class UserController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['status', 'created_at', 'action'])
+                ->rawColumns(['active_status', 'created_at', 'action'])
                 ->make(true);
         }
     }
@@ -79,7 +79,7 @@ class UserController extends Controller
             'name'     => "required",
             'email'    => "required|unique:users,email",
             'password' => "required|min:6",
-            'status'   => "required|in:0,1",
+            'active_status'   => "required|in:0,1",
             'role'     => "required|exists:roles,id"
         ]);
 
@@ -98,7 +98,7 @@ class UserController extends Controller
             'name' => $postData['name'],
             'email' => $postData['email'],
             'password' => Hash::make($postData['password']),
-            'status' => $postData['status']
+            'active_status' => $postData['active_status']
         ]);
 
         //Assign Role
@@ -164,7 +164,7 @@ class UserController extends Controller
             'name'     => "required",
             'email'    => "required|unique:users,email," . $id,
             'password' => "nullable|min:6",
-            'status'   => "required|in:0,1",
+            'active_status'   => "required|in:0,1",
             'role'     => "required|exists:roles,id"
         ]);
 
@@ -190,7 +190,7 @@ class UserController extends Controller
 
         $userModel->name = $postData['name'];
         $userModel->email = $postData['email'];
-        $userModel->status = $postData['status'];
+        $userModel->active_status = $postData['active_status'];
         if (!empty($postData['password'])) {
             $userModel->password = Hash::make($postData['password']);
         }

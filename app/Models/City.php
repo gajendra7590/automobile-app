@@ -14,7 +14,8 @@ class City extends Model
     protected $fillable = [
         'district_id',
         'city_name',
-        'city_code'
+        'city_code',
+        'active_status'
     ];
 
     protected  $hidden = [];

@@ -19,15 +19,20 @@
             <label>Password : </label>
             <input name="password" type="password" class="form-control" value=""
                 placeholder="Please enter password..">
-            <span class="help-block">** Password leave empty if you don`t want to update.</span>
+            @if (isset($method) && $method == 'PUT')
+                <span class="help-block">** Password leave empty if you don`t want to update.</span>
+            @endif
         </div>
         <div class="form-group">
             <label>Status : </label>
-            <select class="form-control" name="status">
+            <select class="form-control" name="active_status">
                 <option value="1"
-                    {{ isset($data['status']) && $data['status'] == '1' ? 'selected="selected"' : '' }}>Active</option>
+                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                    Active
+                </option>
                 <option value="0"
-                    {{ isset($data['status']) && $data['status'] == '0' ? 'selected="selected"' : '' }}>In Active
+                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>In
+                    Active
                 </option>
             </select>
         </div>

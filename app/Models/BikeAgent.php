@@ -28,6 +28,7 @@ class BikeAgent extends Model
         'zipcode',
         'joined_at',
         'more_detail',
+        'active_status'
     ];
 
     protected  $hidden = [];

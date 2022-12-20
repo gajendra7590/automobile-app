@@ -15,6 +15,7 @@ class District extends Model
         'state_id',
         'district_name',
         'district_code',
+        'active_status'
     ];
 
     protected  $hidden = [];

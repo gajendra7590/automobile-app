@@ -13,12 +13,14 @@ class BikeBrand extends Model
 
     protected $fillable = [
         'name',
+        'code',
         'description',
-        'code'
+        'active_status'
     ];
 
-    public function bike_modals(){
-        return $this->hasMany(BikeModel::class,'brand_id');
+    public function bike_modals()
+    {
+        return $this->hasMany(BikeModel::class, 'brand_id');
     }
 
     protected  $hidden = [];

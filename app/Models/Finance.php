@@ -23,7 +23,8 @@ class Finance extends Model
         'loan_end_date',
         'loan_duration',
         'loan_amount',
-        'loan_purpose'
+        'loan_purpose',
+        'active_status'
     ];
 
     protected  $hidden = [];

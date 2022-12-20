@@ -47,7 +47,8 @@ class Purchase extends Model
         'bike_description',
         'status',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'active_status'
     ];
 
     protected  $hidden = [];

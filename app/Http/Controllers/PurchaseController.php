@@ -306,8 +306,10 @@ class PurchaseController extends Controller
         }
 
         $postData['updated_by'] = Auth::user()->id;
+        unset($postData['_token']);
+        unset($postData['_method']);
         //Create New Role
-        Purchase::create($postData);
+        $bpModel->update($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

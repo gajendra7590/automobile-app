@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BikeSale extends Model
+class Sale extends Model
 {
     use HasFactory;
 
-    protected $table = 'bike_sales';
+    protected $table = 'sales';
 
     protected $fillable = [
         'bike_purchased_id',
@@ -39,6 +39,7 @@ class BikeSale extends Model
         'financial_total_installments',
         'remark',
         'payment_don',
+        'active_status'
     ];
 
     protected  $hidden = [];

@@ -25,7 +25,8 @@ class Quotation extends Model
         'accessories_amount',
         'other',
         'total_amount',
-        'bank_info'
+        'bank_info',
+        'active_status'
     ];
 
     protected  $hidden = [];

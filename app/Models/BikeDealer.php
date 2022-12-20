@@ -12,6 +12,7 @@ class BikeDealer extends Model
     protected $table = 'bike_dealers';
 
     protected $fillable = [
+        'dealer_code',
         'company_name',
         'company_email',
         'company_office_phone',
@@ -25,13 +26,15 @@ class BikeDealer extends Model
         'contact_person_address',
         'contact_person_document_type',
         'contact_person_document_file',
+        'active_status'
     ];
 
     protected  $hidden = [];
 
     protected $casts = [];
 
-    public function getContactPersonDocumentFileAttribute($value){
-        return env('APP_URL').'/storage'.'/' . $value;
+    public function getContactPersonDocumentFileAttribute($value)
+    {
+        return env('APP_URL') . '/storage' . '/' . $value;
     }
 }

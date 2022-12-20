@@ -34,8 +34,8 @@ $(document).ready(function () {
                     name: "role",
                 },
                 {
-                    data: "status",
-                    name: "status",
+                    data: "active_status",
+                    name: "active_status",
                 },
                 {
                     data: "created_at",

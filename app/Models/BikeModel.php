@@ -14,7 +14,8 @@ class BikeModel extends Model
     protected $fillable = [
         'brand_id',
         'model_name',
-        'model_code'
+        'model_code',
+        'active_status'
     ];
 
     public function bike_brand()
