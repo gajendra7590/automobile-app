@@ -38,10 +38,6 @@ $(document).ready(function () {
                     name: "active_status",
                 },
                 {
-                    data: "created_at",
-                    name: "created_at",
-                },
-                {
                     data: "action",
                     name: "action",
                 },

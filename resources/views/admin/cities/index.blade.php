@@ -41,6 +41,7 @@
                                         <th>District Name</th>
                                         <th>City Name</th>
                                         <th>City Code</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
