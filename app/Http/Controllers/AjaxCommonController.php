@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Traits\DropdownHelper;
+
+class AjaxCommonController extends Controller
+{
+    use DropdownHelper;
+
+    /**
+     * Common function for handle common ajax dropdowns
+     */
+    public function index(Request $request)
+    {
+        $postData = $request->all();
+        if (isset($postData['req']) && ($postData['req'] != '')) {
+
+            switch ($postData['req']) {
+                case 'states':
+                    return $this->getStates($postData);
+                    break;
+                case 'districts':
+                    return $this->getDistricts($postData);
+                    break;
+                case 'cities':
+                    return $this->getCities($postData);
+                    break;
+                case 'brands':
+                    return $this->getBrands($postData);
+                    break;
+                case 'models':
+                    return $this->getModels($postData);
+                    break;
+                case 'colors':
+                    return $this->getColors($postData);
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        } else {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! invalid request"
+            ]);
+        }
+    }
+}

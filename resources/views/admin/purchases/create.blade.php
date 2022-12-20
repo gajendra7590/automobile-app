@@ -59,7 +59,7 @@
                                         @if (isset($dealers))
                                             @foreach ($dealers as $key => $dealer)
                                                 <option
-                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : '' }}
                                                     value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
                                             @endforeach
                                         @endif
@@ -67,12 +67,14 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Brand Name</label>
-                                    <select name="bike_brand" class="form-control">
+                                    <select name="bike_brand" data-dep_dd_name="bike_model"
+                                        data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
+                                        data-dep_dd2_name="bike_model_color" class="form-control ajaxChangeCDropDown">
                                         <option value="">---Select Brand---</option>
                                         @if (isset($brands))
                                             @foreach ($brands as $key => $brand)
                                                 <option
-                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
                                                     value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
                                         @endif
@@ -80,7 +82,9 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Model Name</label>
-                                    <select name="bike_model" class="form-control">
+                                    <select name="bike_model" data-dep_dd_name="bike_model_color"
+                                        data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
+                                        class="form-control ajaxChangeCDropDown">
                                         @if (isset($editModelsHtml))
                                             {!! $editModelsHtml !!}
                                         @else
@@ -93,11 +97,11 @@
                                 <div class="form-group col-md-3">
                                     <label>Model Color</label>
                                     <select name="bike_model_color" class="form-control">
-                                        <option value="">---Select Model Color---</option>
+                                        <option value="" disabled>---Select Model Color---</option>
                                         @if (isset($colors))
                                             @foreach ($colors as $key => $color)
                                                 <option
-                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : '' }}
                                                     value="{{ $color->id }}">{{ $color->color_name }}</option>
                                             @endforeach
                                         @endif
@@ -312,19 +316,21 @@
                                     <textarea name="bike_description" rows="5" class="form-control">{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label>Status : </label>
-                                <select class="form-control" name="active_status">
-                                    <option value="1"
-                                        {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
-                                        Active
-                                    </option>
-                                    <option value="0"
-                                        {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
-                                        In
-                                        Active
-                                    </option>
-                                </select>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label>Status : </label>
+                                    <select class="form-control" name="active_status">
+                                        <option value="1"
+                                            {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
+                                            Active
+                                        </option>
+                                        <option value="0"
+                                            {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                                            In
+                                            Active
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -349,14 +355,14 @@
 
 @push('after-script')
     <script>
-        $(document).ready(function() {
-            $('select[name="bike_brand"]').change(function() {
-                let id = $(this).val();
-                let URL = "{{ url('getModelsList') }}/" + id;
-                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                    $('select[name="bike_model"]').html(res.data);
-                });
-            });
-        });
+        // $(document).ready(function() {
+        //     $('select[name="bike_brand"]').change(function() {
+        //         let id = $(this).val();
+        //         let URL = "{{ url('getModelsList') }}/" + id;
+        //         CRUD.AJAXDATA(URL, 'GET').then(function(res) {
+        //             $('select[name="bike_model"]').html(res.data);
+        //         });
+        //     });
+        // });
     </script>
 @endpush

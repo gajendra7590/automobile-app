@@ -62,4 +62,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('roles', 'RoleController');
     //Users
     Route::resource('users', 'UserController');
+
+
+    //AjaxCommonController
+    Route::post('getAjaxDropdown', 'AjaxCommonController@index')->name('getAjaxDropdown');
 });

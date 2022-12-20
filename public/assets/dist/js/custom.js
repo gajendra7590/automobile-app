@@ -157,4 +157,49 @@ $(document).ready(function () {
         $("#ajaxModalDialog").modal("show");
         $("#ajaxModalDialogForm").attr("action", url);
     });
+
+    $(document).on("change", ".ajaxChangeCDropDown", function (e) {
+        e.preventDefault();
+        var id = $(this).val();
+        if (id == "") {
+            return false;
+        } else {
+            var url = $(this).data("url");
+            var dep_dd_name = $(this).data("dep_dd_name");
+            var dep_dd2_name = $(this).data("dep_dd2_name");
+        }
+
+        //Call Callback Function
+        getAndFillDropDown(url, id, dep_dd_name, dep_dd2_name);
+    });
+
+    function getAndFillDropDown(url, id, dep_dd_name, dep_dd2_name) {
+        var formdata = new FormData();
+        formdata.append("dep_dd_name", dep_dd_name);
+        formdata.append("dep_dd2_name", dep_dd2_name);
+        formdata.append("id", id);
+        CRUD.AJAXDATA(url, "POST", formdata).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                let payload = result.data;
+                $('select[name="' + payload.dep_dd_name + '"]').html(
+                    payload.dep_dd_html
+                );
+
+                if (
+                    typeof payload.dep_dd2_name != "undefined" &&
+                    payload.dep_dd_name != ""
+                ) {
+                    $('select[name="' + payload.dep_dd2_name + '"]').html(
+                        payload.dep_dd2_html
+                    );
+                }
+                return true;
+            } else {
+                console.log(result);
+                return true;
+            }
+        });
+    }
+
+    //ajaxChangeCDropDown
 });

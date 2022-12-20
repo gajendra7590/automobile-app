@@ -33,7 +33,9 @@
             </div>
             <div class="form-group col-md-3">
                 <label>Customer State</label>
-                <select name="customer_state" class="form-control">
+                <select name="customer_state" data-dep_dd_name="customer_district"
+                    data-url="{{ url('getAjaxDropdown') . '?req=districts' }}" data-dep_dd2_name="customer_city"
+                    class="form-control ajaxChangeCDropDown">
                     <option value="">---Select Customer State---</option>
                     @isset($states)
                         @foreach ($states as $state)
@@ -46,13 +48,15 @@
             </div>
             <div class="form-group col-md-3">
                 <label>Customer District</label>
-                <select name="customer_district" class="form-control">
+                <select name="customer_district" class="form-control ajaxChangeCDropDown"
+                    data-dep_dd_name="customer_city" data-url="{{ url('getAjaxDropdown') . '?req=cities' }}"
+                    data-dep_dd2_name="">
                     <option value="">---Select District---</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>Customer City/Village <span class="addMoreIcon"><a title="Add New" href=""><i
-                                class="fa fa-plus-circle" aria-hidden="true"></i></a></span> </label>
+                <label>Customer City/Village <span style="margin-left: 40px;"><a title="Add New City/Village/Town"
+                            href=""><i class="fa fa-plus-circle" aria-hidden="true"></i></a></span> </label>
                 <select name="customer_city" class="form-control">
                     <option value="">---Select City/Village----</option>
                 </select>
@@ -122,19 +126,30 @@
 
             <div class="form-group col-md-4">
                 <label>Bike Brand</label>
-                <select name="bike_brand" class="form-control">
+                <select name="bike_brand" data-dep_dd_name="bike_model"
+                    data-url="{{ url('getAjaxDropdown') . '?req=models' }}" data-dep_dd2_name="bike_color"
+                    class="form-control ajaxChangeCDropDown">
                     <option value="">---Select Brand----</option>
+                    @isset($brands)
+                        @foreach ($brands as $brand)
+                            <option
+                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $state->id ? 'selected="selected"' : '' }}
+                                value="{{ $brand->id }}">{{ $brand->name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-4">
                 <label>Bike Model</label>
-                <select name="customer_city" class="form-control">
+                <select name="bike_model" data-dep_dd_name="bike_color"
+                    data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
+                    class="form-control ajaxChangeCDropDown">
                     <option value="">---Select Model----</option>
                 </select>
             </div>
             <div class="form-group col-md-4">
                 <label>Bike Color</label>
-                <select name="customer_city" class="form-control">
+                <select name="bike_color" class="form-control">
                     <option value="">---Select Color----</option>
                 </select>
             </div>
