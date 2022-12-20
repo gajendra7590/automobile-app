@@ -305,6 +305,7 @@ class PurchaseController extends Controller
             ]);
         }
 
+        $postData['uuid'] = random_uuid('purc');
         $postData['updated_by'] = Auth::user()->id;
         unset($postData['_token']);
         unset($postData['_method']);
