@@ -30,4 +30,9 @@ class State extends Model
     {
         return $this->hasOne(Country::class, 'id', 'country_id');
     }
+
+    public function districts()
+    {
+        return $this->hasMany(District::class, 'id', 'district_id');
+    }
 }

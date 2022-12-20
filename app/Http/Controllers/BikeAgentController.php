@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BikeAgent;
+use App\Models\City;
+use App\Models\District;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -48,11 +51,24 @@ class BikeAgentController extends Controller
      */
     public function create()
     {
+        $data  = [
+            'action' => route('agents.store'),
+            'method' => 'POST',
+        ];
+        $data['states'] = State::select(['id','state_name'])->get();
+        $data['districts'] = [];
+        $data['cities'] = [];
+        if(count($data['states'])){
+            $data['districts'] = District::select(['id','district_name'])->where('state_id',$data['states'][0]['id'])->get();
+        }
+        if(count($data['districts'])){
+            $data['cities'] = City::select(['id','city_name'])->where('district_id',$data['districts'][0]['id'])->get();
+        }
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal', ['action' => route('agents.store'), 'method' => 'POST'])->render()
+            'data'       => view('admin.agents.ajaxModal', $data)->render()
         ]);
     }
 
@@ -123,11 +139,23 @@ class BikeAgentController extends Controller
     public function edit($id)
     {
         $bikeAgent = BikeAgent::find($id);
+        $data = ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'];
+        $data['states'] = State::select(['id','state_name'])->get();
+        $data['districts'] = [];
+        $data['cities'] = [];
+        if($bikeAgent->state){
+            $data['districts'] = District::select(['id','district_name'])->where('state_id', $bikeAgent->state)->get();
+        }
+        if($bikeAgent->district){
+            $data['cities'] = City::select(['id','city_name'])->where('district_id', $bikeAgent->district)->get();
+        }
+
+        $bikeAgent = BikeAgent::find($id);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.agents.ajaxModal', ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.agents.ajaxModal', $data)->render()
         ]);
     }
 
