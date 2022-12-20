@@ -33,7 +33,7 @@
                 value="{{ isset($data) && $data ? $data->aadhar_card : '' }}" />
         </div>
         <div class="form-group col-md-3">
-            <label>Pancard Number(10 digits)</label>
+            <label>Pan Card Number(10 digits)</label>
             <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Pancard Number"
                 name="pan_card" value="{{ isset($data) && $data ? $data->pan_card : '' }}" />
         </div>
@@ -64,18 +64,51 @@
         </div>
         <div class="form-group col-md-3">
             <label>State</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="State"
-                name="state" value="{{ isset($data) && $data->state ? $data->state : '' }}" />
+            <select
+                name="state"
+                data-url="{{ url('getAjaxDropdown') . '?req=districts' }}"
+                data-dep_dd_name="district"
+                data-dep_dd2_name="city"
+                class="form-control ajaxChangeCDropDown">
+                <option value="">---Select State---</option>
+                @if (isset($states))
+                    @foreach ($states as $key => $state)
+                        <option
+                            {{ isset($data->state) && $data->state == $state->id ? 'selected' : '' }}
+                            value="{{ $state->id }}">{{ $state->state_name }}</option>
+                    @endforeach
+                @endif
+            </select>
         </div>
         <div class="form-group col-md-3">
             <label>District</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="District"
-                name="district" value="{{ isset($data) && $data->district ? $data->district : '' }}" />
+            <select
+                name="district"
+                data-dep_dd_name="city"
+                data-url="{{ url('getAjaxDropdown') . '?req=cities' }}"
+                class="form-control ajaxChangeCDropDown">
+                <option value="">---Select District---</option>
+                @if (isset($districts))
+                    @foreach ($districts as $key => $district)
+                        <option
+                            {{ isset($data->district) && $data->district == $district->id ? 'selected' : '' }}
+                            value="{{ $district->id }}">{{ $district->district_name }}</option>
+                    @endforeach
+                @endif
+            </select>
         </div>
         <div class="form-group col-md-3">
             <label>City</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="City"
-                name="city" value="{{ isset($data) && $data->city ? $data->city : '' }}" />
+            <select name="city" class="form-control">
+                <option value="">---Select City---</option>
+                @if (isset($cities))
+                    @foreach ($cities as $key => $city)
+                        <option
+                            {{ isset($data->city) && $data->city == $city->id ? 'selected="selected"' : '' }}
+                            value="{{ $city->id }}">{{ $city->city_name }}</option>
+                    @endforeach
+                @endif
+            </select>
         </div>
         <div class="form-group col-md-3">
             <label>Zipcode</label>

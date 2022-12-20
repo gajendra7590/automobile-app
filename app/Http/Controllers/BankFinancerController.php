@@ -65,7 +65,7 @@ class BankFinancerController extends Controller
     public function store(Request $request)
     {
         $validateArray = [
-            'bank_name' => 'required|string|unique:bank_financers:bank_name',
+            'bank_name' => 'required|string|unique:bank_financers,bank_name',
             'bank_branch_code' => 'nullable|string',
             'bank_contact_number' => 'nullable|string|min:10|max:13',
             'bank_email_address' => 'nullable|email',
@@ -95,7 +95,7 @@ class BankFinancerController extends Controller
             ]);
         }
 
-        BankFinancer::create(array_keys($validateArray));
+        BankFinancer::create($request->only(['bank_name','bank_branch_code','bank_contact_number','bank_email_address','bank_full_address','bank_manager_name','bank_manager_contact','bank_manager_email','bank_financer_name','bank_financer_contact','bank_financer_email','bank_financer_address','bank_financer_aadhar_card','bank_financer_pan_card','more_details','active_status']));
 
         return response()->json([
             'status'     => true,
@@ -112,8 +112,8 @@ class BankFinancerController extends Controller
      */
     public function show($id)
     {
-        $bikeAgent = BankFinancer::find($id);
-        return view('admin.bankFinancers.show', ['bankFinance' => $bikeAgent]);
+        $bankFinancer = BankFinancer::find($id);
+        return view('admin.bankFinancers.show', ['bankFinance' => $bankFinancer]);
     }
 
     /**
@@ -124,12 +124,12 @@ class BankFinancerController extends Controller
      */
     public function edit($id)
     {
-        $bikeAgent = BankFinancer::find($id);
+        $bankFinancer = BankFinancer::find($id);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bankFinancers.ajaxModal', ['data' => $bikeAgent, 'action' => route('bankFinancers.update', ['bankFicancer' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.bankFinancers.ajaxModal', ['data' => $bankFinancer, 'action' => route('bankFinancers.update', ['bankFinancer' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -144,7 +144,7 @@ class BankFinancerController extends Controller
     {
         $postData = $request->all();
         $validateArray = [
-            'bank_name' => 'required|string|unique:bank_financers:bank_name,'. $id .',id',
+            'bank_name' => 'required|string|unique:bank_financers,bank_name,'. $id .',id',
             'bank_branch_code' => 'nullable|string',
             'bank_contact_number' => 'nullable|string|min:10|max:13',
             'bank_email_address' => 'nullable|email',
@@ -165,11 +165,11 @@ class BankFinancerController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
-        $bikeAgent = BankFinancer::find($id);
-        if (!$bikeAgent) {
+        $bankFinancer = BankFinancer::find($id);
+        if (!$bankFinancer) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bikeAgent->update(array_keys($validateArray));
+        $bankFinancer->update($request->only(['bank_name','bank_branch_code','bank_contact_number','bank_email_address','bank_full_address','bank_manager_name','bank_manager_contact','bank_manager_email','bank_financer_name','bank_financer_contact','bank_financer_email','bank_financer_address','bank_financer_aadhar_card','bank_financer_pan_card','more_details','active_status']));
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
@@ -181,11 +181,11 @@ class BankFinancerController extends Controller
      */
     public function destroy($id)
     {
-        $bikeAgent = BankFinancer::find($id);
-        if (!$bikeAgent) {
+        $bankFinancer = BankFinancer::find($id);
+        if (!$bankFinancer) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bikeAgent->delete();
+        $bankFinancer->delete();
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
