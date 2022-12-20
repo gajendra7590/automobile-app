@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BikeFinancePaymentMode extends Model
+class FinanceType extends Model
 {
     use HasFactory;
 
-    protected $table = 'bike_finance_payment_modes';
+    protected $table = 'finance_types';
 
     protected $fillable = [
         'name',
-        'display_name'
+        'display_name',
+        'description',
     ];
 
     protected  $hidden = [];

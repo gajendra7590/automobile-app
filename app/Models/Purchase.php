@@ -54,7 +54,49 @@ class Purchase extends Model
 
     protected $casts = [];
 
-    public function getFullNameAttribute(){
+    public function getFullNameAttribute()
+    {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+
+    /**
+     * Mapping with branch
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'bike_branch');
+    }
+
+    /**
+     * Mapping with dealers
+     */
+    public function dealer()
+    {
+        return $this->belongsTo(BikeDealer::class, 'bike_dealer');
+    }
+
+    /**
+     * Mapping with brand
+     */
+    public function brand()
+    {
+        return $this->belongsTo(BikeBrand::class, 'bike_brand');
+    }
+
+    /**
+     * Mapping with model
+     */
+    public function model()
+    {
+        return $this->belongsTo(BikeModel::class, 'bike_model');
+    }
+
+    /**
+     * Mapping with color
+     */
+    public function modelColor()
+    {
+        return $this->belongsTo(BikeColor::class, 'bike_model_color');
     }
 }

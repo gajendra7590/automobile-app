@@ -44,8 +44,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('cities', 'CityController');
 
     // Purchases
-    Route::resource('purchases', 'BikePurchaseController');
-    Route::get('getModelsList/{id}', 'BikePurchaseController@getModelsList')->name('getModelsList');
+    Route::resource('purchases', 'PurchaseController');
+    Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
     //getPurchaseModels
 
     // Sales

@@ -6,14 +6,14 @@ use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
-use App\Models\BikePurchased;
+use App\Models\Purchase;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class BikePurchaseController extends Controller
+class PurchaseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class BikePurchaseController extends Controller
             return view('admin.purchases.index');
         } else {
 
-            $data = BikePurchased::select('*')
+            $data = Purchase::select('*')
                 ->with([
                     'branch' => function ($model) {
                         $model->select('id', 'branch_name');
@@ -183,7 +183,7 @@ class BikePurchaseController extends Controller
         $postData['created_by'] = Auth::user()->id;
 
         //Create New Role
-        BikePurchased::create($postData);
+        Purchase::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -210,7 +210,7 @@ class BikePurchaseController extends Controller
      */
     public function edit($id)
     {
-        $bpModel = BikePurchased::where(['uuid' => $id])->first();
+        $bpModel = Purchase::where(['uuid' => $id])->first();
         if (!$bpModel) {
             return response()->json([
                 'status'     => false,
@@ -250,7 +250,7 @@ class BikePurchaseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $bpModel = BikePurchased::where(['uuid' => $id]);
+        $bpModel = Purchase::where(['uuid' => $id]);
         if (!$bpModel) {
             return response()->json([
                 'status'     => false,
@@ -308,7 +308,7 @@ class BikePurchaseController extends Controller
         $postData['uuid'] = random_uuid('purc');
         $postData['updated_by'] = Auth::user()->id;
         //Create New Role
-        BikePurchased::create($postData);
+        Purchase::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
