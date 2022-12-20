@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BikeRto extends Model
+class RtoRegistration extends Model
 {
     use HasFactory;
 
-    protected $table = 'bike_rto';
+    protected $table = 'rto_registration';
 
     protected $fillable = [
         'bike_purchased_id',
