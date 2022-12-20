@@ -44,9 +44,9 @@
                                     <select name="bike_branch" class="form-control">
                                         <option value="">---Select Branch---</option>
                                         @if (isset($branches))
-                                            @foreach ($branches as $branch)
+                                            @foreach ($branches as $key => $branch)
                                                 <option
-                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                             @endforeach
                                         @endif
@@ -57,9 +57,9 @@
                                     <select name="bike_dealer" class="form-control">
                                         <option value="">---Select Dealer---</option>
                                         @if (isset($dealers))
-                                            @foreach ($dealers as $dealer)
+                                            @foreach ($dealers as $key => $dealer)
                                                 <option
-                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_dealer) && $data->bike_dealer == $dealer->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
                                             @endforeach
                                         @endif
@@ -70,9 +70,9 @@
                                     <select name="bike_brand" class="form-control">
                                         <option value="">---Select Brand---</option>
                                         @if (isset($brands))
-                                            @foreach ($brands as $brand)
+                                            @foreach ($brands as $key => $brand)
                                                 <option
-                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
                                         @endif
@@ -95,9 +95,9 @@
                                     <select name="bike_model_color" class="form-control">
                                         <option value="">---Select Model Color---</option>
                                         @if (isset($colors))
-                                            @foreach ($colors as $color)
+                                            @foreach ($colors as $key => $color)
                                                 <option
-                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $color->id }}">{{ $color->color_name }}</option>
                                             @endforeach
                                         @endif
@@ -110,7 +110,7 @@
                                         @if (isset($bike_types))
                                             @foreach ($bike_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -123,7 +123,7 @@
                                         @if (isset($bike_fuel_types))
                                             @foreach ($bike_fuel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -136,7 +136,7 @@
                                         @if (isset($break_types))
                                             @foreach ($break_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -149,7 +149,7 @@
                                         @if (isset($wheel_types))
                                             @foreach ($wheel_types as $key => $name)
                                                 <option
-                                                    {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
@@ -180,7 +180,7 @@
                                         @if (isset($vin_physical_statuses))
                                             @foreach ($vin_physical_statuses as $key => $name)
                                                 <option
-                                                    {{ isset($data->vin_physical_status) && $data->vin_physical_status == $key ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->vin_physical_status) && $data->vin_physical_status == $key ? 'selected="selected"' : ( $key == 0 ? 'selected' : '' ) }}
                                                     value="{{ $key }}">{{ $name }}</option>
                                             @endforeach
                                         @endif
