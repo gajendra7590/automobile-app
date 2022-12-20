@@ -32,6 +32,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::resource('branches', 'BranchController');
 
+    Route::resource('bankFinancers', 'BankFinancerController');
+
     Route::resource('models', 'BikeModelController');
 
     Route::resource('colors', 'BikeColorController');

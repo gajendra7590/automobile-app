@@ -46,6 +46,10 @@
                 <a href="{{ route('dealers.index') }}"><i class="fa fa-users"></i> <span>Dealers</span></a>
             </li>
 
+            <li class="{{ Request::is('bankFinancers*') ? 'active' : '' }}">
+                <a href="{{ route('bankFinancers.index') }}"><i class="fa fa-users"></i> <span>Bank Financers</span></a>
+            </li>
+
             <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
                 <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
             </li>
