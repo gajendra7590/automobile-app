@@ -52,6 +52,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Quotations
     Route::resource('quotations', 'QuotationController');
+    Route::get('print-quotation/{id}', 'QuotationController@printQuotation')->name('print-quotation');
+    //quot-print
     // Sales
     Route::resource('sales', 'SaleController');
     // RTO
