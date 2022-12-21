@@ -23,7 +23,12 @@ class UserController extends Controller
             return view('admin.users.index');
         } else {
 
-            $data = User::with('roles')->select('id', 'name', 'email', 'active_status', 'is_default', 'created_at');
+            $data = User::with([
+                'roles',
+                'branch' => function ($b) {
+                    $b->select('id', 'branch_name');
+                }
+            ])->select('id', 'name', 'email', 'active_status', 'is_default', 'branch_id');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($row) {
@@ -40,13 +45,13 @@ class UserController extends Controller
                         return '<span class="label label-warning">In Active</span>';
                     }
                 })
-                ->addColumn('created_at', function ($row) {
-                    return date('Y-m-d', strtotime($row->created_at));
+                ->addColumn('branch.branch_name', function ($row) {
+                    return (isset($row->branch->branch_name) > 0) ? ucfirst($row->branch->branch_name) . ' Branch' : 'All Branches';
                 })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['active_status', 'created_at', 'action'])
+                ->rawColumns(['branch.branch_name', 'active_status', 'action'])
                 ->make(true);
         }
     }
@@ -226,7 +231,7 @@ class UserController extends Controller
     {
         $action = '<div class="action-btn-container">';
         if ($row->id != '1' && $row->is_default == '0') {
-            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> EDIT</a>';
+            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
             // $action .= '<a href="' . route('users.destroy', ['user' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('users.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         } else {
             $action .= '--';

@@ -39,7 +39,8 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Role</th>
+                                        <th>Associate Branch</th>
+                                        <th>Permission Level</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

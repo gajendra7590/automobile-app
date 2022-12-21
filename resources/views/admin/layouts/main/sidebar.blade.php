@@ -73,9 +73,9 @@
                 <ul class="treeview-menu"
                     {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') ? 'display:"block"' : '' }}>
 
-                    <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                    {{-- <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                         <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
-                    </li>
+                    </li> --}}
                     <li class="{{ Request::is('users*') ? 'active' : '' }}">
                         <a href="{{ route('users.index') }}"><i class="fa fa-users"></i>USERS</a>
                     </li>

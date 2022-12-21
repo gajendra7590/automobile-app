@@ -24,10 +24,10 @@ class RoleController extends Controller
             $data = Role::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    return $this->getActions($row);
-                })
-                ->rawColumns(['action'])
+                // ->addColumn('action', function ($row) {
+                //     return $this->getActions($row);
+                // })
+                // ->rawColumns(['action'])
                 ->make(true);
         }
     }

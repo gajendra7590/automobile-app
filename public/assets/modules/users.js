@@ -30,6 +30,10 @@ $(document).ready(function () {
                     name: "email",
                 },
                 {
+                    data: "branch.branch_name",
+                    name: "branch.branch_name",
+                },
+                {
                     data: "role",
                     name: "role",
                 },

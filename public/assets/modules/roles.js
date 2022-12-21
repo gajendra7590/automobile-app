@@ -25,22 +25,18 @@ $(document).ready(function () {
                     data: "name",
                     name: "name",
                 },
-                {
-                    data: "action",
-                    name: "action",
-                },
             ],
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [0, 1],
                 },
                 {
                     searchable: false,
                     targets: [],
                 },
             ],
-            order: [[0, "asc"]],
+            order: [],
         });
     }
     mainDataTable();
