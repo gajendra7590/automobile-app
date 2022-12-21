@@ -23,85 +23,95 @@
             <li class="header">MAIN NAVIGATION</li>
 
             <li class="{{ Request::is('dashboard*') ? 'active' : '' }}">
-                <a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                <a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a>
             </li>
 
-            <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-                <a href="{{ route('roles.index') }}"><i class="fa fa-snowflake-o"></i> <span>Roles</span></a>
-            </li>
-
-            <li class="{{ Request::is('users*') ? 'active' : '' }}">
-                <a href="{{ route('users.index') }}"><i class="fa fa-address-card"></i> <span>Users</span></a>
-            </li>
-
-            <li class="{{ Request::is('branches*') ? 'active' : '' }}">
-                <a href="{{ route('branches.index') }}"><i class="fa fa-table"></i> <span> Branches</span></a>
-            </li>
-
-            <li class="{{ Request::is('agents*') ? 'active' : '' }}">
-                <a href="{{ route('agents.index') }}"><i class="fa fa-users"></i> <span>Agents</span></a>
-            </li>
-
-            <li class="{{ Request::is('dealers*') ? 'active' : '' }}">
-                <a href="{{ route('dealers.index') }}"><i class="fa fa-users"></i> <span>Dealers</span></a>
-            </li>
-
-            <li class="{{ Request::is('bankFinancers*') ? 'active' : '' }}">
-                <a href="{{ route('bankFinancers.index') }}"><i class="fa fa-users"></i> <span>Bank Financers</span></a>
-            </li>
-
-            <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
-                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>Purchases</span></a>
-            </li>
-
-            <li class="{{ Request::is('quotations*') ? 'active' : '' }}">
-                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i>
-                    <span>Qoutations/Enquiries</span></a>
-            </li>
-
-            <li class="{{ Request::is('sales*') ? 'active' : '' }}">
-                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>Sales</span></a>
-            </li>
-
-            <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('rto.index') }}"><i class="fa fa-share"></i> <span>RTO</span></a>
-            </li>
             <li
-                class="treeview {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'active' : '' }}">
+                class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-cog"></i>
-                    <span>Common Setting</span>
+                    <span>ALL BASIC SETTINGS</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu"
-                    {{ Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'display:"block"' : '' }}>
-
+                    {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'display:"block"' : '' }}>
+                    <li class="{{ Request::is('branches*') ? 'active' : '' }}">
+                        <a href="{{ route('branches.index') }}"><i class="fa fa-building-o"></i>OUR BRANCHES</a>
+                    </li>
                     <li class="{{ Request::is('brands*') ? 'active' : '' }}">
-                        <a href="{{ route('brands.index') }}"><i class="fa fa-circle-o"></i>Brands</a>
+                        <a href="{{ route('brands.index') }}"><i class="fa fa-empire"></i>BRANDS LIST</a>
                     </li>
                     <li class="{{ Request::is('models*') ? 'active' : '' }}">
-                        <a href="{{ route('models.index') }}"><i class="fa fa-circle-o"></i>Models</a>
+                        <a href="{{ route('models.index') }}"><i class="fa fa-gg"></i>BRANDS MODELS</a>
                     </li>
                     <li class="{{ Request::is('colors*') ? 'active' : '' }}">
-                        <a href="{{ route('colors.index') }}"><i class="fa fa-circle-o"></i>Colors</a>
+                        <a href="{{ route('colors.index') }}"><i class="fa fa-paint-brush"></i>MODELS COLORS</a>
                     </li>
                     <li class="{{ Request::is('states*') ? 'active' : '' }}">
-                        <a href="{{ route('states.index') }}"><i class="fa fa-circle-o"></i> States</a>
+                        <a href="{{ route('states.index') }}"><i class="fa fa-building"></i>STATES LIST</a>
                     </li>
                     <li class="{{ Request::is('districts*') ? 'active' : '' }}">
-                        <a href="{{ route('districts.index') }}"><i class="fa fa-circle-o"></i>Districts</a>
+                        <a href="{{ route('districts.index') }}"><i class="fa fa-building"></i>DISTRICTS LIST</a>
                     </li>
                     <li class="{{ Request::is('cities*') ? 'active' : '' }}">
-                        <a href="{{ route('cities.index') }}"><i class="fa fa-circle-o"></i>Cities</a>
+                        <a href="{{ route('cities.index') }}"><i class="fa fa-building"></i>CITIES/TOWNS LISTS</a>
                     </li>
                 </ul>
             </li>
+
+            <li
+                class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-database"></i>
+                    <span>AUTOMOBILE USERS</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu"
+                    {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') ? 'display:"block"' : '' }}>
+
+                    <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+                        <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
+                    </li>
+                    <li class="{{ Request::is('users*') ? 'active' : '' }}">
+                        <a href="{{ route('users.index') }}"><i class="fa fa-users"></i>USERS</a>
+                    </li>
+                    <li class="{{ Request::is('agents*') ? 'active' : '' }}">
+                        <a href="{{ route('agents.index') }}"><i class="fa fa-user-secret"></i>AGENTS</a>
+                    </li>
+                    <li class="{{ Request::is('dealers*') ? 'active' : '' }}">
+                        <a href="{{ route('dealers.index') }}"><i class="fa fa-vcard"></i> DEALERS</a>
+                    </li>
+                    <li class="{{ Request::is('bankFinancers*') ? 'active' : '' }}">
+                        <a href="{{ route('bankFinancers.index') }}"><i class="fa fa-bank"></i>BANK FINANCERS</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
+                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>MY PURCHASES</span></a>
+            </li>
+
+            <li class="{{ Request::is('quotations*') ? 'active' : '' }}">
+                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i><span>PURCHASE
+                        QUOTATIONS</span></a>
+            </li>
+
+            <li class="{{ Request::is('sales*') ? 'active' : '' }}">
+                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES MANAGEMENT</span></a>
+            </li>
+
+            <li class="{{ Request::is('rto*') ? 'active' : '' }}">
+                <a href="{{ route('rto.index') }}"><i class="fa fa-share"></i> <span>RTO MANAGEMENT</span></a>
+            </li>
+
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
-                    <span>Reports</span>
+                    <span>REPORT MANAGEMENT</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
