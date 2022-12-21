@@ -70,34 +70,44 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $postData = $request->only('district_id', 'city_name', 'city_code', 'active_status');
-        $validator = Validator::make($postData, [
-            'district_id' => "required|exists:u_districts,id",
-            'city_name' => "required|unique:u_cities,city_name",
-            'city_code' => "nullable",
-            'active_status'      => 'required|in:0,1'
-        ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
+     public function store(Request $request)
+     {
+        $postData = $request->only('district_id','cities');
+         $validator = Validator::make($postData, [
+             'district_id' => 'required',
+             'cities.*.city_name' => "required",
+             'cities.*.city_code' => 'nullable',
+             'cities.*.active_status' => 'required|in:0,1'
+         ], [
+             'cities.*.city_name.required' => 'The City Name field is required.',
+             'cities.*.active_status.required' => 'The City status field is required.'
+         ]);
 
-        //Create New Role
-        City::create($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
-    }
+         //If Validation failed
+         if ($validator->fails()) {
+             return response()->json([
+                 'status'     => false,
+                 'statusCode' => 419,
+                 'message'    => $validator->errors()->first(),
+                 'errors'     => $validator->errors()
+             ]);
+         }
+
+         //Bulk insert
+         if (count($postData['cities']) > 0) {
+             foreach ($postData['cities'] as $k => $cityObj) {
+                 $cityObj['district_id'] = $postData['district_id'];
+                 City::create($cityObj);
+             }
+         }
+         //Create New Role
+         return response()->json([
+             'status'     => true,
+             'statusCode' => 200,
+             'message'    => "Created Successfully."
+         ]);
+     }
 
     /**
      * Display the specified resource.

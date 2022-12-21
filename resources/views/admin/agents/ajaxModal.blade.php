@@ -69,7 +69,7 @@
                 <option value="">---Select State---</option>
                 @if (isset($states))
                     @foreach ($states as $key => $state)
-                        <option {{ isset($data->state) && $data->state == $state->id ? 'selected' : '' }}
+                        <option {{ (isset($data->state) && $data->state == $state->id) || (!isset($data) && $key == 0)  ? 'selected' : '' }}
                             value="{{ $state->id }}">{{ $state->state_name }}</option>
                     @endforeach
                 @endif
@@ -82,7 +82,7 @@
                 <option value="">---Select District---</option>
                 @if (isset($districts))
                     @foreach ($districts as $key => $district)
-                        <option {{ isset($data->district) && $data->district == $district->id ? 'selected' : '' }}
+                        <option {{ (isset($data->district) && $data->district == $district->id)  || (!isset($data) && $key == 0) ? 'selected' : '' }}
                             value="{{ $district->id }}">{{ $district->district_name }}</option>
                     @endforeach
                 @endif
@@ -94,7 +94,7 @@
                 <option value="">---Select City---</option>
                 @if (isset($cities))
                     @foreach ($cities as $key => $city)
-                        <option {{ isset($data->city) && $data->city == $city->id ? 'selected="selected"' : '' }}
+                        <option {{ (isset($data->city) && $data->city == $city->id) || (!isset($data) && $key == 0) ? 'selected="selected"' : '' }}
                             value="{{ $city->id }}">{{ $city->city_name }}</option>
                     @endforeach
                 @endif
