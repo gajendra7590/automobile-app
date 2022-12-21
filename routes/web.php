@@ -69,3 +69,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //AjaxCommonController
     Route::post('getAjaxDropdown', 'AjaxCommonController@index')->name('getAjaxDropdown');
 });
+
+
+// 404 / Except Above Route
+Route::get('*', function () {
+    return 'TEst';
+})->name('404Route');
