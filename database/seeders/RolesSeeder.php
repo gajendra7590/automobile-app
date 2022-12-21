@@ -21,15 +21,14 @@ class RolesSeeder extends Seeder
     /**
      * Callback function for create roles
      */
-    public function createRoles() {
+    public function createRoles()
+    {
         $roles = array(
-            ['id' => 1,'name' => 'admin'],
-            ['id' => 2,'name' => 'singot-branch1'],
-            ['id' => 3,'name' => 'singot-branch2'],
-            ['id' => 4,'name' => 'singot-branch3']
+            ['id' => 1, 'name' => 'admin'],
+            ['id' => 2, 'name' => 'user']
         );
-        foreach($roles as $role) {
-            Role::updateOrCreate($role,$role);
+        foreach ($roles as $role) {
+            Role::updateOrCreate($role, $role);
         }
         return true;
     }

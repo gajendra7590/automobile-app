@@ -21,22 +21,19 @@ class UserSeeder extends Seeder
     /**
      * Function for create users
      */
-    public function createUsers() {
-        $users = array(
-            ['id' => 1,'name' => 'Admin','email' => 'admin@aakashauto.com'],
-            ['id' => 2,'name' => 'Branch1','email' => 'branch1@aakashauto.com'],
-            ['id' => 3,'name' => 'Branch2','email' => 'branch2@aakashauto.com'],
-            ['id' => 4,'name' => 'Branch3','email' => 'branch3@aakashauto.com'],
-        );
-
-        foreach($users as $user) {
-            $user['password'] = Hash::make('123456');
-            $user['email_verified_at'] = date('Y-m-d H:i:s');
-            User::updateOrCreate(
-                ['id' => $user['id'],'email' => $user['email']],
-                $user
-            );
-        }
+    public function createUsers()
+    {
+        //Create Admin User
+        $userModel = User::updateOrCreate(['id' => 1], [
+            'name'     => 'Admin',
+            'email'    => 'admin@aakashauto.com',
+            'password' => Hash::make('123456'),
+            'is_default' => 1,
+            'is_admin' => 1,
+            'active_status' => 1
+        ]);
+        //Assign Role
+        $userModel->assignRole(1);
         return true;
     }
 }

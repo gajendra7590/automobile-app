@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -58,11 +59,18 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::where('id', '!=', '1')->get();
+        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
+        $data = array(
+            'action'    => route('users.store'),
+            'roles'     => $roles,
+            'branches' => $branches,
+            'method' => 'POST',
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.users.ajaxModal', ['action' => route('users.store'), 'roles' => $roles])->render()
+            'data'       => view('admin.users.ajaxModal', $data)->render()
         ]);
     }
 
@@ -74,13 +82,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->only('name', 'email', 'password', 'branch_id', 'active_status');
         $validator = Validator::make($postData, [
             'name'     => "required",
             'email'    => "required|unique:users,email",
             'password' => "required|min:6",
-            'active_status'   => "required|in:0,1",
-            'role'     => "required|exists:roles,id"
+            'branch_id'     => "required|exists:branches,id",
+            'active_status'   => "required|in:0,1"
         ]);
 
         //If Validation failed
@@ -92,20 +100,12 @@ class UserController extends Controller
                 'errors'     => $validator->errors()
             ]);
         }
-
-        //Create New Role
-        $userModel = User::create([
-            'name' => $postData['name'],
-            'email' => $postData['email'],
-            'password' => Hash::make($postData['password']),
-            'active_status' => $postData['active_status']
-        ]);
-
+        $postData['password'] = Hash::make($postData['password']);
+        $userModel = User::create($postData);
         //Assign Role
         if ($userModel) {
-            $userModel->assignRole($postData['role']);
+            $userModel->assignRole(2);
         }
-
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -132,21 +132,21 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $roles = Role::where('id', '!=', '1')->get();
         $userModel = User::find($id);
+        $roles = Role::where('id', '!=', '1')->get();
+        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
+        $data = array(
+            'action'    => route('users.update', ['user' => $id]),
+            'roles'     => $roles,
+            'branches'  => $branches,
+            'data' => $userModel,
+            'method' => 'PUT',
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.users.ajaxModal', [
-                'action' => route(
-                    'users.update',
-                    ['user' => $id]
-                ),
-                'data' => $userModel,
-                'method' => 'PUT',
-                'roles' => $roles
-            ])->render()
+            'data'       => view('admin.users.ajaxModal', $data)->render()
         ]);
     }
 
@@ -226,8 +226,8 @@ class UserController extends Controller
     {
         $action = '<div class="action-btn-container">';
         if ($row->id != '1' && $row->is_default == '0') {
-            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-            $action .= '<a href="' . route('users.destroy', ['user' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('users.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> EDIT</a>';
+            // $action .= '<a href="' . route('users.destroy', ['user' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('users.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         } else {
             $action .= '--';
         }

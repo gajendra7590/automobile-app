@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('users.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New User">
+                                    data-modal_title="Add New User" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
