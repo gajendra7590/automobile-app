@@ -124,6 +124,22 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-key"></i>
+                    <span>MY SESSION</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('profile') }}"><i class="fa fa-user"></i>MY PROFILE</a></li>
+                    <li><a href="{{ route('profile') }}"><i class="fa fa-key"></i>CHANGE PASSWORD</a></li>
+                    <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out"></i>LOGOUT</a></li>
+            </li>
+        </ul>
+        </li>
         </ul>
     </section>
     <!-- /.sidebar -->

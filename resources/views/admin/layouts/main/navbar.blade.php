@@ -36,9 +36,9 @@
                                 @if (Auth::user())
                                     {{ Auth::user()->name }}
                                 @else
-                                    Guest
+                                    Guest Login
                                 @endif
-                                <small>show role</small>
+
                             </p>
                         </li>
                         <!-- Menu Footer-->
