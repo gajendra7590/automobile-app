@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('models.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New Model">
+                                    data-modal_title="Add New Model" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
@@ -37,9 +37,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Brand Name</th>
                                         <th>Model Name</th>
                                         <th>Model Code</th>
+                                        <th>Brand Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

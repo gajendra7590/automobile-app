@@ -6,6 +6,7 @@ use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeModel;
+use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Quotation;
@@ -84,6 +85,7 @@ class QuotationController extends Controller
     {
 
         $formData = array(
+            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
             'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
             'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
             'action' => route('quotations.store'),
@@ -189,6 +191,7 @@ class QuotationController extends Controller
         }
 
         $formData = array(
+            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
             'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
             'districts' => District::where('active_status', '1')->where('state_id', $quotModel->customer_state)->select('id', 'district_name')->get(),
             'cities' => City::where('active_status', '1')->where('district_id', $quotModel->customer_district)->select('id', 'city_name')->get(),

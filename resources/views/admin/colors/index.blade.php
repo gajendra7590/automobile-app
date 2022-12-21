@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('colors.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New Colors">
+                                    data-modal_title="Add New Colors" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
@@ -39,6 +39,7 @@
                                         <th>#</th>
                                         <th>Color Name</th>
                                         <th>Color Code</th>
+                                        <th>Model Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

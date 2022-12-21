@@ -12,6 +12,7 @@ class Quotation extends Model
     protected $table = 'quotations';
 
     protected $fillable = [
+        'branch_id',
         'bike_purchase_id',
         'customer_first_name',
         'customer_middle_name',

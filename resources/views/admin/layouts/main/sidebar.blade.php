@@ -44,10 +44,10 @@
                         <a href="{{ route('brands.index') }}"><i class="fa fa-empire"></i>BRANDS LIST</a>
                     </li>
                     <li class="{{ Request::is('models*') ? 'active' : '' }}">
-                        <a href="{{ route('models.index') }}"><i class="fa fa-gg"></i>BRANDS MODELS</a>
+                        <a href="{{ route('models.index') }}"><i class="fa fa-gg"></i>MODELS LIST</a>
                     </li>
                     <li class="{{ Request::is('colors*') ? 'active' : '' }}">
-                        <a href="{{ route('colors.index') }}"><i class="fa fa-paint-brush"></i>MODELS COLORS</a>
+                        <a href="{{ route('colors.index') }}"><i class="fa fa-paint-brush"></i>MODEL COLORS</a>
                     </li>
                     <li class="{{ Request::is('states*') ? 'active' : '' }}">
                         <a href="{{ route('states.index') }}"><i class="fa fa-building"></i>STATES LIST</a>

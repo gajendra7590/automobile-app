@@ -106,10 +106,10 @@ class PurchaseController extends Controller
     public function create()
     {
         $data = array(
-            'branches' => Branch::select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::select('id', 'company_name')->get(),
-            'brands' => BikeBrand::select('id', 'name')->get(),
-            'colors' => BikeColor::select('id', 'color_name')->get(),
+            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
+            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
+            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
+            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
             'break_types' => break_types(),
@@ -224,10 +224,10 @@ class PurchaseController extends Controller
         $editModelsHtml = models_list($models, $bpModel->bike_model);
 
         $data = array(
-            'branches' => Branch::select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::select('id', 'company_name')->get(),
-            'brands' => BikeBrand::select('id', 'name')->get(),
-            'colors' => BikeColor::select('id', 'color_name')->get(),
+            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
+            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
+            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
+            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
             'break_types' => break_types(),
@@ -341,7 +341,7 @@ class PurchaseController extends Controller
 
     public function getModelsList($id)
     {
-        $models = BikeModel::where(['brand_id' => $id])->get()->toArray();
+        $models = BikeModel::where('active_status', '1')->where(['brand_id' => $id])->get()->toArray();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

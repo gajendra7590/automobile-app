@@ -69,12 +69,16 @@ class BikeModelController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->only('models', 'brand_id');
         $validator = Validator::make($postData, [
-            'brand_id'      => "required|exists:bike_brands,id",
-            'model_name'    => "required",
-            'model_code'    => "nullable",
-            'active_status' => 'required|in:0,1'
+            'brand_id'              => 'required',
+            'models.*.model_name'     => "required",
+            'models.*.model_code'     => 'nullable',
+            'models.*.active_status'  => 'required|in:0,1'
+        ], [
+            'models.*.model_name.required' => 'The Color Name field is required.',
+            'models.*.active_status.required' => 'The Color status field is required.',
+            'brand_id' => 'The brand is not selected.'
         ]);
 
         //If Validation failed
@@ -87,13 +91,14 @@ class BikeModelController extends Controller
             ]);
         }
 
+        //Bulk insert
+        if (count($postData['models']) > 0) {
+            foreach ($postData['models'] as $k => $modelObj) {
+                $modelObj['brand_id'] = $postData['brand_id'];
+                BikeModel::create($modelObj);
+            }
+        }
         //Create New Role
-        BikeModel::create([
-            'brand_id'      => $postData['brand_id'],
-            'model_name'    => $postData['model_name'],
-            'model_code'    => $postData['model_code'],
-            'active_status' => $postData['active_status']
-        ]);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -133,7 +138,7 @@ class BikeModelController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.models.ajaxModal', [
+            'data'       => view('admin.models.ajaxEditModal', [
                 'action' => route(
                     'models.update',
                     ['model' => $id]

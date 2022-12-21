@@ -11,19 +11,32 @@
     @endif
     <div class="row">
         <div class="box-body">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
+                <label>Branch</label>
+                <select name="branch_id" class="form-control">
+                    <option value="">---Select Branch---</option>
+                    @if (isset($branches))
+                        @foreach ($branches as $key => $branch)
+                            <option
+                                {{ isset($data['bike_branch']) && $data['bike_branch'] == $branch->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="form-group col-md-3">
                 <label>Customer First Name</label>
                 <input name="customer_first_name" type="text" class="form-control"
                     value="{{ isset($data['customer_first_name']) ? $data['customer_first_name'] : '' }}"
                     placeholder="Customer First Name..">
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>Customer Middle Name</label>
                 <input name="customer_middle_name" type="text" class="form-control"
                     value="{{ isset($data['customer_middle_name']) ? $data['customer_middle_name'] : '' }}"
                     placeholder="Customer Middle Name..">
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>Customer Last Name</label>
                 <input name="customer_last_name" type="text" class="form-control"
                     value="{{ isset($data['customer_last_name']) ? $data['customer_last_name'] : '' }}"

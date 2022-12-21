@@ -12,6 +12,7 @@ class BikeColor extends Model
     protected $table = 'bike_colors';
 
     protected $fillable = [
+        'bike_model',
         'color_name',
         'color_code',
         'active_status'
@@ -20,4 +21,9 @@ class BikeColor extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public function model()
+    {
+        return $this->belongsTo(BikeModel::class, 'bike_model');
+    }
 }
