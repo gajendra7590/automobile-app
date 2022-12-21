@@ -15,24 +15,24 @@
             <input type='email' class="form-control my-colorpicker1 colorpicker-element" placeholder="Email" required
                 name="email" value="{{ isset($data) && $data ? $data->email : '' }}" />
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
             <label>Mobile Number</label>
             <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Mobile Number"
                 required name="mobile_number" value="{{ isset($data) && $data ? $data->mobile_number : '' }}" />
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
             <label>Mobile Number Alternate</label>
             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                 placeholder="Mobile Number Alternate" name="mobile_number2"
                 value="{{ isset($data) && $data ? $data->mobile_number2 : '' }}" />
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
             <label>Aadhar Card Number(12 digits)</label>
             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                 placeholder="Aadhar Card Number" name="aadhar_card"
                 value="{{ isset($data) && $data ? $data->aadhar_card : '' }}" />
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
             <label>Pan Card Number(10 digits)</label>
             <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Pancard Number"
                 name="pan_card" value="{{ isset($data) && $data ? $data->pan_card : '' }}" />
@@ -64,17 +64,12 @@
         </div>
         <div class="form-group col-md-3">
             <label>State</label>
-            <select
-                name="state"
-                data-url="{{ url('getAjaxDropdown') . '?req=districts' }}"
-                data-dep_dd_name="district"
-                data-dep_dd2_name="city"
-                class="form-control ajaxChangeCDropDown">
+            <select name="state" data-url="{{ url('getAjaxDropdown') . '?req=districts' }}"
+                data-dep_dd_name="district" data-dep_dd2_name="city" class="form-control ajaxChangeCDropDown">
                 <option value="">---Select State---</option>
                 @if (isset($states))
                     @foreach ($states as $key => $state)
-                        <option
-                            {{ isset($data->state) && $data->state == $state->id ? 'selected' : '' }}
+                        <option {{ isset($data->state) && $data->state == $state->id ? 'selected' : '' }}
                             value="{{ $state->id }}">{{ $state->state_name }}</option>
                     @endforeach
                 @endif
@@ -82,16 +77,12 @@
         </div>
         <div class="form-group col-md-3">
             <label>District</label>
-            <select
-                name="district"
-                data-dep_dd_name="city"
-                data-url="{{ url('getAjaxDropdown') . '?req=cities' }}"
+            <select name="district" data-dep_dd_name="city" data-url="{{ url('getAjaxDropdown') . '?req=cities' }}"
                 class="form-control ajaxChangeCDropDown">
                 <option value="">---Select District---</option>
                 @if (isset($districts))
                     @foreach ($districts as $key => $district)
-                        <option
-                            {{ isset($data->district) && $data->district == $district->id ? 'selected' : '' }}
+                        <option {{ isset($data->district) && $data->district == $district->id ? 'selected' : '' }}
                             value="{{ $district->id }}">{{ $district->district_name }}</option>
                     @endforeach
                 @endif
@@ -103,8 +94,7 @@
                 <option value="">---Select City---</option>
                 @if (isset($cities))
                     @foreach ($cities as $key => $city)
-                        <option
-                            {{ isset($data->city) && $data->city == $city->id ? 'selected="selected"' : '' }}
+                        <option {{ isset($data->city) && $data->city == $city->id ? 'selected="selected"' : '' }}
                             value="{{ $city->id }}">{{ $city->city_name }}</option>
                     @endforeach
                 @endif

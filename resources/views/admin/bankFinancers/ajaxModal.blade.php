@@ -18,19 +18,19 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-4">
                             <label>Bank Name</label>
                             <input type="text" class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Name" required name="bank_name"
                                 value='{{ isset($data) && $data->bank_name ? $data->bank_name : '' }}' />
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-5">
                             <label>Bank Branch Code</label>
                             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Branch Code" name="bank_branch_code"
                                 value="{{ isset($data) && $data->bank_branch_code ? $data->bank_branch_code : '' }}" />
                         </div>
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-3">
                             <label>Bank Contact Number</label>
                             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Contact Number" name="bank_contact_number"
@@ -96,37 +96,37 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Name</label>
                             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Name" name="bank_financer_name"
                                 value="{{ isset($data) && $data->bank_financer_name ? $data->bank_financer_name : '' }}" />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Contact</label>
                             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Contact" name="bank_financer_contact"
                                 value="{{ isset($data) && $data->bank_financer_contact ? $data->bank_financer_contact : '' }}" />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Email</label>
                             <input type='email' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Email" name="bank_financer_email"
                                 value="{{ isset($data) && $data->bank_financer_email ? $data->bank_financer_email : '' }}" />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Address</label>
                             <input type='text' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Address" name="bank_financer_address"
                                 value="{{ isset($data) && $data->bank_financer_address ? $data->bank_financer_address : '' }}" />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Aadhar Card</label>
                             <input type='number' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Aadhar Card" name="bank_financer_aadhar_card"
                                 value="{{ isset($data) && $data->bank_financer_aadhar_card ? $data->bank_financer_aadhar_card : '' }}" />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Bank Financer Pan Card</label>
                             <input type='number' class="form-control my-colorpicker1 colorpicker-element"
                                 placeholder="Bank Financer Pan Card" name="bank_financer_pan_card"

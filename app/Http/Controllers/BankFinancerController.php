@@ -95,7 +95,7 @@ class BankFinancerController extends Controller
             ]);
         }
 
-        BankFinancer::create($request->only(['bank_name','bank_branch_code','bank_contact_number','bank_email_address','bank_full_address','bank_manager_name','bank_manager_contact','bank_manager_email','bank_financer_name','bank_financer_contact','bank_financer_email','bank_financer_address','bank_financer_aadhar_card','bank_financer_pan_card','more_details','active_status']));
+        BankFinancer::create($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status']));
 
         return response()->json([
             'status'     => true,
@@ -144,7 +144,7 @@ class BankFinancerController extends Controller
     {
         $postData = $request->all();
         $validateArray = [
-            'bank_name' => 'required|string|unique:bank_financers,bank_name,'. $id .',id',
+            'bank_name' => 'required|string|unique:bank_financers,bank_name,' . $id . ',id',
             'bank_branch_code' => 'nullable|string',
             'bank_contact_number' => 'nullable|string|min:10|max:13',
             'bank_email_address' => 'nullable|email',
@@ -152,13 +152,13 @@ class BankFinancerController extends Controller
             'bank_manager_name' => 'nullable|string',
             'bank_manager_contact' => 'nullable|string|min:10|max:13',
             'bank_manager_email' => 'nullable|string|email',
-            'bank_financer_name' => 'nullable|string',
-            'bank_financer_contact' => 'nullable|string|min:10|max:13',
+            'bank_financer_name' => 'required|string',
+            'bank_financer_contact' => 'required|string|min:10|max:13',
             'bank_financer_email' => 'nullable|string|email',
             'bank_financer_address' => 'nullable|string',
             'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
             'bank_financer_pan_card' => 'nullable|string',
-            'more_details' => 'string',
+            'more_details' => 'nullable|string',
             'active_status' => 'required|in:0,1'
         ];
         $validator = Validator::make($postData, $validateArray);
@@ -169,7 +169,7 @@ class BankFinancerController extends Controller
         if (!$bankFinancer) {
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
-        $bankFinancer->update($request->only(['bank_name','bank_branch_code','bank_contact_number','bank_email_address','bank_full_address','bank_manager_name','bank_manager_contact','bank_manager_email','bank_financer_name','bank_financer_contact','bank_financer_email','bank_financer_address','bank_financer_aadhar_card','bank_financer_pan_card','more_details','active_status']));
+        $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status']));
         return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 

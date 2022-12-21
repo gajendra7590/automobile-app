@@ -37,9 +37,7 @@
                                         <th>#</th>
                                         <th>Bank Name</th>
                                         <th>Bank Branch Code</th>
-                                        <th>Bank Contact Number</th>
                                         <th>Bank Manager Name</th>
-                                        <th>Bank Manager Contact</th>
                                         <th>Bank Financer Name</th>
                                         <th>Bank Financer Contact</th>
                                         <th>Status</th>

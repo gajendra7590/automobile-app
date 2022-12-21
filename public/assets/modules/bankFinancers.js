@@ -29,18 +29,10 @@ $(document).ready(function () {
                     data: "bank_branch_code",
                     name: "bank_branch_code",
                 },
-                {
-                    data: "bank_contact_number",
-                    name: "bank_contact_number",
-                },
 
                 {
                     data: "bank_manager_name",
                     name: "bank_manager_name",
-                },
-                {
-                    data: "bank_manager_contact",
-                    name: "bank_manager_contact",
                 },
                 {
                     data: "bank_financer_name",
