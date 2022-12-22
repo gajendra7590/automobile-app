@@ -27,6 +27,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('profile', 'AuthController@profile')->name('profile');
     Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');
 
+    Route::post('profileUpdate', 'AuthController@profileUpdate')->name('profileUpdate');
+    Route::post('passwordUpdate', 'AuthController@passwordUpdate')->name('passwordUpdate');
     //Bike - Make/Model/Colors
     Route::resource('brands', 'BikeBrandsController');
 
