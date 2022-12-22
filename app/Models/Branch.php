@@ -12,10 +12,10 @@ class Branch extends Model
     protected $table = 'branches';
 
     protected $fillable = [
-        'branch_manager_name',
-        'branch_manager_phone',
         'branch_name',
+        'branch_email',
         'branch_phone',
+        'branch_phone2',
         'branch_address_line',
         'branch_city',
         'branch_district',
@@ -23,6 +23,7 @@ class Branch extends Model
         'branch_county',
         'branch_pincode',
         'branch_more_detail',
+        'gstin_number',
         'active_status'
     ];
 

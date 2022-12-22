@@ -22,27 +22,51 @@ class BranchesSeeder extends Seeder
         $branches = array(
             [
                 'id'                   => 1,
-                'branch_manager_name'  => 'Aakash Soni',
-                'branch_manager_phone' => '1234567890',
-                'branch_name'          => 'Singot',
+                'branch_name'          => 'AKASH MOTORS',
+                'branch_email'         => 'akashmotorssingot@gmail.com',
+                'branch_phone'         => '9424571005',
+                'branch_phone2'        => '8085367143',
+                'branch_address_line'  => 'Khasra No.-704/150,Near Bus Stand Dharni Road',
+                'branch_county'        => '1',
+                'branch_state'         => '1',
+                'branch_district'      => '1',
+                'branch_city'          => '1',
+                'branch_pincode'       => '450881',
+                'gstin_number'         => '23AXVPS0237M1ZX',
                 'active_status'        => '1'
             ],
             [
                 'id'                   => 2,
-                'branch_manager_name'  => 'Aakash Soni',
-                'branch_manager_phone' => '1234567890',
-                'branch_name'          => 'Khandwa',
+                'branch_name'          => 'GURUKRIPA AGENCY',
+                'branch_email'         => 'gurukripasingot@gmail.com',
+                'branch_phone'         => '9171235037',
+                'branch_phone2'        =>  null,
+                'branch_address_line'  => 'NEAR BUS STAND,SINGOT',
+                'branch_county'        => '1',
+                'branch_state'         => '1',
+                'branch_district'      => '1',
+                'branch_city'          => '1',
+                'branch_pincode'       => '450881',
+                'gstin_number'         => '23BBZPS9887C1ZO',
                 'active_status'        => '1'
             ],
             [
                 'id'                   => 3,
-                'branch_manager_name'  => 'Aakash Soni',
-                'branch_manager_phone' => '1234567890',
-                'branch_name'          => 'Burhanpur',
+                'branch_name'          => 'SAI AUTOMOBILE',
+                'branch_email'         => 'saihondasingot@gmail.com',
+                'branch_phone'         => '9111489794',
+                'branch_phone2'        => null,
+                'branch_address_line'  => 'NEAR BUS STAND, SINGOT',
+                'branch_county'        => '1',
+                'branch_state'         => '1',
+                'branch_district'      => '1',
+                'branch_city'          => '1',
+                'branch_pincode'       => '450881',
+                'gstin_number'         => '23HLLPS4119F1ZY',
                 'active_status'        => '1'
             ]
         );
-        foreach ($branches as $branch) {
+        foreach ($branches as $i => $branch) {
             Branch::updateOrCreate(['id' => $branch['id']], $branch);
         }
     }
