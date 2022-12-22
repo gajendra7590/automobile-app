@@ -7,59 +7,84 @@
 
     <div class="row">
         <div class="form-group col-md-6">
-            <label>Branch Manager Name</label>
-            <input type="text" class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Branch Manager Name" name="branch_manager_name"
-                value='{{ isset($data) && $data->branch_manager_name ? $data->branch_manager_name : '' }}' />
-        </div>
-        <div class="form-group col-md-6">
-            <label>Branch Manager Phone</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Branch Manager Phone" name="branch_manager_phone"
-                value="{{ isset($data) && $data->branch_manager_phone ? $data->branch_manager_phone : '' }}" />
-        </div>
-        <div class="form-group col-md-6">
             <label>Branch Name</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Branch Name Phone" required name="branch_name"
+            <input type='text' class="form-control" placeholder="Branch Name" required name="branch_name"
                 value="{{ isset($data) && $data->branch_name ? $data->branch_name : '' }}" />
         </div>
         <div class="form-group col-md-6">
+            <label>Branch Email</label>
+            <input type='text' class="form-control" placeholder="Branch Email" required name="branch_email"
+                value="{{ isset($data) && $data->branch_email ? $data->branch_email : '' }}" />
+        </div>
+        <div class="form-group col-md-6">
             <label>Branch Phone</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch Phone"
-                required name="branch_phone"
+            <input type='text' class="form-control" placeholder="Branch Phone" required name="branch_phone"
                 value="{{ isset($data) && $data->branch_phone ? $data->branch_phone : '' }}" />
+        </div>
+        <div class="form-group col-md-6">
+            <label>Branch Phone2</label>
+            <input type='text' class="form-control" placeholder="Branch Phone2" required name="branch_phone2"
+                value="{{ isset($data) && $data->branch_phone2 ? $data->branch_phone2 : '' }}" />
         </div>
 
         <div class="form-group col-md-8">
             <label>Branch Address Line</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Branch Address Line" name="branch_address_line"
+            <input type='text' class="form-control" placeholder="Branch Address Line" name="branch_address_line"
                 value="{{ isset($data) && $data->branch_address_line ? $data->branch_address_line : '' }}" />
         </div>
         <div class="form-group col-md-4">
             <label>Branch State</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch State"
-                name="branch_state" value="{{ isset($data) && $data->branch_state ? $data->branch_state : '' }}" />
+            <select name="branch_state" data-dep_dd_name="branch_district"
+                data-url="{{ url('getAjaxDropdown') . '?req=districts' }}" data-dep_dd2_name="branch_city"
+                class="form-control ajaxChangeCDropDown">
+                <option value="">---Select State---</option>
+                @isset($states)
+                    @foreach ($states as $state)
+                        <option
+                            {{ isset($data['branch_state']) && $data['branch_state'] == $state->id ? 'selected="selected"' : '' }}
+                            value="{{ $state->id }}">{{ $state->state_name }}</option>
+                    @endforeach
+                @endisset
+            </select>
         </div>
         <div class="form-group col-md-4">
             <label>Branch District</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch District"
-                name="branch_district"
-                value="{{ isset($data) && $data->branch_district ? $data->branch_district : '' }}" />
+            <select name="branch_district" class="form-control ajaxChangeCDropDown" data-dep_dd_name="branch_city"
+                data-url="{{ url('getAjaxDropdown') . '?req=cities' }}" data-dep_dd2_name="">
+                <option value="">---Select District---</option>
+                @isset($districts)
+                    @foreach ($districts as $district)
+                        <option
+                            {{ isset($data['branch_district']) && $data['branch_district'] == $district->id ? 'selected="selected"' : '' }}
+                            value="{{ $district->id }}">{{ $district->district_name }}</option>
+                    @endforeach
+                @endisset
+            </select>
         </div>
         <div class="form-group col-md-4">
             <label>Branch City</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch City"
-                name="branch_city" value="{{ isset($data) && $data->branch_city ? $data->branch_city : '' }}" />
+            <select name="branch_city" class="form-control">
+                <option value="">---Select City---</option>
+                @isset($cities)
+                    @foreach ($cities as $city)
+                        <option
+                            {{ isset($data['branch_city']) && $data['branch_city'] == $city->id ? 'selected="selected"' : '' }}
+                            value="{{ $city->id }}">{{ $city->city_name }}</option>
+                    @endforeach
+                @endisset
+            </select>
         </div>
         <div class="form-group col-md-4">
             <label>Branch Pincode</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch Pincode"
-                name="branch_pincode"
+            <input type='text' class="form-control" placeholder="Branch Pincode" name="branch_pincode"
                 value="{{ isset($data) && $data->branch_pincode ? $data->branch_pincode : '' }}" />
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
+            <label>Branch GST Number</label>
+            <input type='text' class="form-control" placeholder="Branch GST Number" name="gstin_number"
+                value="{{ isset($data) && $data->gstin_number ? $data->gstin_number : '' }}" />
+        </div>
+        <div class="form-group col-md-6">
             <label>Status : </label>
             <select class="form-control" name="active_status">
                 <option value="1"
@@ -75,8 +100,7 @@
         </div>
         <div class="form-group col-md-12">
             <label>Branch More Detail</label>
-            <textarea type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Branch More Detail"
-                name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>
+            <textarea type='text' class="form-control" placeholder="Branch More Detail" name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>
         </div>
     </div>
     <div class="row">

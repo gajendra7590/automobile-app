@@ -26,16 +26,24 @@ $(document).ready(function () {
                     name: "branch_name",
                 },
                 {
+                    data: "branch_email",
+                    name: "branch_email",
+                },
+                {
                     data: "branch_phone",
                     name: "branch_phone",
                 },
                 {
-                    data: "branch_manager_name",
-                    name: "branch_manager_name",
+                    data: "branch_phone2",
+                    name: "branch_phone2",
                 },
                 {
-                    data: "branch_manager_phone",
-                    name: "branch_manager_phone",
+                    data: "branch_address_line",
+                    name: "branch_address_line",
+                },
+                {
+                    data: "gstin_number",
+                    name: "gstin_number",
                 },
                 {
                     data: "active_status",

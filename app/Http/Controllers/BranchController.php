@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\Models\City;
+use App\Models\District;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -48,11 +51,12 @@ class BranchController extends Controller
      */
     public function create()
     {
+        $states = State::where('active_status', '1')->select('id', 'state_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.branches.ajaxModal', ['action' => route('branches.store'), 'method' => 'POST'])->render()
+            'data'       => view('admin.branches.ajaxModal', ['action' => route('branches.store'), 'method' => 'POST', 'states' => $states])->render()
         ]);
     }
 
@@ -66,9 +70,9 @@ class BranchController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'branch_manager_name' => 'nullable|string',
-            'branch_manager_phone' => 'nullable|string|min:10|max:13',
             'branch_name' => 'required|string|unique:branches,branch_name,NULL,id',
+            'branch_email' => 'required|email',
+            'branch_phone' => 'required|string|min:10|max:13',
             'branch_phone' => 'required|string|min:10|max:13',
             'branch_address_line' => 'nullable|string',
             'branch_city' => 'nullable|string',
@@ -76,6 +80,7 @@ class BranchController extends Controller
             'branch_state' => 'nullable|string',
             'branch_county' => 'nullable|string',
             'branch_pincode' => 'nullable|string',
+            'gstin_number' => 'nullable|string',
             'branch_more_detail' => 'nullable|string',
             'active_status'      => 'required|in:0,1'
         ]);
@@ -91,9 +96,9 @@ class BranchController extends Controller
         }
 
         $createData = $request->only([
-            'branch_manager_name',
-            'branch_manager_phone',
             'branch_name',
+            'branch_email',
+            'branch_phone',
             'branch_phone',
             'branch_address_line',
             'branch_city',
@@ -102,6 +107,7 @@ class BranchController extends Controller
             'branch_county',
             'branch_pincode',
             'branch_more_detail',
+            'gstin_number',
             'active_status'
         ]);
 
@@ -135,11 +141,19 @@ class BranchController extends Controller
     public function edit($id)
     {
         $branch = Branch::find($id);
+        $data = array(
+            'data' => $branch,
+            'action' => route('branches.update', ['branch' => $id]),
+            'method' => 'PUT',
+            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
+            'districts' => District::where('active_status', '1')->where('state_id', $branch->branch_state)->select('id', 'district_name')->get(),
+            'cities' => City::where('active_status', '1')->where('district_id', $branch->branch_district)->select('id', 'city_name')->get(),
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.branches.ajaxModal', ['data' => $branch, 'action' => route('branches.update', ['branch' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.branches.ajaxModal', $data)->render()
         ]);
     }
 
@@ -154,9 +168,9 @@ class BranchController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'branch_manager_name' => 'nullable|string',
-            'branch_manager_phone' => 'nullable|string|min:10|max:13',
             'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
+            'branch_email' => 'required|email',
+            'branch_phone' => 'required|string|min:10|max:13',
             'branch_phone' => 'required|string|min:10|max:13',
             'branch_address_line' => 'nullable|string',
             'branch_city' => 'nullable|string',
@@ -164,7 +178,7 @@ class BranchController extends Controller
             'branch_state' => 'nullable|string',
             'branch_county' => 'nullable|string',
             'branch_pincode' => 'nullable|string',
-            'branch_more_detail' => 'nullable|string',
+            'gstin_number' => 'nullable|string',
             'branch_more_detail' => 'nullable|string',
             'active_status'      => 'required|in:0,1'
         ]);
@@ -176,9 +190,9 @@ class BranchController extends Controller
             return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
         }
         $createData = $request->only([
-            'branch_manager_name',
-            'branch_manager_phone',
             'branch_name',
+            'branch_email',
+            'branch_phone',
             'branch_phone',
             'branch_address_line',
             'branch_city',
@@ -187,6 +201,7 @@ class BranchController extends Controller
             'branch_county',
             'branch_pincode',
             'branch_more_detail',
+            'gstin_number',
             'active_status'
         ]);
         $branch->update($createData);
