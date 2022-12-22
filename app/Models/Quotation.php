@@ -11,12 +11,16 @@ class Quotation extends Model
 
     protected $table = 'quotations';
 
+    protected $appends = ['cust_name'];
+
     protected $fillable = [
+        'uuid',
         'branch_id',
         'bike_purchase_id',
         'customer_first_name',
         'customer_middle_name',
         'customer_last_name',
+        'customer_father_name',
         'customer_address_line',
         'customer_state',
         'customer_district',
@@ -48,6 +52,36 @@ class Quotation extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->uuid = 'enq/' . date('dmY') . '/' . rand(11111, 55555);
+        });
+    }
+
+    public function getCustNameAttribute()
+    {
+        $str = '';
+        if (!empty($this->customer_first_name)) {
+            $str .= $this->customer_first_name;
+        }
+
+        if (!empty($this->customer_middle_name)) {
+            $str .= ' ' . $this->customer_middle_name;
+        }
+
+        if (!empty($this->customer_last_name)) {
+            $str .= ' ' . $this->customer_last_name;
+        }
+
+        if (!empty($this->customer_father_name)) {
+            $str .= ' S/O ' . $this->customer_father_name;
+        }
+        return $str;
+    }
 
     public function state()
     {
@@ -82,5 +116,10 @@ class Quotation extends Model
     public function financer()
     {
         return $this->belongsTo(BankFinancer::class, 'hyp_financer');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

@@ -42,8 +42,14 @@
                     value="{{ isset($data['customer_last_name']) ? $data['customer_last_name'] : '' }}"
                     placeholder="Customer Last Name..">
             </div>
+            <div class="form-group col-md-3">
+                <label>Customer Fathers Name</label>
+                <input name="customer_father_name" type="text" class="form-control"
+                    value="{{ isset($data['customer_father_name']) ? $data['customer_father_name'] : '' }}"
+                    placeholder="Customer Fathers Name..">
+            </div>
 
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-9">
                 <label>Customer Address Line</label>
                 <input name="customer_address_line" type="text" class="form-control"
                     value="{{ isset($data['customer_address_line']) ? $data['customer_address_line'] : '' }}"

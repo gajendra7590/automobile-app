@@ -114,6 +114,7 @@ class QuotationController extends Controller
             'customer_first_name'       => "required|string",
             'customer_middle_name'      => "nullable|string",
             'customer_last_name'        => "nullable|string",
+            'customer_father_name'      => "nullable|string",
             'customer_address_line'     => "required|string",
             'customer_state'            => "required",
             'customer_district'         => "required",
@@ -239,6 +240,7 @@ class QuotationController extends Controller
             'customer_first_name'       => "required|string",
             'customer_middle_name'      => "nullable|string",
             'customer_last_name'        => "nullable|string",
+            'customer_father_name'      => "nullable|string",
             'customer_address_line'     => "required|string",
             'customer_state'            => "required",
             'customer_district'         => "required",
@@ -309,10 +311,13 @@ class QuotationController extends Controller
     }
 
 
-    public function printQuotation(Request $request)
+    public function printQuotation(Request $request, $id)
     {
+        $quotationModel = Quotation::with([
+            'branch'
+        ])->where(['id' => $id])->first();
         // return view('admin.quotations.invoice-print');
-        $pdf = Pdf::loadView('admin.quotations.invoice-print', []);
+        $pdf = Pdf::loadView('admin.quotations.invoice-print', ['data' => $quotationModel]);
         return $pdf->stream('invoice.pdf');
     }
 }
