@@ -311,7 +311,7 @@ class QuotationController extends Controller
 
     public function printQuotation(Request $request)
     {
-        return view('admin.quotations.invoice-print');
+        // return view('admin.quotations.invoice-print');
         $pdf = Pdf::loadView('admin.quotations.invoice-print', []);
         return $pdf->stream('invoice.pdf');
     }
