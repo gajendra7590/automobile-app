@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuotationController extends Controller
 {
@@ -311,5 +312,7 @@ class QuotationController extends Controller
     public function printQuotation(Request $request)
     {
         return view('admin.quotations.invoice-print');
+        $pdf = Pdf::loadView('admin.quotations.invoice-print', []);
+        return $pdf->stream('invoice.pdf');
     }
 }
