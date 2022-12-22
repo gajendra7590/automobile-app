@@ -155,6 +155,26 @@ class UserController extends Controller
         ]);
     }
 
+    public function changePasswordUpdate($id)
+    {
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post')])->render()
+        ]);
+    }
+
+    public function changePassword($id)
+    {
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post')])->render()
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -232,6 +252,8 @@ class UserController extends Controller
         $action = '<div class="action-btn-container">';
         if ($row->id != '1' && $row->is_default == '0') {
             $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('user.changePassword', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Change Password"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+
             // $action .= '<a href="' . route('users.destroy', ['user' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('users.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         } else {
             $action .= '--';
