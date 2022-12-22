@@ -77,7 +77,8 @@ class AuthController extends Controller
     }
 
     public function profile(Request $request) {
-        return 'ndnfdf';
+        $user = auth()->user();
+        return view('');
     }
 
 

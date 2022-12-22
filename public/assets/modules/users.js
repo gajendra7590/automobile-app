@@ -22,6 +22,10 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "profile_image",
+                    name: "profile_image",
+                },
+                {
                     data: "name",
                     name: "name",
                 },
@@ -49,7 +53,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [1,-1],
                 },
                 {
                     searchable: false,

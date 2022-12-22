@@ -28,7 +28,7 @@ class UserController extends Controller
                 'branch' => function ($b) {
                     $b->select('id', 'branch_name');
                 }
-            ])->select('id', 'name', 'email', 'active_status', 'is_default', 'branch_id');
+            ])->select('id', 'name', 'email', 'profile_image','active_status', 'is_default', 'branch_id');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($row) {
@@ -45,13 +45,16 @@ class UserController extends Controller
                         return '<span class="label label-warning">In Active</span>';
                     }
                 })
+                ->addColumn('profile_image', function ($row) {
+                    return "<img src=". $row->profile_image ." style='height: 60px;width: 60px;border-radius: 50%;'>";
+                })
                 ->addColumn('branch.branch_name', function ($row) {
                     return (isset($row->branch->branch_name) > 0) ? ucfirst($row->branch->branch_name) . ' Branch' : 'All Branches';
                 })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['branch.branch_name', 'active_status', 'action'])
+                ->rawColumns(['branch.branch_name', 'active_status', 'action','profile_image'])
                 ->make(true);
         }
     }
@@ -93,7 +96,8 @@ class UserController extends Controller
             'email'    => "required|unique:users,email",
             'password' => "required|min:6",
             'branch_id'     => "required|exists:branches,id",
-            'active_status'   => "required|in:0,1"
+            'active_status'   => "required|in:0,1",
+            'profile_image'   => "nullable|mime:jpg,png,img,jpeg"
         ]);
 
         //If Validation failed

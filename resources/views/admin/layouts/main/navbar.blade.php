@@ -18,7 +18,7 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
+                        <img src="{{ auth()->check() ? auth()->user()->profile_image : asset('assets/dist/img/default-avatar.png') }}" class="user-image" alt="User Image">
                         <span class="hidden-xs">
                             @if (Auth::user())
                                 {{ Auth::user()->name }}
@@ -30,7 +30,7 @@
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle"
+                            <img src="{{ auth()->check() ? auth()->user()->profile_image : asset('assets/dist/img/default-avatar.png') }}" class="img-circle"
                                 alt="User Image">
                             <p>
                                 @if (Auth::user())

@@ -53,4 +53,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
+
+    public function getProfileImageAttribute($value){
+        if(!empty($value)){
+            return env('APP_URL') . '/storage' . '/' . $value;
+        } else {
+            return url('/assets/dist/img/default-avatar.png');
+        }
+    }
 }
