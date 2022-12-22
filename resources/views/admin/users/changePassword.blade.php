@@ -1,4 +1,4 @@
-<form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}"
+<form role="form" method="POST" class="ajaxFormSubmit validatedForm" action="{{ isset($action) ? $action : '' }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon" autocomplete="off">
     @csrf
     <div class="box-body">
@@ -10,8 +10,8 @@
             </div>
             <div class="form-group col-md-12">
                 <label>Confirm Password</label>
-                <input name="confirmation_password" type="password" class="form-control" value=""
-                    placeholder="Please enter confirm password..">
+                <input name="password_confirmation" type="password" class="form-control" value=""
+                    placeholder="Please enter confirmation password..">
             </div>
         </div>
         <!-- /.box-body -->
@@ -23,3 +23,20 @@
             </div>
         </div>
 </form>
+
+<script>
+    $(document).ready(function() {
+
+        jQuery('.validatedForm').validate({
+            rules: {
+                password: {
+                    minlength: 5,
+                },
+                password_confirmation: {
+                    minlength: 5,
+                    equalTo: "#password"
+                }
+            }
+        });
+    });
+</script>
