@@ -155,14 +155,30 @@ class UserController extends Controller
         ]);
     }
 
-    public function changePasswordUpdate($id)
+    public function changePasswordPost(Request $request,$id)
     {
+        $postData = $request->only('password','password_confirmation');
+        $validator = Validator::make($postData, [
+            'password' => "required|min:6|confirmed",
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json(['status'=> false,'statusCode' => 419,'message'=> $validator->errors()->first(),'errors' => $validator->errors()]);
+        }
+
+        $user = User::find($id);
+        if(!$user){
+            response()->json(['status'=> true,'statusCode' => 419,'message'=> 'There is no user associated with this id','data' => []]);
+        }
+        $user->update(['password' => Hash::make(request('password'))]);
+
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post')])->render()
-        ]);
+            'message'    => 'Password generated successfully',
+            'data' => []
+        ],200);
     }
 
     public function changePassword($id)
@@ -171,8 +187,8 @@ class UserController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post')])->render()
-        ]);
+            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post',['user' => $id]) ])->render()
+        ],200);
     }
 
     /**
@@ -252,12 +268,8 @@ class UserController extends Controller
         $action = '<div class="action-btn-container">';
         if ($row->id != '1' && $row->is_default == '0') {
             $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-            $action .= '<a href="' . route('user.changePassword', ['user' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Change Password"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-
-            // $action .= '<a href="' . route('users.destroy', ['user' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('users.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
-        } else {
-            $action .= '--';
         }
+        $action .= '<a href="' . route('user.changePassword', ['user' => $row->id]) . '" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Generate Password" data-modal_size="model-sm"><i class="fa fa-key" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

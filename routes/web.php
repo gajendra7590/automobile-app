@@ -67,6 +67,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Users
     Route::resource('users', 'UserController');
     Route::get('changePassword/{user}', 'UserController@changePassword')->name('user.changePassword');
+    Route::post('changePasswordPost/{user}', 'UserController@changePasswordPost')->name('user.changePassword.post');
 
     //AjaxCommonController
     Route::post('getAjaxDropdown', 'AjaxCommonController@index')->name('getAjaxDropdown');
