@@ -137,6 +137,8 @@ $(document).ready(function () {
         var modal_size = $(this).data("modal_size");
         $("#ajaxModalSize").addClass(modal_size);
         $(".ajaxModalTitle").html(modal_title);
+        $(".ajaxModalBody").attr("tabindex",1)
+
         $(".ajaxModalBody").html(
             `<div style="text-align: center;min-height: 174px;padding: 57px;"><i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true" style="color: #ea6d09;"></i></div>`
         );

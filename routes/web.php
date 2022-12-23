@@ -46,6 +46,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('states', 'StateController');
     Route::resource('districts', 'DistrictController');
     Route::resource('cities', 'CityController');
+    Route::get('create/cities/bulk', 'CityController@createBulk')->name('city.create.popup');
+    Route::get('store/cities/bulk', 'CityController@storeBulk')->name('city.create.bulk');
 
     // Purchases
     Route::resource('purchases', 'PurchaseController');

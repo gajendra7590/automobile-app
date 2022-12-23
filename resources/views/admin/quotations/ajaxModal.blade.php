@@ -86,8 +86,18 @@
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>Customer City/Village <span style="margin-left: 40px;"><a title="Add New City/Village/Town"
-                            href=""><i class="fa fa-plus-circle" aria-hidden="true"></i></a></span> </label>
+                <label>Customer City/Village
+                    <span style="margin-left: 40px;">
+                        <a href="{{ route('city.create.popup') }}"
+                        class="ajaxModalPopup"
+                        title="Add New City/Village/Town"
+                        aria-hidden="true"
+                        data-modal_title="Add New City/Village/Town"
+                        data-modal_size="modal-md">
+                            <i class="fa fa-plus-circle "></i>
+                        </a>
+                    </span>
+                </label>
                 <select name="customer_city" class="form-control">
                     <option value="">---Select City/Village----</option>
                     @isset($cities)
