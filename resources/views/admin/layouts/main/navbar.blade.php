@@ -31,7 +31,7 @@
                         <!-- User image -->
                         <li class="user-header">
                             <img src="{{ auth()->check() ? auth()->user()->profile_image : asset('assets/dist/img/default-avatar.png') }}" class="img-circle"
-                                alt="User Image">
+                            alt="User Image">
                             <p>
                                 @if (Auth::user())
                                     {{ Auth::user()->name }}

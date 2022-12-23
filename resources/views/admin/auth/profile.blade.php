@@ -31,7 +31,7 @@
                                     <div class="form-group col-md-12">
                                         <img id='profile-change'
                                             src="{{ isset($user->profile_image) && $user->profile_image ? $user->profile_image : asset('assets/dist/img/default-avatar.png') }}"
-                                            style='border-radius:50%;' />
+                                            style='border-radius:50%;height:150px;width:150px;' />
                                         <input id='input-profile' type='file' name='profile_image'>
                                     </div>
                                     <div class="form-group col-md-12">
