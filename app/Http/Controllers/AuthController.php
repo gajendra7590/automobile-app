@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -105,7 +106,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => "required|email|unique:users,email,$user->id,id",
             'name' => "required|string",
-            'profile_image' => "nullable|file|mime:png,jpg,jpeg,img"
+            'profile_image' => "nullable|file|mimes:png,jpg,jpeg,img|max:10000"
         ]);
 
         if ($validator->fails()) {
@@ -113,8 +114,11 @@ class AuthController extends Controller
         }
         $user->name = $request->name;
         $user->email = $request->email;
-        if(isset($request->email) && $request->email){
-            $user->profile_image = $request->profile_image;
+        if($request->profile_image) {
+            $file = request()->file('profile_image');
+            $path = 'uploads/images/' . time() . '-' . $file->getClientOriginalName();
+            $file = Storage::disk('public')->put($path, file_get_contents($file));
+            $user->profile_image =  $path;
         }
         $user->save();
         return response()->json(['statusCode' => 200, 'status' => true,'message' => 'Updated Successfully','data' => (object)[] ]);
