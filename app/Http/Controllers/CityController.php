@@ -115,7 +115,7 @@ class CityController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts])->render()
+            'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts,'redirect' => 'closeModal','modalId' => 'ajaxModalCommon2' ])->render()
         ]);
      }
 

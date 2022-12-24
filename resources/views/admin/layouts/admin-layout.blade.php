@@ -82,6 +82,7 @@
     </div>
     <!-- /.common modal popup for ajax -->
     @include('admin.layouts.main.ajaxModal')
+    @include('admin.layouts.main.ajaxModalPopup')
 
     <!-- /.common modal popup for confirm dialog -->
     @include('admin.layouts.main.ajaxConfirmDialog')

@@ -89,12 +89,12 @@
                 <label>Customer City/Village
                     <span style="margin-left: 40px;">
                         <a href="{{ route('city.create.popup') }}"
-                        class="ajaxModalPopup"
-                        title="Add New City/Village/Town"
+                        class="ajaxModalPopupOnPopup"
                         aria-hidden="true"
                         data-modal_title="Add New City/Village/Town"
+                        data-modal-index="1200"
                         data-modal_size="modal-md">
-                            <i class="fa fa-plus-circle "></i>
+                            <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
                         </a>
                     </span>
                 </label>

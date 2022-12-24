@@ -2,7 +2,7 @@
     $rand = rand(11111, 99999);
 @endphp
 <form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}"
-    enctype="multipart/form-data" data-redirect="ajaxModalCommon">
+    enctype="multipart/form-data" data-redirect="{{isset($redirect) && $redirect ? $redirect : 'ajaxModalCommon'}}" data-modal-id="{{isset($modalId) && $modalId ? $modalId : ''}}" >
     @csrf
     @if (isset($method) && $method == 'PUT')
         @method('PUT')

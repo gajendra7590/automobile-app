@@ -109,10 +109,14 @@ $(document).ready(function () {
         var url = $(this).attr("action");
         var method = $(this).attr("method");
         var redirect = $(this).data("redirect");
+        var ajaxModalCommon = $(this).data("modal-id");
         var data = new FormData($(this)[0]);
         CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
-                if (redirect == "ajaxModalCommon") {
+                if (redirect == "closeModal") {
+                    $(`#${ajaxModalCommon}`).modal("hide");
+                    $("#ajaxModalDialog").modal("hide");
+                } else if (redirect == "ajaxModalCommon") {
                     $("#ajaxModalCommon").modal("hide");
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
@@ -146,6 +150,29 @@ $(document).ready(function () {
         CRUD.AJAXMODAL(url, "GET", null).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
                 $(".ajaxModalBody").html(result.data);
+            } else {
+                toastr.error("Something went wrong");
+                // to do
+            }
+        });
+    });
+
+    $(document).on("click", ".ajaxModalPopupOnPopup", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("href");
+        var modal_title = $(this).data("modal_title");
+        var modal_size = $(this).data("modal_size");
+        $("#ajaxModalSize2").addClass(modal_size);
+        $(".ajaxModalTitle2").html(modal_title);
+        // $(".ajaxModalCommon2").attr("tabindex",1)
+
+        $(".ajaxModalBody2").html(
+            `<div style="text-align: center;min-height: 174px;padding: 57px;"><i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true" style="color: #ea6d09;"></i></div>`
+        );
+        $("#ajaxModalCommon2").modal("show");
+        CRUD.AJAXMODAL(url, "GET", null).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                $(".ajaxModalBody2").html(result.data);
             } else {
                 toastr.error("Something went wrong");
                 // to do

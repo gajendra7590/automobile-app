@@ -85,4 +85,46 @@ $(document).ready(function () {
         });
     }
     mainDataTable();
+
+    $(document).on("click", ".addAjaxElement", function (e) {
+        e.preventDefault();
+        let container_el = $(this).data("container_el");
+        let randCode = Math.floor(Math.random() * 100000) + 5;
+        let html =
+            '<div class="row">' +
+            '    <div class="form-group col-md-4">' +
+            "        <label>Color Name</label>" +
+            '        <input name="cities[' +
+            randCode +
+            '][city_name]" type="text" class="form-control" value=""' +
+            '            placeholder="Color name..">' +
+            "    </div>" +
+            '    <div class="form-group col-md-3">' +
+            "        <label>Color Code</label>" +
+            '        <input name="cities[' +
+            randCode +
+            '][city_code]" type="text" class="form-control" value=""' +
+            '            placeholder="Color Code..">' +
+            "    </div>" +
+            '    <div class="form-group col-md-4">' +
+            "        <label>Status : </label>" +
+            '        <select class="form-control" name="cities[' +
+            randCode +
+            '][active_status]">' +
+            '            <option value="1" selected="selected">Active</option>' +
+            '            <option value="0">In Active </option>' +
+            "        </select>" +
+            "    </div>" +
+            '    <div class="form-group col-md-1">' +
+            '        <a href="#" class="btn btn-md btn-danger removeMoreInFormGroup removeAjaxElement"' +
+            '            data-container_el="#city_container"><i class="fa fa-trash-o" aria-hidden="true"></i></a>' +
+            "    </div>" +
+            "</div>";
+        $(container_el).append(html);
+    });
+
+    $(document).on("click", ".removeAjaxElement", function (e) {
+        e.preventDefault();
+        $(this).parents(".row").remove();
+    });
 });
