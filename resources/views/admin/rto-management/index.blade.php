@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Sales
+                RTO
                 <small>Report</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Sales Report</li>
+                <li class="active">RTO Report</li>
             </ol>
         </section>
 
@@ -20,17 +20,17 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> All Sales Report</h3>
+                            <h3 class="box-title"> All RTO Report</h3>
                             <div class="pull-right">
-                                <a href="{{ route('sales.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Create New Sales" data-modal_size="modal-lg">
+                                <a href="{{ route('rto.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Create New RTO Entry" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('sales.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('rto.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -58,5 +58,5 @@
 
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/sales.js') }}"></script>
+    <script src="{{ asset('assets/modules/rto-management.js') }}"></script>
 @endpush
