@@ -55,14 +55,14 @@ class BikeAgentController extends Controller
             'action' => route('agents.store'),
             'method' => 'POST',
         ];
-        $data['states'] = State::select(['id','state_name'])->get();
+        $data['states'] = State::select(['id', 'state_name'])->get();
         $data['districts'] = [];
         $data['cities'] = [];
-        if(count($data['states'])){
-            $data['districts'] = District::select(['id','district_name'])->where('state_id',$data['states'][0]['id'])->get();
+        if (count($data['states'])) {
+            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $data['states'][0]['id'])->get();
         }
-        if(count($data['districts'])){
-            $data['cities'] = City::select(['id','city_name'])->where('district_id',$data['districts'][0]['id'])->get();
+        if (count($data['districts'])) {
+            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $data['districts'][0]['id'])->get();
         }
         return response()->json([
             'status'     => true,
@@ -140,14 +140,14 @@ class BikeAgentController extends Controller
     {
         $bikeAgent = BikeAgent::find($id);
         $data = ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'];
-        $data['states'] = State::select(['id','state_name'])->get();
+        $data['states'] = State::select(['id', 'state_name'])->get();
         $data['districts'] = [];
         $data['cities'] = [];
-        if($bikeAgent->state){
-            $data['districts'] = District::select(['id','district_name'])->where('state_id', $bikeAgent->state)->get();
+        if ($bikeAgent->state) {
+            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $bikeAgent->state)->get();
         }
-        if($bikeAgent->district){
-            $data['cities'] = City::select(['id','city_name'])->where('district_id', $bikeAgent->district)->get();
+        if ($bikeAgent->district) {
+            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $bikeAgent->district)->get();
         }
 
         $bikeAgent = BikeAgent::find($id);
@@ -217,7 +217,7 @@ class BikeAgentController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('agents.edit', ['agent' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('agents.destroy', ['agent' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        //$action .= '<a href="' . route('agents.destroy', ['agent' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }

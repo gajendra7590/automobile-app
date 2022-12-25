@@ -28,7 +28,7 @@ class UserController extends Controller
                 'branch' => function ($b) {
                     $b->select('id', 'branch_name');
                 }
-            ])->select('id', 'name', 'email', 'profile_image','active_status', 'is_default', 'branch_id');
+            ])->select('id', 'name', 'email', 'profile_image', 'active_status', 'is_default', 'branch_id');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($row) {
@@ -46,7 +46,7 @@ class UserController extends Controller
                     }
                 })
                 ->addColumn('profile_image', function ($row) {
-                    return "<img src=". $row->profile_image ." style='height: 60px;width: 60px;border-radius: 50%;'>";
+                    return "<img src=" . $row->profile_image . " style='height: 60px;width: 60px;border-radius: 50%;'>";
                 })
                 ->addColumn('branch.branch_name', function ($row) {
                     return (isset($row->branch->branch_name) > 0) ? ucfirst($row->branch->branch_name) . ' Branch' : 'All Branches';
@@ -54,7 +54,7 @@ class UserController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['branch.branch_name', 'active_status', 'action','profile_image'])
+                ->rawColumns(['branch.branch_name', 'active_status', 'action', 'profile_image'])
                 ->make(true);
         }
     }
@@ -159,21 +159,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function changePasswordPost(Request $request,$id)
+    public function changePasswordPost(Request $request, $id)
     {
-        $postData = $request->only('password','password_confirmation');
+        $postData = $request->only('password', 'password_confirmation');
         $validator = Validator::make($postData, [
             'password' => "required|min:6|confirmed",
         ]);
 
         //If Validation failed
         if ($validator->fails()) {
-            return response()->json(['status'=> false,'statusCode' => 419,'message'=> $validator->errors()->first(),'errors' => $validator->errors()]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
         }
 
         $user = User::find($id);
-        if(!$user){
-            response()->json(['status'=> true,'statusCode' => 419,'message'=> 'There is no user associated with this id','data' => []]);
+        if (!$user) {
+            response()->json(['status' => true, 'statusCode' => 419, 'message' => 'There is no user associated with this id', 'data' => []]);
         }
         $user->update(['password' => Hash::make(request('password'))]);
 
@@ -182,7 +182,7 @@ class UserController extends Controller
             'statusCode' => 200,
             'message'    => 'Password generated successfully',
             'data' => []
-        ],200);
+        ], 200);
     }
 
     public function changePassword($id)
@@ -191,8 +191,8 @@ class UserController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.users.changePassword',['id' => $id,'action' => route('user.changePassword.post',['user' => $id]) ])->render()
-        ],200);
+            'data'       => view('admin.users.changePassword', ['id' => $id, 'action' => route('user.changePassword.post', ['user' => $id])])->render()
+        ], 200);
     }
 
     /**

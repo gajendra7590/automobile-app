@@ -230,7 +230,7 @@ class BikeModelController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('models.edit', ['model' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Model"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('models.destroy', ['model' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Model"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        //$action .= '<a href="' . route('models.destroy', ['model' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Model"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

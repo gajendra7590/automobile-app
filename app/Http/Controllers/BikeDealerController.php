@@ -229,7 +229,7 @@ class BikeDealerController extends Controller
     {
         $action  = '<div class="action-btn-container">';
         $action .= '<a href="' . route('dealers.edit', ['dealer' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Update Dealer Detail"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('dealers.destroy', ['dealer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('dealers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        //$action .= '<a href="' . route('dealers.destroy', ['dealer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('dealers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }

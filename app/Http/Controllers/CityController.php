@@ -71,91 +71,92 @@ class CityController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function store(Request $request)
-     {
-        $postData = $request->only('district_id','cities');
-         $validator = Validator::make($postData, [
-             'district_id' => 'required',
-             'cities.*.city_name' => "required",
-             'cities.*.city_code' => 'nullable',
-             'cities.*.active_status' => 'required|in:0,1'
-         ], [
-             'cities.*.city_name.required' => 'The City Name field is required.',
-             'cities.*.active_status.required' => 'The City status field is required.'
-         ]);
+    public function store(Request $request)
+    {
+        $postData = $request->only('district_id', 'cities');
+        $validator = Validator::make($postData, [
+            'district_id' => 'required',
+            'cities.*.city_name' => "required",
+            'cities.*.city_code' => 'nullable',
+            'cities.*.active_status' => 'required|in:0,1'
+        ], [
+            'cities.*.city_name.required' => 'The City Name field is required.',
+            'cities.*.active_status.required' => 'The City status field is required.'
+        ]);
 
-         //If Validation failed
-         if ($validator->fails()) {
-             return response()->json([
-                 'status'     => false,
-                 'statusCode' => 419,
-                 'message'    => $validator->errors()->first(),
-                 'errors'     => $validator->errors()
-             ]);
-         }
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
 
-         //Bulk insert
-         if (count($postData['cities']) > 0) {
-             foreach ($postData['cities'] as $k => $cityObj) {
-                 $cityObj['district_id'] = $postData['district_id'];
-                 City::create($cityObj);
-             }
-         }
-         //Create New Role
-         return response()->json([
-             'status'     => true,
-             'statusCode' => 200,
-             'message'    => "Created Successfully."
-         ]);
-     }
+        //Bulk insert
+        if (count($postData['cities']) > 0) {
+            foreach ($postData['cities'] as $k => $cityObj) {
+                $cityObj['district_id'] = $postData['district_id'];
+                City::create($cityObj);
+            }
+        }
+        //Create New Role
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Created Successfully."
+        ]);
+    }
 
-     public function createBulk(){
+    public function createBulk()
+    {
         $districts = District::where(['active_status' => '1'])->select('id', 'district_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts,'redirect' => 'closeModal','modalId' => 'ajaxModalCommon2' ])->render()
+            'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts, 'redirect' => 'closeModal', 'modalId' => 'ajaxModalCommon2'])->render()
         ]);
-     }
+    }
 
-     public function storeBulk(Request $request)
-     {
-        $postData = $request->only('district_id','cities');
-         $validator = Validator::make($postData, [
-             'district_id' => 'required',
-             'cities.*.city_name' => "required",
-             'cities.*.city_code' => 'nullable',
-             'cities.*.active_status' => 'required|in:0,1'
-         ], [
-             'cities.*.city_name.required' => 'The City Name field is required.',
-             'cities.*.active_status.required' => 'The City status field is required.'
-         ]);
+    public function storeBulk(Request $request)
+    {
+        $postData = $request->only('district_id', 'cities');
+        $validator = Validator::make($postData, [
+            'district_id' => 'required',
+            'cities.*.city_name' => "required",
+            'cities.*.city_code' => 'nullable',
+            'cities.*.active_status' => 'required|in:0,1'
+        ], [
+            'cities.*.city_name.required' => 'The City Name field is required.',
+            'cities.*.active_status.required' => 'The City status field is required.'
+        ]);
 
-         //If Validation failed
-         if ($validator->fails()) {
-             return response()->json([
-                 'status'     => false,
-                 'statusCode' => 419,
-                 'message'    => $validator->errors()->first(),
-                 'errors'     => $validator->errors()
-             ]);
-         }
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
 
-         //Bulk insert
-         if (count($postData['cities']) > 0) {
-             foreach ($postData['cities'] as $k => $cityObj) {
-                 $cityObj['district_id'] = $postData['district_id'];
-                 City::create($cityObj);
-             }
-         }
-         //Create New Role
-         return response()->json([
-             'status'     => true,
-             'statusCode' => 200,
-             'message'    => "Created Successfully."
-         ]);
-     }
+        //Bulk insert
+        if (count($postData['cities']) > 0) {
+            foreach ($postData['cities'] as $k => $cityObj) {
+                $cityObj['district_id'] = $postData['district_id'];
+                City::create($cityObj);
+            }
+        }
+        //Create New Role
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Created Successfully."
+        ]);
+    }
 
 
 
@@ -278,7 +279,7 @@ class CityController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('cities.edit', ['city' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update City"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('cities.destroy', ['city' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete City"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        //$action .= '<a href="' . route('cities.destroy', ['city' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete City"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }
