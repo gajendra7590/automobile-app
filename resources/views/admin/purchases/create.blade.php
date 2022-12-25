@@ -39,7 +39,7 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label>Branch</label>
                                     <select name="bike_branch" class="form-control">
                                         <option value="">---Select Branch---</option>
@@ -52,7 +52,7 @@
                                         @endif
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label>Bike Dealer</label>
                                     <select name="bike_dealer" class="form-control">
                                         <option value="">---Select Dealer---</option>
@@ -65,7 +65,7 @@
                                         @endif
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label>Brand Name</label>
                                     <select name="bike_brand" data-dep_dd_name="bike_model"
                                         data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
@@ -77,18 +77,6 @@
                                                     {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
                                                     value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Model Name</label>
-                                    <select name="bike_model" data-dep_dd_name="bike_model_color"
-                                        data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
-                                        class="form-control ajaxChangeCDropDown">
-                                        @if (isset($editModelsHtml))
-                                            {!! $editModelsHtml !!}
-                                        @else
-                                            <option value="">---Select Model---</option>
                                         @endif
                                     </select>
                                 </div>
@@ -264,50 +252,70 @@
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label>Battery Brand Name</label>
                                     <input type="text" class="form-control" placeholder="Battery Brand Name"
                                         name="battery_brand"
                                         value="{{ isset($data->battery_brand) ? $data->battery_brand : '' }}" />
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label>Battery Number</label>
                                     <input type="text" class="form-control" placeholder="Battery Number"
                                         name="battery_number"
                                         value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label>Sale Price(₹)</label>
-                                    <input type="text" class="form-control" placeholder="Sale Price(₹)"
-                                        name="sale_price"
-                                        value="{{ isset($data->sale_price) ? $data->sale_price : '' }}" />
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Final Price(₹)</label>
-                                    <input type="text" class="form-control" placeholder="Final Price(₹)"
-                                        name="final_price"
-                                        value="{{ isset($data->final_price) ? $data->final_price : '' }}" />
-                                </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label>Purchase Invoice Amount(₹)</label>
                                     <input type="text" class="form-control" placeholder="Purchase Invoice Amount(₹)"
                                         name="purchase_invoice_amount"
                                         value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}" />
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label>Purchase Invoice Number</label>
                                     <input type="text" class="form-control" placeholder="Purchase Invoice Number"
                                         name="purchase_invoice_number"
                                         value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}" />
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label>Purchase Invoice Date</label>
                                     <input type="date" class="form-control" placeholder="Purchase Invoice Date"
                                         name="purchase_invoice_date"
                                         value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : '' }}" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Pre GST Amount</label>
+                                    <input type="number" class="form-control" placeholder="Pre GST Amount"
+                                        name="pre_gst_amount"
+                                        value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : '' }}" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-3">
+                                    <label>GST Amount</label>
+                                    <input type="number" class="form-control totalAmountCal" placeholder="GST Amount"
+                                        name="gst_amount"
+                                        value="{{ isset($data->gst_amount) ? $data->gst_amount : '' }}" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Ex Showroom Price</label>
+                                    <input type="number" class="form-control totalAmountCal"
+                                        placeholder="Ex Showroom Price" name="ex_showroom_price"
+                                        value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Discount Amount</label>
+                                    <input type="number" class="form-control totalAmountCal"
+                                        placeholder="Discount Amount" name="discount_amount"
+                                        value="{{ isset($data->discount_amount) ? $data->discount_amount : '' }}" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Grand Total</label>
+                                    <input type="number" class="form-control" placeholder="Grand Total"
+                                        name="grand_total" readonly
+                                        value="{{ isset($data->grand_total) ? $data->grand_total : '' }}" />
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -316,22 +324,8 @@
                                     <textarea name="bike_description" rows="5" class="form-control">{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="form-group col-md-12">
-                                    <label>Status : </label>
-                                    <select class="form-control" name="active_status">
-                                        <option value="1"
-                                            {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
-                                            Active
-                                        </option>
-                                        <option value="0"
-                                            {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
-                                            In
-                                            Active
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+
+                            <input type="hidden" value="1" name="active_status">
                         </div>
                     </div>
                 </div>
@@ -354,15 +348,5 @@
 @endsection
 
 @push('after-script')
-    <script>
-        // $(document).ready(function() {
-        //     $('select[name="bike_brand"]').change(function() {
-        //         let id = $(this).val();
-        //         let URL = "{{ url('getModelsList') }}/" + id;
-        //         CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-        //             $('select[name="bike_model"]').html(res.data);
-        //         });
-        //     });
-        // });
-    </script>
+    <script src="{{ asset('assets/modules/purchase.js') }}"></script>
 @endpush

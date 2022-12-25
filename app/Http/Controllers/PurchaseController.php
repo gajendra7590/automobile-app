@@ -164,7 +164,12 @@ class PurchaseController extends Controller
             'purchase_invoice_date'     => "required|date",
             'bike_description'          => "required",
             'status'                    => "nullable|in:1,2",
-            'active_status'             => "required|in:0,1"
+            'active_status'             => "required|in:0,1",
+            'pre_gst_amount'            => 'nullable',
+            'gst_amount'                => 'nullable',
+            'ex_showroom_price'         => 'nullable',
+            'discount_price'            => 'nullable',
+            'grand_total'               => 'nullable',
         ]);
 
         //If Validation failed
@@ -295,7 +300,12 @@ class PurchaseController extends Controller
             'grand_total'               => "required|numeric",
             'bike_description'          => "required",
             'status'                    => "nullable|in:1,2",
-            'active_status'             => "required|in:0,1"
+            'active_status'             => "required|in:0,1",
+            'pre_gst_amount'            => 'nullable',
+            'gst_amount'                => 'nullable',
+            'ex_showroom_price'         => 'nullable',
+            'discount_price'            => 'nullable',
+            'grand_total'               => 'nullable'
         ]);
 
         //If Validation failed

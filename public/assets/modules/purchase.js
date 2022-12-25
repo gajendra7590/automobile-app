@@ -1,4 +1,19 @@
 $(document).ready(function () {
+
+    $(document).on("keyup keypress", ".totalAmountCal", function () {
+        console.log('csc');
+        var total = 0.0;
+        $(".totalAmountCal").each(function (i, ele) {
+            let input_value = parseFloat($(this).val());
+            if (isNaN(input_value)) {
+                total += 0.0;
+            } else {
+                total += input_value;
+            }
+        });
+        $('input[name="grand_total"]').val(total);
+    });
+
     function mainDataTable() {
         const tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
