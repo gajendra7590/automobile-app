@@ -6,10 +6,11 @@ use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
+use App\Models\BikeModel;
+use App\Models\Sale;
 use App\Models\Branch;
 use App\Models\Purchase;
 use App\Models\Quotation;
-use App\Models\Sale;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,12 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         if (!request()->ajax()) {
             return view('admin.sales.index');
         } else {
+
             $data = Sale::select('*')
                 ->with([
                     'branch' => function ($model) {
@@ -109,13 +111,13 @@ class SaleController extends Controller
     {
         $data = array(
             'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
             'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
+            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
             'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
             'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
             'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get(),
-            'quotations' => Quotation::select('id','customer_first_name','customer_last_name')->where('status', 'open')->get(),
             'purchases' => Purchase::select('*')->get(),
+            'quotations' => Quotation::select('*')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
             'break_types' => break_types(),
@@ -125,7 +127,6 @@ class SaleController extends Controller
             'method' => 'POST',
             'action' => route('sales.store')
         );
-
         // return $data;
         return view('admin.sales.create', $data);
     }
@@ -140,63 +141,65 @@ class SaleController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'bike_branch'                   => 'nullable',
-            'bike_dealer'                   => 'nullable',
-            'bike_brand'                    => 'nullable',
-            'bike_model'                    => 'nullable',
-            'bike_model_color'              => 'nullable',
-            'bike_type'                     => 'nullable',
-            'bike_fuel_type'                => 'nullable',
-            'break_type'                    => 'nullable',
-            'wheel_type'                    => 'nullable',
-            'dc_number'                     => 'nullable',
-            'dc_date'                       => 'nullable',
-            'vin_number'                    => 'nullable',
-            'vin_physical_status'           => 'nullable',
-            'sku'                           => 'nullable',
-            'sku_description'               => 'nullable',
-            'hsn_number'                    => 'nullable',
-            'engine_number'                 => 'nullable',
-            'key_number'                    => 'nullable',
-            'service_book_number'           => 'nullable',
-            'tyre_brand_name'               => 'nullable',
-            'tyre_front_number'             => 'nullable',
-            'tyre_rear_number'              => 'nullable',
-            'battery_brand'                 => 'nullable',
-            'battery_number'                => 'nullable',
-            'purchase_invoice_number'       => 'nullable',
-            'purchase_invoice_amount'       => 'nullable',
-            'purchase_invoice_date'         => 'nullable',
-            'bike_description'              => 'nullable',
-            'pre_gst_amount'                => 'nullable',
-            'gst_amount'                    => 'nullable',
-            'discount_price'                => 'nullable',
-            'grand_total'                   => 'nullable',
-            'branch_id'                     => 'nullable',
-            'customer_first_name'           => 'nullable',
-            'customer_middle_name'          => 'nullable',
-            'customer_last_name'            => 'nullable',
-            'customer_father_name'          => 'nullable',
-            'customer_address_line'         => 'nullable',
-            'customer_state'                => 'nullable',
-            'customer_district'             => 'nullable',
-            'customer_city'                 => 'nullable',
-            'customer_zipcode'              => 'nullable',
-            'customer_mobile_number'        => 'nullable',
-            'customer_email_address'        => 'nullable',
-            'payment_type'                  => 'nullable',
-            'is_exchange_avaliable'         => 'nullable',
-            'hyp_financer'                  => 'nullable',
-            'hyp_financer_description'      => 'nullable',
-            'purchase_visit_date'           => 'nullable',
-            'purchase_est_date'             => 'nullable',
-            'ex_showroom_price'             => 'nullable',
-            'registration_amount'           => 'nullable',
-            'insurance_amount'              => 'nullable',
-            'hypothecation_amount'          => 'nullable',
-            'accessories_amount'            => 'nullable',
-            'other_charges'                 => 'nullable',
-            'total_amount'                  => 'nullable',
+            'bike_branch' => 'nullable',
+            'bike_dealer' => 'nullable',
+            'bike_brand' => 'nullable',
+            'bike_model' => 'nullable',
+            'bike_model_color' => 'nullable',
+            'bike_type' => 'nullable',
+            'bike_fuel_type' => 'nullable',
+            'break_type' => 'nullable',
+            'wheel_type' => 'nullable',
+            'dc_number' => 'nullable',
+            'dc_date' => 'nullable',
+            'vin_number' => 'nullable',
+            'vin_physical_status' => 'nullable',
+            'sku' => 'nullable',
+            'sku_description' => 'nullable',
+            'hsn_number' => 'nullable',
+            'engine_number' => 'nullable',
+            'key_number' => 'nullable',
+            'service_book_number' => 'nullable',
+            'tyre_brand_name' => 'nullable',
+            'tyre_front_number' => 'nullable',
+            'tyre_rear_number' => 'nullable',
+            'battery_brand' => 'nullable',
+            'battery_number' => 'nullable',
+            'purchase_invoice_number' => 'nullable',
+            'purchase_invoice_amount' => 'nullable',
+            'purchase_invoice_date' => 'nullable',
+            'bike_description' => 'nullable',
+            'pre_gst_amount' => 'nullable',
+            'gst_amount' => 'nullable',
+            'discount_price' => 'nullable',
+            'grand_total' => 'nullable',
+            'branch_id' => 'nullable',
+            'customer_first_name' => 'nullable',
+            'customer_middle_name' => 'nullable',
+            'customer_last_name' => 'nullable',
+            'customer_father_name' => 'nullable',
+            'customer_address_line' => 'nullable',
+            'customer_state' => 'nullable',
+            'customer_district' => 'nullable',
+            'customer_city' => 'nullable',
+            'customer_zipcode' => 'nullable',
+            'customer_mobile_number' => 'nullable',
+            'customer_email_address' => 'nullable',
+            'payment_type' => 'nullable',
+            'is_exchange_avaliable' => 'nullable',
+            'hyp_financer' => 'nullable',
+            'hyp_financer_description' => 'nullable',
+            'purchase_visit_date' => 'nullable',
+            'purchase_est_date' => 'nullable',
+            'ex_showroom_price' => 'nullable',
+            'registration_amount' => 'nullable',
+            'insurance_amount' => 'nullable',
+            'hypothecation_amount' => 'nullable',
+            'accessories_amount' => 'nullable',
+            'other_charges' => 'nullable',
+            'total_amount' => 'nullable',
+            'active_status' => 'nullable',
+            'status' => 'nullable',
         ]);
 
         //If Validation failed
@@ -209,7 +212,8 @@ class SaleController extends Controller
             ]);
         }
 
-        $postData['uuid'] = random_uuid('sale');
+
+        $postData['uuid'] = random_uuid('purc');
         $postData['created_by'] = Auth::user()->id;
 
         //Create New Role
@@ -240,7 +244,35 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $bpModel = Sale::where(['uuid' => $id])->first();
+        if (!$bpModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+
+        $models = BikeModel::where(['brand_id' => $bpModel->bike_brand])->get()->toArray();
+        $editModelsHtml = models_list($models, $bpModel->bike_model);
+
+        $data = array(
+            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
+            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
+            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
+            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
+            'bike_types' => bike_types(),
+            'bike_fuel_types' => bike_fuel_types(),
+            'break_types' => break_types(),
+            'wheel_types' => wheel_types(),
+            'vin_physical_statuses' => vin_physical_statuses(),
+            //Other Important Data
+            'action' => route('sales.update', ['sale' => $id]),
+            'editModelsHtml' => $editModelsHtml,
+            'data'   => $bpModel,
+            'method' => 'PUT',
+        );
+        return view('admin.sales.create', $data);
     }
 
     /**
@@ -252,7 +284,75 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $bpModel = Sale::where(['uuid' => $id]);
+        if (!$bpModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => "Sorry! This id($id) not exist"
+            ]);
+        }
+
+        $postData = $request->all();
+        $validator = Validator::make($postData, [
+            'bike_branch'               => "required",
+            'bike_dealer'               => "required",
+            'bike_brand'                => "required",
+            'bike_model'                => "required",
+            'bike_model_color'          => "required",
+            'bike_type'                 => "required",
+            'bike_fuel_type'            => "required",
+            'break_type'                => "required",
+            'wheel_type'                => "required",
+            'dc_number'                 => "nullable",
+            'dc_date'                   => "nullable",
+            'vin_number'                => "nullable",
+            'vin_physical_status'       => "nullable",
+            'sku'                       => "nullable",
+            'sku_description'           => "nullable",
+            'hsn_number'                => "nullable",
+            'model_number'              => "nullable",
+            'engine_number'             => "nullable",
+            'key_number'                => "nullable",
+            'service_book_number'       => "nullable",
+            'tyre_brand_name'           => "nullable",
+            'tyre_front_number'         => "nullable",
+            'tyre_rear_number'          => "nullable",
+            'battery_brand'             => "nullable",
+            'battery_number'            => "nullable",
+            'sale_invoice_number'   => "required",
+            'sale_invoice_amount'   => "required|numeric",
+            'sale_invoice_date'     => "required|date",
+            'pre_gst_amount'            => "required|numeric",
+            'gst_amount'                => "required|numeric",
+            'ex_showroom_price'         => "required|numeric",
+            'discount_price'            => "required|numeric",
+            'grand_total'               => "required|numeric",
+            'bike_description'          => "required",
+            'status'                    => "nullable|in:1,2",
+            'active_status'             => "required|in:0,1"
+        ]);
+
+        //If Validation failed
+        if ($validator->fails()) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $validator->errors()->first(),
+                'errors'     => $validator->errors()
+            ]);
+        }
+
+        $postData['updated_by'] = Auth::user()->id;
+        unset($postData['_token']);
+        unset($postData['_method']);
+        //Create New Role
+        $bpModel->update($postData);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Updated Successfully."
+        ]);
     }
 
     /**
@@ -266,13 +366,23 @@ class SaleController extends Controller
         //
     }
 
-
-    public function getActions($id)
+    public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('sales.edit', ['sale' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('sales.destroy', ['sale' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '<a href="' . route('sales.edit', ['sale' => $row->uuid]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Sale"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        // $action .= '<a href="' . route('sales.destroy', ['sale' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Sale"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
+    }
+
+    public function getModelsList($id)
+    {
+        $models = BikeModel::where('active_status', '1')->where(['brand_id' => $id])->get()->toArray();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Retrived Successfully.",
+            'data'       => models_list($models)
+        ]);
     }
 }

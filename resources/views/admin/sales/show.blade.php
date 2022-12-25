@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Bike Brand
+                Branch
                 <small>Detail</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="#">Bike Brand</a></li>
+                <li><a href="#">Branch</a></li>
                 <li class="active">View</li>
             </ol>
         </section>
@@ -39,10 +39,6 @@
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer">
-                    Visit <a href="https://select2.github.io/">Select2 documentation</a> for more examples and information about the plugin.
                 </div>
             </div>
         </section>
