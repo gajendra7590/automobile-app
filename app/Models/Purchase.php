@@ -30,7 +30,6 @@ class Purchase extends Model
         'sku',
         'sku_description',
         'hsn_number',
-        'model_number',
         'engine_number',
         'key_number',
         'service_book_number',
@@ -42,13 +41,16 @@ class Purchase extends Model
         'purchase_invoice_number',
         'purchase_invoice_amount',
         'purchase_invoice_date',
-        'final_price',
-        'sale_price',
         'bike_description',
         'status',
         'created_by',
         'updated_by',
-        'active_status'
+        'active_status',
+        'pre_gst_amount',
+        'gst_amount',
+        'ex_showroom_price',
+        'discount_price',
+        'grand_total',
     ];
 
     protected  $hidden = [];

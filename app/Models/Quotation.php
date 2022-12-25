@@ -14,13 +14,11 @@ class Quotation extends Model
     protected $appends = ['cust_name'];
 
     protected $fillable = [
-        'uuid',
         'branch_id',
-        'bike_purchase_id',
-        'customer_first_name',
-        'customer_middle_name',
-        'customer_last_name',
-        'customer_father_name',
+        'customer_gender',
+        'customer_name',
+        'customer_relationship',
+        'customer_guardian_name',
         'customer_address_line',
         'customer_state',
         'customer_district',
@@ -45,8 +43,9 @@ class Quotation extends Model
         'other_charges',
         'total_amount',
         'active_status',
+        'status',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     protected  $hidden = [];

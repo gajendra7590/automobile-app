@@ -35,7 +35,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -44,7 +43,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -53,7 +51,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -62,7 +59,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -71,7 +67,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -80,7 +75,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -89,7 +83,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -98,7 +91,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -107,7 +99,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -116,7 +107,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -125,7 +115,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -134,7 +123,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -143,7 +131,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -152,7 +139,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -161,7 +147,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -170,7 +155,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -179,7 +163,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -188,7 +171,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -197,7 +179,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -206,7 +187,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -215,7 +195,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -224,7 +203,6 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
             ],
             [
                 'brand_id' => 1,
@@ -233,7 +211,86 @@ class ModelSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'GLAMOUR',
+                'model_code' => 'GMR',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'GLAMOUR XTEC',
+                'model_code' => 'GMR',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'HF DELUXE',
+                'model_code' => 'HFD',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'MAESTRO EDGE 125',
+                'model_code' => 'MTE',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'PASSION PRO',
+                'model_code' => 'PPR',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'PASSION XTEC',
+                'model_code' => 'PXT',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'SPLENDOR +',
+                'model_code' => 'SP',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'SPLENDOR+ XTEC',
+                'model_code' => 'SPXT',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'SUPER SPLENDOR',
+                'model_code' => 'SPXT',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'brand_id' => 2,
+                'model_name' => 'XTREME 160R',
+                'model_code' => 'XTR',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
             ],
         ];
         DB::table('bike_models')->insert($create);

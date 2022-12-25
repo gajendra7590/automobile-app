@@ -28,7 +28,23 @@ class BrandSeeder extends Seeder
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
-            ]
+            ],
+            [
+                'name' => 'HERO',
+                'code' => 'HR',
+                'description' =>  'HERO description',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+                'name' => 'BAJAJ',
+                'code' => 'BJJ',
+                'description' =>  'BAJAJ description',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
         ];
         DB::table('bike_brands')->insert($create);
         DB::commit();
