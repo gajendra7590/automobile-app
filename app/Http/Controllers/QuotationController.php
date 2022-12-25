@@ -29,7 +29,6 @@ class QuotationController extends Controller
         if (!request()->ajax()) {
             return view('admin.quotations.index');
         } else {
-
             $data = Quotation::with([
                 'state' => function ($s) {
                     $s->select('id', 'state_name');
@@ -53,6 +52,7 @@ class QuotationController extends Controller
                     $s->select('id', 'bank_name');
                 }
             ])->select('*');
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {

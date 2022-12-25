@@ -35,8 +35,8 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "customer_first_name",
-                    name: "customer_first_name",
+                    data: "customer_name",
+                    name: "customer_name",
                 },
                 {
                     data: "customer_mobile_number",
