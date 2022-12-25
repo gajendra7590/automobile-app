@@ -8,6 +8,7 @@ use App\Models\BikeDealer;
 use App\Models\BikeModel;
 use App\Models\Purchase;
 use App\Models\Branch;
+use App\Models\Quotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -347,6 +348,17 @@ class PurchaseController extends Controller
             'statusCode' => 200,
             'message'    => "Retrived Successfully.",
             'data'       => models_list($models)
+        ]);
+    }
+
+    public function getPurchaseDetails($id)
+    {
+        $models = Purchase::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Retrived Successfully.",
+            'data'       => $models
         ]);
     }
 }

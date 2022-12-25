@@ -320,4 +320,15 @@ class QuotationController extends Controller
         $pdf = Pdf::loadView('admin.quotations.invoice-print', ['data' => $quotationModel]);
         return $pdf->stream('invoice.pdf');
     }
+
+    public function getQuotationDetails($id)
+    {
+        $models = Quotation::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Retrived Successfully.",
+            'data'       => $models
+        ]);
+    }
 }

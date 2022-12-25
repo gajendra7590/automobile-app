@@ -51,11 +51,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     // Purchases
     Route::resource('purchases', 'PurchaseController');
+    Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
     //getPurchaseModels
 
     //Quotations
     Route::resource('quotations', 'QuotationController');
+    Route::get('getQuotationDetails/{id}', 'QuotationController@getQuotationDetails')->name('getQuotationDetails');
     Route::get('print-quotation/{id}', 'QuotationController@printQuotation')->name('print-quotation');
     //quot-print
     // Sales
