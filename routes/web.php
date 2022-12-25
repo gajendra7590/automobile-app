@@ -61,7 +61,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     // Sales
     Route::resource('sales', 'SaleController');
     // RTO
-    Route::resource('rto', 'RtoController');
+    Route::resource('rto', 'RtoRegistrationController');
 
     //Users Module
     // Agents

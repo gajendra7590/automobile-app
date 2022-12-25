@@ -23,7 +23,7 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
             return view('admin.sales.index');
@@ -123,7 +123,6 @@ class SaleController extends Controller
             'vin_physical_statuses' => vin_physical_statuses(),
             //Other Important Data
             'method' => 'POST',
-            'action' => route('sales.store')
             'action' => route('sales.store')
         );
 
@@ -268,14 +267,12 @@ class SaleController extends Controller
     }
 
 
-
-    public function getActions($row)
+    public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->uuid]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('sales.edit', ['sale' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('sales.destroy', ['sale' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }
-
 }
