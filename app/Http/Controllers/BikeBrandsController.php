@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BikeBrand;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -45,11 +46,12 @@ class BikeBrandsController extends Controller
      */
     public function create()
     {
+        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.brands.ajaxModal', ['action' => route('brands.store'), 'method' => 'POST'])->render()
+            'data'       => view('admin.brands.ajaxModal', ['action' => route('brands.store'), 'method' => 'POST', 'branches' => $branches])->render()
         ]);
     }
 
@@ -106,12 +108,13 @@ class BikeBrandsController extends Controller
      */
     public function edit($id)
     {
+        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
         $bikeBrand = BikeBrand::find($id);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.brands.ajaxModal', ['data' => $bikeBrand, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.brands.ajaxModal', ['data' => $bikeBrand, 'branches' => $branches, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
 
@@ -164,7 +167,7 @@ class BikeBrandsController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('brands.edit', ['brand' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('brands.destroy', ['brand' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-modal_title="" data-redirect="' . route('brands.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        //$action .= '<a href="' . route('brands.destroy', ['brand' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-modal_title="" data-redirect="' . route('brands.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }

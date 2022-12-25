@@ -6,6 +6,18 @@
     @endif
     <div class="box-body">
         <div class="form-group">
+            <label>Select Branch : </label>
+            <select class="form-control" name="baranch_id">
+                @isset($branches)
+                    @foreach ($branches as $branch)
+                        <option
+                            {{ isset($data['baranch_id']) && $data['baranch_id'] == $branch->id ? 'selected="selected"' : '' }}
+                            value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                    @endforeach
+                @endisset
+            </select>
+        </div>
+        <div class="form-group">
             <label>Brand Name</label>
             <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name"
                 name="name" value='{{ isset($data) && $data ? $data->name : '' }}' />
