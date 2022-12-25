@@ -51,7 +51,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //GST
     Route::resource('gst-rates', 'GstRateController');
-    Route::resource('gst-rates-rto', 'GstRtoRateController');
+    Route::resource('gst-rto-rates', 'GstRtoRateController');
 
 
     // Purchases
