@@ -4,7 +4,8 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{ auth()->check() ? auth()->user()->profile_image : asset('assets/dist/img/default-avatar.png') }}" style="height: 45px;width: 45px;" class="img-circle" alt="User Image">
+                <img src="{{ auth()->check() ? auth()->user()->profile_image : asset('assets/dist/img/default-avatar.png') }}"
+                    style="height: 45px;width: 45px;" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>
@@ -27,7 +28,7 @@
             </li>
 
             <li
-                class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'active' : '' }}">
+                class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rates-rto*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-cog"></i>
                     <span>ALL BASIC SETTINGS</span>
@@ -36,7 +37,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu"
-                    {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') ? 'display:"block"' : '' }}>
+                    {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rates-rto*') ? 'display:"block"' : '' }}>
                     <li class="{{ Request::is('branches*') ? 'active' : '' }}">
                         <a href="{{ route('branches.index') }}"><i class="fa fa-building-o"></i>OUR BRANCHES</a>
                     </li>
@@ -57,6 +58,13 @@
                     </li>
                     <li class="{{ Request::is('cities*') ? 'active' : '' }}">
                         <a href="{{ route('cities.index') }}"><i class="fa fa-building"></i>CITIES/TOWNS LISTS</a>
+                    </li>
+                    {{-- GST --}}
+                    <li class="{{ Request::is('gst-rates*') ? 'active' : '' }}">
+                        <a href="{{ route('gst-rates.index') }}"><i class="fa fa-money"></i>GST RATES</a>
+                    </li>
+                    <li class="{{ Request::is('gst-rates-rto*') ? 'active' : '' }}">
+                        <a href="{{ route('gst-rates-rto.index') }}"><i class="fa fa-money"></i>GST RTO RATES</a>
                     </li>
                 </ul>
             </li>

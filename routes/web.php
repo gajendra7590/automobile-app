@@ -49,6 +49,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('create/cities/bulk', 'CityController@createBulk')->name('city.create.popup');
     Route::get('store/cities/bulk', 'CityController@storeBulk')->name('city.create.bulk');
 
+    //GST
+    Route::resource('gst-rates', 'GstRateController');
+    Route::resource('gst-rates-rto', 'GstRtoRateController');
+
+
     // Purchases
     Route::resource('purchases', 'PurchaseController');
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
