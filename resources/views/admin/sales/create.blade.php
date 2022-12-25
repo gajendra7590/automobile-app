@@ -229,12 +229,6 @@
                                         value="{{ isset($data->hsn_number) ? $data->hsn_number : '' }}" />
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Model Number</label>
-                                    <input type="text" class="form-control" placeholder="Model Number"
-                                        name="model_number"
-                                        value="{{ isset($data->model_number) ? $data->model_number : '' }}" />
-                                </div>
-                                <div class="form-group col-md-4">
                                     <label>Engine Number</label>
                                     <input type="text" class="form-control" placeholder="Engine Number"
                                         name="engine_number"
@@ -290,18 +284,6 @@
                                     <input type="text" class="form-control" placeholder="Battery Number"
                                         name="battery_number"
                                         value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Sale Price(₹)</label>
-                                    <input type="text" class="form-control" placeholder="Sale Price(₹)"
-                                        name="sale_price"
-                                        value="{{ isset($data->sale_price) ? $data->sale_price : '' }}" />
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Final Price(₹)</label>
-                                    <input type="text" class="form-control" placeholder="Final Price(₹)"
-                                        name="final_price"
-                                        value="{{ isset($data->final_price) ? $data->final_price : '' }}" />
                                 </div>
                             </div>
 
@@ -664,7 +646,6 @@
                     });
                     $("[name=bike_branch]").val(res.data.bike_branch)
                     $("[name=bike_dealer]").val(res.data.bike_dealer)
-                    $("[name=bike_model_color]").val(res.data.bike_model_color)
                     $("[name=bike_type]").val(res.data.bike_type)
                     $("[name=bike_fuel_type]").val(res.data.bike_fuel_type)
                     $("[name=break_type]").val(res.data.break_type)
@@ -676,7 +657,6 @@
                     $("[name=sku]").val(res.data.sku)
                     $("[name=sku_description]").val(res.data.sku_description)
                     $("[name=hsn_number]").val(res.data.hsn_number)
-                    $("[name=model_number]").val(res.data.model_number)
                     $("[name=engine_number]").val(res.data.engine_number)
                     $("[name=key_number]").val(res.data.key_number)
                     $("[name=service_book_number]").val(res.data.service_book_number)
@@ -685,8 +665,6 @@
                     $("[name=tyre_rear_number]").val(res.data.tyre_rear_number)
                     $("[name=battery_brand]").val(res.data.battery_brand)
                     $("[name=battery_number]").val(res.data.battery_number)
-                    $("[name=sale_price]").val(res.data.sale_price)
-                    $("[name=final_price]").val(res.data.final_price)
                     $("[name=purchase_invoice_amount]").val(res.data.purchase_invoice_amount)
                     $("[name=purchase_invoice_number]").val(res.data.purchase_invoice_number)
                     $("[name=purchase_invoice_date]").val(res.data.purchase_invoice_date)
