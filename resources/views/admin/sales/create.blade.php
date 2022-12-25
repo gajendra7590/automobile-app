@@ -37,6 +37,8 @@
                         </div>
                     </div>
                     <div class="box-body">
+
+                            {{-- Purchase --}}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group col-md-3">
@@ -46,7 +48,7 @@
                                         @if (isset($purchases))
                                             @foreach ($purchases as $key => $purchase)
                                                 <option
-                                                    {{ isset($data->bike_purchase) && $data->bike_purchase == $purchase->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data->purchase_id) && $data->purchase_id == $purchase->id ? 'selected="selected"' : '' }}
                                                     value="{{ $purchase->id }}">{{ $purchase->vin_number }}</option>
                                             @endforeach
                                         @endif
@@ -343,7 +345,7 @@
                                         @if (isset($quotations))
                                             @foreach ($quotations as $key => $quotation)
                                                 <option
-                                                    {{ isset($data['bike_quotation']) && $data['bike_quotation'] == $quotation->id ? 'selected="selected"' : '' }}
+                                                    {{ isset($data['quotation_id']) && $data['quotation_id'] == $quotation->id ? 'selected' : '' }}
                                                     value="{{ $quotation->id }}">{{ $quotation->customer_name }}</option>
                                             @endforeach
                                         @endif
@@ -638,11 +640,18 @@
                 let id = $(this).val();
                 let URL = "{{ url('getPurchaseDetails') }}/" + id;
                 CRUD.AJAXDATA(URL, 'GET').then(function(res) {
+                    let bike_model = res.data.bike_model
+                    let bike_model_color = res.data.bike_model_color
                     $("[name=bike_brand]").val(res.data.bike_brand)
-                    let URL = "{{ url('getModelsList') }}/" + res.data.bike_brand;
+                    URL = "{{ url('getModelsList') }}/" + res.data.bike_brand;
                     CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                        $('select[name="bike_model"]').html(res.data);
-                        $("[name=bike_model]").val(res.data.bike_model)
+                        $('select[name="bike_model"]').html(res.data)
+                        $("[name=bike_model]").val(bike_model)
+                        URL = "{{ url('getColorsList') }}/" + bike_model;
+                        CRUD.AJAXDATA(URL, 'GET').then(function(res) {
+                            $('select[name="bike_model_color"]').html(res.data)
+                            $("[name=bike_model_color]").val(bike_model_color)
+                        });
                     });
                     $("[name=bike_branch]").val(res.data.bike_branch)
                     $("[name=bike_dealer]").val(res.data.bike_dealer)
@@ -671,44 +680,44 @@
                     $("[name=bike_description]").val(res.data.bike_description)
                 });
             });
-        });
 
-        $('#quotation').change(function() {
-            let id = $(this).val();
-            let URL = "{{ url('getQuotationDetails') }}/" + id;
-            CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                $("[name=active_status]").val(res.data.active_status)
-                $("[name=active_status]").val(res.data.active_status)
-                $("[name=bike_quotation]").val(res.data.bike_quotation)
-                $("[name=customer_gender]").val(res.data.customer_gender)
-                $("[name=customer_name]").val(res.data.customer_name)
-                $("[name=customer_relationship]").val(res.data.customer_relationship)
-                $("[name=customer_guardian_name]").val(res.data.customer_guardian_name)
-                $("[name=customer_address_line]").val(res.data.customer_address_line)
-                $("[name=customer_state]").val(res.data.customer_state)
-                $("[name=customer_district]").val(res.data.customer_district)
-                $("[name=customer_city]").val(res.data.customer_city)
-                $("[name=customer_zipcode]").val(res.data.customer_zipcode)
-                $("[name=customer_mobile_number]").val(res.data.customer_mobile_number)
-                $("[name=customer_email_address]").val(res.data.customer_email_address)
-                $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
-                $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
-                $("[name=payment_type]").val(res.data.payment_type)
-                $("[name=payment_type]").val(res.data.payment_type)
-                $("[name=hyp_financer]").val(res.data.hyp_financer)
-                $("[name=hyp_financer_description]").val(res.data.hyp_financer_description)
-                $("[name=bike_brand]").val(res.data.bike_brand)
-                $("[name=bike_model]").val(res.data.bike_model)
-                $("[name=bike_color]").val(res.data.bike_color)
-                $("[name=ex_showroom_price]").val(res.data.ex_showroom_price)
-                $("[name=registration_amount]").val(res.data.registration_amount)
-                $("[name=insurance_amount]").val(res.data.insurance_amount)
-                $("[name=hypothecation_amount]").val(res.data.hypothecation_amount)
-                $("[name=accessories_amount]").val(res.data.accessories_amount)
-                $("[name=other_charges]").val(res.data.other_charges)
-                $("[name=total_amount]").val(res.data.total_amount)
-                $("[name=purchase_visit_date]").val(res.data.purchase_visit_date)
-                $("[name=purchase_est_date]").val(res.data.purchase_est_date)
+            $('#quotation').change(function() {
+                let id = $(this).val();
+                let URL = "{{ url('getQuotationDetails') }}/" + id;
+                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
+                    $("[name=active_status]").val(res.data.active_status)
+                    $("[name=active_status]").val(res.data.active_status)
+                    $("[name=bike_quotation]").val(res.data.bike_quotation)
+                    $("[name=customer_gender]").val(res.data.customer_gender)
+                    $("[name=customer_name]").val(res.data.customer_name)
+                    $("[name=customer_relationship]").val(res.data.customer_relationship)
+                    $("[name=customer_guardian_name]").val(res.data.customer_guardian_name)
+                    $("[name=customer_address_line]").val(res.data.customer_address_line)
+                    $("[name=customer_state]").val(res.data.customer_state)
+                    $("[name=customer_district]").val(res.data.customer_district)
+                    $("[name=customer_city]").val(res.data.customer_city)
+                    $("[name=customer_zipcode]").val(res.data.customer_zipcode)
+                    $("[name=customer_mobile_number]").val(res.data.customer_mobile_number)
+                    $("[name=customer_email_address]").val(res.data.customer_email_address)
+                    $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
+                    $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
+                    $("[name=payment_type]").val(res.data.payment_type)
+                    $("[name=payment_type]").val(res.data.payment_type)
+                    $("[name=hyp_financer]").val(res.data.hyp_financer)
+                    $("[name=hyp_financer_description]").val(res.data.hyp_financer_description)
+                    $("[name=bike_brand]").val(res.data.bike_brand)
+                    $("[name=bike_model]").val(res.data.bike_model)
+                    $("[name=bike_color]").val(res.data.bike_color)
+                    $("[name=ex_showroom_price]").val(res.data.ex_showroom_price)
+                    $("[name=registration_amount]").val(res.data.registration_amount)
+                    $("[name=insurance_amount]").val(res.data.insurance_amount)
+                    $("[name=hypothecation_amount]").val(res.data.hypothecation_amount)
+                    $("[name=accessories_amount]").val(res.data.accessories_amount)
+                    $("[name=other_charges]").val(res.data.other_charges)
+                    $("[name=total_amount]").val(res.data.total_amount)
+                    $("[name=purchase_visit_date]").val(res.data.purchase_visit_date)
+                    $("[name=purchase_est_date]").val(res.data.purchase_est_date)
+                });
             });
         });
     </script>

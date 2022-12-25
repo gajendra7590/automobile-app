@@ -221,4 +221,16 @@ class BikeColorController extends Controller
         $action .= '</div>';
         return $action;
     }
+
+    public function getColorsList($id)
+    {
+        $colors = BikeColor::where('active_status', '1')->where(['bike_model' => $id])->get()->toArray();
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Retrived Successfully.",
+            'data'       => colors_list($colors)
+        ]);
+    }
+
 }

@@ -90,6 +90,20 @@ if (!function_exists('models_list')) {
     }
 }
 
+if (!function_exists('colors_list')) {
+    function colors_list($colors, $selected_id = 0)
+    {
+        $options = "<option value=''>---Select Model---</option>";
+        if (count($colors)) {
+            foreach ($colors as $color) {
+                $selected = ($color['id'] == $selected_id) ? 'selected="selected"' : '';
+                $options .= "<option value='" . $color['id'] . "' " . $selected . ">" . $color['color_name'] . "</option>";
+            }
+        }
+        return $options;
+    }
+}
+
 if (!function_exists('random_uuid')) {
     function random_uuid($module = "purc")
     {

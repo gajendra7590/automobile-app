@@ -39,6 +39,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('models', 'BikeModelController');
 
     Route::resource('colors', 'BikeColorController');
+    Route::get('getColorsList/{id}', 'BikeColorController@getColorsList')->name('getModelsList');
 
     Route::resource('dealers', 'BikeDealerController');
 

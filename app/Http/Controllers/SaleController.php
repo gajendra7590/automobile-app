@@ -9,6 +9,8 @@ use App\Models\BikeDealer;
 use App\Models\BikeModel;
 use App\Models\Sale;
 use App\Models\Branch;
+use App\Models\City;
+use App\Models\District;
 use App\Models\Purchase;
 use App\Models\Quotation;
 use App\Models\State;
@@ -107,7 +109,7 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $data = array(
             'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
@@ -127,7 +129,17 @@ class SaleController extends Controller
             'method' => 'POST',
             'action' => route('sales.store')
         );
-        // return $data;
+
+        if(!empty(request('quotation_id'))){
+            $quotation = Quotation::select('*')->find(request('quotation_id'));
+            $data['data'] = $quotation;
+            $data['data']['quotation_id'] = request('quotation_id');
+            $data['models'] = BikeModel::select('*')->where('brand_id',$quotation->bike_brand)->get();
+            $data['colors'] = BikeColor::select('*')->where('bike_model',$quotation->bike_model)->get();
+            $data['districts'] = District::select('*')->where('state_id',$quotation->customer_state)->get();
+            $data['cities'] = City::select('*')->where('district_id',$quotation->customer_district)->get();
+        }
+
         return view('admin.sales.create', $data);
     }
 
