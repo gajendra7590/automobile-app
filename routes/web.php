@@ -54,6 +54,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('gst-rto-rates', 'GstRtoRateController');
 
 
+    //RTO
+    Route::resource('rto-agents', 'RtoAgentController');
+
     // Purchases
     Route::resource('purchases', 'PurchaseController');
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');
