@@ -22,7 +22,20 @@ class BrandSeeder extends Seeder
         $today = date('Y-m-d H:i:s');
         $create = [
             [
-                'name' => 'HONDA',
+                'id' => '1',
+                'baranch_id' => '1',
+                'name' => 'HERO MOTOCORP',
+                'code' => 'HR',
+                'description' =>  'HERO MOTOCORP description',
+                'active_status' => 1,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ],
+            [
+
+                'id' => '2',
+                'baranch_id' => '2',
+                'name' => 'HONDA MOTOR COMPANY',
                 'code' => 'HND',
                 'description' =>  'HONDA description',
                 'active_status' => 1,
@@ -30,17 +43,11 @@ class BrandSeeder extends Seeder
                 'updated_at' => $today,
             ],
             [
-                'name' => 'HERO',
-                'code' => 'HR',
-                'description' =>  'HERO description',
-                'active_status' => 1,
-                'created_at' => $today,
-                'updated_at' => $today,
-            ],
-            [
-                'name' => 'BAJAJ',
+                'id' => '3',
+                'baranch_id' => '3',
+                'name' => 'BAJAJ AUTO',
                 'code' => 'BJJ',
-                'description' =>  'BAJAJ description',
+                'description' =>  'BAJAJ AUTO description',
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,

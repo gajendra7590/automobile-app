@@ -37,6 +37,21 @@ class BranchesSeeder extends Seeder
             ],
             [
                 'id'                   => 2,
+                'branch_name'          => 'SAI AUTOMOBILE',
+                'branch_email'         => 'saihondasingot@gmail.com',
+                'branch_phone'         => '9111489794',
+                'branch_phone2'        => null,
+                'branch_address_line'  => 'NEAR BUS STAND, SINGOT',
+                'branch_county'        => '1',
+                'branch_state'         => '1',
+                'branch_district'      => '1',
+                'branch_city'          => '1',
+                'branch_pincode'       => '450881',
+                'gstin_number'         => '23HLLPS4119F1ZY',
+                'active_status'        => '1'
+            ],
+            [
+                'id'                   => 3,
                 'branch_name'          => 'GURUKRIPA AGENCY',
                 'branch_email'         => 'gurukripasingot@gmail.com',
                 'branch_phone'         => '9171235037',
@@ -50,21 +65,6 @@ class BranchesSeeder extends Seeder
                 'gstin_number'         => '23BBZPS9887C1ZO',
                 'active_status'        => '1'
             ],
-            [
-                'id'                   => 3,
-                'branch_name'          => 'SAI AUTOMOBILE',
-                'branch_email'         => 'saihondasingot@gmail.com',
-                'branch_phone'         => '9111489794',
-                'branch_phone2'        => null,
-                'branch_address_line'  => 'NEAR BUS STAND, SINGOT',
-                'branch_county'        => '1',
-                'branch_state'         => '1',
-                'branch_district'      => '1',
-                'branch_city'          => '1',
-                'branch_pincode'       => '450881',
-                'gstin_number'         => '23HLLPS4119F1ZY',
-                'active_status'        => '1'
-            ]
         );
         foreach ($branches as $i => $branch) {
             Branch::updateOrCreate(['id' => $branch['id']], $branch);
