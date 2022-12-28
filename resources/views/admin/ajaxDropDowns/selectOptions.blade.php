@@ -54,6 +54,15 @@
             @endisset
         @break
 
+        @case('branches')
+        @isset($data)
+            <option value="">---Select Branch---</option>
+            @foreach ($data as $item)
+                <option value="{{ $item->id }}">{{ $item->branch_name }}</option>
+            @endforeach
+        @endisset
+    @break
+
         @default
     @endswitch
 @endif

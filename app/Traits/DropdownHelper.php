@@ -2,8 +2,10 @@
 
 namespace App\Traits;
 
+use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeModel;
+use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
 use Illuminate\Database\Eloquent\Model;
@@ -77,6 +79,44 @@ trait DropdownHelper
 
     public static function getBrands($data)
     {
+        $where = array();
+        if (isset($data['id']) && (intval($data['id']) > 0)) {
+            $where['branch_id'] = $data['id'];
+        }
+
+        $brands = BikeBrand::where('active_status', '1')->where($where)->get();
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $brands, 'type' => 'brands'])->render(),
+            'dep_dd2_name' => '',
+            'dep_dd2_html' => ''
+        );
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
+    public static function getBranches($data)
+    {
+        $branches = Branch::where('active_status', '1')->get();
+
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $branches, 'type' => 'cities'])->render(),
+            'dep_dd2_name' => '',
+            'dep_dd2_html' => ''
+        );
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
     }
 
     public static function getModels($data)

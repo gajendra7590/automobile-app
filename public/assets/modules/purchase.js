@@ -1,8 +1,36 @@
 $(document).ready(function () {
 
     $(document).on("keyup keypress", ".totalAmountCal", function () {
-        console.log('csc');
+        calculate()
+    });
+
+
+    $(document).on("keyup keypress", ".totalAmountCal2", function () {
+        calculate()
+    });
+
+    $(document).on("change", "#gst_rate", function () {
+        calculate()
+    });
+
+    function calculate(){
+        $val = $('#pre_gst_amount').val();
+        $rate = $('#gst_rate').val();;
+        $('input[name="gst_amount"]').val(($val*$rate/100).toFixed(2));
+
         var total = 0.0;
+        $(".totalAmountCal2").each(function (i, ele) {
+            let input_value = parseFloat($(this).val());
+            if (isNaN(input_value)) {
+                total += 0.0;
+            } else {
+                total += input_value;
+            }
+        });
+        $('input[name="ex_showroom_price"]').val(total);
+
+        total = 0.0;
+
         $(".totalAmountCal").each(function (i, ele) {
             let input_value = parseFloat($(this).val());
             if (isNaN(input_value)) {
@@ -12,7 +40,7 @@ $(document).ready(function () {
             }
         });
         $('input[name="grand_total"]').val(total);
-    });
+    }
 
     function mainDataTable() {
         const tableObj = $("#ajaxDataTable").DataTable({
