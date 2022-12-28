@@ -76,30 +76,6 @@ trait DropdownHelper
         ]);
     }
 
-
-    public static function getBrands($data)
-    {
-        $where = array();
-        if (isset($data['id']) && (intval($data['id']) > 0)) {
-            $where['branch_id'] = $data['id'];
-        }
-
-        $brands = BikeBrand::where('active_status', '1')->where($where)->get();
-        $responseData = array(
-            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
-            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $brands, 'type' => 'brands'])->render(),
-            'dep_dd2_name' => '',
-            'dep_dd2_html' => ''
-        );
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Dropdwon Request",
-            'data'       =>  $responseData
-        ]);
-    }
-
     public static function getBranches($data)
     {
         $branches = Branch::where('active_status', '1')->get();
@@ -118,6 +94,44 @@ trait DropdownHelper
             'data'       =>  $responseData
         ]);
     }
+
+    public static function getBrands($data)
+    {
+        $where = array();
+        if (isset($data['id']) && (intval($data['id']) > 0)) {
+            $where['branch_id'] = $data['id'];
+        }
+
+        $brands = BikeBrand::where('active_status', '1')->where($where)->get();
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $brands, 'type' => 'brands'])->render()
+        );
+
+        if (isset($data['dep_dd2_name']) && ($data['dep_dd2_name'] != '')) {
+            $responseData['dep_dd2_name'] = $data['dep_dd2_name'];
+            $responseData['dep_dd2_html'] = view('admin.ajaxDropDowns.selectDefaultOptions', ['type' => 'models'])->render();
+        } else {
+            $responseData['dep_dd2_name'] = '';
+            $responseData['dep_dd2_html'] = '';
+        }
+
+        if (isset($data['dep_dd3_name']) && ($data['dep_dd3_name'] != '')) {
+            $responseData['dep_dd3_name'] = $data['dep_dd3_name'];
+            $responseData['dep_dd3_html'] = view('admin.ajaxDropDowns.selectDefaultOptions', ['type' => 'colors'])->render();
+        } else {
+            $responseData['dep_dd3_name'] = '';
+            $responseData['dep_dd3_html'] = '';
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
 
     public static function getModels($data)
     {
@@ -153,7 +167,7 @@ trait DropdownHelper
     {
         $where = array();
         if (isset($data['id']) && (intval($data['id']) > 0)) {
-            //$where['model_id'] = $data['id'];
+            $where['bike_model'] = $data['id'];
         }
 
         $distModel = BikeColor::where('active_status', '1')->where($where)->get();

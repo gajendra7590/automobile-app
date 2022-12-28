@@ -54,15 +54,15 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Branch</label>
-                                    <select name="bike_branch"
-                                    data-dep_dd_name="bike_brand"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
-                                    class="form-control ajaxChangeCDropDown">
+                                    <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
+                                        data-dep_dd3_name="bike_model_color"
+                                        data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
+                                        class="form-control ajaxChangeCDropDown">
                                         <option value="">---Select Branch---</option>
                                         @if (isset($branches))
                                             @foreach ($branches as $key => $branch)
                                                 <option
-                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected' :'' }}
+                                                    {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected' : '' }}
                                                     value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                             @endforeach
                                         @endif
@@ -70,10 +70,8 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Brand Name</label>
-                                    <select name="bike_brand"
-                                        data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
-                                        data-dep_dd_name="bike_model"
-                                        data-dep_dd2_name="bike_model_color"
+                                    <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
+                                        data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
                                         class="form-control ajaxChangeCDropDown">
                                         <option value="">---Select Brand---</option>
                                         @if (isset($brands))
@@ -87,8 +85,7 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Model Name</label>
-                                    <select name="bike_brand"
-                                        data-dep_dd_name="bike_model_color"
+                                    <select name="bike_model" data-dep_dd_name="bike_model_color"
                                         data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
                                         class="form-control ajaxChangeCDropDown">
                                         <option value="">---Select Model---</option>
@@ -106,7 +103,7 @@
                                 <div class="form-group col-md-3">
                                     <label>Model Color</label>
                                     <select name="bike_model_color" class="form-control">
-                                        <option value="" disabled>---Select Model Color---</option>
+                                        <option value="">---Select Model Color---</option>
                                         @if (isset($colors))
                                             @foreach ($colors as $key => $color)
                                                 <option

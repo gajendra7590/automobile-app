@@ -110,8 +110,8 @@ class PurchaseController extends Controller
         $data = array(
             'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
             'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
+            // 'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
+            //'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
             'gst_rates' => GstRates::where('active_status', '1')->select('id', 'gst_rate')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
