@@ -24,8 +24,7 @@
                                 <h3 class="box-title">Quotations List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('quotations.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Create New Qoutation" data-modal_size="modal-lg">
+                                <a href="{{ route('quotations.create') }}" class="btn btn-sm btn-success">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>

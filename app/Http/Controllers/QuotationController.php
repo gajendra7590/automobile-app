@@ -92,12 +92,15 @@ class QuotationController extends Controller
             'action' => route('quotations.store'),
             'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get()
         );
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.quotations.ajaxModal', $formData)->render()
-        ]);
+
+        return view('admin.quotations.create', $formData);
+
+        // return response()->json([
+        //     'status'     => true,
+        //     'statusCode' => 200,
+        //     'message'    => 'AjaxModal Loaded',
+        //     'data'       => view('admin.quotations.ajaxModal', $formData)->render()
+        // ]);
     }
 
     /**
@@ -111,10 +114,10 @@ class QuotationController extends Controller
         $postData = $request->all();
         // dd($postData);
         $validator = Validator::make($postData, [
-            'customer_first_name'       => "required|string",
-            'customer_middle_name'      => "nullable|string",
-            'customer_last_name'        => "nullable|string",
-            'customer_father_name'      => "nullable|string",
+            'customer_gender'           => "required|string",
+            'customer_name'             => "required|string",
+            'customer_relationship'     => "required|string",
+            'customer_guardian_name'    => "required|string",
             'customer_address_line'     => "required|string",
             'customer_state'            => "required",
             'customer_district'         => "required",
@@ -156,11 +159,12 @@ class QuotationController extends Controller
         $postData['created_by'] = Auth::user()->id;
 
         //Create New Role
-        Quotation::create($postData);
+        $quotation = Quotation::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Created Successfully."
+            'message'    => "Created Successfully.",
+            'data'       => $quotation
         ]);
     }
 
@@ -209,12 +213,14 @@ class QuotationController extends Controller
             'method' => 'PUT',
         );
 
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.quotations.ajaxModal', $formData)->render()
-        ]);
+        return view('admin.quotations.create', $formData);
+
+        // return response()->json([
+        //     'status'     => true,
+        //     'statusCode' => 200,
+        //     'message'    => 'AjaxModal Loaded',
+        //     'data'       => view('admin.quotations.create', $formData)->render()
+        // ]);
     }
 
     /**
@@ -237,10 +243,10 @@ class QuotationController extends Controller
 
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'customer_first_name'       => "required|string",
-            'customer_middle_name'      => "nullable|string",
-            'customer_last_name'        => "nullable|string",
-            'customer_father_name'      => "nullable|string",
+            'customer_gender'           => "required|string",
+            'customer_name'             => "required|string",
+            'customer_relationship'     => "required|string",
+            'customer_guardian_name'    => "required|string",
             'customer_address_line'     => "required|string",
             'customer_state'            => "required",
             'customer_district'         => "required",

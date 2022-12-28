@@ -354,7 +354,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group col-md-2">
-                                    <label>Mr./Mrs./Miss</label>
+                                    <label>Prefix</label>
                                     <select name="customer_gender" class="form-control">
                                         <option
                                             {{ isset($data['customer_gender']) && $data['customer_gender'] == '1' ? 'selected' : '' }}

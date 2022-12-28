@@ -54,7 +54,9 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>Branch</label>
-                                    <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
+                                    <select name="bike_branch"
+                                        data-dep_dd_name="bike_brand"
+                                        data-dep_dd2_name="bike_model"
                                         data-dep_dd3_name="bike_model_color"
                                         data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
                                         class="form-control ajaxChangeCDropDown">
