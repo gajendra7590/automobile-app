@@ -117,7 +117,7 @@
             </li>
 
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('rto.index') }}"><i class="fa fa-share"></i> <span>RTO MANAGEMENT</span></a>
+                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i> <span>RTO MANAGEMENT</span></a>
             </li>
 
             <li class="treeview">

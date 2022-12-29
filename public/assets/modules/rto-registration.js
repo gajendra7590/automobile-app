@@ -22,16 +22,16 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "name",
-                    name: "name",
+                    data: "contact_name",
+                    name: "contact_name",
                 },
                 {
-                    data: "email",
-                    name: "email",
+                    data: "contact_city",
+                    name: "contact_city",
                 },
                 {
-                    data: "mobile_number",
-                    name: "mobile_number",
+                    data: "contact_mobile_number",
+                    name: "contact_mobile_number",
                 },
                 {
                     data: "active_status",

@@ -22,7 +22,7 @@
                         <div class="box-header">
                             <h3 class="box-title"> All RTO Report</h3>
                             <div class="pull-right">
-                                <a href="{{ route('rto.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('rtoRegistration.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
                                     data-modal_title="Create New RTO Entry" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
@@ -30,14 +30,14 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('rto.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('rtoRegistration.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile Number</th>
+                                        <th>Contact Name</th>
+                                        <th>Contact City</th>
+                                        <th>Contact Mobile Number</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -58,5 +58,5 @@
 
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/rto-management.js') }}"></script>
+    <script src="{{ asset('assets/modules/rto-registration.js') }}"></script>
 @endpush
