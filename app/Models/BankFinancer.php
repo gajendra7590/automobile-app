@@ -27,6 +27,7 @@ class BankFinancer extends Model
         'bank_financer_aadhar_card',
         'bank_financer_pan_card',
         'active_status',
+        'financer_type'
     ];
 
     protected  $hidden = [];

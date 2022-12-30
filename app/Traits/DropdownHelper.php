@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeModel;
@@ -175,6 +176,42 @@ trait DropdownHelper
         $responseData = array(
             'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
             'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $distModel, 'type' => 'colors'])->render()
+        );
+
+        $responseData['dep_dd2_name'] = '';
+        $responseData['dep_dd2_html'] = '';
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
+    public static function getFinanciersList($data)
+    {
+
+        $where = array('financer_type' => '0');
+        if (isset($data['id'])) {
+            switch ($data['id']) {
+                case 1:
+                    $where = array('financer_type' => '0');
+                    break;
+                case 2:
+                    $where = array('financer_type' => '1');
+                    break;
+                case 3:
+                    $where = array('financer_type' => '2');
+                    break;
+            }
+        }
+
+        $finModel = BankFinancer::where($where)->select('id', 'bank_name')->get();
+
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $finModel, 'type' => 'financers'])->render(),
         );
 
         $responseData['dep_dd2_name'] = '';

@@ -116,8 +116,15 @@
                 <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES MANAGEMENT</span></a>
             </li>
 
+            <li class="{{ Request::is('sales-accounts*') ? 'active' : '' }}">
+                <a href="{{ route('sales-accounts.index') }}"><i class="fa fa-university"></i>
+                    <span>SALES ACCOUNTS</span>
+                </a>
+            </li>
+
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i> <span>RTO MANAGEMENT</span></a>
+                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i> <span>RTO
+                        MANAGEMENT</span></a>
             </li>
 
             <li class="treeview">

@@ -71,6 +71,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //quot-print
     // Sales
     Route::resource('sales', 'SaleController');
+    Route::resource('sales-accounts', 'SalesAccountController');
     // RTO
     Route::resource('rtoRegistration', 'RtoRegistrationController');
 

@@ -66,11 +66,78 @@ if (!function_exists('wheel_types')) {
 if (!function_exists('vin_physical_statuses')) {
     function vin_physical_statuses()
     {
-        return [
+        $data = [
             'Good' => "Good",
             'Damaged' => "Damaged",
             'Not Recieved' => "Not Recieved"
         ];
+        return $data;
+    }
+}
+
+if (!function_exists('depositeSources')) {
+    function depositeSources($id = 0)
+    {
+        $data = [
+            'Cash'        => "Cash",
+            'Cheque'      => "Cheque",
+            'Netbanking'  => "Netbanking",
+            'UPI'         => "UPI",
+            'Credit Card' => "Credit Card",
+            'Debit Card'  => "Debit Card"
+        ];
+
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('duePaySources')) {
+    function duePaySources($id = 0)
+    {
+        $data = [
+            '1'  => "Self Pay",
+            '2'  => "Bank Finance",
+            '3'  => "Personal Finance"
+        ];
+
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('emiTerms')) {
+    function emiTerms($id = 0)
+    {
+        $data = [
+            '1'  => "Monthy",
+            '2'  => "Quaterly",
+            '3'  => "Half Yearly",
+            '4'  => "Half Yearly"
+        ];
+
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('getStatus')) {
+    function getStatus($id = 0)
+    {
+        $data = [
+            '0'  => "Open",
+            '1'  => "Close"
+        ];
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
     }
 }
 
@@ -105,8 +172,8 @@ if (!function_exists('colors_list')) {
 }
 
 if (!function_exists('random_uuid')) {
-    function random_uuid($module = "purc")
+    function random_uuid($module = "purc", $sep = '_')
     {
-        return strtolower($module . '-' . Str::random(12));
+        return strtolower($module . $sep . Str::random(16));
     }
 }

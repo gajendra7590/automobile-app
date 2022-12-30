@@ -40,6 +40,9 @@ class AjaxCommonController extends Controller
                 case 'colors':
                     return $this->getColors($postData);
                     break;
+                case 'financiers_list':
+                    return $this->getFinanciersList($postData);
+                    break;
                 default:
                     # code...
                     break;
