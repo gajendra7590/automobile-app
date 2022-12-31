@@ -26,7 +26,7 @@
                             <div class="pull-right">
                                 <a href="{{ route('sales-accounts.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
                                     data-modal_title="Create New Sales Account" data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Account
                                 </a>
                             </div>
                         </div>
@@ -36,11 +36,13 @@
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Country Name</th>
-                                        <th>State Name</th>
-                                        <th>State Code</th>
+                                        <th>#ID</th>
+                                        <th>Title</th>
+                                        <th>Sale Price</th>
+                                        <th>Down Payment</th>
+                                        <th>Due Amount</th>
                                         <th>Status</th>
+                                        <th>OpenAt</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

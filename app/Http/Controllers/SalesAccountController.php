@@ -27,24 +27,51 @@ class SalesAccountController extends Controller
         if (!request()->ajax()) {
             return view('admin.sales-accounts.index');
         } else {
-            $data = State::with([
-                'country' => function ($model) {
-                    $model->select('id', 'country_name');
+            $data = SalePaymentAccounts::with([
+                'sale' => function ($model) {
+                    $model->select('id', 'bike_branch', 'sku', 'customer_name', 'created_at')
+                        ->with([
+                            'branch' => function ($b) {
+                                $b->select('id', 'branch_name');
+                            }
+                        ]);
                 }
-            ])->select('*');
+            ])->select(
+                'id',
+                'account_uuid',
+                'sale_id',
+                'sales_total_amount',
+                'deposite_amount',
+                'due_amount',
+                'due_payment_source',
+                'status',
+                'created_at'
+            );
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('active_status', function ($row) {
-                    if ($row->active_status == '1') {
-                        return '<span class="label label-success">Active</span>';
-                    } else {
-                        return '<span class="label label-warning">In Active</span>';
+                ->addColumn('title', function ($row) {
+
+                    $title = '';
+                    if (isset($row->sale->customer_name)) {
+                        $title .= ucfirst($row->sale->customer_name);
+                        $title .= '(' . $row->sale->sku . ')';
                     }
+                    return $title;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->active_status == '1') {
+                        return '<span class="label label-success">Close</span>';
+                    } else {
+                        return '<span class="label label-warning">Open</span>';
+                    }
+                })
+                ->addColumn('created_at', function ($row) {
+                    return date('Y-m-d', strtotime($row->created_at));
                 })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['active_status', 'action'])
+                ->rawColumns(['title', 'status', 'created_at', 'action'])
                 ->make(true);
         }
     }
@@ -56,7 +83,8 @@ class SalesAccountController extends Controller
      */
     public function create()
     {
-        $salesList = Sale::select('id', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'sku', 'total_amount')->where('status', 'open')->get();
+        $salesList = Sale::select('id', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'sku', 'total_amount')
+            ->where('sp_account_id', '=', 0)->get();
         $data = array(
             'depositeSources' => depositeSources(),
             'duePaySources'   => duePaySources(),
@@ -135,6 +163,9 @@ class SalesAccountController extends Controller
             //Create Account
             $accountModel = SalePaymentAccounts::create($postData);
             if ($accountModel) {
+
+                //Update In Sale
+                Sale::where('id', $postData['sale_id'])->update(['sp_account_id' => $accountModel->id]);
 
                 //Create New Transactions
                 SalePaymentTransactions::create([
@@ -296,8 +327,7 @@ class SalesAccountController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('sales-accounts.edit', ['sales_account' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update State"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        //$action .= '<a href="' . route('states.destroy', ['state' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete State"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('sales-accounts.edit', ['sales_account' => $row->id]) . '" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

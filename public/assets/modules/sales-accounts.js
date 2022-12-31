@@ -22,20 +22,28 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "country.country_name",
-                    name: "country.country_name",
+                    data: "title",
+                    name: "title",
                 },
                 {
-                    data: "state_name",
-                    name: "state_name",
+                    data: "sales_total_amount",
+                    name: "sales_total_amount",
                 },
                 {
-                    data: "state_code",
-                    name: "state_code",
+                    data: "deposite_amount",
+                    name: "deposite_amount",
                 },
                 {
-                    data: "active_status",
-                    name: "active_status",
+                    data: "due_amount",
+                    name: "due_amount",
+                },
+                {
+                    data: "status",
+                    name: "status",
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
                 },
                 {
                     data: "action",

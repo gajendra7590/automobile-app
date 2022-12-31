@@ -48,4 +48,9 @@ class SalePaymentAccounts extends Model
             $model->account_uuid = random_uuid('acc');
         });
     }
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
+    }
 }

@@ -74,6 +74,7 @@ class Sale extends Model
         'status',
         'created_by',
         'updated_by',
+        'sp_account_id'
     ];
 
     protected $hidden = [];
