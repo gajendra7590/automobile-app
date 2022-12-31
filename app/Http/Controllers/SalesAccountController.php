@@ -299,6 +299,38 @@ class SalesAccountController extends Controller
     public function edit($id)
     {
         //
+        $accountDetail = SalePaymentAccounts::with([
+            'sale' => function ($model) {
+                $model->with([
+                    'dealer' => function ($b) {
+                        $b->select('id', 'dealer_code', 'company_name');
+                    },
+                    'branch' => function ($b) {
+                        $b->select('id', 'branch_name');
+                    },
+                    'brand' => function ($b) {
+                        $b->select('id', 'name');
+                    },
+                    'model' => function ($b) {
+                        $b->select('id', 'model_name');
+                    },
+                    'modelColor' => function ($b) {
+                        $b->select('id', 'color_name');
+                    },
+                    'state' => function ($b) {
+                        $b->select('id', 'state_name');
+                    },
+                    'district' => function ($b) {
+                        $b->select('id', 'district_name');
+                    },
+                    'city' => function ($b) {
+                        $b->select('id', 'city_name');
+                    },
+                ]);
+            }
+        ])->select('*')->where('id', $id)->first();
+        // return $accountDetail;
+        return view('admin.sales-accounts.account-detail', ['data' => $accountDetail]);
     }
 
     /**

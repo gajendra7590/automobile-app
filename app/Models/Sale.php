@@ -127,4 +127,19 @@ class Sale extends Model
     {
         return $this->belongsTo(BikeColor::class, 'bike_model_color');
     }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'customer_state');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'customer_city');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'customer_district');
+    }
 }

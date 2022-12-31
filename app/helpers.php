@@ -141,6 +141,36 @@ if (!function_exists('getStatus')) {
     }
 }
 
+if (!function_exists('custPrefix')) {
+    function custPrefix($id = 0)
+    {
+        $data = [
+            '1'  => "Mr",
+            '2'  => "Mrs",
+            '3'  => "Miss"
+        ];
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('custRel')) {
+    function custRel($id = 0)
+    {
+        $data = [
+            '1'  => "S/o",
+            '2'  => "W/o",
+            '3'  => "D/o"
+        ];
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
 
 if (!function_exists('models_list')) {
     function models_list($models, $selected_id = 0)
@@ -175,5 +205,58 @@ if (!function_exists('random_uuid')) {
     function random_uuid($module = "purc", $sep = '_')
     {
         return strtolower($module . $sep . Str::random(16));
+    }
+}
+
+if (!function_exists('custFullAddress')) {
+    function custFullAddress($data = array())
+    {
+        $str = "";
+
+        if (isset($data['customer_address_line'])) {
+            $str .= $data['customer_address_line'] . ',';
+        }
+
+        if (isset($data['city']['city_name'])) {
+            $str .= $data['city']['city_name'] . ' ';
+        }
+
+        if (isset($data['district']['district_name'])) {
+            $str .= $data['district']['district_name'] . ' ';
+        }
+
+        if (isset($data['state']['state_name'])) {
+            $str .= $data['state']['state_name'] . ' ';
+        }
+
+        if (isset($data['customer_zipcode'])) {
+            $str .= $data['customer_zipcode'];
+        }
+
+        return ucwords(strtolower($str));
+    }
+}
+
+if (!function_exists('custFullName')) {
+    function custFullName($data = array())
+    {
+        $str = "";
+        if (isset($data['customer_gender'])) {
+            $str .= custPrefix($data['customer_gender']) . '. ';
+        }
+
+        if (isset($data['customer_name'])) {
+            $str .= $data['customer_name'] . ' ';
+        }
+
+        if (isset($data['customer_relationship'])) {
+            $str .= custRel($data['customer_relationship']) . ' ';
+        }
+
+        if (isset($data['customer_guardian_name'])) {
+            $str .= $data['customer_guardian_name'];
+        }
+
+        return ucwords(strtolower($str));
     }
 }
