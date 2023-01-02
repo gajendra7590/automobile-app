@@ -327,9 +327,11 @@ class SalesAccountController extends Controller
                         $b->select('id', 'city_name');
                     },
                 ]);
-            }
+            },
+            'installments',
+            'transactions'
         ])->select('*')->where('id', $id)->first();
-        // return $accountDetail;
+        return $accountDetail;
         return view('admin.sales-accounts.account-detail', ['data' => $accountDetail]);
     }
 
