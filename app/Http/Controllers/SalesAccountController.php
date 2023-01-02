@@ -331,7 +331,7 @@ class SalesAccountController extends Controller
             'installments',
             'transactions'
         ])->select('*')->where('id', $id)->first();
-        return $accountDetail;
+        // return $accountDetail;
         return view('admin.sales-accounts.account-detail', ['data' => $accountDetail]);
     }
 

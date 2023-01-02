@@ -130,14 +130,14 @@ class SaleController extends Controller
             'action' => route('sales.store')
         );
 
-        if(!empty(request('quotation_id'))){
+        if (!empty(request('quotation_id'))) {
             $quotation = Quotation::select('*')->find(request('quotation_id'));
             $data['data'] = $quotation;
             $data['data']['quotation_id'] = request('quotation_id');
-            $data['models'] = BikeModel::select('*')->where('brand_id',$quotation->bike_brand)->get();
-            $data['colors'] = BikeColor::select('*')->where('bike_model',$quotation->bike_model)->get();
-            $data['districts'] = District::select('*')->where('state_id',$quotation->customer_state)->get();
-            $data['cities'] = City::select('*')->where('district_id',$quotation->customer_district)->get();
+            $data['models'] = BikeModel::select('*')->where('brand_id', $quotation->bike_brand)->get();
+            $data['colors'] = BikeColor::select('*')->where('bike_model', $quotation->bike_model)->get();
+            $data['districts'] = District::select('*')->where('state_id', $quotation->customer_state)->get();
+            $data['cities'] = City::select('*')->where('district_id', $quotation->customer_district)->get();
         }
 
         return view('admin.sales.create', $data);
@@ -157,7 +157,7 @@ class SaleController extends Controller
             'bike_dealer' => 'nullable',
             'bike_brand' => 'nullable',
             'bike_model' => 'nullable',
-            'bike_model_color' => 'nullable',
+            'bike_color' => 'nullable',
             'bike_type' => 'nullable',
             'bike_fuel_type' => 'nullable',
             'break_type' => 'nullable',
