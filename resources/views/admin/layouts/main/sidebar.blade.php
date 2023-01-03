@@ -73,7 +73,7 @@
                 class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-database"></i>
-                    <span>AUTOMOBILE USERS</span>
+                    <span>ALL USERS</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -104,27 +104,27 @@
             </li>
 
             <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
-                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>MY PURCHASES</span></a>
+                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>PURCHASES</span></a>
             </li>
 
             <li class="{{ Request::is('quotations*') ? 'active' : '' }}">
-                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i><span>PURCHASE
-                        QUOTATIONS</span></a>
+                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i>
+                    <span>QUOTATIONS</span></a>
             </li>
 
             <li class="{{ Request::is('sales*') ? 'active' : '' }}">
-                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES MANAGEMENT</span></a>
+                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES</span></a>
             </li>
 
             <li class="{{ Request::is('sales-accounts*') ? 'active' : '' }}">
                 <a href="{{ route('sales-accounts.index') }}"><i class="fa fa-university"></i>
-                    <span>SALES ACCOUNTS</span>
+                    <span>ACCOUNTS</span>
                 </a>
             </li>
 
             <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i> <span>RTO
-                        MANAGEMENT</span></a>
+                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i>
+                    <span>RTO REGISTRATIONS</span></a>
             </li>
 
             <li class="treeview">
@@ -147,7 +147,7 @@
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-key"></i>
-                    <span>MY SESSION</span>
+                    <span>MANAGE PROFILE</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
