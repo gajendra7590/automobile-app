@@ -130,10 +130,10 @@ class SaleController extends Controller
             'action' => route('sales.store')
         );
 
-        if (!empty(request('quotation_id'))) {
-            $quotation = Quotation::select('*')->find(request('quotation_id'));
+        if (!empty(request('q'))) {
+            $quotation = Quotation::select('*')->find(request('q'));
             $data['data'] = $quotation;
-            $data['data']['quotation_id'] = request('quotation_id');
+            $data['data']['quotation_id'] = request('q');
             $data['models'] = BikeModel::select('*')->where('brand_id', $quotation->bike_brand)->get();
             $data['colors'] = BikeColor::select('*')->where('bike_model', $quotation->bike_model)->get();
             $data['districts'] = District::select('*')->where('state_id', $quotation->customer_state)->get();

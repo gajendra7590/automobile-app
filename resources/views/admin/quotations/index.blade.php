@@ -44,7 +44,7 @@
                                         <th>Total Amount</th>
                                         <th>Visit Date</th>
                                         <th>Est Purchase Date</th>
-                                        <th>Action</th>
+                                        <th width="10%">Action</th>
                                     </tr>
                                 </thead>
                             </table>
