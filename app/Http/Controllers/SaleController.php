@@ -118,8 +118,8 @@ class SaleController extends Controller
             'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
             'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
             'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get(),
-            'purchases' => Purchase::select('*')->get(),
-            'quotations' => Quotation::select('*')->get(),
+            'purchases' => Purchase::select('id', 'dc_number', 'vin_number', 'sku')->where('status', '1')->get(),
+            // 'quotations' => Quotation::select('*')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
             'break_types' => break_types(),
@@ -132,8 +132,14 @@ class SaleController extends Controller
 
         if (!empty(request('q'))) {
             $quotation = Quotation::select('*')->find(request('q'));
+
+
             $data['data'] = $quotation;
-            $data['data']['quotation_id'] = request('q');
+            $data['bike_branch'] = $quotation->branch_id;
+            $data['bike_model_color'] = $quotation->bike_color;
+
+            // return $quotation;
+
             $data['models'] = BikeModel::select('*')->where('brand_id', $quotation->bike_brand)->get();
             $data['colors'] = BikeColor::select('*')->where('bike_model', $quotation->bike_model)->get();
             $data['districts'] = District::select('*')->where('state_id', $quotation->customer_state)->get();

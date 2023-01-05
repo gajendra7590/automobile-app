@@ -48,38 +48,13 @@
                                         @foreach ($purchases as $key => $purchase)
                                             <option
                                                 {{ isset($data->purchase_id) && $data->purchase_id == $purchase->id ? 'selected="selected"' : '' }}
-                                                value="{{ $purchase->id }}">{{ $purchase->vin_number }}</option>
+                                                value="{{ $purchase->id }}">
+                                                {{ $purchase->sku . '(' . $purchase->vin_number . ')' }}</option>
                                         @endforeach
                                     @endif
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Quotation</label>
-                                <select id="quotation" name="quotation_id" class="form-control">
-                                    <option value="">---Select Quotation---</option>
-                                    @if (isset($quotations))
-                                        @foreach ($quotations as $key => $quotation)
-                                            <option
-                                                {{ isset($data['quotation_id']) && $data['quotation_id'] == $quotation->id ? 'selected' : '' }}
-                                                value="{{ $quotation->id }}">{{ $quotation->customer_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>Branch</label>
-                                <select name="bike_branch" class="form-control">
-                                    <option value="">---Select Branch---</option>
-                                    @if (isset($branches))
-                                        @foreach ($branches as $key => $branch)
-                                            <option
-                                                {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
-                                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
                                 <label>Bike Dealer</label>
                                 <select name="bike_dealer" class="form-control">
                                     <option value="">---Select Dealer---</option>
@@ -92,41 +67,62 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
+                                <label>Branch</label>
+                                <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
+                                    data-dep_dd3_name="bike_model_color"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
+                                    class="form-control ajaxChangeCDropDown">
+                                    <option value="">---Select Branch---</option>
+                                    @if (isset($branches))
+                                        @foreach ($branches as $key => $branch)
+                                            <option
+                                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $branch->id ? 'selected' : '' }}
+                                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
                                 <label>Brand Name</label>
-                                <select name="bike_brand" data-dep_dd_name="bike_model"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=models' }}" data-dep_dd2_name="bike_color"
+                                <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
+                                    data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
                                     class="form-control ajaxChangeCDropDown">
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
                                             <option
-                                                {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
+                                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $brand->id ? 'selected="selected"' : '' }}
                                                 value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label>Model Name</label>
-                                <select name="bike_model" data-dep_dd_name="bike_color"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
+                                <select name="bike_model" data-dep_dd_name="bike_model_color"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
                                     class="form-control ajaxChangeCDropDown">
-                                    @if (isset($editModelsHtml))
-                                        {!! $editModelsHtml !!}
-                                    @else
-                                        <option value="">---Select Model---</option>
+                                    <option value="">---Select Model---</option>
+                                    @if (isset($models))
+                                        @foreach ($models as $key => $model)
+                                            <option
+                                                {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected="selected"' : '' }}
+                                                value="{{ $model->id }}">{{ $model->model_name }}</option>
+                                        @endforeach
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+
+                            <div class="form-group col-md-3">
                                 <label>Model Color</label>
                                 <select name="bike_model_color" class="form-control">
-                                    <option value="" disabled>---Select Model Color---</option>
+                                    <option value="">---Select Model Color __{{ $data['bike_model_color'] }}---
+                                    </option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
                                             <option
-                                                {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : '' }}
+                                                {{ isset($data['bike_model_color']) && $data['bike_model_color'] == $color->id ? 'selected="selected"' : '' }}
                                                 value="{{ $color->id }}">{{ $color->color_name }}</option>
                                         @endforeach
                                     @endif
@@ -139,7 +135,7 @@
                                     @if (isset($bike_types))
                                         @foreach ($bike_types as $key => $name)
                                             <option
-                                                {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ isset($data['bike_type']) && $data['bike_type'] == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif
@@ -546,45 +542,6 @@
                     $("[name=purchase_invoice_number]").val(res.data.purchase_invoice_number)
                     $("[name=purchase_invoice_date]").val(res.data.purchase_invoice_date)
                     $("[name=bike_description]").val(res.data.bike_description)
-                });
-            });
-
-            $('#quotation').change(function() {
-                let id = $(this).val();
-                let URL = "{{ url('getQuotationDetails') }}/" + id;
-                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                    $("[name=active_status]").val(res.data.active_status)
-                    $("[name=active_status]").val(res.data.active_status)
-                    $("[name=bike_quotation]").val(res.data.bike_quotation)
-                    $("[name=customer_gender]").val(res.data.customer_gender)
-                    $("[name=customer_name]").val(res.data.customer_name)
-                    $("[name=customer_relationship]").val(res.data.customer_relationship)
-                    $("[name=customer_guardian_name]").val(res.data.customer_guardian_name)
-                    $("[name=customer_address_line]").val(res.data.customer_address_line)
-                    $("[name=customer_state]").val(res.data.customer_state)
-                    $("[name=customer_district]").val(res.data.customer_district)
-                    $("[name=customer_city]").val(res.data.customer_city)
-                    $("[name=customer_zipcode]").val(res.data.customer_zipcode)
-                    $("[name=customer_mobile_number]").val(res.data.customer_mobile_number)
-                    $("[name=customer_email_address]").val(res.data.customer_email_address)
-                    $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
-                    $("[name=is_exchange_avaliable]").val(res.data.is_exchange_avaliable)
-                    $("[name=payment_type]").val(res.data.payment_type)
-                    $("[name=payment_type]").val(res.data.payment_type)
-                    $("[name=hyp_financer]").val(res.data.hyp_financer)
-                    $("[name=hyp_financer_description]").val(res.data.hyp_financer_description)
-                    $("[name=bike_brand]").val(res.data.bike_brand)
-                    $("[name=bike_model]").val(res.data.bike_model)
-                    $("[name=bike_color]").val(res.data.bike_color)
-                    $("[name=ex_showroom_price]").val(res.data.ex_showroom_price)
-                    $("[name=registration_amount]").val(res.data.registration_amount)
-                    $("[name=insurance_amount]").val(res.data.insurance_amount)
-                    $("[name=hypothecation_amount]").val(res.data.hypothecation_amount)
-                    $("[name=accessories_amount]").val(res.data.accessories_amount)
-                    $("[name=other_charges]").val(res.data.other_charges)
-                    $("[name=total_amount]").val(res.data.total_amount)
-                    $("[name=purchase_visit_date]").val(res.data.purchase_visit_date)
-                    $("[name=purchase_est_date]").val(res.data.purchase_est_date)
                 });
             });
         });
