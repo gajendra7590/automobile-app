@@ -224,12 +224,17 @@ class SaleController extends Controller
             ]);
         }
 
-
         $postData['uuid'] = random_uuid('sale');
         $postData['created_by'] = Auth::user()->id;
 
-        //Create New Role
+        //Create Sale
         Sale::create($postData);
+
+        //Mark Status Closed If Purchase With Quotation
+        if (isset($postData['quotation_id']) && intval($postData['quotation_id']) > 0) {
+            Quotation::where('id', $postData['quotation_id'])->update('status', 'close');
+        }
+
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

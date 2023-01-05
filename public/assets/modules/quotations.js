@@ -51,10 +51,6 @@ $(document).ready(function () {
                     name: "payment_type",
                 },
                 {
-                    data: "is_exchange_avaliable",
-                    name: "is_exchange_avaliable",
-                },
-                {
                     data: "total_amount",
                     name: "total_amount",
                 },
@@ -65,6 +61,10 @@ $(document).ready(function () {
                 {
                     data: "purchase_est_date",
                     name: "purchase_est_date",
+                },
+                {
+                    data: "status",
+                    name: "status",
                 },
                 {
                     data: "action",

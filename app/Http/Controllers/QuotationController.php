@@ -55,11 +55,11 @@ class QuotationController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('active_status', function ($row) {
-                    if ($row->active_status == '1') {
-                        return '<span class="label label-success">Active</span>';
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 'open') {
+                        return '<span class="label label-warning">Open</span>';
                     } else {
-                        return '<span class="label label-warning">In Active</span>';
+                        return '<span class="label label-success">Close</span>';
                     }
                 })
                 ->addColumn('action', function ($row) {
@@ -72,7 +72,7 @@ class QuotationController extends Controller
                     $str .= (isset($row->color->color_name) ? $row->color->color_name : '');
                     return $str;
                 })
-                ->rawColumns(['active_status', 'bike_detail', 'action'])
+                ->rawColumns(['status', 'bike_detail', 'action'])
                 ->make(true);
         }
     }
@@ -309,10 +309,12 @@ class QuotationController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" data-modal_size="modal-lg" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Quotation Update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         $action .= '<a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print" aria-hidden="true"></i></a>';
-        $action .= '<a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-recycle" aria-hidden="true"></i></a>';
 
+        if ($row->status == 'open') {
+            $action .= '<a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-recycle" aria-hidden="true"></i></a>';
+        }
         // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

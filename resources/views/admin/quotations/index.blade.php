@@ -6,7 +6,7 @@
         <section class="content-header">
             <h1>
                 Quotations
-                <small>Quotations list</small>
+                <small>List</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -36,15 +36,15 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Customer Name</th>
-                                        <th>Customer Email</th>
-                                        <th>Bike Purchase</th>
-                                        <th>Payment Type</th>
-                                        <th>Exchange</th>
-                                        <th>Total Amount</th>
-                                        <th>Visit Date</th>
-                                        <th>Est Purchase Date</th>
-                                        <th width="10%">Action</th>
+                                        <th width="12%">CUSTOMER NAME</th>
+                                        <th width="13%">CUSTOMER PHONE</th>
+                                        <th width="13%">BIKE</th>
+                                        <th width="12%">PAY TYPE</th>
+                                        <th>TOTAL AMOUNT</th>
+                                        <th>VISIT DATE</th>
+                                        <th>PURCHASE DATE</th>
+                                        <th>STATUS</th>
+                                        <th width="10%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
