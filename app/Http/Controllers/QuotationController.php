@@ -100,9 +100,9 @@ class QuotationController extends Controller
         $formData['branches'] = self::_getbranches(!$auth->is_admin);
         $formData['brands'] = self::_getbrands(!$auth->is_admin);
         $formData['models'] = self::_getmodels(config('brand_id'),!$auth->is_admin);
-        $formData['states'] = State::where('active_status', '1')->select('id', 'state_name')->get();
+        $formData['states'] = self::_getStates();
         $formData['action'] = route('quotations.store');
-        $formData['bank_financers'] = BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get();
+        $formData['bank_financers'] = self::_getFinaceirs();
         $formData['method'] = 'POST';
         return view('admin.quotations.create', $formData);
     }

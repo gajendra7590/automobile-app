@@ -48,7 +48,7 @@ class PurchaseController extends Controller
                     'modelColor' => function ($model) {
                         $model->select('id', 'color_name');
                     }
-                ])->when( !$auth->is_admin , function ($q) use ($auth){
+                ])->when(!$auth->is_admin, function ($q) use ($auth) {
                     $q->where('bike_branch', $auth->branch_id);
                 });
 
@@ -114,16 +114,15 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        config(['type' => true]);
         $auth = User::find(auth()->id());
         $data = [];
-        $data['branches'] = self::_getbranches(!$auth->is_admin);
         $data['method'] = 'POST';
+        $data['branches'] = self::_getbranches(!$auth->is_admin);
+        config(['first_brand' => true]);
         $data['brands'] = self::_getbrands(!$auth->is_admin);
-        $data['models'] = self::_getmodels(config('brand_id'),!$auth->is_admin);
-        $data['dealers'] = BikeDealer::where('active_status', '1')->select('id', 'company_name')->get();
-        $data['colors'] = BikeColor::where('active_status', '1')->select('id', 'color_name')->get();
-        $data['gst_rates'] = GstRates::where('active_status', '1')->select('id', 'gst_rate')->get();
+        $data['models'] = self::_getmodels(config('brand_id'), !$auth->is_admin);
+        $data['dealers'] = self::_getDealers(!$auth->is_admin);
+        $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
         $data['bike_types'] = bike_types();
         $data['bike_fuel_types'] = bike_fuel_types();
         $data['break_types'] = break_types();
@@ -227,6 +226,7 @@ class PurchaseController extends Controller
      */
     public function edit($id)
     {
+        $auth = User::find(auth()->id());
         $bpModel = Purchase::where(['uuid' => $id])->first();
         if (!$bpModel) {
             return response()->json([
@@ -235,28 +235,22 @@ class PurchaseController extends Controller
                 'message'    => "Sorry! This id($id) not exist"
             ]);
         }
-
-        // $models = BikeModel::where(['brand_id' => $bpModel->bike_brand])->get()->toArray();
-        // $editModelsHtml = models_list($models, $bpModel->bike_model);
-
-        $data = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'models' => BikeModel::where(['active_status' => '1', 'brand_id' => $bpModel->bike_brand])->get(),
-            'colors' => BikeColor::where(['active_status' => '1', 'bike_model' => $bpModel->bike_model])->get(),
-            'gst_rates' => GstRates::where('active_status', '1')->select('id', 'gst_rate')->get(),
-            'bike_types' => bike_types(),
-            'bike_fuel_types' => bike_fuel_types(),
-            'break_types' => break_types(),
-            'wheel_types' => wheel_types(),
-            'vin_physical_statuses' => vin_physical_statuses(),
-            //Other Important Data
-            'action' => route('purchases.update', ['purchase' => $id]),
-            // 'editModelsHtml' => $editModelsHtml,
-            'data'   => $bpModel,
-            'method' => 'PUT',
-        );
+        $data = [];
+        config(['first_brand' => true]);
+        $data['branches'] = self::_getbranches(!$auth->is_admin);
+        $data['dealers'] = self::_getDealers(!$auth->is_admin);
+        $data['brands'] = self::_getbrands(!$auth->is_admin);
+        $data['models'] = self::_getmodels($bpModel->brand_id, !$auth->is_admin);
+        $data['colors'] = self::_getColors($bpModel->color_id);
+        $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
+        $data['bike_types'] = bike_types();
+        $data['bike_fuel_types'] = bike_fuel_types();
+        $data['break_types'] = break_types();
+        $data['wheel_types'] = wheel_types();
+        $data['vin_physical_statuses'] = vin_physical_statuses();
+        $data['action'] = route('purchases.update', ['purchase' => $id]);
+        $data['data']   = $bpModel;
+        $data['method'] = 'PUT';
         return view('admin.purchases.create', $data);
     }
 

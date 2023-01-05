@@ -58,7 +58,7 @@ trait CommonHelper
     /**
      * Get All Brands
      */
-    public static function _getBrands($select_all = false) {
+    public static function _getBrands($select_all = false,$branch_id = null) {
         $model = BikeBrand::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
@@ -68,7 +68,7 @@ trait CommonHelper
         if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
-        if (config('type')) {
+        if (config('first_brand')) {
             $branch_id = Branch::value('id');
             $model = $model->where('branch_id',$branch_id);
             $model_one = clone $model;
