@@ -60,9 +60,6 @@ class SaleController extends Controller
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->addColumn('sale_id', function ($row) {
-                    return $row->uuid;
-                })
                 ->addColumn('branch.branch_name', function ($row) {
                     if ($row->branch) {
                         return $row->branch->branch_name;
@@ -77,33 +74,57 @@ class SaleController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('brand.name', function ($row) {
-                    if ($row->brand) {
-                        return $row->brand->name;
-                    } else {
-                        return 'N/A';
-                    }
+                ->addColumn('customer', function ($row) {
+                    // $str = '';
+                    // if ($row->customer_gender) {
+                    //     $str .= custPrefix($row->customer_gender) . ' ';
+                    // }
+
+                    // if ($row->customer_name) {
+                    //     $str .= ucwords($row->customer_name) . ' ';
+                    // }
+
+                    // if ($row->customer_relationship) {
+                    //     $str .= custRel($row->customer_relationship) . ' ';
+                    // }
+
+                    // if ($row->customer_guardian_name) {
+                    //     $str .= ucwords($row->customer_guardian_name);
+                    // }
+                    // return $str;
+                    return ucwords($row->customer_name);
                 })
-                ->addColumn('model.model_name', function ($row) {
-                    if ($row->model) {
-                        return $row->model->model_name;
-                    } else {
-                        return 'N/A';
+                ->addColumn('bike_detail', function ($row) {
+                    $str = '';
+                    if (isset($row->brand->name)) {
+                        $str .= $row->brand->name . ' | ';
                     }
-                })
-                ->addColumn('model_color.color_name', function ($row) {
-                    if ($row->modelColor) {
-                        return $row->modelColor->color_name;
-                    } else {
-                        return 'N/A';
+
+                    if (isset($row->model->model_name)) {
+                        $str .= $row->model->model_name . ' | ';
                     }
+
+                    if (isset($row->modelColor->color_name)) {
+                        $str .= $row->modelColor->color_name;
+                    }
+                    return $str;
                 })
-                ->addColumn('sale_invoice_amount', function ($row) {
-                    return '₹' . $row->sale_invoice_amount;
+                ->addColumn('total_amount', function ($row) {
+                    return '₹' . $row->total_amount;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return date('Y-m-d', strtotime($row->created_at));
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 'open') {
+                        return '<span class="label label-warning">Open</span>';
+                    } else {
+                        return '<span class="label label-success">Close</span>';
+                    }
                 })
                 ->rawColumns([
-                    'action', 'sale_id', 'branch.branch_name', 'dealer.company_name', 'brand.name',
-                    'model.model_name', 'model_color.color_name', 'sale_invoice_amount'
+                    'action', 'branch.branch_name', 'dealer.company_name', 'customer',
+                    'bike_detail', 'total_amount', 'created_at', 'status'
                 ])
                 ->make(true);
         }
@@ -136,14 +157,11 @@ class SaleController extends Controller
 
         if (!empty(request('q'))) {
             $quotation = Quotation::select('*')->find(request('q'));
-
-
-            $data['data'] = $quotation;
-            $data['data']['bike_branch'] = $quotation->branch_id;
-            $data['data']['bike_model_color'] = $quotation->bike_color;
-
-            // return $quotation;
-
+            if ($quotation) {
+                $data['data'] = $quotation;
+                $data['data']['bike_branch'] = $quotation->branch_id;
+                $data['data']['quotation_id'] = $quotation->id;
+            }
             $data['models']    = self::_getModels($quotation->bike_brand);
             $data['colors']    = self::_getColors($quotation->bike_model);
             $data['districts'] = self::_getDistricts($quotation->customer_state);
@@ -163,6 +181,8 @@ class SaleController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
+            'purchase_id' => 'required|exists:purchases,id',
+            'quotation_id' => 'nullable|exists:quotations,id',
             'bike_branch' => 'required|exists:branches,id',
             'bike_dealer' => 'required|exists:bike_dealers,id',
             'bike_brand' => 'required|exists:bike_brands,id',
@@ -172,48 +192,43 @@ class SaleController extends Controller
             'bike_fuel_type' => 'required',
             'break_type' => 'required',
             'wheel_type' => 'required',
-            'dc_number' => 'nullable',
-            'dc_date' => 'nullable',
             'vin_number'  => "required|min:17",
             'vin_physical_status' => 'required',
             'sku' => 'nullable',
             'sku_description' => 'nullable',
-            'hsn_number' => "nullable|min:6",
-            'engine_number'  => "nullable|min:14",
-            'key_number' => 'nullable',
-            'service_book_number' => 'nullable',
-            'tyre_brand_name' => 'nullable',
-            'tyre_front_number' => 'nullable',
-            'tyre_rear_number' => 'nullable',
-            'battery_brand' => 'nullable',
-            'battery_number' => 'nullable',
+            'hsn_number' => "required|min:6",
+            'engine_number'  => "required|min:14",
+            'key_number' => 'required',
+            'service_book_number' => 'required',
+            'tyre_brand_name' => 'required',
+            'tyre_front_number' => 'required',
+            'tyre_rear_number' => 'required',
+            'battery_brand' => 'required',
+            'battery_number' => 'required',
             'bike_description' => 'nullable',
-            'customer_first_name' => 'nullable',
-            'customer_middle_name' => 'nullable',
-            'customer_last_name' => 'nullable',
-            'customer_father_name' => 'nullable',
-            'customer_address_line' => 'nullable',
-            'customer_state' => 'nullable',
-            'customer_district' => 'nullable',
-            'customer_city' => 'nullable',
-            'customer_zipcode' => 'nullable',
-            'customer_mobile_number' => 'nullable',
-            'customer_email_address' => 'nullable',
-            'payment_type' => 'nullable',
-            'is_exchange_avaliable' => 'nullable',
-            'hyp_financer' => 'nullable',
+            'customer_gender' => 'required|in:1,2,3',
+            'customer_name' => 'required|string',
+            'customer_relationship' => 'required|in:1,2,3',
+            'customer_guardian_name' => 'required|string',
+            'customer_address_line' => 'required|string',
+            'customer_state' => 'required|exists:u_states,id',
+            'customer_district' => 'required|exists:u_districts,id',
+            'customer_city' => 'required|exists:u_cities,id',
+            'customer_zipcode' => 'required|numeric',
+            'customer_mobile_number' => 'required|numeric',
+            'customer_email_address' => 'nullable|email',
+            'payment_type' => 'required',
+            'is_exchange_avaliable' => 'required|in:Yes,No',
+            'hyp_financer' => 'nullable|exists:bank_financers,id',
             'hyp_financer_description' => 'nullable',
-            'purchase_visit_date' => 'nullable',
-            'purchase_est_date' => 'nullable',
-            'ex_showroom_price' => 'nullable',
-            'registration_amount' => 'nullable',
-            'insurance_amount' => 'nullable',
-            'hypothecation_amount' => 'nullable',
-            'accessories_amount' => 'nullable',
-            'other_charges' => 'nullable',
-            'total_amount' => 'nullable',
-            'active_status' => 'nullable',
-            'status' => 'nullable',
+            'ex_showroom_price' => 'required|numeric',
+            'registration_amount' => 'required|numeric',
+            'insurance_amount' => 'required|numeric',
+            'hypothecation_amount' => 'required|numeric',
+            'accessories_amount' => 'required|numeric',
+            'other_charges' => 'required|numeric',
+            'total_amount' => 'required|numeric',
+            'active_status' => 'nullable|in:0,1'
         ]);
 
         //If Validation failed
@@ -229,17 +244,18 @@ class SaleController extends Controller
         $postData['sale_uuid'] = random_uuid('sale');
         $postData['created_by'] = Auth::user()->id;
         //Create Sale
-        Sale::create($postData);
+        $createModel = Sale::create($postData);
 
         //Mark Status Closed If Purchase With Quotation
         if (isset($postData['quotation_id']) && intval($postData['quotation_id']) > 0) {
-            Quotation::where('id', $postData['quotation_id'])->update('status', 'close');
+            Quotation::where('id', $postData['quotation_id'])->update(['status' => 'close']);
         }
 
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Created Successfully."
+            'message'    => "Created Successfully.",
+            'data'       => $createModel
         ]);
     }
 
@@ -262,7 +278,7 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
-        $bpModel = Sale::where(['uuid' => $id])->first();
+        $bpModel = Sale::where(['id' => $id])->first();
         if (!$bpModel) {
             return response()->json([
                 'status'     => false,
@@ -270,11 +286,12 @@ class SaleController extends Controller
                 'message'    => "Sorry! This id($id) not exist"
             ]);
         }
-
         $data = array(
             'branches'              => self::_getBranches(),
             'dealers'               => self::_getDealers(),
             'states'                => self::_getStates(),
+            'districts'             => self::_getDistricts($bpModel->customer_state),
+            'cities'                => self::_getCities($bpModel->customer_district),
             'brands'                => self::_getBrands(),
             'models'                => self::_getModels($bpModel->bike_brand),
             'colors'                => self::_getColors($bpModel->bike_model),
@@ -302,7 +319,7 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $bpModel = Sale::where(['uuid' => $id]);
+        $bpModel = Sale::where(['id' => $id]);
         if (!$bpModel) {
             return response()->json([
                 'status'     => false,
@@ -313,65 +330,54 @@ class SaleController extends Controller
 
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'bike_branch' => 'nullable',
-            'bike_dealer' => 'nullable',
-            'bike_brand' => 'nullable',
-            'bike_model' => 'nullable',
-            'bike_model_color' => 'nullable',
-            'bike_type' => 'nullable',
-            'bike_fuel_type' => 'nullable',
-            'break_type' => 'nullable',
-            'wheel_type' => 'nullable',
-            'dc_number' => 'nullable',
-            'dc_date' => 'nullable',
-            'vin_number' => 'nullable',
-            'vin_physical_status' => 'nullable',
+            'purchase_id' => 'required|exists:purchases,id',
+            'quotation_id' => 'nullable|exists:quotations,id',
+            'bike_branch' => 'required|exists:branches,id',
+            'bike_dealer' => 'required|exists:bike_dealers,id',
+            'bike_brand' => 'required|exists:bike_brands,id',
+            'bike_model' => 'required|exists:bike_models,id',
+            'bike_color' => 'required|exists:bike_colors,id',
+            'bike_type' => 'required',
+            'bike_fuel_type' => 'required',
+            'break_type' => 'required',
+            'wheel_type' => 'required',
+            'vin_number'  => "required|min:17",
+            'vin_physical_status' => 'required',
             'sku' => 'nullable',
             'sku_description' => 'nullable',
-            'hsn_number' => 'nullable',
-            'engine_number' => 'nullable',
-            'key_number' => 'nullable',
-            'service_book_number' => 'nullable',
-            'tyre_brand_name' => 'nullable',
-            'tyre_front_number' => 'nullable',
-            'tyre_rear_number' => 'nullable',
-            'battery_brand' => 'nullable',
-            'battery_number' => 'nullable',
-            'purchase_invoice_number' => 'nullable',
-            'purchase_invoice_amount' => 'nullable',
-            'purchase_invoice_date' => 'nullable',
+            'hsn_number' => "required|min:6",
+            'engine_number'  => "required|min:14",
+            'key_number' => 'required',
+            'service_book_number' => 'required',
+            'tyre_brand_name' => 'required',
+            'tyre_front_number' => 'required',
+            'tyre_rear_number' => 'required',
+            'battery_brand' => 'required',
+            'battery_number' => 'required',
             'bike_description' => 'nullable',
-            'pre_gst_amount' => 'nullable',
-            'gst_amount' => 'nullable',
-            'discount_price' => 'nullable',
-            'grand_total' => 'nullable',
-            'branch_id' => 'nullable',
-            'customer_first_name' => 'nullable',
-            'customer_middle_name' => 'nullable',
-            'customer_last_name' => 'nullable',
-            'customer_father_name' => 'nullable',
-            'customer_address_line' => 'nullable',
-            'customer_state' => 'nullable',
-            'customer_district' => 'nullable',
-            'customer_city' => 'nullable',
-            'customer_zipcode' => 'nullable',
-            'customer_mobile_number' => 'nullable',
-            'customer_email_address' => 'nullable',
-            'payment_type' => 'nullable',
-            'is_exchange_avaliable' => 'nullable',
-            'hyp_financer' => 'nullable',
+            'customer_gender' => 'required|in:1,2,3',
+            'customer_name' => 'required|string',
+            'customer_relationship' => 'required|in:1,2,3',
+            'customer_guardian_name' => 'required|string',
+            'customer_address_line' => 'required|string',
+            'customer_state' => 'required|exists:u_states,id',
+            'customer_district' => 'required|exists:u_districts,id',
+            'customer_city' => 'required|exists:u_cities,id',
+            'customer_zipcode' => 'required|numeric',
+            'customer_mobile_number' => 'required|numeric',
+            'customer_email_address' => 'nullable|email',
+            'payment_type' => 'required',
+            'is_exchange_avaliable' => 'required|in:Yes,No',
+            'hyp_financer' => 'nullable|exists:bank_financers,id',
             'hyp_financer_description' => 'nullable',
-            'purchase_visit_date' => 'nullable',
-            'purchase_est_date' => 'nullable',
-            'ex_showroom_price' => 'nullable',
-            'registration_amount' => 'nullable',
-            'insurance_amount' => 'nullable',
-            'hypothecation_amount' => 'nullable',
-            'accessories_amount' => 'nullable',
-            'other_charges' => 'nullable',
-            'total_amount' => 'nullable',
-            'active_status' => 'nullable',
-            'status' => 'nullable',
+            'ex_showroom_price' => 'required|numeric',
+            'registration_amount' => 'required|numeric',
+            'insurance_amount' => 'required|numeric',
+            'hypothecation_amount' => 'required|numeric',
+            'accessories_amount' => 'required|numeric',
+            'other_charges' => 'required|numeric',
+            'total_amount' => 'required|numeric',
+            'active_status' => 'nullable|in:0,1'
         ]);
 
         //If Validation failed
@@ -410,7 +416,7 @@ class SaleController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('sales.edit', ['sale' => $row->uuid]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Sale"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Sale"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('sales.destroy', ['sale' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Sale"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
