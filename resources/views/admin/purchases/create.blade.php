@@ -44,7 +44,7 @@
                                 <button type="button"
                                     class="btn {{ $data['status'] == '1' ? 'btn-success' : 'btn-danger' }} pull-left"
                                     style="margin-right: 10px;">
-                                    {{ $data['status'] == '1' ? 'IN STOCK' : 'SOLD OUT' }}
+                                    STATUS - {{ $data['status'] == '1' ? 'IN STOCK' : 'SOLD OUT' }}
                                 </button>
                             @endif
                         </div>

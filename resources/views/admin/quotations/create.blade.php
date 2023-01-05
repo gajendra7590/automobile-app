@@ -34,16 +34,25 @@
                 <div class="box box-default">
                     <div>
                         <div class="box-header with-border">
-                            <h3 class="box-title">Quotation Detail</h3>
-
+                            @if (!isset($data['status']))
+                                <h3 class="box-title">Quotation Detail</h3>
+                            @endif
                             <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                                 {{ $isClosed }}>
                                 @if (isset($method) && $method == 'PUT')
                                     UPDATE QUOTATION
                                 @else
-                                    CREATE NEW QUOTATION
+                                    CREATE QUOTATION
                                 @endif
                             </button>
+
+                            @if (isset($data['status']))
+                                <button type="button"
+                                    class="btn {{ $data['status'] == 'open' ? 'btn-warning' : 'btn-success' }} pull-left"
+                                    style="margin-right: 10px;">
+                                    STATUS - {{ $data['status'] == 'open' ? 'OPEN' : 'CLOSED' }}
+                                </button>
+                            @endif
                         </div>
                     </div>
                     <div class="box-body">
