@@ -30,36 +30,24 @@ $(document).ready(function () {
                     name: "dealer.company_name",
                 },
                 {
-                    data: "brand.name",
-                    name: "brand.name",
+                    data: "customer",
+                    name: "customer",
                 },
                 {
-                    data: "model.model_name",
-                    name: "model.model_name",
+                    data: "bike_detail",
+                    name: "bike_detail",
                 },
                 {
-                    data: "model_color.color_name",
-                    name: "model_color.color_name",
+                    data: "total_amount",
+                    name: "total_amount",
                 },
                 {
-                    data: "dc_number",
-                    name: "dc_number",
+                    data: "created_at",
+                    name: "created_at",
                 },
                 {
-                    data: "dc_date",
-                    name: "dc_date",
-                },
-                {
-                    data: "purchase_invoice_number",
-                    name: "purchase_invoice_number",
-                },
-                {
-                    data: "purchase_invoice_date",
-                    name: "purchase_invoice_date",
-                },
-                {
-                    data: "purchase_invoice_amount",
-                    name: "purchase_invoice_amount",
+                    data: "status",
+                    name: "status",
                 },
                 {
                     data: "action",

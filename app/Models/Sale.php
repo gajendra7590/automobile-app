@@ -17,7 +17,10 @@ class Sale extends Model
     protected $table = 'sales';
 
     protected $fillable = [
-        'uuid',
+        'sale_uuid',
+        'branch_id',
+        'purchase_id',
+        'quotation_id',
         'bike_branch',
         'bike_dealer',
         'bike_brand',
@@ -40,19 +43,11 @@ class Sale extends Model
         'tyre_rear_number',
         'battery_brand',
         'battery_number',
-        'purchase_invoice_number',
-        'purchase_invoice_amount',
-        'purchase_invoice_date',
         'bike_description',
-        'pre_gst_amount',
-        'gst_amount',
-        'discount_price',
-        'grand_total',
-        'branch_id',
-        'customer_first_name',
-        'customer_middle_name',
-        'customer_last_name',
-        'customer_father_name',
+        'customer_gender',
+        'customer_name',
+        'customer_relationship',
+        'customer_guardian_name',
         'customer_address_line',
         'customer_state',
         'customer_district',
@@ -64,8 +59,6 @@ class Sale extends Model
         'is_exchange_avaliable',
         'hyp_financer',
         'hyp_financer_description',
-        'purchase_visit_date',
-        'purchase_est_date',
         'ex_showroom_price',
         'registration_amount',
         'insurance_amount',
@@ -77,7 +70,7 @@ class Sale extends Model
         'status',
         'created_by',
         'updated_by',
-        'sp_account_id'
+        'sp_account_id',
     ];
 
     protected $hidden = [];
@@ -137,7 +130,7 @@ class Sale extends Model
      */
     public function modelColor()
     {
-        return $this->belongsTo(BikeColor::class, 'bike_model_color');
+        return $this->belongsTo(BikeColor::class, 'bike_color');
     }
 
     public function state()

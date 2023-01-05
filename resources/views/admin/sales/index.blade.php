@@ -34,18 +34,15 @@
                                 data-url="{{ route('sales.index') }}">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Branch</th>
-                                        <th>Dealer</th>
-                                        <th>Brand</th>
-                                        <th>Mode</th>
-                                        <th>Model Color</th>
-                                        <th>DC Number</th>
-                                        <th>DC Date</th>
-                                        <th>Invoice Number</th>
-                                        <th>Invoice Date</th>
-                                        <th>Invoice Amount</th>
-                                        <th>Action</th>
+                                        <th width="5">#</th>
+                                        <th width="12%">BRANCH NAME</th>
+                                        <th width="12%">DEALER NAME</th>
+                                        <th width="15%">CUSTOMER NAME</th>
+                                        <th width="20%">BIKE DETAIL</th>
+                                        <th width="12%">TOTAL AMOUNT</th>
+                                        <th width="10%">SALE DATE</th>
+                                        <th width="5%">STATUS</th>
+                                        <th width="8%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
