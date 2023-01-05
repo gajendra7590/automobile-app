@@ -5,8 +5,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {{ isset($title) && $title ? $title : '' }}
-                <small>Purchase List</small>
+                <small>Purchases List</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -35,17 +34,14 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Branch</th>
-                                        <th>Dealer</th>
-                                        <th>Brand</th>
-                                        <th>Mode</th>
-                                        <th>Model Color</th>
-                                        <th>DC Number</th>
-                                        <th>DC Date</th>
-                                        <th>Invoice Number</th>
-                                        <th>Invoice Date</th>
-                                        <th>Invoice Amount</th>
-                                        <th>Action</th>
+                                        <th>BRANCH</th>
+                                        <th width="18%">BIKE INFO</th>
+                                        <th>INVOICE NUMBER</th>
+                                        <th>INVOICE DATE</th>
+                                        <th>INVOICE AMOUNT</th>
+                                        <th>GRAND TOTAL</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                             </table>

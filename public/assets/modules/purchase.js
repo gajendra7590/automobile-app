@@ -1,22 +1,21 @@
 $(document).ready(function () {
-
     $(document).on("keyup keypress", ".totalAmountCal", function () {
-        calculate()
+        calculate();
     });
 
-
     $(document).on("keyup keypress", ".totalAmountCal2", function () {
-        calculate()
+        calculate();
     });
 
     $(document).on("change", "#gst_rate", function () {
-        calculate()
+        calculate();
     });
 
-    function calculate(){
-        $val = $('#pre_gst_amount').val();
-        $rate = $('#gst_rate').val();;
-        $('input[name="gst_amount"]').val(($val*$rate/100).toFixed(2));
+    function calculate() {
+        $val = $("#pre_gst_amount").val();
+        $rate = $("#gst_rate option:selected").data("rate");
+        $("#gst_rate_percent").val($rate);
+        $('input[name="gst_amount"]').val((($val * $rate) / 100).toFixed(2));
 
         var total = 0.0;
         $(".totalAmountCal2").each(function (i, ele) {
@@ -61,36 +60,16 @@ $(document).ready(function () {
             searchDelay: 350,
             columns: [
                 {
-                    data: "purchase_id",
-                    name: "purchase_id",
+                    data: "id",
+                    name: "id",
                 },
                 {
                     data: "branch.branch_name",
                     name: "branch.branch_name",
                 },
                 {
-                    data: "dealer.company_name",
-                    name: "dealer.company_name",
-                },
-                {
-                    data: "brand.name",
-                    name: "brand.name",
-                },
-                {
-                    data: "model.model_name",
-                    name: "model.model_name",
-                },
-                {
-                    data: "model_color.color_name",
-                    name: "model_color.color_name",
-                },
-                {
-                    data: "dc_number",
-                    name: "dc_number",
-                },
-                {
-                    data: "dc_date",
-                    name: "dc_date",
+                    data: "bike_detail",
+                    name: "bike_detail",
                 },
                 {
                     data: "purchase_invoice_number",
@@ -103,6 +82,14 @@ $(document).ready(function () {
                 {
                     data: "purchase_invoice_amount",
                     name: "purchase_invoice_amount",
+                },
+                {
+                    data: "grand_total",
+                    name: "grand_total",
+                },
+                {
+                    data: "status",
+                    name: "status",
                 },
                 {
                     data: "action",

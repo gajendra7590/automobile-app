@@ -68,33 +68,34 @@ class PurchaseController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('brand.name', function ($row) {
+                ->addColumn('bike_detail', function ($row) {
+                    $str = '';
                     if ($row->brand) {
-                        return $row->brand->name;
-                    } else {
-                        return 'N/A';
+                        $str .= $row->brand->name . ' | ';
                     }
-                })
-                ->addColumn('model.model_name', function ($row) {
                     if ($row->model) {
-                        return $row->model->model_name;
-                    } else {
-                        return 'N/A';
+                        $str .= $row->model->model_name . ' | ';
                     }
-                })
-                ->addColumn('model_color.color_name', function ($row) {
                     if ($row->modelColor) {
-                        return $row->modelColor->color_name;
-                    } else {
-                        return 'N/A';
+                        $str .= $row->modelColor->color_name;
                     }
+                    return $str;
                 })
                 ->addColumn('purchase_invoice_amount', function ($row) {
                     return '₹' . $row->purchase_invoice_amount;
                 })
+                ->addColumn('grand_total', function ($row) {
+                    return '₹' . $row->grand_total;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == '1') {
+                        return '<span class="label label-success">IN_STOCK</span>';
+                    } else {
+                        return '<span class="label label-danger">SOLD_OUT</span>';
+                    }
+                })
                 ->rawColumns([
-                    'action', 'purchase_id', 'branch.branch_name', 'dealer.company_name', 'brand.name',
-                    'model.model_name', 'model_color.color_name', 'purchase_invoice_amount'
+                    'action', 'purchase_id', 'branch.branch_name', 'dealer.company_name', 'bike_detail', 'purchase_invoice_amount', 'grand_total', 'status'
                 ])
                 ->make(true);
         }
@@ -137,11 +138,11 @@ class PurchaseController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'bike_branch'               => "required",
-            'bike_dealer'               => "required",
-            'bike_brand'                => "required",
-            'bike_model'                => "required",
-            'bike_model_color'          => "required",
+            'bike_dealer'               => "required|exists:bike_dealers,id",
+            'bike_branch'               => "required|exists:branches,id",
+            'bike_brand'                => "required|exists:bike_brands,id",
+            'bike_model'                => "required|exists:bike_models,id",
+            'bike_model_color'          => "required|exists:bike_colors,id",
             'bike_type'                 => "required",
             'bike_fuel_type'            => "required",
             'break_type'                => "required",
@@ -150,28 +151,29 @@ class PurchaseController extends Controller
             'dc_date'                   => "nullable",
             'vin_number'                => "required|min:17",
             'vin_physical_status'       => "nullable",
-            'sku'                       => "nullable",
-            'sku_description'           => "nullable",
             'hsn_number'                => "nullable|min:6",
             'engine_number'             => "nullable|min:14",
+            'sku'                       => "nullable",
+            'sku_description'           => "nullable",
             'key_number'                => "nullable|",
             'service_book_number'       => "nullable",
+            'battery_brand'             => "nullable",
+            'battery_number'            => "nullable",
             'tyre_brand_name'           => "nullable",
             'tyre_front_number'         => "nullable",
             'tyre_rear_number'          => "nullable",
-            'battery_brand'             => "nullable",
-            'battery_number'            => "nullable",
-            'purchase_invoice_number'   => "required",
             'purchase_invoice_amount'   => "required|numeric",
+            'purchase_invoice_number'   => "required",
             'purchase_invoice_date'     => "required|date",
-            'bike_description'          => "required",
             'status'                    => "nullable|in:1,2",
-            'active_status'             => "required|in:0,1",
-            'pre_gst_amount'            => 'nullable',
-            'gst_amount'                => 'nullable',
-            'ex_showroom_price'         => 'nullable',
-            'discount_price'            => 'nullable',
-            'grand_total'               => 'nullable',
+            //'active_status'             => "required|in:0,1",
+            'gst_rate'                  => 'required|numeric',
+            'pre_gst_amount'            => 'required|numeric',
+            'gst_amount'                => 'required|numeric',
+            'ex_showroom_price'         => 'required|numeric',
+            'discount_price'            => 'nullable|numeric',
+            'grand_total'               => 'required|numeric',
+            'bike_description'          => "nullable",
         ]);
 
         //If Validation failed
@@ -188,12 +190,13 @@ class PurchaseController extends Controller
         $postData['uuid'] = random_uuid('purc');
         $postData['created_by'] = Auth::user()->id;
 
-        //Create New Role
-        Purchase::create($postData);
+        //Create
+        $createModel = Purchase::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Created Successfully."
+            'message'    => "Created Successfully.",
+            'data'       => $createModel
         ]);
     }
 
@@ -225,14 +228,16 @@ class PurchaseController extends Controller
             ]);
         }
 
-        $models = BikeModel::where(['brand_id' => $bpModel->bike_brand])->get()->toArray();
-        $editModelsHtml = models_list($models, $bpModel->bike_model);
+        // $models = BikeModel::where(['brand_id' => $bpModel->bike_brand])->get()->toArray();
+        // $editModelsHtml = models_list($models, $bpModel->bike_model);
 
         $data = array(
             'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
             'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
             'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
+            'models' => BikeModel::where(['active_status' => '1', 'brand_id' => $bpModel->bike_brand])->get(),
+            'colors' => BikeColor::where(['active_status' => '1', 'bike_model' => $bpModel->bike_model])->get(),
+            'gst_rates' => GstRates::where('active_status', '1')->select('id', 'gst_rate')->get(),
             'bike_types' => bike_types(),
             'bike_fuel_types' => bike_fuel_types(),
             'break_types' => break_types(),
@@ -240,7 +245,7 @@ class PurchaseController extends Controller
             'vin_physical_statuses' => vin_physical_statuses(),
             //Other Important Data
             'action' => route('purchases.update', ['purchase' => $id]),
-            'editModelsHtml' => $editModelsHtml,
+            // 'editModelsHtml' => $editModelsHtml,
             'data'   => $bpModel,
             'method' => 'PUT',
         );
@@ -267,47 +272,43 @@ class PurchaseController extends Controller
 
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'bike_branch'               => "required",
-            'bike_dealer'               => "required",
-            'bike_brand'                => "required",
-            'bike_model'                => "required",
-            'bike_model_color'          => "required",
+            'bike_dealer'               => "required|exists:bike_dealers,id",
+            'bike_branch'               => "required|exists:branches,id",
+            'bike_brand'                => "required|exists:bike_brands,id",
+            'bike_model'                => "required|exists:bike_models,id",
+            'bike_model_color'          => "required|exists:bike_colors,id",
             'bike_type'                 => "required",
             'bike_fuel_type'            => "required",
             'break_type'                => "required",
             'wheel_type'                => "required",
             'dc_number'                 => "nullable",
             'dc_date'                   => "nullable",
-            'vin_number'                => "nullable",
+            'vin_number'                => "required|min:17",
             'vin_physical_status'       => "nullable",
+            'hsn_number'                => "nullable|min:6",
+            'engine_number'             => "nullable|min:14",
             'sku'                       => "nullable",
             'sku_description'           => "nullable",
-            'hsn_number'                => "nullable",
-            'model_number'              => "nullable",
-            'engine_number'             => "nullable",
-            'key_number'                => "nullable",
+            'key_number'                => "nullable|",
             'service_book_number'       => "nullable",
+            'battery_brand'             => "nullable",
+            'battery_number'            => "nullable",
             'tyre_brand_name'           => "nullable",
             'tyre_front_number'         => "nullable",
             'tyre_rear_number'          => "nullable",
-            'battery_brand'             => "nullable",
-            'battery_number'            => "nullable",
-            'purchase_invoice_number'   => "required",
             'purchase_invoice_amount'   => "required|numeric",
+            'purchase_invoice_number'   => "required",
             'purchase_invoice_date'     => "required|date",
-            'pre_gst_amount'            => "required|numeric",
-            'gst_amount'                => "required|numeric",
-            'ex_showroom_price'         => "required|numeric",
-            'discount_price'            => "required|numeric",
-            'grand_total'               => "required|numeric",
-            'bike_description'          => "required",
             'status'                    => "nullable|in:1,2",
-            'active_status'             => "required|in:0,1",
-            'pre_gst_amount'            => 'nullable',
-            'gst_amount'                => 'nullable',
-            'ex_showroom_price'         => 'nullable',
-            'discount_price'            => 'nullable',
-            'grand_total'               => 'nullable'
+            //'active_status'             => "required|in:0,1",
+            'gst_rate'                  => 'required|numeric|exists:gst_rates,id',
+            'gst_rate_percent'          => 'required|numeric',
+            'pre_gst_amount'            => 'required|numeric',
+            'gst_amount'                => 'required|numeric',
+            'ex_showroom_price'         => 'required|numeric',
+            'discount_price'            => 'nullable|numeric',
+            'grand_total'               => 'required|numeric',
+            'bike_description'          => "nullable",
         ]);
 
         //If Validation failed
@@ -323,7 +324,8 @@ class PurchaseController extends Controller
         $postData['updated_by'] = Auth::user()->id;
         unset($postData['_token']);
         unset($postData['_method']);
-        //Create New Role
+
+        //Updated
         $bpModel->update($postData);
         return response()->json([
             'status'     => true,

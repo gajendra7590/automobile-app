@@ -158,13 +158,13 @@ class QuotationController extends Controller
 
         $postData['created_by'] = Auth::user()->id;
 
-        //Create New Role
-        $quotation = Quotation::create($postData);
+        //Create
+        $createModel = Quotation::create($postData);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => "Created Successfully.",
-            'data'       => $quotation
+            'data'       => $createModel
         ]);
     }
 
