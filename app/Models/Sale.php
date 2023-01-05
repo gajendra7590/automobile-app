@@ -5,8 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+//
+use App\Traits\CommonHelper;
+
 class Sale extends Model
 {
+    use CommonHelper;
+
     use HasFactory;
 
     protected $table = 'sales';
@@ -83,6 +88,15 @@ class Sale extends Model
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    //Fitler by branch - local scope
+    public function scopeBranchWise($query)
+    {
+        $branch_id = self::getCurrentUserBranch();
+        if ($branch_id != '0' || $branch_id != 'null') {
+            return $query->where('bike_branch', $branch_id);
+        }
     }
 
 

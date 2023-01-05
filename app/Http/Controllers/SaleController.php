@@ -19,8 +19,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
+//Helpr
+use App\Traits\CommonHelper;
+
 class SaleController extends Controller
 {
+    use CommonHelper;
     /**
      * Display a listing of the resource.
      *
@@ -28,11 +32,13 @@ class SaleController extends Controller
      */
     public function index()
     {
+
         if (!request()->ajax()) {
             return view('admin.sales.index');
         } else {
 
             $data = Sale::select('*')
+                ->branchWise()
                 ->with([
                     'branch' => function ($model) {
                         $model->select('id', 'branch_name');
@@ -112,18 +118,17 @@ class SaleController extends Controller
     public function create(Request $request)
     {
         $data = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
-            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
-            'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get(),
-            'purchases' => Purchase::select('id', 'dc_number', 'vin_number', 'sku')->where('status', '1')->get(),
-            // 'quotations' => Quotation::select('*')->get(),
-            'bike_types' => bike_types(),
-            'bike_fuel_types' => bike_fuel_types(),
-            'break_types' => break_types(),
-            'wheel_types' => wheel_types(),
+            'branches'              => self::_getBranches(),
+            'dealers'               => self::_getDealers(),
+            'states'                => self::_getStates(),
+            'brands'                => self::_getBrands(),
+            'colors'                => self::_getColors(),
+            'bank_financers'        => self::_getFinaceirs(),
+            'purchases'             => self::_getInStockPurchases(),
+            'bike_types'            => bike_types(),
+            'bike_fuel_types'       => bike_fuel_types(),
+            'break_types'           => break_types(),
+            'wheel_types'           => wheel_types(),
             'vin_physical_statuses' => vin_physical_statuses(),
             //Other Important Data
             'method' => 'POST',
@@ -135,15 +140,15 @@ class SaleController extends Controller
 
 
             $data['data'] = $quotation;
-            $data['bike_branch'] = $quotation->branch_id;
-            $data['bike_model_color'] = $quotation->bike_color;
+            $data['data']['bike_branch'] = $quotation->branch_id;
+            $data['data']['bike_model_color'] = $quotation->bike_color;
 
             // return $quotation;
 
-            $data['models'] = BikeModel::select('*')->where('brand_id', $quotation->bike_brand)->get();
-            $data['colors'] = BikeColor::select('*')->where('bike_model', $quotation->bike_model)->get();
-            $data['districts'] = District::select('*')->where('state_id', $quotation->customer_state)->get();
-            $data['cities'] = City::select('*')->where('district_id', $quotation->customer_district)->get();
+            $data['models']    = self::_getModels($quotation->bike_brand);
+            $data['colors']    = self::_getColors($quotation->bike_model);
+            $data['districts'] = self::_getDistricts($quotation->customer_state);
+            $data['cities']    = self::_getCities($quotation->customer_district);
         }
 
         return view('admin.sales.create', $data);
@@ -159,23 +164,23 @@ class SaleController extends Controller
     {
         $postData = $request->all();
         $validator = Validator::make($postData, [
-            'bike_branch' => 'nullable',
-            'bike_dealer' => 'nullable',
-            'bike_brand' => 'nullable',
-            'bike_model' => 'nullable',
-            'bike_color' => 'nullable',
-            'bike_type' => 'nullable',
-            'bike_fuel_type' => 'nullable',
-            'break_type' => 'nullable',
-            'wheel_type' => 'nullable',
+            'bike_branch' => 'required|exists:branches,id',
+            'bike_dealer' => 'required|exists:bike_dealers,id',
+            'bike_brand' => 'required|exists:bike_brands,id',
+            'bike_model' => 'required|exists:bike_models,id',
+            'bike_color' => 'required|exists:bike_colors,id',
+            'bike_type' => 'required',
+            'bike_fuel_type' => 'required',
+            'break_type' => 'required',
+            'wheel_type' => 'required',
             'dc_number' => 'nullable',
             'dc_date' => 'nullable',
-            'vin_number' => 'nullable',
-            'vin_physical_status' => 'nullable',
+            'vin_number'  => "required|min:17",
+            'vin_physical_status' => 'required',
             'sku' => 'nullable',
             'sku_description' => 'nullable',
-            'hsn_number' => 'nullable',
-            'engine_number' => 'nullable',
+            'hsn_number' => "nullable|min:6",
+            'engine_number'  => "nullable|min:14",
             'key_number' => 'nullable',
             'service_book_number' => 'nullable',
             'tyre_brand_name' => 'nullable',
@@ -183,15 +188,7 @@ class SaleController extends Controller
             'tyre_rear_number' => 'nullable',
             'battery_brand' => 'nullable',
             'battery_number' => 'nullable',
-            'purchase_invoice_number' => 'nullable',
-            'purchase_invoice_amount' => 'nullable',
-            'purchase_invoice_date' => 'nullable',
             'bike_description' => 'nullable',
-            'pre_gst_amount' => 'nullable',
-            'gst_amount' => 'nullable',
-            'discount_price' => 'nullable',
-            'grand_total' => 'nullable',
-            'branch_id' => 'nullable',
             'customer_first_name' => 'nullable',
             'customer_middle_name' => 'nullable',
             'customer_last_name' => 'nullable',
@@ -230,8 +227,9 @@ class SaleController extends Controller
             ]);
         }
 
-        $postData['uuid'] = random_uuid('sale');
+        $postData['sale_uuid'] = random_uuid('sale');
         $postData['created_by'] = Auth::user()->id;
+        $postData['']
 
         //Create Sale
         Sale::create($postData);
@@ -276,22 +274,22 @@ class SaleController extends Controller
             ]);
         }
 
-        $models = BikeModel::where(['brand_id' => $bpModel->bike_brand])->get()->toArray();
-        $editModelsHtml = models_list($models, $bpModel->bike_model);
-
         $data = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
-            'bike_types' => bike_types(),
-            'bike_fuel_types' => bike_fuel_types(),
-            'break_types' => break_types(),
-            'wheel_types' => wheel_types(),
+            'branches'              => self::_getBranches(),
+            'dealers'               => self::_getDealers(),
+            'states'                => self::_getStates(),
+            'brands'                => self::_getBrands(),
+            'models'                => self::_getModels($bpModel->bike_brand),
+            'colors'                => self::_getColors($bpModel->bike_model),
+            'bank_financers'        => self::_getFinaceirs(),
+            'purchases'             => self::_getInStockPurchases(),
+            'bike_types'            => bike_types(),
+            'bike_fuel_types'       => bike_fuel_types(),
+            'break_types'           => break_types(),
+            'wheel_types'           => wheel_types(),
             'vin_physical_statuses' => vin_physical_statuses(),
             //Other Important Data
             'action' => route('sales.update', ['sale' => $id]),
-            'editModelsHtml' => $editModelsHtml,
             'data'   => $bpModel,
             'method' => 'PUT',
         );

@@ -117,7 +117,7 @@
                             <div class="form-group col-md-3">
                                 <label>Model Color</label>
                                 <select name="bike_model_color" class="form-control">
-                                    <option value="">---Select Model Color __{{ $data['bike_model_color'] }}---
+                                    <option value="">---Select Model Color---
                                     </option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
@@ -135,7 +135,7 @@
                                     @if (isset($bike_types))
                                         @foreach ($bike_types as $key => $name)
                                             <option
-                                                {{ isset($data['bike_type']) && $data['bike_type'] == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ isset($data['bike_type']) && $data['bike_type'] == $key ? 'selected="selected"' : (strtolower($key) == 'bike' ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif
@@ -148,7 +148,7 @@
                                     @if (isset($bike_fuel_types))
                                         @foreach ($bike_fuel_types as $key => $name)
                                             <option
-                                                {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ isset($data->bike_fuel_type) && $data->bike_fuel_type == $key ? 'selected="selected"' : (strtolower($key) == 'petrol' ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif
@@ -161,7 +161,7 @@
                                     @if (isset($break_types))
                                         @foreach ($break_types as $key => $name)
                                             <option
-                                                {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ isset($data->break_type) && $data->break_type == $key ? 'selected="selected"' : (strtolower($key) == 'normal' ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif
@@ -170,11 +170,11 @@
                             <div class="form-group col-md-3">
                                 <label>Wheal Type</label>
                                 <select name="wheel_type" class="form-control">
-                                    <option value="">---Select Break Type---</option>
+                                    <option value="">---Select Wheal Type---</option>
                                     @if (isset($wheel_types))
                                         @foreach ($wheel_types as $key => $name)
                                             <option
-                                                {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ isset($data->wheel_type) && $data->wheel_type == $key ? 'selected="selected"' : (strtolower($key) == 'alloy' ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif

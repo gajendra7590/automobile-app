@@ -12,6 +12,7 @@ class BikeBrand extends Model
     protected $table = 'bike_brands';
 
     protected $fillable = [
+        'branch_id',
         'name',
         'code',
         'description',
