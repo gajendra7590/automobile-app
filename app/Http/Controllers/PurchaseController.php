@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\Branch;
 use App\Models\GstRates;
 use App\Models\Quotation;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -24,10 +25,10 @@ class PurchaseController extends Controller
      */
     public function index()
     {
+        $auth = User::find(auth()->id());
         if (!request()->ajax()) {
             return view('admin.purchases.index');
         } else {
-
             $data = Purchase::select('*')
                 ->with([
                     'branch' => function ($model) {
@@ -45,7 +46,10 @@ class PurchaseController extends Controller
                     'modelColor' => function ($model) {
                         $model->select('id', 'color_name');
                     }
-                ]);
+                ])->when( !$auth->is_admin , function ($q) use ($auth){
+                    $q->where('bike_branch', $auth->branch_id);
+                });
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -108,21 +112,28 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $data = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'dealers' => BikeDealer::where('active_status', '1')->select('id', 'company_name')->get(),
-            // 'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            //'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
-            'gst_rates' => GstRates::where('active_status', '1')->select('id', 'gst_rate')->get(),
-            'bike_types' => bike_types(),
-            'bike_fuel_types' => bike_fuel_types(),
-            'break_types' => break_types(),
-            'wheel_types' => wheel_types(),
-            'vin_physical_statuses' => vin_physical_statuses(),
-            //Other Important Data
-            'method' => 'POST',
-            'action' => route('purchases.store')
-        );
+        $auth = User::find(auth()->id());
+        $data = [];
+        $branches = $data['branches'] = Branch::where('active_status', '1')
+                            ->select('id', 'branch_name')
+                            ->when(!$auth->is_admin , function ($q) use ($auth){
+                                $q->where('id', $auth->branch_id);
+                            })->get();
+        $data['dealers'] = BikeDealer::where('active_status', '1')->select('id', 'company_name')->get();
+        $data['brands'] = BikeBrand::where('active_status', '1')
+                            ->select('id', 'name')
+                            ->when(count($branches) , function ($q) use ($branches){
+                                $q->where('branch_id', $branches[0]['id']);
+                            })->get();
+        $data['colors'] = BikeColor::where('active_status', '1')->select('id', 'color_name')->get();
+        $data['gst_rates'] = GstRates::where('active_status', '1')->select('id', 'gst_rate')->get();
+        $data['bike_types'] = bike_types();
+        $data['bike_fuel_types'] = bike_fuel_types();
+        $data['break_types'] = break_types();
+        $data['wheel_types'] = wheel_types();
+        $data['vin_physical_statuses'] = vin_physical_statuses();
+        $data['method'] = 'POST';
+        $data['action'] = route('purchases.store');
 
         // return $data;
         return view('admin.purchases.create', $data);

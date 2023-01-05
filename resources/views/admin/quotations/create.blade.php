@@ -108,7 +108,7 @@
                                     @if (isset($branches))
                                         @foreach ($branches as $key => $branch)
                                             <option
-                                                {{ isset($data['bike_branch']) && $data['bike_branch'] == $branch->id ? 'selected="selected"' : ($key == 0 ? 'selected' : '') }}
+                                                {{ (isset($data['branch_id']) && $data['branch_id'] == $branch->id ) || ($method == "POST" && $key == 0)  ? 'selected' : '' }}
                                                 value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                         @endforeach
                                     @endif
@@ -248,9 +248,12 @@
                                     {{ $isClosed }}>
                                     <option value="">---Select Brand----</option>
                                     @isset($brands)
-                                        @foreach ($brands as $brand)
+                                        @foreach ($brands as $key => $brand)
                                             <option
-                                                {{ isset($data['bike_brand']) && $data['bike_brand'] == $brand->id ? 'selected="selected"' : '' }}
+                                                {{ (isset($data['bike_brand']) && $data['bike_brand'] == $brand->id) ||
+                                                ($method && $method == 'POST' && $key == 0)
+                                                    ? 'selected'
+                                                    : '' }}
                                                 value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     @endisset
@@ -265,7 +268,7 @@
                                     @isset($models)
                                         @foreach ($models as $model)
                                             <option
-                                                {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected="selected"' : '' }}
+                                                {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected' : '' }}
                                                 value="{{ $model->id }}">{{ $model->model_name }}</option>
                                         @endforeach
                                     @endisset
@@ -355,7 +358,11 @@
                             @if (isset($method) && $method == 'PUT')
                                 UPDATE QUOTATION
                             @else
+<<<<<<< Updated upstream
                                 CREATE NEW QUOTATION
+=======
+                                CREATE QUOTATION
+>>>>>>> Stashed changes
                             @endif
                         </button>
                     </div>

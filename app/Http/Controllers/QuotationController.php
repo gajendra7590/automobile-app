@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\Quotation;
 use App\Models\State;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -26,10 +27,11 @@ class QuotationController extends Controller
      */
     public function index()
     {
+        $auth = User::find(auth()->id());
         if (!request()->ajax()) {
             return view('admin.quotations.index');
         } else {
-            $data = Quotation::with([
+            $data = Quotation::select('*')->with([
                 'state' => function ($s) {
                     $s->select('id', 'state_name');
                 },
@@ -51,7 +53,11 @@ class QuotationController extends Controller
                 'financer' => function ($s) {
                     $s->select('id', 'bank_name');
                 }
-            ])->select('*');
+            ]);
+
+            if(!$auth->is_admin){
+                $data->where('branch_id',$auth->branch_id);
+            }
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -84,23 +90,29 @@ class QuotationController extends Controller
      */
     public function create()
     {
+        $auth = User::find(auth()->id());
+        $formData = [];
+        $branches = $formData['branches'] = Branch::select('id', 'branch_name')
+                    ->where('active_status', '1')
+                    ->when( $auth && $auth->branch_id ,function ($q) use ($auth){
+                        $q->where('id',$auth->branch_id);
+                    })->get();
+        $formData['states'] = State::where('active_status', '1')->select('id', 'state_name')->get();
 
-        $formData = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'action' => route('quotations.store'),
-            'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get()
-        );
-
+        $brands = $formData['brands'] = BikeBrand::where('active_status', '1')
+                    ->select('id', 'name','branch_id')
+                    ->when( !$auth->is_admin && count($branches) ,function ($q) use ($branches){
+                        $q->where('branch_id',$branches[0]['id']);
+                    })->get();
+        $formData['models'] = BikeModel::where('active_status', '1')
+                    ->select('id', 'model_name','brand_id')
+                    ->when(count($brands) ,function ($q) use ($brands){
+                        $q->where('brand_id',$brands[0]['id']);
+                    })->get();
+        $formData['action'] = route('quotations.store');
+        $formData['bank_financers'] = BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get();
+        $formData['method'] = 'POST';
         return view('admin.quotations.create', $formData);
-
-        // return response()->json([
-        //     'status'     => true,
-        //     'statusCode' => 200,
-        //     'message'    => 'AjaxModal Loaded',
-        //     'data'       => view('admin.quotations.ajaxModal', $formData)->render()
-        // ]);
     }
 
     /**
@@ -129,8 +141,8 @@ class QuotationController extends Controller
             'is_exchange_avaliable'     => "required",
             'hyp_financer'              => "nullable",
             'hyp_financer_description'  => "nullable",
-            'purchase_visit_date'       => "nullable|date",
-            'purchase_est_date'         => "nullable|date",
+            'purchase_visit_date'       => "required|date",
+            'purchase_est_date'         => "required|date",
             'bike_brand'                => "required",
             'bike_model'                => "required",
             'bike_color'                => "required",
@@ -187,40 +199,33 @@ class QuotationController extends Controller
      */
     public function edit($id)
     {
+        $auth = User::find(auth()->id());
         $quotModel = Quotation::find($id);
         if (!$quotModel) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
-            ]);
+            return response()->json(['status' => false,'statusCode' => 419,'message' => "Sorry! This id($id) not exist"]);
         }
 
-        $formData = array(
-            'branches' => Branch::where('active_status', '1')->select('id', 'branch_name')->get(),
-            'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
-            'districts' => District::where('active_status', '1')->where('state_id', $quotModel->customer_state)->select('id', 'district_name')->get(),
-            'cities' => City::where('active_status', '1')->where('district_id', $quotModel->customer_district)->select('id', 'city_name')->get(),
-
-            'brands' => BikeBrand::where('active_status', '1')->select('id', 'name')->get(),
-            'models' => BikeModel::where('active_status', '1')->where('brand_id', $quotModel->bike_brand)->select('id', 'model_name')->get(),
-            'colors' => BikeColor::where('active_status', '1')->select('id', 'color_name')->get(),
-
-            'action' => route('quotations.store'),
-            'bank_financers' => BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get(),
-            'data'  => $quotModel,
-            'action' => route('quotations.update', ['quotation' => $id]),
-            'method' => 'PUT',
-        );
+        $formData = [];
+        $branches = $formData['branches'] = Branch::where('active_status', '1')->select('id', 'branch_name')
+                            ->when($auth && $auth->branch_id ,function ($q) use ($auth){
+                                $q->where('id',$auth->branch_id);
+                            })->get();
+        $formData['states'] = State::where('active_status', '1')->select('id', 'state_name')->get();
+        $formData['districts'] = District::where('active_status', '1')->where('state_id', $quotModel->customer_state)->select('id', 'district_name')->get();
+        $formData['cities'] = City::where('active_status', '1')->where('district_id', $quotModel->customer_district)->select('id', 'city_name')->get();
+        $formData['brands'] = BikeBrand::where('active_status', '1')->select('id', 'name')
+                            ->when( !$auth->is_admin && count($branches) ,function ($q) use ($branches){
+                                $q->where('branch_id',$branches[0]['id']);
+                            })->get();
+        $formData['models'] = BikeModel::where('active_status', '1')->where('brand_id', $quotModel->bike_brand)->select('id', 'model_name')->get();
+        $formData['colors'] = BikeColor::where('active_status', '1')->select('id', 'color_name')->get();
+        $formData['action'] = route('quotations.store');
+        $formData['bank_financers'] = BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get();
+        $formData['data']  = $quotModel;
+        $formData['action'] = route('quotations.update', ['quotation' => $id]);
+        $formData['method'] = 'PUT';
 
         return view('admin.quotations.create', $formData);
-
-        // return response()->json([
-        //     'status'     => true,
-        //     'statusCode' => 200,
-        //     'message'    => 'AjaxModal Loaded',
-        //     'data'       => view('admin.quotations.create', $formData)->render()
-        // ]);
     }
 
     /**
@@ -258,8 +263,8 @@ class QuotationController extends Controller
             'is_exchange_avaliable'     => "required",
             'hyp_financer'              => "nullable",
             'hyp_financer_description'  => "nullable",
-            'purchase_visit_date'       => "nullable|date",
-            'purchase_est_date'         => "nullable|date",
+            'purchase_visit_date'       => "required|date",
+            'purchase_est_date'         => "required|date",
             'bike_brand'                => "required",
             'bike_model'                => "required",
             'bike_color'                => "required",
