@@ -198,21 +198,15 @@ class QuotationController extends Controller
         }
 
         $formData = [];
-        $branches = $formData['branches'] = Branch::where('active_status', '1')->select('id', 'branch_name')
-                            ->when($auth && $auth->branch_id ,function ($q) use ($auth){
-                                $q->where('id',$auth->branch_id);
-                            })->get();
-        $formData['states'] = State::where('active_status', '1')->select('id', 'state_name')->get();
-        $formData['districts'] = District::where('active_status', '1')->where('state_id', $quotModel->customer_state)->select('id', 'district_name')->get();
-        $formData['cities'] = City::where('active_status', '1')->where('district_id', $quotModel->customer_district)->select('id', 'city_name')->get();
-        $formData['brands'] = BikeBrand::where('active_status', '1')->select('id', 'name')
-                            ->when( !$auth->is_admin && count($branches) ,function ($q) use ($branches){
-                                $q->where('branch_id',$branches[0]['id']);
-                            })->get();
-        $formData['models'] = BikeModel::where('active_status', '1')->where('brand_id', $quotModel->bike_brand)->select('id', 'model_name')->get();
-        $formData['colors'] = BikeColor::where('active_status', '1')->select('id', 'color_name')->get();
+        $formData['branches'] = self::_getBranches(!$auth->is_admin);
+        $formData['states'] = self::_getStates(!$auth->is_admin);
+        $formData['districts'] = self::_getDistricts($quotModel->customer_state,!$auth->is_admin);
+        $formData['cities'] = self::_getCities($quotModel->customer_district,!$auth->is_admin);
+        $formData['brands'] = self::_getBrands(!$auth->is_admin,$quotModel->branch_id);
+        $formData['models'] = self::_getModels($quotModel->bike_brand,!$auth->is_admin);
+        $formData['colors'] = self::_getColors($quotModel->bike_model,!$auth->is_admin);
+        $formData['bank_financers'] = self::_getFinaceirs();
         $formData['action'] = route('quotations.store');
-        $formData['bank_financers'] = BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get();
         $formData['data']  = $quotModel;
         $formData['action'] = route('quotations.update', ['quotation' => $id]);
         $formData['method'] = 'PUT';

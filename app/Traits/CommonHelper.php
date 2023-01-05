@@ -68,8 +68,10 @@ trait CommonHelper
         if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
-        if (config('first_brand')) {
-            $branch_id = Branch::value('id');
+        if ($branch_id || config('first_brand')) {
+            if(!$branch_id){
+                $branch_id = Branch::value('id');
+            }
             $model = $model->where('branch_id',$branch_id);
             $model_one = clone $model;
             $model_one = $model_one->value('id');
