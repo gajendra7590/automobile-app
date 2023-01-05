@@ -105,7 +105,7 @@
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
                                             <option
-                                                {{ (isset($data->bike_model) && $data->bike_model == $model->id) || ($method && $method == 'POST' && $key == 0)  ? 'selected="selected"' : '' }}
+                                                {{ (isset($data->bike_model) && $data->bike_model == $model->id) ? 'selected="selected"' : '' }}
                                                 value="{{ $model->id }}">{{ $model->model_name }}</option>
                                         @endforeach
                                     @endif
