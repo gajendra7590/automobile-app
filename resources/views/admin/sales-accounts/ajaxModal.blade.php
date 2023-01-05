@@ -105,7 +105,7 @@
 
         <!-- EMI SECTION-->
         <div class="row common_depended hideElement" id="emi_section">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>EMI Term</label>
                 <select class="form-control" name="finance_terms">
                     @isset($emiTerms)
@@ -117,26 +117,26 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>No Of EMI</label>
                 <input name="no_of_emis" type="number" class="form-control" value=""
                     placeholder="Ex : how many emis">
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Rate Of Intrest(%)</label>
-                <input name="rate_of_interest" type="number" class="form-control" value=""
+                <input name="rate_of_interest" type="text" class="form-control" value=""
                     placeholder="Any +ve Number">
             </div>
             <div class="form-group col-md-3">
                 <label>Processing Fees(If Any)</label>
-                <input name="processing_fees" type="number" class="form-control" value=""
+                <input name="processing_fees" type="text" class="form-control" value=""
                     placeholder="₹ 0.00">
             </div>
-            <div class="form-group col-md-3">
+            {{-- <div class="form-group col-md-3">
                 <label>Total Finanace Amount</label>
                 <input name="due_grand_total" type="number" class="form-control" value="" readonly
                     placeholder="₹ 0.00">
-            </div>
+            </div> --}}
         </div>
     </div>
     <!-- /.box-body -->

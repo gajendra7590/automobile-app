@@ -183,6 +183,7 @@ class SalesAccountController extends Controller
 
 
                 if ((floatval($postData['due_amount']) > 0)) {
+                    $total_pay_with_intrest = 0.00;
                     //EMI Table IF Pay Source Self Pay / Bank Finance
                     if ((in_array($postData['due_payment_source'], [1, 2]))) {
                         $emi_title = "Customer Self Pay.";
@@ -205,39 +206,52 @@ class SalesAccountController extends Controller
                             'pay_due'                 => null,
                             'status'                  => 0
                         ]);
+
+                        $total_pay_with_intrest = $postData['due_amount'];
                     }
                     //Case Of Personal Finance
                     else if ((in_array($postData['due_payment_source'], [3]))) {
 
                         $P = floatval($postData['due_amount']) + floatval($postData['processing_fees']);
                         $T = ($postData['no_of_emis']);
+                        $term_value = 0;
                         switch ($postData['finance_terms']) {
                             case 1:
                                 $T *= 1;
+                                $term_value = 1;
                                 break;
                             case 2:
                                 $T *= 3;
+                                $term_value = 3;
                                 break;
                             case 3:
                                 $T *= 6;
+                                $term_value = 6;
                                 break;
                             case 4:
                                 $T *= 12;
+                                $term_value = 12;
                                 break;
                         }
                         $R = $postData['rate_of_interest'];
                         $total_interest = (($P * $R * ($T / 12)) / 100);
 
                         $grand_total = round($P + $total_interest);
+                        $total_pay_with_intrest = $grand_total;
 
                         $installment_amount    = round($grand_total / $postData['no_of_emis']);
                         $installment_intr     = round($total_interest / $postData['no_of_emis']);
                         $installment_prin     = ($installment_amount - $installment_intr);
 
+                        $final_due_date = null;
+
                         //Convert Emis
                         for ($i = 1; $i <= $postData['no_of_emis']; $i++) {
-                            $emi_due_date = date('Y-m-d', strtotime("+ $T months"));
+                            // for ($i = $postData['no_of_emis']; $i >= 1; $i--) {
+                            $next_month  = ($term_value * $i);
+                            $emi_due_date = date('Y-m-d', strtotime("+ $next_month months"));
                             $emi_due_date = date('Y-m', strtotime($emi_due_date)) . '-' . date('d');
+                            $final_due_date = $emi_due_date;
                             SalePaymentInstallments::create([
                                 'sale_id'                 => $postData['sale_id'],
                                 'sale_payment_account_id' => $accountModel->id,
@@ -255,7 +269,15 @@ class SalesAccountController extends Controller
                                 'status'                  => 0
                             ]);
                         }
+
+                        //Due Date As Per Final Amount
+                        SalePaymentAccounts::where('id', $accountModel->id)->update(['due_date' => $final_due_date]);
                     }
+
+                    //$total_pay_with_intrest
+                    SalePaymentAccounts::where('id', $accountModel->id)->update([
+                        'total_pay_with_intrest' => $total_pay_with_intrest
+                    ]);
                 }
                 //Case If Pay Full Down Payment
                 else {

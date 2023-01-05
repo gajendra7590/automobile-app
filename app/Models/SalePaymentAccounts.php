@@ -30,6 +30,7 @@ class SalePaymentAccounts extends Model
         'no_of_emis',
         'rate_of_interest',
         'processing_fees',
+        'total_pay_with_intrest',
         'status',
         'status_closed_note',
         'status_closed_by'
