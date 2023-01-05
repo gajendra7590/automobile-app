@@ -32,7 +32,6 @@ class SaleController extends Controller
      */
     public function index()
     {
-
         if (!request()->ajax()) {
             return view('admin.sales.index');
         } else {
