@@ -32,7 +32,6 @@ class SaleController extends Controller
      */
     public function index()
     {
-
         if (!request()->ajax()) {
             return view('admin.sales.index');
         } else {
@@ -229,8 +228,6 @@ class SaleController extends Controller
 
         $postData['sale_uuid'] = random_uuid('sale');
         $postData['created_by'] = Auth::user()->id;
-        $postData['']
-
         //Create Sale
         Sale::create($postData);
 

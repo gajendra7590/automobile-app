@@ -9,8 +9,8 @@ use App\Models\BikeModel;
 use App\Models\Purchase;
 use App\Models\Branch;
 use App\Models\GstRates;
-use App\Models\Quotation;
 use App\Models\User;
+use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +18,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PurchaseController extends Controller
 {
+    use CommonHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -112,19 +114,14 @@ class PurchaseController extends Controller
      */
     public function create()
     {
+        config(['type' => true]);
         $auth = User::find(auth()->id());
         $data = [];
-        $branches = $data['branches'] = Branch::where('active_status', '1')
-                            ->select('id', 'branch_name')
-                            ->when(!$auth->is_admin , function ($q) use ($auth){
-                                $q->where('id', $auth->branch_id);
-                            })->get();
+        $data['branches'] = self::_getbranches(!$auth->is_admin);
+        $data['method'] = 'POST';
+        $data['brands'] = self::_getbrands(!$auth->is_admin);
+        $data['models'] = self::_getmodels(config('brand_id'),!$auth->is_admin);
         $data['dealers'] = BikeDealer::where('active_status', '1')->select('id', 'company_name')->get();
-        $data['brands'] = BikeBrand::where('active_status', '1')
-                            ->select('id', 'name')
-                            ->when(count($branches) , function ($q) use ($branches){
-                                $q->where('branch_id', $branches[0]['id']);
-                            })->get();
         $data['colors'] = BikeColor::where('active_status', '1')->select('id', 'color_name')->get();
         $data['gst_rates'] = GstRates::where('active_status', '1')->select('id', 'gst_rate')->get();
         $data['bike_types'] = bike_types();

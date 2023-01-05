@@ -75,7 +75,7 @@
                                     @if (isset($branches))
                                         @foreach ($branches as $key => $branch)
                                             <option
-                                                {{ isset($data->bike_branch) && $data->bike_branch == $branch->id ? 'selected' : '' }}
+                                                {{ (isset($data->bike_branch) && $data->bike_branch == $branch->id) || ($method && $method == 'POST' && $key == 0) ? 'selected' : '' }}
                                                 value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                         @endforeach
                                     @endif
@@ -90,7 +90,7 @@
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
                                             <option
-                                                {{ isset($data->bike_brand) && $data->bike_brand == $brand->id ? 'selected="selected"' : '' }}
+                                                {{ (isset($data->bike_brand) && $data->bike_brand == $brand->id) || ($method && $method == 'POST' && $key == 0)  ? 'selected="selected"' : '' }}
                                                 value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     @endif
@@ -105,7 +105,7 @@
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
                                             <option
-                                                {{ isset($data->bike_model) && $data->bike_model == $model->id ? 'selected="selected"' : '' }}
+                                                {{ (isset($data->bike_model) && $data->bike_model == $model->id) || ($method && $method == 'POST' && $key == 0)  ? 'selected="selected"' : '' }}
                                                 value="{{ $model->id }}">{{ $model->model_name }}</option>
                                         @endforeach
                                     @endif

@@ -23,11 +23,11 @@ trait CommonHelper
 
     public static function getCurrentUserBranch()
     {
-        $id = 0;
+        $branch_id = 0;
         if (Auth::user()) {
-            $id = intval(Auth::user()->branch_id);
+            $branch_id = intval(Auth::user()->branch_id);
         }
-        return $id;
+        return $branch_id;
     }
 
     public static function branchFilter($select_all = false)
@@ -58,20 +58,23 @@ trait CommonHelper
     /**
      * Get All Brands
      */
-    public static function _getBrands($select_all = false)
-    {
+    public static function _getBrands($select_all = false) {
         $model = BikeBrand::where('active_status', '1');
-
         //Select Specific
         if ($select_all == false) {
             $model = $model->select('id', 'name');
         }
-
         //Filter by branch
         if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
-
+        if (config('type')) {
+            $branch_id = Branch::value('id');
+            $model = $model->where('branch_id',$branch_id);
+            $model_one = clone $model;
+            $model_one = $model_one->value('id');
+            config(['brand_id' => $model_one]);
+        }
         return $model->get();
     }
 

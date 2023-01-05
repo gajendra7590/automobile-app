@@ -12,6 +12,7 @@ use App\Models\District;
 use App\Models\Quotation;
 use App\Models\State;
 use App\Models\User;
+use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuotationController extends Controller
 {
+    use CommonHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -90,25 +93,14 @@ class QuotationController extends Controller
      */
     public function create()
     {
+        config(['type' => true]);
         $auth = User::find(auth()->id());
         $formData = [];
-        $branches = $formData['branches'] = Branch::select('id', 'branch_name')
-                    ->where('active_status', '1')
-                    ->when( $auth && $auth->branch_id ,function ($q) use ($auth){
-                        $q->where('id',$auth->branch_id);
-                    })->get();
+        $formData['method'] = 'POST';
+        $formData['branches'] = self::_getbranches(!$auth->is_admin);
+        $formData['brands'] = self::_getbrands(!$auth->is_admin);
+        $formData['models'] = self::_getmodels(config('brand_id'),!$auth->is_admin);
         $formData['states'] = State::where('active_status', '1')->select('id', 'state_name')->get();
-
-        $brands = $formData['brands'] = BikeBrand::where('active_status', '1')
-                    ->select('id', 'name','branch_id')
-                    ->when( !$auth->is_admin && count($branches) ,function ($q) use ($branches){
-                        $q->where('branch_id',$branches[0]['id']);
-                    })->get();
-        $formData['models'] = BikeModel::where('active_status', '1')
-                    ->select('id', 'model_name','brand_id')
-                    ->when(count($brands) ,function ($q) use ($brands){
-                        $q->where('brand_id',$brands[0]['id']);
-                    })->get();
         $formData['action'] = route('quotations.store');
         $formData['bank_financers'] = BankFinancer::select('id', 'bank_name')->where('active_status', '1')->get();
         $formData['method'] = 'POST';

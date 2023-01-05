@@ -358,11 +358,7 @@
                             @if (isset($method) && $method == 'PUT')
                                 UPDATE QUOTATION
                             @else
-<<<<<<< Updated upstream
                                 CREATE NEW QUOTATION
-=======
-                                CREATE QUOTATION
->>>>>>> Stashed changes
                             @endif
                         </button>
                     </div>
