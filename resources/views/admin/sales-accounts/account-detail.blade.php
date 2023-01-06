@@ -189,11 +189,16 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
+                                                            <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
                                                                 class="btn btn-success btn-sm ajaxModalPopup"
+                                                                data-modal_title="Make Due Payment" data-modal_size="modal-lg">
+                                                                PAY
+                                                            </a>
+                                                            <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
+                                                                class="btn btn-warning btn-sm ajaxModalPopup"
                                                                 data-modal_title="Due Payment Detail"
                                                                 data-modal_size="modal-lg">
-                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                VIEW
                                                             </a>
                                                         </td>
                                                     </tr>

@@ -73,6 +73,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('sales', 'SaleController');
     Route::resource('sales-accounts', 'SalesAccountController');
     Route::get('sales-detail-modal', 'SalesAccountController@salesDetailModal')->name('salesDetailModal');
+    Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
 
     // RTO
     Route::resource('rtoRegistration', 'RtoRegistrationController');

@@ -401,7 +401,7 @@ class SalesAccountController extends Controller
             $view = $postData['type'];
             switch ($postData['type']) {
                 case 'due-detail':
-                    $data = SalePaymentInstallments::where('id', $postData['id'])->with([
+                    $data['data'] = SalePaymentInstallments::where('id', $postData['id'])->with([
                         'account' => function ($account) {
                             $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
                         },
@@ -412,7 +412,7 @@ class SalesAccountController extends Controller
                     // return ['status' => true, 'data' => $data];
                     break;
                 case 'transaction-detail':
-                    $data = SalePaymentTransactions::where('id', $postData['id'])->with([
+                    $data['data'] = SalePaymentTransactions::where('id', $postData['id'])->with([
                         'account' => function ($account) {
                             $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
                         },
@@ -428,6 +428,18 @@ class SalesAccountController extends Controller
                     ])->first();
                     // return ['status' => true, 'data' => $data];
                     break;
+                case 'due-pay-form':
+                    $data['data'] = SalePaymentInstallments::where('id', $postData['id'])->with([
+                        'account' => function ($account) {
+                            $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
+                        },
+                        'sale' => function ($account) {
+                            $account->select('id', 'customer_name', 'status');
+                        }
+                    ])->first();
+                    $data['depositeSources'] = depositeSources();
+                    // return ['status' => true, 'data' => $data];
+                    break;
                 default:
                     # code...
                     break;
@@ -437,7 +449,64 @@ class SalesAccountController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.sales-accounts.modals.' . $view, ['data' => $data])->render()
+            'data'       => view('admin.sales-accounts.modals.' . $view, $data)->render()
         ]);
+    }
+
+    /**
+     * installmentPay
+     */
+    public function installmentPay(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'id'              => 'required|exists:sale_payment_installments,id',
+                'emi_due_amount'  => 'required|numeric|min:1',
+                'pay_method'      => 'required',
+                'pay_method_note' => 'nullable|string',
+                'pay_option'      => 'required|in:full,partial',
+                'pay_amount'      => 'required|numeric|min:1'
+            ]);
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $instModel = SalePaymentInstallments::find($postData['id']);
+
+            $total_overall_due = SalePaymentInstallments::where([
+                'status' => '0',
+                'sale_payment_account_id'  => $instModel->sale_payment_account_id
+            ])->sum('emi_due_amount');
+
+            $due_amount = floatval($instModel->emi_due_amount);
+            $pay_amount = floatval($postData['pay_amount']);
+
+            echo $total_overall_due . '___' . $due_amount . '___' . $pay_amount;
+
+
+            dd($instModel);
+
+            die;
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage()
+            ]);
+        }
+
+
+
+        dd($postData);
     }
 }
