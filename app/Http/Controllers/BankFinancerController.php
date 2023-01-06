@@ -49,12 +49,21 @@ class BankFinancerController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bankFinancers.ajaxModal', ['action' => route('bankFinancers.store'), 'method' => 'POST'])->render()
-        ]);
+        try {
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.bankFinancers.ajaxModal', ['action' => route('bankFinancers.store'), 'method' => 'POST'])->render()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**
@@ -103,7 +112,7 @@ class BankFinancerController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully',
+                'message'    => trans('messages.create_success'),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -136,14 +145,24 @@ class BankFinancerController extends Controller
      */
     public function edit($id)
     {
-        $bankFinancer = BankFinancer::find($id);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
-            'data'       => view('admin.bankFinancers.ajaxModal', ['data' => $bankFinancer, 'action' => route('bankFinancers.update', ['bankFinancer' => $id]), 'method' => 'PUT'])->render()
-        ]);
+        try {
+            $bankFinancer = BankFinancer::find($id);
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.bankFinancers.ajaxModal', ['data' => $bankFinancer, 'action' => route('bankFinancers.update', ['bankFinancer' => $id]), 'method' => 'PUT'])->render()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -181,11 +200,11 @@ class BankFinancerController extends Controller
             }
             $bankFinancer = BankFinancer::find($id);
             if (!$bankFinancer) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.bank_financer_not_found')]);
             }
             $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status']));
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -209,11 +228,11 @@ class BankFinancerController extends Controller
             DB::beginTransaction();
             $bankFinancer = BankFinancer::find($id);
             if (!$bankFinancer) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $bankFinancer->delete();
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

@@ -51,7 +51,7 @@ class BikeBrandsController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.brands.ajaxModal', ['action' => route('brands.store'), 'method' => 'POST', 'branches' => $branches])->render()
         ]);
     }
@@ -87,7 +87,7 @@ class BikeBrandsController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully',
+                'message'    => trans('messages.create_success'),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -125,7 +125,7 @@ class BikeBrandsController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.brands.ajaxModal', ['data' => $bikeBrand, 'branches' => $branches, 'action' => route('brands.update', ['brand' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
@@ -151,12 +151,12 @@ class BikeBrandsController extends Controller
             }
             $bikeBrand = BikeBrand::find($id);
             if (!$bikeBrand) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
 
             $bikeBrand->update($postData);
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -180,14 +180,14 @@ class BikeBrandsController extends Controller
             DB::beginTransaction();
             $bikeBrand = BikeBrand::find($id);
             if (!$bikeBrand) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             if ($bikeBrand->bike_modals()->count()) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.cant_delete_brand')]);
             }
             $bikeBrand->delete();
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

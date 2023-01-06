@@ -68,7 +68,7 @@ class BikeAgentController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.agents.ajaxModal', $data)->render()
         ]);
     }
@@ -117,7 +117,7 @@ class BikeAgentController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully',
+                'message'    => trans('messages.create_success'),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -166,7 +166,7 @@ class BikeAgentController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.agents.ajaxModal', $data)->render()
         ]);
     }
@@ -205,11 +205,11 @@ class BikeAgentController extends Controller
             }
             $bikeAgent = BikeAgent::find($id);
             if (!$bikeAgent) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $bikeAgent->update($request->all());
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -233,11 +233,11 @@ class BikeAgentController extends Controller
             DB::beginTransaction();
             $bikeAgent = BikeAgent::find($id);
             if (!$bikeAgent) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $bikeAgent->delete();
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

@@ -48,7 +48,7 @@ class GstRtoRateController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.gst-rto-rates.ajaxModal', ['action' => route('gst-rto-rates.store')])->render()
         ]);
     }
@@ -88,7 +88,7 @@ class GstRtoRateController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully."
+                'message'    => trans('messages.create_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -125,13 +125,13 @@ class GstRtoRateController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => trans('messages.id_not_exist',['id' => $id])
             ]);
         }
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.gst-rto-rates.ajaxModal', [
                 'action' => route(
                     'gst-rto-rates.update',
@@ -178,7 +178,7 @@ class GstRtoRateController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
 
@@ -188,7 +188,7 @@ class GstRtoRateController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Updated Successfully."
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

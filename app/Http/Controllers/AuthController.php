@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,29 +42,38 @@ class AuthController extends Controller
      */
     public function loginPost(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'email' => "required|email",
-            'password' => "required"
-        ]);
+        try {
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'email' => "required|email",
+                'password' => "required"
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['statusCode' => 419, 'status' => false, 'message' => $validator->errors()->first(), 'data' => (object)[]]);
-        }
+            if ($validator->fails()) {
+                return response()->json(['statusCode' => 419, 'status' => false, 'message' => $validator->errors()->first(), 'data' => (object)[]]);
+            }
 
-        $userModel = User::where('email', $postData['email'])->first();
+            $userModel = User::where('email', $postData['email'])->first();
 
-        if (!$userModel) {
-            return response()->json(['statusCode' => 419, 'status' => false, 'message' => 'User does not exists.', 'data' => (object)[]]);
-        }
+            if (!$userModel) {
+                return response()->json(['statusCode' => 419, 'status' => false, 'message' => trans('messages.user_not_exist'), 'data' => (object)[]]);
+            }
 
-        //return $validator;
-        $credentials = array('email' => $postData['email'], 'password' => $postData['password']);
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return response()->json(['statusCode' => 200, 'status' => true, 'message' => 'Login Successful', 'data' => (object)[]]);
-        } else {
-            return response()->json(['statusCode' => 419, 'status' => false, 'message' => 'You have entered wrong credetials', 'data' => (object)[]]);
+            //return $validator;
+            $credentials = array('email' => $postData['email'], 'password' => $postData['password']);
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                return response()->json(['statusCode' => 200, 'status' => true, 'message' => trans('messages.login_success'), 'data' => (object)[]]);
+            } else {
+                return response()->json(['statusCode' => 419, 'status' => false, 'message' => trans('messages.wrong_credetials'), 'data' => (object)[]]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
     }
 
@@ -127,7 +137,7 @@ class AuthController extends Controller
             }
             $user->save();
             DB::commit();
-            return response()->json(['statusCode' => 200, 'status' => true, 'message' => 'Updated Successfully', 'data' => (object)[]]);
+            return response()->json(['statusCode' => 200, 'status' => true, 'message' => trans('messages.update_success'), 'data' => (object)[]]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -153,12 +163,12 @@ class AuthController extends Controller
                 return response()->json(['statusCode' => 419, 'status' => false, 'message' => $validator->errors()->first(), 'data' => (object)[]]);
             }
             if (!Hash::check($request->password, $user->password)) {
-                return response()->json(['statusCode' => 419, 'status' => false, 'message' => 'Old password not match..', 'data' => (object)[]]);
+                return response()->json(['statusCode' => 419, 'status' => false, 'message' => trans('messages.password_not_match'), 'data' => (object)[]]);
             }
             $user->password = Hash::make($request->new_password);
             $user->save();
             DB::commit();
-            return response()->json(['statusCode' => 200, 'status' => true, 'message' => 'Updated Successfully', 'data' => (object)[]]);
+            return response()->json(['statusCode' => 200, 'status' => true, 'message' => trans('messages.update_success'), 'data' => (object)[]]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

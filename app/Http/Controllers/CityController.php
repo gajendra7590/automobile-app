@@ -60,7 +60,7 @@ class CityController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts])->render()
         ]);
     }
@@ -109,7 +109,7 @@ class CityController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully."
+                'message'    => trans('messages.create_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -128,7 +128,7 @@ class CityController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.cities.ajaxModal', ['action' => route('cities.store'), 'districts' => $districts, 'redirect' => 'closeModal', 'modalId' => 'ajaxModalCommon2'])->render()
         ]);
     }
@@ -170,7 +170,7 @@ class CityController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully."
+                'message'    => trans('messages.create_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -210,13 +210,13 @@ class CityController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => trans('messages.id_not_exist',['id' => $id])
             ]);
         }
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.cities.ajaxModal', [
                 'action' => route(
                     'cities.update',
@@ -247,7 +247,7 @@ class CityController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
             $validator = Validator::make($postData, [
@@ -273,7 +273,7 @@ class CityController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Updated Successfully."
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -301,7 +301,7 @@ class CityController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
 

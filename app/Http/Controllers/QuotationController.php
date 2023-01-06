@@ -168,7 +168,7 @@ class QuotationController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully.",
+                'message'    => trans('messages.create_success'),
                 'data'       => $createModel
             ]);
         } catch (\Exception $e) {
@@ -203,7 +203,7 @@ class QuotationController extends Controller
         $auth = User::find(auth()->id());
         $quotModel = Quotation::find($id);
         if (!$quotModel) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => "Sorry! This id($id) not exist"]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.id_not_exist',['id' => $id])]);
         }
 
         $formData = [];
@@ -238,7 +238,7 @@ class QuotationController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
 
@@ -292,7 +292,7 @@ class QuotationController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Updated Successfully."
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -346,7 +346,7 @@ class QuotationController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Retrived Successfully.",
+            'message'    => trans('messages.retrieve_success'),
             'data'       => $models
         ]);
     }

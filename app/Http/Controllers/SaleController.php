@@ -254,7 +254,7 @@ class SaleController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully.",
+                'message'    => trans('messages.create_success'),
                 'data'       => $createModel
             ]);
         } catch (\Exception $e) {
@@ -291,7 +291,7 @@ class SaleController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => trans('messages.id_not_exist',['id' => $id])
             ]);
         }
         $data = array(
@@ -333,7 +333,7 @@ class SaleController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
 
@@ -407,7 +407,7 @@ class SaleController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Updated Successfully."
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -445,7 +445,7 @@ class SaleController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Retrived Successfully.",
+            'message'    => trans('messages.retrieve_success'),
             'data'       => models_list($models)
         ]);
     }

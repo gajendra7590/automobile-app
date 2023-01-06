@@ -77,7 +77,7 @@ class UserController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.users.ajaxModal', $data)->render()
         ]);
     }
@@ -118,7 +118,7 @@ class UserController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Created Successfully."
+            'message'    => trans('messages.create_success')
         ]);
     }
 
@@ -154,7 +154,7 @@ class UserController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.users.ajaxModal', $data)->render()
         ]);
     }
@@ -173,14 +173,14 @@ class UserController extends Controller
 
         $user = User::find($id);
         if (!$user) {
-            response()->json(['status' => true, 'statusCode' => 419, 'message' => 'There is no user associated with this id', 'data' => []]);
+            response()->json(['status' => true, 'statusCode' => 419, 'message' => trans('messages.on_user_associate'), 'data' => []]);
         }
         $user->update(['password' => Hash::make(request('password'))]);
 
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'Password generated successfully',
+            'message'    => trans('messages.password_generated'),
             'data' => []
         ], 200);
     }
@@ -190,7 +190,7 @@ class UserController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.users.changePassword', ['id' => $id, 'action' => route('user.changePassword.post', ['user' => $id])])->render()
         ], 200);
     }
@@ -228,7 +228,7 @@ class UserController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Opps! user does not exist."
+                'message'    => trans('messages.user_not_exist')
             ]);
         }
 
@@ -247,7 +247,7 @@ class UserController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => "Updated Successfully."
+            'message'    => trans('messages.update_success')
         ]);
     }
 
@@ -261,10 +261,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Not Found']);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.user_not_exist')]);
         }
         $user->delete();
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
     }
 
     public function getActions($row)

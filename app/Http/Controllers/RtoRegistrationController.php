@@ -78,7 +78,7 @@ class RtoRegistrationController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.rto-registration.ajaxModal', $data)->render()
         ]);
     }
@@ -98,7 +98,7 @@ class RtoRegistrationController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully',
+                'message'    => trans('messages.create_success'),
                 'data'       => $rtoRegistration
             ]);
         } catch (\Exception $e) {
@@ -152,7 +152,7 @@ class RtoRegistrationController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.rto-registration.ajaxModal', $data)->render()
         ]);
     }

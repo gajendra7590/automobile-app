@@ -95,7 +95,7 @@ class SalesAccountController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.sales-accounts.ajaxModal', $data)->render()
         ]);
     }
@@ -299,7 +299,7 @@ class SalesAccountController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully."
+                'message'    => trans('messages.create_success')
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -458,7 +458,7 @@ class SalesAccountController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.sales-accounts.modals.' . $view, $data)->render()
         ]);
     }

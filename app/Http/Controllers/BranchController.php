@@ -56,7 +56,7 @@ class BranchController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.branches.ajaxModal', ['action' => route('branches.store'), 'method' => 'POST', 'states' => $states])->render()
         ]);
     }
@@ -119,7 +119,7 @@ class BranchController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully'
+                'message'    => trans('messages.create_success')
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -164,7 +164,7 @@ class BranchController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.branches.ajaxModal', $data)->render()
         ]);
     }
@@ -201,7 +201,7 @@ class BranchController extends Controller
             }
             $branch = Branch::find($id);
             if (!$branch) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $createData = $request->only([
                 'branch_name',
@@ -220,7 +220,7 @@ class BranchController extends Controller
             ]);
             $branch->update($createData);
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -244,11 +244,11 @@ class BranchController extends Controller
             DB::beginTransaction();
             $branch = Branch::find($id);
             if (!$branch) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $branch->delete();
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

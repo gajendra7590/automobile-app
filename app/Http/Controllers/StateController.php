@@ -53,7 +53,7 @@ class StateController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.states.ajaxModal', ['action' => route('states.store')])->render()
         ]);
     }
@@ -92,7 +92,7 @@ class StateController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Created Successfully."
+                'message'    => trans('messages.create_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -129,13 +129,13 @@ class StateController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => trans('messages.id_not_exist',['id' => $id])
             ]);
         }
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.states.ajaxModal', [
                 'action' => route(
                     'states.update',
@@ -164,7 +164,7 @@ class StateController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
             $validator = Validator::make($postData, [
@@ -189,7 +189,7 @@ class StateController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => "Updated Successfully."
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -217,7 +217,7 @@ class StateController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => "Sorry! This id($id) not exist"
+                    'message'    => trans('messages.id_not_exist',['id' => $id])
                 ]);
             }
 

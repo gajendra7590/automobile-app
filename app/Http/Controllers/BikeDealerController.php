@@ -53,7 +53,7 @@ class BikeDealerController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.dealers.ajaxModal', ['action' => route('dealers.store'), 'method' => 'POST'])->render()
         ]);
     }
@@ -127,7 +127,7 @@ class BikeDealerController extends Controller
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => 'Created Successfully'
+                'message'    => trans('messages.create_success')
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -164,7 +164,7 @@ class BikeDealerController extends Controller
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
-            'message'    => 'AjaxModal Loaded',
+            'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.dealers.ajaxModal', ['data' => $bikeDealer, 'action' => route('dealers.update', ['dealer' => $id]), 'method' => 'PUT'])->render()
         ]);
     }
@@ -202,7 +202,7 @@ class BikeDealerController extends Controller
             }
             $branch = BikeDealer::find($id);
             if (!$branch) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $createData = $request->only([
                 'dealer_code',
@@ -221,7 +221,7 @@ class BikeDealerController extends Controller
             ]);
             $branch->update($createData);
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -245,11 +245,11 @@ class BikeDealerController extends Controller
             DB::beginTransaction();
             $bikeDealer = BikeDealer::find($id);
             if (!$bikeDealer) {
-                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $bikeDealer->delete();
             DB::commit();
-            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
