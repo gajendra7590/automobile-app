@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\District;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -73,40 +74,52 @@ class CityController extends Controller
 
     public function store(Request $request)
     {
-        $postData = $request->only('district_id', 'cities');
-        $validator = Validator::make($postData, [
-            'district_id' => 'required',
-            'cities.*.city_name' => "required",
-            'cities.*.city_code' => 'nullable',
-            'cities.*.active_status' => 'required|in:0,1'
-        ], [
-            'cities.*.city_name.required' => 'The City Name field is required.',
-            'cities.*.active_status.required' => 'The City status field is required.'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('district_id', 'cities');
+            $validator = Validator::make($postData, [
+                'district_id' => 'required',
+                'cities.*.city_name' => "required",
+                'cities.*.city_code' => 'nullable',
+                'cities.*.active_status' => 'required|in:0,1'
+            ], [
+                'cities.*.city_name.required' => 'The City Name field is required.',
+                'cities.*.active_status.required' => 'The City status field is required.'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Bulk insert
+            if (count($postData['cities']) > 0) {
+                foreach ($postData['cities'] as $k => $cityObj) {
+                    $cityObj['district_id'] = $postData['district_id'];
+                    City::create($cityObj);
+                }
+            }
+            DB::commit();
+            //Create New Role
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Bulk insert
-        if (count($postData['cities']) > 0) {
-            foreach ($postData['cities'] as $k => $cityObj) {
-                $cityObj['district_id'] = $postData['district_id'];
-                City::create($cityObj);
-            }
-        }
-        //Create New Role
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
     public function createBulk()
@@ -122,40 +135,52 @@ class CityController extends Controller
 
     public function storeBulk(Request $request)
     {
-        $postData = $request->only('district_id', 'cities');
-        $validator = Validator::make($postData, [
-            'district_id' => 'required',
-            'cities.*.city_name' => "required",
-            'cities.*.city_code' => 'nullable',
-            'cities.*.active_status' => 'required|in:0,1'
-        ], [
-            'cities.*.city_name.required' => 'The City Name field is required.',
-            'cities.*.active_status.required' => 'The City status field is required.'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('district_id', 'cities');
+            $validator = Validator::make($postData, [
+                'district_id' => 'required',
+                'cities.*.city_name' => "required",
+                'cities.*.city_code' => 'nullable',
+                'cities.*.active_status' => 'required|in:0,1'
+            ], [
+                'cities.*.city_name.required' => 'The City Name field is required.',
+                'cities.*.active_status.required' => 'The City status field is required.'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Bulk insert
+            if (count($postData['cities']) > 0) {
+                foreach ($postData['cities'] as $k => $cityObj) {
+                    $cityObj['district_id'] = $postData['district_id'];
+                    City::create($cityObj);
+                }
+            }
+            DB::commit();
+            //Create New Role
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Bulk insert
-        if (count($postData['cities']) > 0) {
-            foreach ($postData['cities'] as $k => $cityObj) {
-                $cityObj['district_id'] = $postData['district_id'];
-                City::create($cityObj);
-            }
-        }
-        //Create New Role
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
 
@@ -214,39 +239,51 @@ class CityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->only('district_id', 'city_name', 'city_code', 'active_status');
-        $cityModel = City::find($id);
-        if (!$cityModel) {
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('district_id', 'city_name', 'city_code', 'active_status');
+            $cityModel = City::find($id);
+            if (!$cityModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+            $validator = Validator::make($postData, [
+                'district_id' => "required|exists:u_districts,id",
+                'city_name' => "required|unique:u_cities,city_name," . $id . ",id",
+                'city_code' => "nullable",
+                'active_status'      => 'required|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            $cityModel->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-        $validator = Validator::make($postData, [
-            'district_id' => "required|exists:u_districts,id",
-            'city_name' => "required|unique:u_cities,city_name," . $id . ",id",
-            'city_code' => "nullable",
-            'active_status'      => 'required|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        //Create New Role
-        $cityModel->update($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -257,22 +294,34 @@ class CityController extends Controller
      */
     public function destroy($id)
     {
-        $cityModel = City::find($id);
-        if (!$cityModel) {
+        try {
+            DB::beginTransaction();
+            $cityModel = City::find($id);
+            if (!$cityModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+            //Delete
+            $cityModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Delete
-        $cityModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
     public function getActions($row)

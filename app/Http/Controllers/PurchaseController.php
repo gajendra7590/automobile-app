@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -139,6 +140,7 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'bike_dealer'               => "required|exists:bike_dealers,id",
@@ -195,6 +197,7 @@ class PurchaseController extends Controller
 
             //Create
             $createModel = Purchase::create($postData);
+            DB::commit();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
@@ -202,6 +205,7 @@ class PurchaseController extends Controller
                 'data'       => $createModel
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
@@ -243,9 +247,9 @@ class PurchaseController extends Controller
         config(['first_brand' => true]);
         $data['branches'] = self::_getbranches(!$auth->is_admin);
         $data['dealers'] = self::_getDealers(!$auth->is_admin);
-        $data['brands'] = self::_getbrands(!$auth->is_admin,$bpModel->bike_branch);
+        $data['brands'] = self::_getbrands(!$auth->is_admin, $bpModel->bike_branch);
         $data['models'] = self::_getmodels($bpModel->bike_brand, !$auth->is_admin);
-        $data['colors'] = self::_getColors($bpModel->bike_model,$bpModel->color_id);
+        $data['colors'] = self::_getColors($bpModel->bike_model, $bpModel->color_id);
         $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
         $data['bike_types'] = bike_types();
         $data['bike_fuel_types'] = bike_fuel_types();
@@ -268,6 +272,7 @@ class PurchaseController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
             $bpModel = Purchase::where(['uuid' => $id]);
             if (!$bpModel) {
                 return response()->json([
@@ -334,12 +339,14 @@ class PurchaseController extends Controller
 
             //Updated
             $bpModel->update($postData);
+            DB::commit();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
                 'message'    => "Updated Successfully."
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,

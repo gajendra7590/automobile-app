@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -80,42 +81,53 @@ class BikeAgentController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "required|string",
-            'email' => "required|email",
-            'mobile_number' => 'required|string|min:10|max:13',
-            'mobile_number2' => 'string|min:10|max:13',
-            'aadhar_card' => 'string|min:12|max:12',
-            'pan_card' => 'string|min:10|max:10',
-            'date_of_birth' => 'date_format:Y-m-d',
-            'highest_qualification' => 'string',
-            'gender' => 'string|in:male,female',
-            'address_line' => 'string',
-            'state' => 'string',
-            'district' => 'string',
-            'city' => 'string',
-            'more_details' => 'string',
-            'active_status'      => 'required|in:0,1'
-        ]);
+        try {
+            DB::beginTransaction();;
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'name' => "required|string",
+                'email' => "required|email",
+                'mobile_number' => 'required|string|min:10|max:13',
+                'mobile_number2' => 'string|min:10|max:13',
+                'aadhar_card' => 'string|min:12|max:12',
+                'pan_card' => 'string|min:10|max:10',
+                'date_of_birth' => 'date_format:Y-m-d',
+                'highest_qualification' => 'string',
+                'gender' => 'string|in:male,female',
+                'address_line' => 'string',
+                'state' => 'string',
+                'district' => 'string',
+                'city' => 'string',
+                'more_details' => 'string',
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors(),
+                ]);
+            }
+
+            BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details', 'active_status']));
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => 'Created Successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors(),
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details', 'active_status']));
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Created Successfully',
-        ], 200);
     }
 
     /**
@@ -168,33 +180,45 @@ class BikeAgentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "nullable|string",
-            'email' => "nullable|email",
-            'mobile_number' => 'nullable|string|min:10|max:13',
-            'mobile_number2' => 'nullable|string|min:10|max:13',
-            'aadhar_card' => 'nullable|string|min:12|max:12',
-            'pan_card' => 'nullable|string|min:10|max:10',
-            'date_of_birth' => 'nullable|date_format:Y-m-d',
-            'highest_qualification' => 'nullable|string',
-            'gender' => 'nullable|string|in:male,female',
-            'address_line' => 'nullable|string',
-            'state' => 'nullable|string',
-            'district' => 'nullable|string',
-            'city' => 'nullable|string',
-            'more_details' => 'nullable|string',
-            'active_status'      => 'required|in:0,1'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'name' => "nullable|string",
+                'email' => "nullable|email",
+                'mobile_number' => 'nullable|string|min:10|max:13',
+                'mobile_number2' => 'nullable|string|min:10|max:13',
+                'aadhar_card' => 'nullable|string|min:12|max:12',
+                'pan_card' => 'nullable|string|min:10|max:10',
+                'date_of_birth' => 'nullable|date_format:Y-m-d',
+                'highest_qualification' => 'nullable|string',
+                'gender' => 'nullable|string|in:male,female',
+                'address_line' => 'nullable|string',
+                'state' => 'nullable|string',
+                'district' => 'nullable|string',
+                'city' => 'nullable|string',
+                'more_details' => 'nullable|string',
+                'active_status'      => 'required|in:0,1'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+            }
+            $bikeAgent = BikeAgent::find($id);
+            if (!$bikeAgent) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $bikeAgent->update($request->all());
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $bikeAgent = BikeAgent::find($id);
-        if (!$bikeAgent) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
-        }
-        $bikeAgent->update($request->all());
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**
@@ -205,12 +229,24 @@ class BikeAgentController extends Controller
      */
     public function destroy($id)
     {
-        $bikeAgent = BikeAgent::find($id);
-        if (!$bikeAgent) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+        try {
+            DB::beginTransaction();
+            $bikeAgent = BikeAgent::find($id);
+            if (!$bikeAgent) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $bikeAgent->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $bikeAgent->delete();
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)

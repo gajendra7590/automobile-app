@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BikeBrand;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -63,29 +64,40 @@ class BikeBrandsController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_brands,name",
-            'active_status'      => 'required|in:0,1'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'name' => "required|unique:bike_brands,name",
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors(),
+                ]);
+            }
+
+            BikeBrand::create($request->only('name', 'description', 'code', 'active_status'));
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => 'Created Successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors(),
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        BikeBrand::create($request->only('name', 'description', 'code', 'active_status'));
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Created Successfully',
-        ], 200);
     }
 
     /**
@@ -127,21 +139,33 @@ class BikeBrandsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->only('name', 'code', 'description', 'active_status');
-        $validator = Validator::make($postData, [
-            'name' => "required|unique:bike_brands,name," . $id,
-            'active_status'      => 'required|in:0,1'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
-        }
-        $bikeBrand = BikeBrand::find($id);
-        if (!$bikeBrand) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
-        }
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('name', 'code', 'description', 'active_status');
+            $validator = Validator::make($postData, [
+                'name' => "required|unique:bike_brands,name," . $id,
+                'active_status'      => 'required|in:0,1'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+            }
+            $bikeBrand = BikeBrand::find($id);
+            if (!$bikeBrand) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
 
-        $bikeBrand->update($postData);
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+            $bikeBrand->update($postData);
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**
@@ -152,15 +176,27 @@ class BikeBrandsController extends Controller
      */
     public function destroy($id)
     {
-        $bikeBrand = BikeBrand::find($id);
-        if (!$bikeBrand) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+        try {
+            DB::beginTransaction();
+            $bikeBrand = BikeBrand::find($id);
+            if (!$bikeBrand) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            if ($bikeBrand->bike_modals()->count()) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
+            }
+            $bikeBrand->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        if ($bikeBrand->bike_modals()->count()) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Sorry! You cant delete brand,first you have to delete modals.']);
-        }
-        $bikeBrand->delete();
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)

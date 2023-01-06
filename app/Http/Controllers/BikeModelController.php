@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BikeBrand;
 use App\Models\BikeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -69,41 +70,53 @@ class BikeModelController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->only('models', 'brand_id');
-        $validator = Validator::make($postData, [
-            'brand_id'              => 'required',
-            'models.*.model_name'     => "required",
-            'models.*.model_code'     => 'nullable',
-            'models.*.active_status'  => 'required|in:0,1'
-        ], [
-            'models.*.model_name.required' => 'The Color Name field is required.',
-            'models.*.active_status.required' => 'The Color status field is required.',
-            'brand_id' => 'The brand is not selected.'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('models', 'brand_id');
+            $validator = Validator::make($postData, [
+                'brand_id'              => 'required',
+                'models.*.model_name'     => "required",
+                'models.*.model_code'     => 'nullable',
+                'models.*.active_status'  => 'required|in:0,1'
+            ], [
+                'models.*.model_name.required' => 'The Color Name field is required.',
+                'models.*.active_status.required' => 'The Color status field is required.',
+                'brand_id' => 'The brand is not selected.'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Bulk insert
+            if (count($postData['models']) > 0) {
+                foreach ($postData['models'] as $k => $modelObj) {
+                    $modelObj['brand_id'] = $postData['brand_id'];
+                    BikeModel::create($modelObj);
+                }
+            }
+            DB::commit();
+            //Create New Role
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Bulk insert
-        if (count($postData['models']) > 0) {
-            foreach ($postData['models'] as $k => $modelObj) {
-                $modelObj['brand_id'] = $postData['brand_id'];
-                BikeModel::create($modelObj);
-            }
-        }
-        //Create New Role
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
     /**
@@ -160,44 +173,56 @@ class BikeModelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
-        $modelModel = BikeModel::find($id);
-        if (!$modelModel) {
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $modelModel = BikeModel::find($id);
+            if (!$modelModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+            $validator = Validator::make($postData, [
+                'brand_id'      => "required|exists:bike_brands,id",
+                'model_name'    => "required",
+                'model_code'    => "nullable",
+                'active_status' => 'required|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            BikeModel::where(['id' => $id])->update([
+                'brand_id'      => $postData['brand_id'],
+                'model_name'    => $postData['model_name'],
+                'model_code'    => $postData['model_code'],
+                'active_status' => $postData['active_status']
+            ]);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-        $validator = Validator::make($postData, [
-            'brand_id'      => "required|exists:bike_brands,id",
-            'model_name'    => "required",
-            'model_code'    => "nullable",
-            'active_status' => 'required|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        //Create New Role
-        BikeModel::where(['id' => $id])->update([
-            'brand_id'      => $postData['brand_id'],
-            'model_name'    => $postData['model_name'],
-            'model_code'    => $postData['model_code'],
-            'active_status' => $postData['active_status']
-        ]);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -208,22 +233,34 @@ class BikeModelController extends Controller
      */
     public function destroy($id)
     {
-        $modelModel = BikeModel::find($id);
-        if (!$modelModel) {
+        try {
+            DB::beginTransaction();
+            $modelModel = BikeModel::find($id);
+            if (!$modelModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+            //Delete
+            $modelModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Delete
-        $modelModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
     public function getActions($row)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GstRates;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -60,6 +61,8 @@ class GstRateController extends Controller
      */
     public function store(Request $request)
     {
+        try{
+            DB::beginTransaction();
         $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
         $validator = Validator::make($postData, [
             'gst_rate'           => "required|numeric",
@@ -81,11 +84,21 @@ class GstRateController extends Controller
 
         //Create New Role
         GstRates::create($postData);
+        DB::commit();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => "Created Successfully."
         ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'status'     => false,
+            'statusCode' => 419,
+            'message'    => $e->getMessage(),
+            'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+        ]);
+    }
     }
 
     /**
@@ -139,6 +152,8 @@ class GstRateController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
+            DB::beginTransaction();
         $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
         $validator = Validator::make($postData, [
             'gst_rate'           => "required|numeric",
@@ -169,11 +184,21 @@ class GstRateController extends Controller
 
         //Create New Role
         $gstRatesModel->update($postData);
+        DB::commit();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => "Updated Successfully."
         ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'status'     => false,
+            'statusCode' => 419,
+            'message'    => $e->getMessage(),
+            'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+        ]);
+    }
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -68,56 +69,67 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'branch_name' => 'required|string|unique:branches,branch_name,NULL,id',
-            'branch_email' => 'required|email',
-            'branch_phone' => 'required|string|min:10|max:13',
-            'branch_phone' => 'required|string|min:10|max:13',
-            'branch_address_line' => 'nullable|string',
-            'branch_city' => 'nullable|string',
-            'branch_district' => 'nullable|string',
-            'branch_state' => 'nullable|string',
-            'branch_county' => 'nullable|string',
-            'branch_pincode' => 'nullable|string',
-            'gstin_number' => 'nullable|string',
-            'branch_more_detail' => 'nullable|string',
-            'active_status'      => 'required|in:0,1'
-        ]);
+        try {
+            DB::beginTransaction();;
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'branch_name' => 'required|string|unique:branches,branch_name,NULL,id',
+                'branch_email' => 'required|email',
+                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_address_line' => 'nullable|string',
+                'branch_city' => 'nullable|string',
+                'branch_district' => 'nullable|string',
+                'branch_state' => 'nullable|string',
+                'branch_county' => 'nullable|string',
+                'branch_pincode' => 'nullable|string',
+                'gstin_number' => 'nullable|string',
+                'branch_more_detail' => 'nullable|string',
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors(),
+                ]);
+            }
+
+            $createData = $request->only([
+                'branch_name',
+                'branch_email',
+                'branch_phone',
+                'branch_phone',
+                'branch_address_line',
+                'branch_city',
+                'branch_district',
+                'branch_state',
+                'branch_county',
+                'branch_pincode',
+                'branch_more_detail',
+                'gstin_number',
+                'active_status'
+            ]);
+
+            Branch::create($createData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => 'Created Successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors(),
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        $createData = $request->only([
-            'branch_name',
-            'branch_email',
-            'branch_phone',
-            'branch_phone',
-            'branch_address_line',
-            'branch_city',
-            'branch_district',
-            'branch_state',
-            'branch_county',
-            'branch_pincode',
-            'branch_more_detail',
-            'gstin_number',
-            'active_status'
-        ]);
-
-        Branch::create($createData);
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Created Successfully'
-        ], 200);
     }
 
     /**
@@ -166,46 +178,58 @@ class BranchController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
-            'branch_email' => 'required|email',
-            'branch_phone' => 'required|string|min:10|max:13',
-            'branch_phone' => 'required|string|min:10|max:13',
-            'branch_address_line' => 'nullable|string',
-            'branch_city' => 'nullable|string',
-            'branch_district' => 'nullable|string',
-            'branch_state' => 'nullable|string',
-            'branch_county' => 'nullable|string',
-            'branch_pincode' => 'nullable|string',
-            'gstin_number' => 'nullable|string',
-            'branch_more_detail' => 'nullable|string',
-            'active_status'      => 'required|in:0,1'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
+                'branch_email' => 'required|email',
+                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_address_line' => 'nullable|string',
+                'branch_city' => 'nullable|string',
+                'branch_district' => 'nullable|string',
+                'branch_state' => 'nullable|string',
+                'branch_county' => 'nullable|string',
+                'branch_pincode' => 'nullable|string',
+                'gstin_number' => 'nullable|string',
+                'branch_more_detail' => 'nullable|string',
+                'active_status'      => 'required|in:0,1'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+            }
+            $branch = Branch::find($id);
+            if (!$branch) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $createData = $request->only([
+                'branch_name',
+                'branch_email',
+                'branch_phone',
+                'branch_phone',
+                'branch_address_line',
+                'branch_city',
+                'branch_district',
+                'branch_state',
+                'branch_county',
+                'branch_pincode',
+                'branch_more_detail',
+                'gstin_number',
+                'active_status'
+            ]);
+            $branch->update($createData);
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $branch = Branch::find($id);
-        if (!$branch) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
-        }
-        $createData = $request->only([
-            'branch_name',
-            'branch_email',
-            'branch_phone',
-            'branch_phone',
-            'branch_address_line',
-            'branch_city',
-            'branch_district',
-            'branch_state',
-            'branch_county',
-            'branch_pincode',
-            'branch_more_detail',
-            'gstin_number',
-            'active_status'
-        ]);
-        $branch->update($createData);
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**
@@ -216,12 +240,24 @@ class BranchController extends Controller
      */
     public function destroy($id)
     {
-        $branch = Branch::find($id);
-        if (!$branch) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+        try {
+            DB::beginTransaction();
+            $branch = Branch::find($id);
+            if (!$branch) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $branch->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $branch->delete();
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)

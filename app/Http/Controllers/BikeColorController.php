@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BikeColor;
 use App\Models\BikeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -63,41 +64,54 @@ class BikeColorController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model', 'colors');
-        $validator = Validator::make($postData, [
-            'bike_model' => 'required',
-            'colors.*.color_name' => "required",
-            'colors.*.color_code' => 'nullable',
-            'colors.*.active_status'      => 'required|in:0,1'
-        ], [
-            'colors.*.color_name.required' => 'The Color Name field is required.',
-            'colors.*.active_status.required' => 'The Color status field is required.'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model', 'colors');
+            $validator = Validator::make($postData, [
+                'bike_model' => 'required',
+                'colors.*.color_name' => "required",
+                'colors.*.color_code' => 'nullable',
+                'colors.*.active_status'      => 'required|in:0,1'
+            ], [
+                'colors.*.color_name.required' => 'The Color Name field is required.',
+                'colors.*.active_status.required' => 'The Color status field is required.'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Bulk insert
+            if (count($postData['colors']) > 0) {
+                foreach ($postData['colors'] as $k => $colorObj) {
+                    $colorObj['bike_model'] = $postData['bike_model'];
+                    BikeColor::create($colorObj);
+                }
+            }
+            DB::commit();
+            //Create New Role
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Bulk insert
-        if (count($postData['colors']) > 0) {
-            foreach ($postData['colors'] as $k => $colorObj) {
-                $colorObj['bike_model'] = $postData['bike_model'];
-                BikeColor::create($colorObj);
-            }
-        }
-        //Create New Role
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -152,39 +166,51 @@ class BikeColorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model');
-        $colorModel = BikeColor::find($id);
-        if (!$colorModel) {
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model');
+            $colorModel = BikeColor::find($id);
+            if (!$colorModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+            $validator = Validator::make($postData, [
+                'bike_model'      => 'required',
+                'color_name' => "required|unique:bike_colors,color_name," . $id,
+                'color_code' => "nullable",
+                'active_status'      => 'required|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            BikeColor::where(['id' => $id])->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-        $validator = Validator::make($postData, [
-            'bike_model'      => 'required',
-            'color_name' => "required|unique:bike_colors,color_name," . $id,
-            'color_code' => "nullable",
-            'active_status'      => 'required|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        //Create New Role
-        BikeColor::where(['id' => $id])->update($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -195,22 +221,34 @@ class BikeColorController extends Controller
      */
     public function destroy($id)
     {
-        $colorModel = BikeColor::find($id);
-        if (!$colorModel) {
+        try {
+            DB::beginTransaction();
+            $colorModel = BikeColor::find($id);
+            if (!$colorModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+            //Delete
+            $colorModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Delete
-        $colorModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
     public function getActions($row)
@@ -232,5 +270,4 @@ class BikeColorController extends Controller
             'data'       => colors_list($colors)
         ]);
     }
-
 }

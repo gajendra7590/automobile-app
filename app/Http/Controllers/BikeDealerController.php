@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BikeDealer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -65,67 +66,78 @@ class BikeDealerController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'dealer_code' => 'required|string',
-            'company_name' => 'required|string',
-            'company_email' => 'required|string',
-            'company_office_phone' => 'required|string',
-            'company_address' => 'nullable|string',
-            'company_gst_no' => 'nullable|string',
-            'company_more_detail' => 'nullable|string',
-            'contact_person' => 'nullable|string',
-            'contact_person_email' => 'nullable|string',
-            'contact_person_phone' => 'nullable|string',
-            'contact_person_phone2' => 'nullable|string',
-            'contact_person_address' => 'nullable|string',
-            'contact_person_document_file' => 'file|max:10000',
-            'active_status'      => 'required|in:0,1'
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'dealer_code' => 'required|string',
+                'company_name' => 'required|string',
+                'company_email' => 'required|string',
+                'company_office_phone' => 'required|string',
+                'company_address' => 'nullable|string',
+                'company_gst_no' => 'nullable|string',
+                'company_more_detail' => 'nullable|string',
+                'contact_person' => 'nullable|string',
+                'contact_person_email' => 'nullable|string',
+                'contact_person_phone' => 'nullable|string',
+                'contact_person_phone2' => 'nullable|string',
+                'contact_person_address' => 'nullable|string',
+                'contact_person_document_file' => 'file|max:10000',
+                'active_status'      => 'required|in:0,1'
 
-        ]);
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors(),
+                ]);
+            }
+
+            $createData = $request->only([
+                'dealer_code',
+                'company_name',
+                'company_email',
+                'company_office_phone',
+                'company_address',
+                'company_gst_no',
+                'company_more_detail',
+                'contact_person',
+                'contact_person_email',
+                'contact_person_phone',
+                'contact_person_phone2',
+                'contact_person_address',
+                'active_status'
+            ]);
+
+            if (request()->hasFile('contact_person_document_file')) {
+                $file = request()->file('contact_person_document_file');
+                $createData['contact_person_document_type'] = $file->getMimeType();
+                $path = 'uploads/' . time() . '-' . $file->getClientOriginalName();
+                // $path = $file->storeAs('uploads', $filename);
+                $file = Storage::disk('public')->put($path, file_get_contents($file));
+                $createData['contact_person_document_file'] = $path;
+            }
+
+            BikeDealer::create($createData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => 'Created Successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors(),
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        $createData = $request->only([
-            'dealer_code',
-            'company_name',
-            'company_email',
-            'company_office_phone',
-            'company_address',
-            'company_gst_no',
-            'company_more_detail',
-            'contact_person',
-            'contact_person_email',
-            'contact_person_phone',
-            'contact_person_phone2',
-            'contact_person_address',
-            'active_status'
-        ]);
-
-        if (request()->hasFile('contact_person_document_file')) {
-            $file = request()->file('contact_person_document_file');
-            $createData['contact_person_document_type'] = $file->getMimeType();
-            $path = 'uploads/' . time() . '-' . $file->getClientOriginalName();
-            // $path = $file->storeAs('uploads', $filename);
-            $file = Storage::disk('public')->put($path, file_get_contents($file));
-            $createData['contact_person_document_file'] = $path;
-        }
-
-        BikeDealer::create($createData);
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Created Successfully'
-        ], 200);
     }
 
     /**
@@ -166,47 +178,59 @@ class BikeDealerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'dealer_code' => 'required|string',
-            'company_name' => 'required|string',
-            'company_email' => 'required|string',
-            'company_office_phone' => 'required|string',
-            'company_address' => 'nullable|string',
-            'company_gst_no' => 'nullable|string',
-            'company_more_detail' => 'nullable|string',
-            'contact_person' => 'nullable|string',
-            'contact_person_email' => 'nullable|string',
-            'contact_person_phone' => 'nullable|string',
-            'contact_person_phone2' => 'nullable|string',
-            'contact_person_address' => 'nullable|string',
-            'contact_person_document_file' => 'file|max:10000',
-            'active_status'      => 'required|in:0,1'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'dealer_code' => 'required|string',
+                'company_name' => 'required|string',
+                'company_email' => 'required|string',
+                'company_office_phone' => 'required|string',
+                'company_address' => 'nullable|string',
+                'company_gst_no' => 'nullable|string',
+                'company_more_detail' => 'nullable|string',
+                'contact_person' => 'nullable|string',
+                'contact_person_email' => 'nullable|string',
+                'contact_person_phone' => 'nullable|string',
+                'contact_person_phone2' => 'nullable|string',
+                'contact_person_address' => 'nullable|string',
+                'contact_person_document_file' => 'file|max:10000',
+                'active_status'      => 'required|in:0,1'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
+            }
+            $branch = BikeDealer::find($id);
+            if (!$branch) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $createData = $request->only([
+                'dealer_code',
+                'company_name',
+                'company_email',
+                'company_office_phone',
+                'company_address',
+                'company_gst_no',
+                'company_more_detail',
+                'contact_person',
+                'contact_person_email',
+                'contact_person_phone',
+                'contact_person_phone2',
+                'contact_person_address',
+                'active_status'
+            ]);
+            $branch->update($createData);
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $branch = BikeDealer::find($id);
-        if (!$branch) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
-        }
-        $createData = $request->only([
-            'dealer_code',
-            'company_name',
-            'company_email',
-            'company_office_phone',
-            'company_address',
-            'company_gst_no',
-            'company_more_detail',
-            'contact_person',
-            'contact_person_email',
-            'contact_person_phone',
-            'contact_person_phone2',
-            'contact_person_address',
-            'active_status'
-        ]);
-        $branch->update($createData);
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Updated Successfully',], 200);
     }
 
     /**
@@ -217,12 +241,24 @@ class BikeDealerController extends Controller
      */
     public function destroy($id)
     {
-        $bikeDealer = BikeDealer::find($id);
-        if (!$bikeDealer) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+        try {
+            DB::beginTransaction();
+            $bikeDealer = BikeDealer::find($id);
+            if (!$bikeDealer) {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => 'Brand Not Found']);
+            }
+            $bikeDealer->delete();
+            DB::commit();
+            return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
         }
-        $bikeDealer->delete();
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Deleted Successfully',], 200);
     }
 
     public function getActions($id)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -65,31 +66,43 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
-        $validator = Validator::make($postData, [
-            'country_id' => "required",
-            'state_name' => "required|unique:u_states,state_name",
-            'state_code' => "required",
-            'active_status'      => 'required|in:0,1'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
+            $validator = Validator::make($postData, [
+                'country_id' => "required",
+                'state_name' => "required|unique:u_states,state_name",
+                'state_code' => "required",
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            State::create($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Create New Role
-        State::create($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
     /**
@@ -143,38 +156,50 @@ class StateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
-        $stateModel = State::find($id);
-        if (!$stateModel) {
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('country_id', 'state_name', 'state_code', 'active_status');
+            $stateModel = State::find($id);
+            if (!$stateModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+            $validator = Validator::make($postData, [
+                'state_name' => "required|unique:u_states,state_name," . $id . ",id",
+                'state_code' => "required",
+                'active_status'      => 'required|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            State::where(['id' => $id])->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-        $validator = Validator::make($postData, [
-            'state_name' => "required|unique:u_states,state_name," . $id . ",id",
-            'state_code' => "required",
-            'active_status'      => 'required|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        //Create New Role
-        State::where(['id' => $id])->update($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -185,31 +210,43 @@ class StateController extends Controller
      */
     public function destroy($id)
     {
-        $stateModel = State::find($id);
-        if (!$stateModel) {
+        try {
+            DB::beginTransaction();
+            $stateModel = State::find($id);
+            if (!$stateModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+
+            if (District::where(['state_id' => $id])->count()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! You can`t delete state, before delete all districts first."
+                ]);
+            }
+
+            //Delete
+            $stateModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-
-        if (District::where(['state_id' => $id])->count()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => "Sorry! You can`t delete state, before delete all districts first."
-            ]);
-        }
-
-        //Delete
-        $stateModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
 

@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -68,31 +69,43 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
-        $validator = Validator::make($postData, [
-            'state_id' => "required|exists:u_states,id",
-            'district_name' => "required|unique:u_districts,district_name",
-            'district_code' => "nullable",
-            'active_status'      => 'required|in:0,1'
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
+            $validator = Validator::make($postData, [
+                'state_id' => "required|exists:u_states,id",
+                'district_name' => "required|unique:u_districts,district_name",
+                'district_code' => "nullable",
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            District::create($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Create New Role
-        District::create($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
     /**
@@ -149,39 +162,51 @@ class DistrictController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
-        $districtModel = District::find($id);
-        if (!$districtModel) {
+        try {
+            DB::beginTransaction();
+            $postData = $request->only('state_id', 'district_name', 'district_code', 'active_status');
+            $districtModel = District::find($id);
+            if (!$districtModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+            $validator = Validator::make($postData, [
+                'state_id' => "required|exists:u_states,id",
+                'district_name' => "required|unique:u_districts,district_name," . $id . ",id",
+                'district_code' => "nullable",
+                'active_status'      => 'required|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            District::where(['id' => $id])->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-        $validator = Validator::make($postData, [
-            'state_id' => "required|exists:u_states,id",
-            'district_name' => "required|unique:u_districts,district_name," . $id . ",id",
-            'district_code' => "nullable",
-            'active_status'      => 'required|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        //Create New Role
-        District::where(['id' => $id])->update($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -192,30 +217,42 @@ class DistrictController extends Controller
      */
     public function destroy($id)
     {
-        $districtModel = District::find($id);
-        if (!$districtModel) {
+        try {
+            DB::beginTransaction();
+            $districtModel = District::find($id);
+            if (!$districtModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+            if (City::where(['district_id' => $id])->count()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! You can`t delete district, before delete all cities first."
+                ]);
+            }
+
+            //Delete
+            $districtModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        if (City::where(['district_id' => $id])->count()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => "Sorry! You can`t delete district, before delete all cities first."
-            ]);
-        }
-
-        //Delete
-        $districtModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
 

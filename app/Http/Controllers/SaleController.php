@@ -178,84 +178,93 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'purchase_id' => 'required|exists:purchases,id',
-            'quotation_id' => 'nullable|exists:quotations,id',
-            'bike_branch' => 'required|exists:branches,id',
-            'bike_dealer' => 'required|exists:bike_dealers,id',
-            'bike_brand' => 'required|exists:bike_brands,id',
-            'bike_model' => 'required|exists:bike_models,id',
-            'bike_color' => 'required|exists:bike_colors,id',
-            'bike_type' => 'required',
-            'bike_fuel_type' => 'required',
-            'break_type' => 'required',
-            'wheel_type' => 'required',
-            'vin_number'  => "required|min:17",
-            'vin_physical_status' => 'required',
-            'sku' => 'nullable',
-            'sku_description' => 'nullable',
-            'hsn_number' => "required|min:6",
-            'engine_number'  => "required|min:14",
-            'key_number' => 'required',
-            'service_book_number' => 'required',
-            'tyre_brand_name' => 'required',
-            'tyre_front_number' => 'required',
-            'tyre_rear_number' => 'required',
-            'battery_brand' => 'required',
-            'battery_number' => 'required',
-            'bike_description' => 'nullable',
-            'customer_gender' => 'required|in:1,2,3',
-            'customer_name' => 'required|string',
-            'customer_relationship' => 'required|in:1,2,3',
-            'customer_guardian_name' => 'required|string',
-            'customer_address_line' => 'required|string',
-            'customer_state' => 'required|exists:u_states,id',
-            'customer_district' => 'required|exists:u_districts,id',
-            'customer_city' => 'required|exists:u_cities,id',
-            'customer_zipcode' => 'required|numeric',
-            'customer_mobile_number' => 'required|numeric',
-            'customer_email_address' => 'nullable|email',
-            'payment_type' => 'required',
-            'is_exchange_avaliable' => 'required|in:Yes,No',
-            'hyp_financer' => 'nullable|exists:bank_financers,id',
-            'hyp_financer_description' => 'nullable',
-            'ex_showroom_price' => 'required|numeric',
-            'registration_amount' => 'required|numeric',
-            'insurance_amount' => 'required|numeric',
-            'hypothecation_amount' => 'required|numeric',
-            'accessories_amount' => 'required|numeric',
-            'other_charges' => 'required|numeric',
-            'total_amount' => 'required|numeric',
-            'active_status' => 'nullable|in:0,1'
-        ]);
+        try {
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'purchase_id' => 'required|exists:purchases,id',
+                'quotation_id' => 'nullable|exists:quotations,id',
+                'bike_branch' => 'required|exists:branches,id',
+                'bike_dealer' => 'required|exists:bike_dealers,id',
+                'bike_brand' => 'required|exists:bike_brands,id',
+                'bike_model' => 'required|exists:bike_models,id',
+                'bike_color' => 'required|exists:bike_colors,id',
+                'bike_type' => 'required',
+                'bike_fuel_type' => 'required',
+                'break_type' => 'required',
+                'wheel_type' => 'required',
+                'vin_number'  => "required|min:17",
+                'vin_physical_status' => 'required',
+                'sku' => 'nullable',
+                'sku_description' => 'nullable',
+                'hsn_number' => "required|min:6",
+                'engine_number'  => "required|min:14",
+                'key_number' => 'required',
+                'service_book_number' => 'required',
+                'tyre_brand_name' => 'required',
+                'tyre_front_number' => 'required',
+                'tyre_rear_number' => 'required',
+                'battery_brand' => 'required',
+                'battery_number' => 'required',
+                'bike_description' => 'nullable',
+                'customer_gender' => 'required|in:1,2,3',
+                'customer_name' => 'required|string',
+                'customer_relationship' => 'required|in:1,2,3',
+                'customer_guardian_name' => 'required|string',
+                'customer_address_line' => 'required|string',
+                'customer_state' => 'required|exists:u_states,id',
+                'customer_district' => 'required|exists:u_districts,id',
+                'customer_city' => 'required|exists:u_cities,id',
+                'customer_zipcode' => 'required|numeric',
+                'customer_mobile_number' => 'required|numeric',
+                'customer_email_address' => 'nullable|email',
+                'payment_type' => 'required',
+                'is_exchange_avaliable' => 'required|in:Yes,No',
+                'hyp_financer' => 'nullable|exists:bank_financers,id',
+                'hyp_financer_description' => 'nullable',
+                'ex_showroom_price' => 'required|numeric',
+                'registration_amount' => 'required|numeric',
+                'insurance_amount' => 'required|numeric',
+                'hypothecation_amount' => 'required|numeric',
+                'accessories_amount' => 'required|numeric',
+                'other_charges' => 'required|numeric',
+                'total_amount' => 'required|numeric',
+                'active_status' => 'nullable|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $postData['sale_uuid'] = random_uuid('sale');
+            $postData['created_by'] = Auth::user()->id;
+            //Create Sale
+            $createModel = Sale::create($postData);
+
+            //Mark Status Closed If Purchase With Quotation
+            if (isset($postData['quotation_id']) && intval($postData['quotation_id']) > 0) {
+                Quotation::where('id', $postData['quotation_id'])->update(['status' => 'close']);
+            }
+
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully.",
+                'data'       => $createModel
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        $postData['sale_uuid'] = random_uuid('sale');
-        $postData['created_by'] = Auth::user()->id;
-        //Create Sale
-        $createModel = Sale::create($postData);
-
-        //Mark Status Closed If Purchase With Quotation
-        if (isset($postData['quotation_id']) && intval($postData['quotation_id']) > 0) {
-            Quotation::where('id', $postData['quotation_id'])->update(['status' => 'close']);
-        }
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully.",
-            'data'       => $createModel
-        ]);
     }
 
     /**
@@ -318,87 +327,96 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $bpModel = Sale::where(['id' => $id]);
-        if (!$bpModel) {
+        try {
+            $bpModel = Sale::where(['id' => $id]);
+            if (!$bpModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'purchase_id' => 'required|exists:purchases,id',
+                'quotation_id' => 'nullable|exists:quotations,id',
+                'bike_branch' => 'required|exists:branches,id',
+                'bike_dealer' => 'required|exists:bike_dealers,id',
+                'bike_brand' => 'required|exists:bike_brands,id',
+                'bike_model' => 'required|exists:bike_models,id',
+                'bike_color' => 'required|exists:bike_colors,id',
+                'bike_type' => 'required',
+                'bike_fuel_type' => 'required',
+                'break_type' => 'required',
+                'wheel_type' => 'required',
+                'vin_number'  => "required|min:17",
+                'vin_physical_status' => 'required',
+                'sku' => 'nullable',
+                'sku_description' => 'nullable',
+                'hsn_number' => "required|min:6",
+                'engine_number'  => "required|min:14",
+                'key_number' => 'required',
+                'service_book_number' => 'required',
+                'tyre_brand_name' => 'required',
+                'tyre_front_number' => 'required',
+                'tyre_rear_number' => 'required',
+                'battery_brand' => 'required',
+                'battery_number' => 'required',
+                'bike_description' => 'nullable',
+                'customer_gender' => 'required|in:1,2,3',
+                'customer_name' => 'required|string',
+                'customer_relationship' => 'required|in:1,2,3',
+                'customer_guardian_name' => 'required|string',
+                'customer_address_line' => 'required|string',
+                'customer_state' => 'required|exists:u_states,id',
+                'customer_district' => 'required|exists:u_districts,id',
+                'customer_city' => 'required|exists:u_cities,id',
+                'customer_zipcode' => 'required|numeric',
+                'customer_mobile_number' => 'required|numeric',
+                'customer_email_address' => 'nullable|email',
+                'payment_type' => 'required',
+                'is_exchange_avaliable' => 'required|in:Yes,No',
+                'hyp_financer' => 'nullable|exists:bank_financers,id',
+                'hyp_financer_description' => 'nullable',
+                'ex_showroom_price' => 'required|numeric',
+                'registration_amount' => 'required|numeric',
+                'insurance_amount' => 'required|numeric',
+                'hypothecation_amount' => 'required|numeric',
+                'accessories_amount' => 'required|numeric',
+                'other_charges' => 'required|numeric',
+                'total_amount' => 'required|numeric',
+                'active_status' => 'nullable|in:0,1'
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $postData['updated_by'] = Auth::user()->id;
+            unset($postData['_token']);
+            unset($postData['_method']);
+            //Create New Role
+            $bpModel->update($postData);
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'purchase_id' => 'required|exists:purchases,id',
-            'quotation_id' => 'nullable|exists:quotations,id',
-            'bike_branch' => 'required|exists:branches,id',
-            'bike_dealer' => 'required|exists:bike_dealers,id',
-            'bike_brand' => 'required|exists:bike_brands,id',
-            'bike_model' => 'required|exists:bike_models,id',
-            'bike_color' => 'required|exists:bike_colors,id',
-            'bike_type' => 'required',
-            'bike_fuel_type' => 'required',
-            'break_type' => 'required',
-            'wheel_type' => 'required',
-            'vin_number'  => "required|min:17",
-            'vin_physical_status' => 'required',
-            'sku' => 'nullable',
-            'sku_description' => 'nullable',
-            'hsn_number' => "required|min:6",
-            'engine_number'  => "required|min:14",
-            'key_number' => 'required',
-            'service_book_number' => 'required',
-            'tyre_brand_name' => 'required',
-            'tyre_front_number' => 'required',
-            'tyre_rear_number' => 'required',
-            'battery_brand' => 'required',
-            'battery_number' => 'required',
-            'bike_description' => 'nullable',
-            'customer_gender' => 'required|in:1,2,3',
-            'customer_name' => 'required|string',
-            'customer_relationship' => 'required|in:1,2,3',
-            'customer_guardian_name' => 'required|string',
-            'customer_address_line' => 'required|string',
-            'customer_state' => 'required|exists:u_states,id',
-            'customer_district' => 'required|exists:u_districts,id',
-            'customer_city' => 'required|exists:u_cities,id',
-            'customer_zipcode' => 'required|numeric',
-            'customer_mobile_number' => 'required|numeric',
-            'customer_email_address' => 'nullable|email',
-            'payment_type' => 'required',
-            'is_exchange_avaliable' => 'required|in:Yes,No',
-            'hyp_financer' => 'nullable|exists:bank_financers,id',
-            'hyp_financer_description' => 'nullable',
-            'ex_showroom_price' => 'required|numeric',
-            'registration_amount' => 'required|numeric',
-            'insurance_amount' => 'required|numeric',
-            'hypothecation_amount' => 'required|numeric',
-            'accessories_amount' => 'required|numeric',
-            'other_charges' => 'required|numeric',
-            'total_amount' => 'required|numeric',
-            'active_status' => 'nullable|in:0,1'
-        ]);
-
-        //If Validation failed
-        if ($validator->fails()) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
-            ]);
-        }
-
-        $postData['updated_by'] = Auth::user()->id;
-        unset($postData['_token']);
-        unset($postData['_method']);
-        //Create New Role
-        $bpModel->update($postData);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**

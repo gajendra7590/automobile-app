@@ -11,6 +11,7 @@ use App\Models\RtoRegistration;
 use App\Models\Sale;
 use App\Models\State;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class RtoRegistrationController extends Controller
@@ -40,7 +41,7 @@ class RtoRegistrationController extends Controller
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['contact_city','action', 'active_status'])
+                ->rawColumns(['contact_city', 'action', 'active_status'])
                 ->make(true);
         } else {
             $formDetails = [
@@ -90,13 +91,25 @@ class RtoRegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        $rtoRegistration = RtoRegistration::create($request->all());
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Created Successfully',
-            'data'       => $rtoRegistration
-        ]);
+        try {
+            DB::beginTransaction();
+            $rtoRegistration = RtoRegistration::create($request->all());
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => 'Created Successfully',
+                'data'       => $rtoRegistration
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**
@@ -120,7 +133,7 @@ class RtoRegistrationController extends Controller
     {
         $data = RtoRegistration::find($id);
         $data  = [
-            'action' => route('rtoRegistration.update',['rtoRegistration' => $id]),
+            'action' => route('rtoRegistration.update', ['rtoRegistration' => $id]),
             'method' => 'POST',
         ];
         $data['sales'] = Sale::select(['id', 'customer_name'])->get();

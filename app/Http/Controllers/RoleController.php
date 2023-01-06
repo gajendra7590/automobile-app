@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -55,28 +56,40 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "required|unique:roles,name"
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'name' => "required|unique:roles,name"
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            Role::create(['name' => $postData['name']]);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Created Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Create New Role
-        Role::create(['name' => $postData['name']]);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Created Successfully."
-        ]);
     }
 
     /**
@@ -123,28 +136,40 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postData = $request->all();
-        $validator = Validator::make($postData, [
-            'name' => "required|unique:roles,name," . $id
-        ]);
+        try {
+            DB::beginTransaction();
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'name' => "required|unique:roles,name," . $id
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            Role::where(['id' => $id])->update(['name' => $postData['name']]);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Updated Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Create New Role
-        Role::where(['id' => $id])->update(['name' => $postData['name']]);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Updated Successfully."
-        ]);
     }
 
     /**
@@ -155,32 +180,44 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $roleModel = Role::find($id);
-        if (!$roleModel) {
+        try {
+            DB::beginTransaction();
+            $roleModel = Role::find($id);
+            if (!$roleModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! This id($id) not exist"
+                ]);
+            }
+
+
+            $userCounts = User::role($id)->count();
+            if ($userCounts) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! You can`t delete role, before delete all users first."
+                ]);
+            }
+
+            //Delete
+            $roleModel->delete();
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Deleted Successfully."
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => "Sorry! This id($id) not exist"
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-
-        $userCounts = User::role($id)->count();
-        if ($userCounts) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => "Sorry! You can`t delete role, before delete all users first."
-            ]);
-        }
-
-        //Delete
-        $roleModel->delete();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => "Deleted Successfully."
-        ]);
     }
 
     public function getActions($row)
