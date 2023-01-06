@@ -387,4 +387,57 @@ class SalesAccountController extends Controller
         $action .= '</div>';
         return $action;
     }
+
+
+    /**
+     * Fucntion for load detail modal popup - transaction detail / due-emil detail
+     */
+    public function salesDetailModal(Request $request)
+    {
+        $data = null;
+        $postData = $request->all();
+        $view = '';
+        if (isset($postData['type'])) {
+            $view = $postData['type'];
+            switch ($postData['type']) {
+                case 'due-detail':
+                    $data = SalePaymentInstallments::where('id', $postData['id'])->with([
+                        'account' => function ($account) {
+                            $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
+                        },
+                        'sale' => function ($account) {
+                            $account->select('id', 'customer_name', 'status');
+                        }
+                    ])->first();
+                    // return ['status' => true, 'data' => $data];
+                    break;
+                case 'transaction-detail':
+                    $data = SalePaymentTransactions::where('id', $postData['id'])->with([
+                        'account' => function ($account) {
+                            $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
+                        },
+                        'sale' => function ($sale) {
+                            $sale->select('id', 'customer_name', 'status');
+                        },
+                        'user' => function ($user) {
+                            $user->select('id', 'name', 'email');
+                        },
+                        'installment' => function ($installment) {
+                            $installment->select('id', 'installment_uuid', 'emi_title');
+                        }
+                    ])->first();
+                    // return ['status' => true, 'data' => $data];
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'AjaxModal Loaded',
+            'data'       => view('admin.sales-accounts.modals.' . $view, ['data' => $data])->render()
+        ]);
+    }
 }

@@ -260,3 +260,11 @@ if (!function_exists('custFullName')) {
         return ucwords(strtolower($str));
     }
 }
+
+if (!function_exists('priceFormateWithSymbol')) {
+    function priceFormate($price = 0, $only_symbol = false)
+    {
+        return ($only_symbol == true) ? "₹" : "₹" . number_format($price, 2);
+    }
+}
+//₹

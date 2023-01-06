@@ -40,4 +40,36 @@ class SalePaymentTransactions extends Model
             $model->transaction_uuid = random_uuid('tran');
         });
     }
+
+    /**
+     * MApping With Account
+     */
+    public function account()
+    {
+        return $this->belongsTo(SalePaymentAccounts::class, 'sale_payment_account_id');
+    }
+
+    /**
+     * MApping With Sales
+     */
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
+    }
+
+    /**
+     * MApping With User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'payment_collected_by');
+    }
+
+    /**
+     * MApping With Installment
+     */
+    public function installment()
+    {
+        return $this->belongsTo(SalePaymentInstallments::class, 'sale_payment_installment_id');
+    }
 }
