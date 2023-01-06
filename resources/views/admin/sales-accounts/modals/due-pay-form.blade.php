@@ -7,7 +7,8 @@
             <div class="form-group col-md-4">
                 <label>TOTAL PAY AMOUNT</label>
                 <input name="emi_due_amount" class="form-control" readonly
-                    value="{{ isset($data['emi_due_amount']) ? $data['emi_due_amount'] : '' }}" placeholder="₹ 0.00">
+                    value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
+                    placeholder="₹ 0.00">
             </div>
             <div class="form-group col-md-4">
                 <label>PAYMENT DUE DATE</label>
@@ -40,8 +41,14 @@
             <div class="form-group col-md-6">
                 <label>PAYABLE AMOUNT</label>
                 <input name="pay_amount" type="number" class="form-control"
-                    value="{{ isset($data['emi_due_amount']) ? $data['emi_due_amount'] : '' }}" placeholder="₹ 0.00"
-                    readonly>
+                    value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
+                    placeholder="₹ 0.00" readonly>
+            </div>
+            <div class="form-group col-md-12">
+                <p class="text-danger" style="font-size: 15px;">
+                    <b>Important Note :</b> If You are paying advance partial payment, then can only pay for next emi
+                    only. more then 1 next emi you have to pay one by one.
+                </p>
             </div>
         </div>
         <!-- /.box-body -->

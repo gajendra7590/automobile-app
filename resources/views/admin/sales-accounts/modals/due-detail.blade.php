@@ -4,17 +4,23 @@
                  <tr>
                      <th>ACCOUNT ID</th>
                      <td> {{ isset($data['account']['account_uuid']) ? $data['account']['account_uuid'] : '--' }}</td>
-                 </tr>
-                 <tr>
-                     <th>TITLE</th>
-                     <td>{{ isset($data['emi_title']) ? $data['emi_title'] : '--' }}</td>
                      <th>DUE PAYMENT ID</th>
                      <td>{{ $data['installment_uuid'] }}</td>
                  </tr>
                  <tr>
-                     <th>TOTAL INSTALLMENT AMOUNT</th>
+                     <th>TITLE</th>
+                     <td>{{ isset($data['emi_title']) ? $data['emi_title'] : '--' }}</td>
+                     <th>TOTAL PAYABLE AMOUNT</th>
                      <td>
                          <span class="badge bg-red" style="padding:6px !important;">
+                             {{ isset($data['emi_due_revised_amount']) ? priceFormate($data['emi_due_revised_amount']) : '0.00' }}
+                         </span>
+                     </td>
+                 </tr>
+                 <tr>
+                     <th>TOTAL INSTALLMENT AMOUNT</th>
+                     <td>
+                         <span class="badge bg-blue" style="padding:6px !important;">
                              {{ isset($data['emi_due_amount']) ? priceFormate($data['emi_due_amount']) : '0.00' }}
                          </span>
                      </td>

@@ -140,9 +140,10 @@
                                         <table class="table">
                                             <tr>
                                                 <th>#</th>
-                                                <th width="25%">TITLE</th>
+                                                <th width="20%">TITLE</th>
                                                 <th>DUE AMOUNT</th>
                                                 <th>DUE DATE</th>
+                                                <th>PAYABLE AMOUNT</th>
                                                 <th>PAID AMOUNT</th>
                                                 <th>PAID DATE</th>
                                                 <th>+/-</th>
@@ -152,15 +153,19 @@
                                             @isset($data['installments'])
                                                 @foreach ($data['installments'] as $k => $installment)
                                                     <tr>
-                                                        <td>{{ $k + 1 }}</td>
+                                                        <td>{{ $installment->id }}</td>
                                                         <td>{{ $installment->emi_title }}</td>
                                                         <td>
-                                                            <span class="label label-danger" style="padding: 5px;">
+                                                            <span class="label label-primary" style="padding: 5px;">
                                                                 {{ priceFormate($installment->emi_due_amount) }}
                                                             </span>
                                                         </td>
                                                         <td>{{ date('d-m-Y', strtotime($installment->emi_due_date)) }}</td>
-
+                                                        <td>
+                                                            <span class="label label-danger" style="padding: 5px;">
+                                                                {{ priceFormate($installment->emi_due_revised_amount) }}
+                                                            </span>
+                                                        </td>
                                                         <td>
                                                             @if (!empty($installment->amount_paid))
                                                                 <span class="label label-success" style="padding: 5px;">
@@ -189,11 +194,14 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
-                                                                class="btn btn-success btn-sm ajaxModalPopup"
-                                                                data-modal_title="Make Due Payment" data-modal_size="modal-lg">
-                                                                PAY
-                                                            </a>
+                                                            @if ($installment->status == '0')
+                                                                <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
+                                                                    class="btn btn-success btn-sm ajaxModalPopup"
+                                                                    data-modal_title="Make Due Payment"
+                                                                    data-modal_size="modal-lg">
+                                                                    PAY
+                                                                </a>
+                                                            @endif
                                                             <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
                                                                 class="btn btn-warning btn-sm ajaxModalPopup"
                                                                 data-modal_title="Due Payment Detail"
