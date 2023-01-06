@@ -77,7 +77,9 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Branch</label>
-                                <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
+                                <select name="bike_branch"
+                                    data-dep_dd_name="bike_brand"
+                                    data-dep_dd2_name="bike_model"
                                     data-dep_dd3_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
                                     class="form-control ajaxChangeCDropDown" {{ $editDisabled }}>
@@ -94,7 +96,8 @@
                             <div class="form-group col-md-3">
                                 <label>Brand Name</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
-                                    data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
+                                    data-dep_dd_name="bike_model"
+                                    data-dep_dd2_name="bike_model_color"
                                     class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))
@@ -529,7 +532,7 @@
                 let URL = "{{ url('getPurchaseDetails') }}/" + id;
                 CRUD.AJAXDATA(URL, 'GET').then(function(res) {
                     let bike_model = res.data.bike_model
-                    let bike_model_color = res.data.bike_model_color
+                    let bike_color = res.data.bike_model_color
                     $("[name=bike_brand]").val(res.data.bike_brand)
                     URL = "{{ url('getModelsList') }}/" + res.data.bike_brand;
                     CRUD.AJAXDATA(URL, 'GET').then(function(res) {
@@ -537,8 +540,8 @@
                         $("[name=bike_model]").val(bike_model)
                         URL = "{{ url('getColorsList') }}/" + bike_model;
                         CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                            $('select[name="bike_model_color"]').html(res.data)
-                            $("[name=bike_model_color]").val(bike_model_color)
+                            $('select[name="bike_color"]').html(res.data)
+                            $("[name=bike_color]").val(bike_color)
                         });
                     });
                     $("[name=bike_branch]").val(res.data.bike_branch)

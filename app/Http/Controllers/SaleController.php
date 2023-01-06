@@ -142,7 +142,6 @@ class SaleController extends Controller
             'dealers'               => self::_getDealers(),
             'states'                => self::_getStates(),
             'brands'                => self::_getBrands(),
-            'colors'                => self::_getColors(),
             'bank_financers'        => self::_getFinaceirs(),
             'purchases'             => self::_getInStockPurchases(),
             'bike_types'            => bike_types(),
