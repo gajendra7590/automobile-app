@@ -199,6 +199,11 @@ class SalesAccountController extends Controller
                             'loan_total_amount'       => $postData['sales_total_amount'],
                             'emi_due_amount'          => $postData['due_amount'],
                             'emi_due_date'            => $postData['due_date'],
+                            'emi_other_charges'       => null,
+                            'emi_other_charges_date'  => null,
+                            'emi_other_charges_note'  => null,
+                            'emi_due_revised_amount'  => $postData['due_amount'],
+                            'emi_due_revised_note'    => null,
                             'amount_paid'             => null,
                             'amount_paid_date'        => null,
                             'amount_paid_source'      => null,
@@ -261,6 +266,11 @@ class SalesAccountController extends Controller
                                 'emi_due_principal'       => $installment_prin,
                                 'emi_due_intrest'         => $installment_intr,
                                 'emi_due_date'            => $emi_due_date,
+                                'emi_other_charges'       => null,
+                                'emi_other_charges_date'  => null,
+                                'emi_other_charges_note'  => null,
+                                'emi_due_revised_amount'  => $installment_amount,
+                                'emi_due_revised_note'    => null,
                                 'amount_paid'             => null,
                                 'amount_paid_date'        => null,
                                 'amount_paid_source'      => null,
@@ -488,6 +498,61 @@ class SalesAccountController extends Controller
 
             $due_amount = floatval($instModel->emi_due_amount);
             $pay_amount = floatval($postData['pay_amount']);
+            $total_overall_due = floatval($total_overall_due);
+
+            //Due Amount & Pay Amount Is Same | CASE - 1
+            if ($due_amount == $pay_amount) {
+                dd("CASE - 1");
+                //Mark As Paid
+                $instModel->update([
+                    'amount_paid'        => $pay_amount,
+                    'amount_paid_date'   => date('Y-m-d'),
+                    'amount_paid_source' => $postData['pay_method'],
+                    'amount_paid_note'   => $postData['pay_method_note'],
+                    'pay_due'            => 0.00,
+                    'status'             => 1
+                ]);
+                //Add Transaction
+                SalePaymentTransactions::create([
+                    'sale_id'                       => $instModel->sale_id,
+                    'sale_payment_account_id'       => $instModel->sale_payment_account_id,
+                    'transaction_title'             => $instModel->emi_title,
+                    'amount_paid'                   => $pay_amount,
+                    'amount_paid_source'            => $postData['pay_method'],
+                    'amount_paid_source_note'       => $postData['pay_method_note'],
+                    'amount_paid_date'              => date('Y-m-d'),
+                    'status'                        => 1,
+                    'payment_collected_by'          => Auth::user()->id,
+                    'sale_payment_installment_id'   => $instModel->id,
+                    'pay_due'                       => 0.00
+
+                ]);
+            }
+            //If Customer Pay Less That Due | CASE - 2
+            else if ($due_amount > $pay_amount) {
+
+                dd("CASE - 2");
+            }
+            //If Customer Pay More Than due | CASE - 3
+            else if ($due_amount < $pay_amount) {
+                //If Overall remaining is greater than - advance pay
+                if ($total_overall_due < $pay_amount) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => "Opps! Sorry you are paying more than due amount."
+                    ]);
+                }
+
+                //Get Advance Pay
+                $advance_pay = floatval($pay_amount - $due_amount);
+
+                dd($advance_pay);
+
+
+                dd("CASE - 3");
+            }
 
             echo $total_overall_due . '___' . $due_amount . '___' . $pay_amount;
 

@@ -20,7 +20,6 @@ class SalePaymentTransactions extends Model
         'amount_paid_source',
         'amount_paid_source_note',
         'amount_paid_date',
-        'status',
         'payment_collected_by',
         'sale_payment_installment_id',
         'pay_due',
