@@ -235,13 +235,9 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $auth = User::find(auth()->id());
-        $bpModel = Purchase::where(['uuid' => $id])->first();
+        $bpModel = Purchase::where(['id' => $id])->first();
         if (!$bpModel) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
-            ]);
+            return redirect()->back();
         }
         $data = [];
         config(['first_brand' => true]);
@@ -278,7 +274,7 @@ class PurchaseController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
@@ -370,7 +366,7 @@ class PurchaseController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->uuid]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

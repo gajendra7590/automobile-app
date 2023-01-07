@@ -58,7 +58,8 @@ trait CommonHelper
     /**
      * Get All Brands
      */
-    public static function _getBrands($select_all = false,$branch_id = null) {
+    public static function _getBrands($select_all = false, $branch_id = null)
+    {
         $model = BikeBrand::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
@@ -69,10 +70,10 @@ trait CommonHelper
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
         if ($branch_id || config('first_brand')) {
-            if(!$branch_id){
+            if (!$branch_id) {
                 $branch_id = Branch::value('id');
             }
-            $model = $model->where('branch_id',$branch_id);
+            $model = $model->where('branch_id', $branch_id);
             $model_one = clone $model;
             $model_one = $model_one->value('id');
             config(['brand_id' => $model_one]);
@@ -284,13 +285,30 @@ trait CommonHelper
     /**
      * Get Active Purchases
      */
-    public static function _getInStockPurchases($select_all = false)
+    public static function _getInStockPurchases($branch_id = 0, $select_all = false)
     {
         //Filter By Status : Un Sold / InStock
-        $model = Purchase::where('status', '1');
+        $model = Purchase::where('status', '1')->with([
+            'branch' => function ($bb) {
+                $bb->select('id', 'branch_name');
+            },
+            'brand' => function ($bb) {
+                $bb->select('id', 'name');
+            },
+            'model' => function ($bb) {
+                $bb->select('id', 'model_name');
+            },
+            'modelColor' => function ($bb) {
+                $bb->select('id', 'color_name');
+            }
+        ]);
         //Select Specific
         if ($select_all == false) {
-            $model = $model->select('id', 'dc_number', 'vin_number', 'sku');
+            $model = $model->select('id', 'dc_number', 'vin_number', 'sku', 'bike_branch', 'bike_brand', 'bike_model', 'bike_model_color');
+        }
+
+        if ($branch_id > 0) {
+            $model = $model->where('bike_branch', $branch_id);
         }
 
         //Filter by branch
