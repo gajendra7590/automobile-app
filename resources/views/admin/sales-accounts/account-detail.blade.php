@@ -25,7 +25,7 @@
                             <img class="profile-user-img img-responsive img-circle"
                                 src="{{ asset('assets/dist/img/avatar.png') }}" alt="User profile picture">
                             <h3 class="profile-username text-center">
-                                {{ isset($data['sale']['customer_name']) ? $data['sale']['customer_name'] : '' }}
+                                {{ isset($data['sale']['customer_name']) ? ucwords(strtolower($data['sale']['customer_name'])) : '' }}
                             </h3>
                             <p class="text-muted text-center">
                                 @isset($data['status'])
@@ -64,6 +64,13 @@
                                 </li>
 
                                 @if ($data['due_payment_source'] == '3')
+                                    <li class="list-group-item">
+                                        <b>FINANCIER BANK</b>
+                                        <span class="label label-default pull-right" style="padding: 7px !important;">
+                                            {{ isset($data['financier']['bank_name']) ? ucwords(strtolower($data['financier']['bank_name'])) : '--' }}
+                                        </span>
+                                    </li>
+
                                     <li class="list-group-item">
                                         <b>PROCESSING FEES</b>
                                         <span class="label label-info pull-right" style="padding: 7px !important;">
@@ -141,14 +148,14 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th width="20%">TITLE</th>
-                                                <th>DUE AMOUNT</th>
-                                                <th>DUE DATE</th>
+                                                <th>INSTALLMENT AMOUNT</th>
+                                                <th>INSTALLMENT DATE</th>
                                                 <th>PAYABLE AMOUNT</th>
                                                 <th>PAID AMOUNT</th>
-                                                <th>PAID DATE</th>
+                                                <th width="10%">PAID DATE</th>
                                                 <th>+/-</th>
                                                 <th>STATUS</th>
-                                                <th>ACTION</th>
+                                                <th width="10%">ACTION</th>
                                             </tr>
                                             @isset($data['installments'])
                                                 @foreach ($data['installments'] as $k => $installment)
@@ -160,7 +167,7 @@
                                                                 {{ priceFormate($installment->emi_due_amount) }}
                                                             </span>
                                                         </td>
-                                                        <td>{{ date('d-m-Y', strtotime($installment->emi_due_date)) }}</td>
+                                                        <td>{{ date('d/m/Y', strtotime($installment->emi_due_date)) }}</td>
                                                         <td>
                                                             <span class="label label-danger" style="padding: 5px;">
                                                                 {{ priceFormate($installment->emi_due_revised_amount) }}
@@ -176,7 +183,7 @@
                                                             @endif
                                                         </td>
                                                         </td>
-                                                        <td>{{ !empty($installment->amount_paid) ? date('d-m-Y', strtotime($installment->amount_paid_date)) : '--' }}
+                                                        <td>{{ !empty($installment->amount_paid) ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
                                                         </td>
                                                         <td>{{ !empty($installment->pay_due) ? priceFormate($installment->pay_due) : '--' }}
                                                         </td>
@@ -199,14 +206,14 @@
                                                                     class="btn btn-success btn-sm ajaxModalPopup"
                                                                     data-modal_title="Make Due Payment"
                                                                     data-modal_size="modal-lg">
-                                                                    PAY
+                                                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                                 </a>
                                                             @endif
                                                             <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
                                                                 class="btn btn-warning btn-sm ajaxModalPopup"
                                                                 data-modal_title="Due Payment Detail"
                                                                 data-modal_size="modal-lg">
-                                                                VIEW
+                                                                <i class="fa fa-eye" aria-hidden="true"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -232,6 +239,8 @@
                                                 <th width="25%">TITLE</th>
                                                 <th>PAID AMOUNT</th>
                                                 <th>PAID DATE</th>
+                                                <th>PAID Source</th>
+                                                <th width="25%">PAID NOTE</th>
                                                 <th>STATUS</th>
                                                 <th>ACTION</th>
                                             </tr>
@@ -252,6 +261,10 @@
                                                         </td>
                                                         </td>
                                                         <td>{{ !empty($transaction->amount_paid) ? date('d-m-Y', strtotime($transaction->amount_paid_date)) : '--' }}
+                                                        </td>
+                                                        <td>{{ isset($transaction->amount_paid_source) ? $transaction->amount_paid_source : '' }}
+                                                        </td>
+                                                        <td>{{ isset($transaction->amount_paid_source_note) ? $transaction->amount_paid_source_note : '' }}
                                                         </td>
                                                         <td>
                                                             @if ($transaction->status == '0')

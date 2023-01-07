@@ -341,6 +341,9 @@ class SalesAccountController extends Controller
     {
         //
         $accountDetail = SalePaymentAccounts::with([
+            'financier' => function ($financier) {
+                $financier->select('id', 'bank_name');
+            },
             'sale' => function ($model) {
                 $model->with([
                     'dealer' => function ($b) {

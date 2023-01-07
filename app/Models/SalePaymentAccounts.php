@@ -64,4 +64,11 @@ class SalePaymentAccounts extends Model
     {
         return $this->hasMany(SalePaymentTransactions::class, 'sale_payment_account_id');
     }
+
+    public function financier()
+    {
+        return $this->belongsTo(BankFinancer::class, 'financier_id');
+    }
+
+    //financier_id
 }
