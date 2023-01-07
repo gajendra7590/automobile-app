@@ -291,4 +291,26 @@ if (!function_exists('myDateFormate')) {
         }
     }
 }
+
+if (!function_exists('sales2RtoPayload')) {
+    function sales2RtoPayload($data)
+    {
+        return array(
+            'contact_name'   => isset($data['customer_name']) ? $data['customer_name'] : "",
+            'contact_mobile_number' => isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : "",
+            'contact_address_line'  => isset($data['customer_address_line']) ? $data['customer_address_line'] : "",
+            'contact_state_id'      => isset($data['customer_state']) ? $data['customer_state'] : "",
+            'contact_district_id'  => isset($data['customer_district']) ? $data['customer_district'] : "",
+            'contact_city_id' => isset($data['customer_city']) ? $data['customer_city'] : "",
+            'contact_zipcode' => isset($data['customer_zipcode']) ? $data['customer_zipcode'] : "",
+            'sku' => isset($data['sku']) ? $data['sku'] : "",
+            'ex_showroom_amount' => isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : "",
+            'tax_amount' => 0.00,
+            'hyp_amount' => isset($data['hypothecation_amount']) ? $data['hypothecation_amount'] : "",
+            'tr_amount' => 0.00,
+            'fees' => 0.00,
+            'total_amount' => 0.00,
+        );
+    }
+}
 //₹

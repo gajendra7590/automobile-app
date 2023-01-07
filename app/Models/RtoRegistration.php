@@ -32,7 +32,7 @@ class RtoRegistration extends Model
         'tr_amount',
         'fees',
         'total_amount',
-        'payment_amout',
+        'payment_amount',
         'payment_date',
         'outstanding',
         'rc_number',
@@ -51,7 +51,8 @@ class RtoRegistration extends Model
 
     protected $casts = [];
 
-    public function contact_city(){
-        return $this->belongsTo(City::class,'contact_city_id');
+    public function contact_city()
+    {
+        return $this->belongsTo(City::class, 'contact_city_id');
     }
 }

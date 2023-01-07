@@ -14,8 +14,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
+//
+use App\Traits\CommonHelper;
+use Illuminate\Support\Facades\Validator;
+
 class RtoRegistrationController extends Controller
 {
+    use CommonHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -92,8 +98,60 @@ class RtoRegistrationController extends Controller
     public function store(Request $request)
     {
         try {
+            $postData = $request->all();
+
+            $validator = Validator::make($postData, [
+                'sale_id' => 'required|exists:sales,id',
+                'rto_agent_id' => 'required|exists:rto_agents,id',
+                'contact_name' => 'required|string',
+                'contact_mobile_number' => 'required|numeric|min:10',
+                'contact_address_line'  => 'required|string',
+                'contact_state_id'     => "required|exists:u_states,id",
+                'contact_district_id'  => "required|exists:u_districts,id",
+                'contact_city_id'  => "required|exists:u_cities,id",
+                'contact_zipcode' => "required|numeric|min:6",
+                'financer_name' => "nullable|string",
+                'sku'             => "required",
+                'gst_rto_rates_id' => "required|exists:gst_rto_rates,id",
+                'gst_rto_rates_percentage' => "required|numeric|min:1",
+                'ex_showroom_amount' => "required|numeric|min:1",
+                'tax_amount' => "required|numeric|min:1",
+                'hyp_amount' => "required|numeric",
+                'tr_amount' => "nullable|numeric",
+                'fees' => "nullable|numeric",
+                'total_amount' => "required|numeric",
+                'payment_amount' => "nullable|numeric",
+                'payment_date' => "nullable|date",
+                'outstanding' => "nullable|numeric",
+                'rc_number' => "nullable|string",
+                'rc_status' => "required|in:0,1",
+                'submit_date' => "nullable|date",
+                'bike_number' => "nullable|string",
+                'recieved_date' => "nullable|date",
+                'customer_given_date' => "nullable|date",
+                'remark' => "nullable|string"
+            ], [
+                'sale_id.required' => "The sales field is required.",
+                'rto_agent_id.required' => "The RTO agent field is required.",
+                'contact_state_id.required' => "The state field is required.",
+                'contact_district_id.required' => "The district field is required.",
+                'contact_city_id.required' => "The city field is required.",
+                'gst_rto_rates_id.required' => "The RTO Gst Rate field is required."
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            dd($postData);
             DB::beginTransaction();
-            $rtoRegistration = RtoRegistration::create($request->all());
+            $rtoRegistration = RtoRegistration::create($postData);
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -180,6 +238,24 @@ class RtoRegistrationController extends Controller
         //
     }
 
+    public function ajaxChangeContent(Request $request)
+    {
+        $postData = $request->all();
+        $salesModel = Sale::find($postData['id']);
+        $data = array(
+            'states' => self::_getStates(1),
+            'districts' => self::_getDistricts($salesModel->customer_state),
+            'cities' => self::_getCities($salesModel->customer_district),
+            'gst_rto_rates' => self::_getRtoGstRates(),
+            'data' => sales2RtoPayload($salesModel)
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'Load Form',
+            'data'       => (view('admin.rto-registration.ajax-change')->with($data)->render())
+        ]);
+    }
 
     public function getActions($id)
     {

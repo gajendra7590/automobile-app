@@ -71,6 +71,7 @@ class Sale extends Model
         'created_by',
         'updated_by',
         'sp_account_id',
+        'rto_account_id'
     ];
 
     protected $hidden = [];

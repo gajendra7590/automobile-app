@@ -76,6 +76,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
 
     // RTO
+    Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
     Route::resource('rtoRegistration', 'RtoRegistrationController');
 
     //Users Module

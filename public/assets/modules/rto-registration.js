@@ -56,4 +56,58 @@ $(document).ready(function () {
         });
     }
     mainDataTable();
+    $(document).on("change", 'select[name="sale_id"]', function () {
+        let selected_id = $(this).val();
+        let url = $(this).data("url");
+        let ele = $(this).data("ele");
+        if (selected_id > 0) {
+            CRUD.AJAXDATA(url + "?id=" + selected_id, "GET").then(function (
+                res
+            ) {
+                if (typeof res.status != "undefined" && res.status == true) {
+                    $("#" + ele).html(res.data);
+                    $("#rtoAjaxContainer").removeClass("hideElement");
+                }
+            });
+        } else {
+            $("#rtoAjaxContainer").addClass("hideElement");
+        }
+    });
+
+    $(document).on("change", ".onChangeSelect", function () {
+        let rto_rate = $(this).val();
+        if (rto_rate == "") {
+            $('input[name="gst_rto_rate_percentage"]').val(0);
+            $(".onChangeInput").attr("readonly", true);
+        } else {
+            $(".onChangeInput").attr("readonly", false);
+            CalculatTotal();
+        }
+    });
+
+    $(document).on("keyup keypress", ".onChangeInput", function () {
+        CalculatTotal();
+    });
+
+    //onChangeSelect
+
+    function CalculatTotal() {
+        let rto_rate = $("select[name='gst_rto_rate_id'] option:selected").data(
+            "percentage"
+        );
+        $('input[name="gst_rto_rate_percentage"]').val(rto_rate);
+        let ex_showroom_amount = $('input[name="ex_showroom_amount"]').val();
+        let Tax = (rto_rate / 100) * parseFloat(ex_showroom_amount);
+        $('input[name="tax_amount"]').val(Tax);
+        let tax_amount = $('input[name="tax_amount"]').val();
+        let hyp_amount = $('input[name="hyp_amount"]').val();
+        let tr_amount = $('input[name="tr_amount"]').val();
+        let fees = $('input[name="fees"]').val();
+        let total =
+            parseFloat(ex_showroom_amount) +
+            parseFloat(hyp_amount) +
+            parseFloat(tr_amount) +
+            parseFloat(fees);
+        $('input[name="total_amount"]').val(total);
+    }
 });

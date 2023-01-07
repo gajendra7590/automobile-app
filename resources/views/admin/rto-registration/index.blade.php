@@ -22,8 +22,9 @@
                         <div class="box-header">
                             <h3 class="box-title"> All RTO Report</h3>
                             <div class="pull-right">
-                                <a href="{{ route('rtoRegistration.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Create New RTO Entry" data-modal_size="modal-lg">
+                                <a href="{{ route('rtoRegistration.create') }}"
+                                    class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New RTO Entry"
+                                    data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
