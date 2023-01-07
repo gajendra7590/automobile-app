@@ -86,10 +86,18 @@ class SalesAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $postData = $request->all();
+        $where = array('sp_account_id' => "0");
+
+        //In Case IF Create From Sales List
+        if (isset($postData['sales_id']) && ($postData['sales_id'] > 0)) {
+            $where['id'] = $postData['sales_id'];
+        }
+
         $salesList = Sale::select('id', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'sku', 'total_amount')
-            ->where('sp_account_id', '=', 0)->get();
+            ->where($where)->get();
         $data = array(
             'depositeSources' => depositeSources(),
             'duePaySources'   => duePaySources(),

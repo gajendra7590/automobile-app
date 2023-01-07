@@ -31,18 +31,18 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="ajaxDataTable" class="table table-bordered table-hover"
-                                data-url="{{ route('sales.index') }}">
+                                data-url="{{ route('sales.index') }}" style="width: auto !important;">
                                 <thead>
                                     <tr>
-                                        <th width="5">#</th>
+                                        <th width="5%">#</th>
                                         <th width="12%">BRANCH NAME</th>
                                         <th width="12%">DEALER NAME</th>
-                                        <th width="15%">CUSTOMER NAME</th>
-                                        <th width="20%">BIKE DETAIL</th>
+                                        <th width="12%">CUSTOMER NAME</th>
+                                        <th width="18%">BIKE DETAIL</th>
                                         <th width="12%">TOTAL AMOUNT</th>
                                         <th width="10%">SALE DATE</th>
                                         <th width="5%">STATUS</th>
-                                        <th width="8%">ACTION</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
