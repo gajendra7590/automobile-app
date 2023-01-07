@@ -1,3 +1,7 @@
+@php
+    $editReadOnly = isset($method) && $method == 'PUT' ? 'readonly' : '';
+    $editDisable = isset($method) && $method == 'PUT' ? 'disabled' : '';
+@endphp
 <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
@@ -8,7 +12,7 @@
 
         <div class="form-group col-md-6">
             <label>RTO Agent </label>
-            <select name="rto_agent_id" class="form-control ">
+            <select name="rto_agent_id" class="form-control" {{ $editDisable }}>
                 <option value="">---Select RTO Agent---</option>
                 @if (isset($rto_agents))
                     @foreach ($rto_agents as $key => $rto_agent)
@@ -23,7 +27,7 @@
         <div class="form-group col-md-6">
             <label>Select Sale To Create RTO</label>
             <select name="sale_id" class="form-control " data-url="{{ route('ajaxChangeContent') }}"
-                data-ele="rtoAjaxContainer">
+                data-ele="rtoAjaxContainer" {{ $editDisable }}>
                 <option value="">---Select Sale To Create RTO---</option>
                 @if (isset($sales))
                     @foreach ($sales as $key => $sale)
@@ -34,7 +38,8 @@
             </select>
         </div>
     </div>
-    <div class="row hideElement" id="rtoAjaxContainer">
+    <div class="row {{ isset($htmlData) ? '' : 'hideElement' }}" id="rtoAjaxContainer">
+        {!! isset($htmlData) ? $htmlData : '' !!}
     </div>
     <div class="row">
         <div class="form-group col-12">

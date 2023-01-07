@@ -24,8 +24,8 @@ class RtoRegistration extends Model
         'sku',
         'financer_name',
         'financer_id',
-        'gst_rto_rates_id',
-        'gst_rto_rates_percentage',
+        'gst_rto_rate_id',
+        'gst_rto_rate_percentage',
         'ex_showroom_amount',
         'tax_amount',
         'hyp_amount',
@@ -51,8 +51,33 @@ class RtoRegistration extends Model
 
     protected $casts = [];
 
-    public function contact_city()
+    public function agent()
+    {
+        return $this->belongsTo(RtoAgent::class, 'rto_agent_id');
+    }
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'contact_state_id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'contact_district_id');
+    }
+
+    public function city()
     {
         return $this->belongsTo(City::class, 'contact_city_id');
+    }
+
+    public function tax()
+    {
+        return $this->belongsTo(GstRtoRates::class, 'gst_rto_rate_id');
     }
 }

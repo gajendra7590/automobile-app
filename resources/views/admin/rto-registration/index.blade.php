@@ -6,11 +6,11 @@
         <section class="content-header">
             <h1>
                 RTO
-                <small>Report</small>
+                <small>Registrations</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">RTO Report</li>
+                <li class="active">RTO Registrations</li>
             </ol>
         </section>
 
@@ -20,12 +20,12 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> All RTO Report</h3>
+                            <h3 class="box-title"> All Registrations</h3>
                             <div class="pull-right">
                                 <a href="{{ route('rtoRegistration.create') }}"
-                                    class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New RTO Entry"
+                                    class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New Registration"
                                     data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Registration
                                 </a>
                             </div>
                         </div>

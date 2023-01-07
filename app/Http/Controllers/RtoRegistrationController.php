@@ -68,19 +68,19 @@ class RtoRegistrationController extends Controller
             'action' => route('rtoRegistration.store'),
             'method' => 'POST',
         ];
-        $data['sales'] = Sale::select(['id', 'customer_name'])->get();
+        $data['sales'] = Sale::select(['id', 'customer_name'])->where('rto_account_id', '0')->orWhereNull('rto_account_id')->get();
         $data['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->get();
-        $data['gst_rto_rates'] = GstRtoRates::select(['id', 'gst_rate'])->get();
-        $data['states'] = State::select(['id', 'state_name'])->get();
-        $data['states'] = State::select(['id', 'state_name'])->get();
-        $data['districts'] = [];
-        $data['cities'] = [];
-        if (count($data['states'])) {
-            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $data['states'][0]['id'])->get();
-        }
-        if (count($data['districts'])) {
-            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $data['districts'][0]['id'])->get();
-        }
+        // $data['gst_rto_rates'] = GstRtoRates::select(['id', 'gst_rate'])->get();
+        // $data['states'] = State::select(['id', 'state_name'])->get();
+        // $data['states'] = State::select(['id', 'state_name'])->get();
+        // $data['districts'] = [];
+        // $data['cities'] = [];
+        // if (count($data['states'])) {
+        //     $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $data['states'][0]['id'])->get();
+        // }
+        // if (count($data['districts'])) {
+        //     $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $data['districts'][0]['id'])->get();
+        // }
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -99,7 +99,6 @@ class RtoRegistrationController extends Controller
     {
         try {
             $postData = $request->all();
-
             $validator = Validator::make($postData, [
                 'sale_id' => 'required|exists:sales,id',
                 'rto_agent_id' => 'required|exists:rto_agents,id',
@@ -112,8 +111,8 @@ class RtoRegistrationController extends Controller
                 'contact_zipcode' => "required|numeric|min:6",
                 'financer_name' => "nullable|string",
                 'sku'             => "required",
-                'gst_rto_rates_id' => "required|exists:gst_rto_rates,id",
-                'gst_rto_rates_percentage' => "required|numeric|min:1",
+                'gst_rto_rate_id' => "required|exists:gst_rto_rates,id",
+                'gst_rto_rate_percentage' => "required|numeric|min:1",
                 'ex_showroom_amount' => "required|numeric|min:1",
                 'tax_amount' => "required|numeric|min:1",
                 'hyp_amount' => "required|numeric",
@@ -136,7 +135,7 @@ class RtoRegistrationController extends Controller
                 'contact_state_id.required' => "The state field is required.",
                 'contact_district_id.required' => "The district field is required.",
                 'contact_city_id.required' => "The city field is required.",
-                'gst_rto_rates_id.required' => "The RTO Gst Rate field is required."
+                'gst_rto_rate_id.required' => "The RTO Gst Rate field is required."
             ]);
 
             //If Validation failed
@@ -148,10 +147,11 @@ class RtoRegistrationController extends Controller
                     'errors'     => $validator->errors()
                 ]);
             }
-
-            dd($postData);
             DB::beginTransaction();
             $rtoRegistration = RtoRegistration::create($postData);
+            if ($rtoRegistration) {
+                Sale::where(['id' => $postData['sale_id']])->update(['rto_account_id' => $rtoRegistration->id]);
+            }
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -178,7 +178,53 @@ class RtoRegistrationController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $rtoModel = RtoRegistration::with([
+                'agent' => function ($agent) {
+                    $agent->select('id', 'agent_name');
+                },
+                'state' => function ($state) {
+                    $state->select('id', 'state_name');
+                },
+                'district' => function ($district) {
+                    $district->select('id', 'district_name');
+                },
+                'city' => function ($city) {
+                    $city->select('id', 'city_name');
+                },
+                'tax' => function ($tax) {
+                    $tax->select('id', 'gst_rate');
+                },
+                'sale' => function ($sale) {
+                    $sale->select('id', 'sale_uuid', 'bike_branch')->with([
+                        'branch' => function ($branch) {
+                            $branch->select('id', 'branch_name');
+                        }
+                    ]);
+                }
+            ])->where('id', $id)->first();
+            if (!$rtoModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Opps! Invalid request."
+                ]);
+            }
+
+
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.rto-registration.show', ['data' => $rtoModel])->render()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -189,29 +235,30 @@ class RtoRegistrationController extends Controller
      */
     public function edit($id)
     {
-        $data = RtoRegistration::find($id);
-        $data  = [
+        $rtoModel = RtoRegistration::find($id);
+        $responsePayload  = [
             'action' => route('rtoRegistration.update', ['rtoRegistration' => $id]),
-            'method' => 'POST',
+            'method' => 'PUT',
         ];
-        $data['sales'] = Sale::select(['id', 'customer_name'])->get();
-        $data['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->get();
-        $data['gst_rto_rates'] = GstRtoRates::select(['id', 'gst_rate'])->get();
-        $data['states'] = State::select(['id', 'state_name'])->get();
-        $data['states'] = State::select(['id', 'state_name'])->get();
-        $data['districts'] = [];
-        $data['cities'] = [];
-        if (count($data['states'])) {
-            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $data['states'][0]['id'])->get();
-        }
-        if (count($data['districts'])) {
-            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $data['districts'][0]['id'])->get();
-        }
+        $responsePayload['sales'] = Sale::select(['id', 'customer_name'])->where('id', $rtoModel->sale_id)->get();
+        $responsePayload['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->where('id', $rtoModel->rto_agent_id)->get();
+        $htmlData = array(
+            'states' => self::_getStates(1),
+            'districts' => self::_getDistricts($rtoModel->contact_state_id),
+            'cities' => self::_getCities($rtoModel->contact_district_id),
+            'gst_rto_rates' => self::_getRtoGstRates(),
+            'data' => $rtoModel,
+            'action' => "edit"
+        );
+        //Get Raw Html
+        $responsePayload['htmlData'] = (view('admin.rto-registration.ajax-change')->with($htmlData)->render());
+        $responsePayload['data'] = $rtoModel;
+        //Return Response
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.rto-registration.ajaxModal', $data)->render()
+            'data'       => view('admin.rto-registration.ajaxModal', $responsePayload)->render()
         ]);
     }
 
@@ -224,7 +271,82 @@ class RtoRegistrationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $rtoModel = RtoRegistration::find($id);
+            if (!$rtoModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Opps! Invalid request."
+                ]);
+            }
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'sale_id' => 'nullable|exists:sales,id',
+                'rto_agent_id' => 'nullable|exists:rto_agents,id',
+                'contact_name' => 'required|string',
+                'contact_mobile_number' => 'required|numeric|min:10',
+                'contact_address_line'  => 'required|string',
+                'contact_state_id'     => "nullable|exists:u_states,id",
+                'contact_district_id'  => "nullable|exists:u_districts,id",
+                'contact_city_id'  => "nullable|exists:u_cities,id",
+                'contact_zipcode' => "required|numeric|min:6",
+                'financer_name' => "nullable|string",
+                'sku'             => "required",
+                'gst_rto_rate_id' => "nullable|exists:gst_rto_rates,id",
+                'gst_rto_rate_percentage' => "required|numeric|min:1",
+                'ex_showroom_amount' => "required|numeric|min:1",
+                'tax_amount' => "required|numeric|min:1",
+                'hyp_amount' => "required|numeric",
+                'tr_amount' => "nullable|numeric",
+                'fees' => "nullable|numeric",
+                'total_amount' => "required|numeric",
+                'payment_amount' => "nullable|numeric",
+                'payment_date' => "nullable|date",
+                'outstanding' => "nullable|numeric",
+                'rc_number' => "nullable|string",
+                'rc_status' => "required|in:0,1",
+                'submit_date' => "nullable|date",
+                'bike_number' => "nullable|string",
+                'recieved_date' => "nullable|date",
+                'customer_given_date' => "nullable|date",
+                'remark' => "nullable|string"
+            ], [
+                'sale_id.required' => "The sales field is required.",
+                'rto_agent_id.required' => "The RTO agent field is required.",
+                'contact_state_id.required' => "The state field is required.",
+                'contact_district_id.required' => "The district field is required.",
+                'contact_city_id.required' => "The city field is required.",
+                'gst_rto_rate_id.required' => "The RTO Gst Rate field is required."
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+            DB::beginTransaction();
+            $rtoModel->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.update_success'),
+                'data'       => $rtoModel
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**
@@ -247,7 +369,8 @@ class RtoRegistrationController extends Controller
             'districts' => self::_getDistricts($salesModel->customer_state),
             'cities' => self::_getCities($salesModel->customer_district),
             'gst_rto_rates' => self::_getRtoGstRates(),
-            'data' => sales2RtoPayload($salesModel)
+            'data' => sales2RtoPayload($salesModel),
+            'action' => "add"
         );
         return response()->json([
             'status'     => true,
@@ -260,8 +383,8 @@ class RtoRegistrationController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        //$action .= '<a href="' . route('rtoRegistration.destroy', ['rto' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        $action .= '<a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Edit Registration Data" data-title="Edit" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('rtoRegistration.show', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-success ajaxModalPopup"  data-modal_size="modal-lg" data-modal_title="Preview Registration Data" data-title="View"><i class="fa fa-eye" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }
