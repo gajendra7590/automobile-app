@@ -1,5 +1,5 @@
 <form role="form" method="POST" class="ajaxFormSubmit" action="{{ route('installmentPay') }}"
-    enctype="multipart/form-data">
+    enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
     <div class="box-body">
         <div class="row">

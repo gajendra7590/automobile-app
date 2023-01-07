@@ -15,8 +15,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
+//Trait
+use App\Traits\CronHelper;
+
 class SalesAccountController extends Controller
 {
+    use CronHelper;
+
     /**
      * Display a listing of the resource.
      *
@@ -59,7 +64,7 @@ class SalesAccountController extends Controller
                     return $title;
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->active_status == '1') {
+                    if ($row->status == '1') {
                         return '<span class="label label-success">Close</span>';
                     } else {
                         return '<span class="label label-warning">Open</span>';
@@ -295,6 +300,10 @@ class SalesAccountController extends Controller
                     Sale::where('id', $postData['sale_id'])->update(['status' => 'close']);
                 }
             }
+
+            //Account status check all dues & mark closed
+            self::verifyAccountPendings();
+
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -675,6 +684,11 @@ class SalesAccountController extends Controller
                     ]);
                 }
             }
+
+
+            //Account status check all dues & mark closed
+            self::verifyAccountPendings();
+
             DB::commit();
             return response()->json([
                 'status'     => true,
