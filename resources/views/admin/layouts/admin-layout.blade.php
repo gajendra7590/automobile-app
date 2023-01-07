@@ -134,20 +134,6 @@
 
     <script src="{{ asset('assets/dist/js/toastr.min.js') }}"></script>
 
-    <script type="text/javascript">
-        function loaderHide() {
-            $('.ajax_loader').hide();
-        }
-
-        function loaderShow() {
-            $('.ajax_loader').show();
-        }
-
-        $(window).on('load', function() {
-            loaderHide();
-        });
-    </script>
-
     @stack('after-script')
 
 </body>

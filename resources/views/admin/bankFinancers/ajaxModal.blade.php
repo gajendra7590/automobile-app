@@ -138,6 +138,20 @@
         </div>
 
         <div class="form-group col-md-12">
+            <label>Financer Type: </label>
+            <select class="form-control" name="financer_type">
+                <option value="1"
+                    {{ isset($data['financer_type']) && $data['financer_type'] == '1' ? 'selected="selected"' : '' }}>
+                    Bank Financers
+                </option>
+                <option value="2"
+                    {{ isset($data['financer_type']) && $data['financer_type'] == '2' ? 'selected="selected"' : '' }}>
+                    Personal Financers
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-12">
             <label>Status : </label>
             <select class="form-control" name="active_status">
                 <option value="1"

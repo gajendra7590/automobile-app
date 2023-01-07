@@ -40,11 +40,45 @@
         .register-logo a {
             color: #fff !important;
         }
+
+        .ajax_loader {
+            content: '';
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            opacity: 0.8;
+            z-index: 999999;
+        }
+
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .action-btn-container a {
+            margin-left: 2px !important;
+        }
     </style>
 </head>
 
 <body class="hold-transition login-page"
     style="background-image: url('{{ asset('/assets/dist/img/auth-layout-bg.jpg') }}') !important; ">
+    <div class="ajax_loader">
+        <div class="loader-center">
+            <div class="loader">
+                <img src="{{ asset('/assets/dist/img/loading-spinner.gif') }}" />
+            </div>
+        </div>
+    </div>
     <!-- /.login-box -->
     @yield('container')
     <!-- jQuery 3 -->

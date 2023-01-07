@@ -91,6 +91,7 @@ class BankFinancerController extends Controller
                 'bank_financer_address' => 'nullable|string',
                 'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
                 'bank_financer_pan_card' => 'nullable|string',
+                'financer_type' => 'required|in:0,1',
                 'more_details' => 'string',
                 'active_status' => 'required|in:0,1'
             ];
@@ -107,7 +108,7 @@ class BankFinancerController extends Controller
                 ]);
             }
 
-            BankFinancer::create($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status']));
+            BankFinancer::create($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'financer_type','active_status']));
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -192,7 +193,8 @@ class BankFinancerController extends Controller
                 'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
                 'bank_financer_pan_card' => 'nullable|string',
                 'more_details' => 'nullable|string',
-                'active_status' => 'required|in:0,1'
+                'active_status' => 'required|in:0,1',
+                'financer_type' => 'required|in:0,1',
             ];
             $validator = Validator::make($postData, $validateArray);
             if ($validator->fails()) {
@@ -202,7 +204,7 @@ class BankFinancerController extends Controller
             if (!$bankFinancer) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.bank_financer_not_found')]);
             }
-            $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status']));
+            $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status','financer_type']));
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {

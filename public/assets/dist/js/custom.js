@@ -1,10 +1,14 @@
-function loaderShow() {
-    $("#loading").show();
+function loaderHide() {
+    $('.ajax_loader').hide();
 }
 
-function loaderHide() {
-    $("#loading").hide();
+function loaderShow() {
+    $('.ajax_loader').show();
 }
+
+$(window).on('load', function() {
+    loaderHide();
+});
 
 bearer_token = "";
 app_url = "";
