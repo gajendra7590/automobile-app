@@ -577,19 +577,41 @@ class SalesAccountController extends Controller
                 ])->whereNotIn('id', $whereNotIn)->first();
                 //Create New EMI
                 if (empty($nextEMIModel)) {
+
+                    $emi_due_amount    = $p1_due;
+                    $emi_due_principal = 0.00;
+                    $emi_due_intrest   = 0.00;
+                    $emi_due_date      = null;
+                    $accountModel = SalePaymentAccounts::find($instModel->sale_payment_account_id);
+                    if ($accountModel) {
+                        switch ($accountModel->due_payment_source) {
+                            case '3':
+                                $emi_due_principal = $p1_due;
+                                $months = emiTermsMonths($accountModel->finance_terms);
+                                $roi   = $accountModel->rate_of_interest;
+                                $emi_due_intrest = ($emi_due_principal * $roi * ($months / 12)) / 100;
+                                $emi_due_amount = ($emi_due_principal + $emi_due_intrest);
+                                $emi_due_date = date('Y-m-d', strtotime("+ $months months"));
+                                break;
+                            default:
+                                $emi_due_date = date('Y-m-d', strtotime("+ 1 months"));
+                                break;
+                        }
+                    }
+
                     SalePaymentInstallments::create([
                         'sale_id'                   => $instModel->sale_id,
                         'sale_payment_account_id'   => $instModel->sale_payment_account_id,
                         'emi_title'                 => "Due Pending Last Installment.#" . $instModel->id,
                         'loan_total_amount'         => $instModel->loan_total_amount,
-                        'emi_due_amount'            => $p1_due,
-                        'emi_due_principal'         => 0.00,
-                        'emi_due_intrest'           => 0.00,
-                        'emi_due_date'              => isset($postData['nextDueDate']) ? $postData['nextDueDate'] : $instModel->emi_due_date,
+                        'emi_due_amount'            => $emi_due_amount,
+                        'emi_due_principal'         => $emi_due_principal,
+                        'emi_due_intrest'           => $emi_due_intrest,
+                        'emi_due_date'              => $emi_due_date,
                         'emi_other_adjustment'      => ($pay_amount),
                         'emi_other_adjustment_date' => date('Y-m-d'),
                         'emi_other_adjustment_note' => "Due Payment From Last Emi Adjust",
-                        'emi_due_revised_amount'    => $p1_due,
+                        'emi_due_revised_amount'    => $emi_due_amount,
                         'emi_due_revised_note'      => "Revised Due After (-" . $pay_amount . ") added.",
                         'status'                    => 0
                     ]);
@@ -639,18 +661,18 @@ class SalesAccountController extends Controller
                 if ($nextEMITotal >= $advance_pay) {
                     //MARK PAID CURRENT EMI
                     $instModel->update([
-                        'amount_paid'        => $due_amount,
+                        'amount_paid'        => $pay_amount,
                         'amount_paid_date'   => date('Y-m-d'),
                         'amount_paid_source' => $postData['pay_method'],
                         'amount_paid_note'   => $postData['pay_method_note'],
-                        'pay_due'            => $advance_pay,
+                        'pay_due'            => 0,
                         'status'             => 1
                     ]);
                     SalePaymentTransactions::create([
                         'sale_id'                     => $instModel->sale_id,
                         'sale_payment_account_id'     => $instModel->sale_payment_account_id,
                         'transaction_title'           => $instModel->emi_title,
-                        'amount_paid'                 => $due_amount,
+                        'amount_paid'                 => $pay_amount,
                         'amount_paid_source'          => $postData['pay_method'],
                         'amount_paid_source_note'     => $postData['pay_method_note'],
                         'amount_paid_date'            => date('Y-m-d'),
@@ -665,7 +687,7 @@ class SalesAccountController extends Controller
                         'amount_paid'                => $advance_pay,
                         'amount_paid_date'           => date('Y-m-d'),
                         'amount_paid_source'         => $postData['pay_method'],
-                        'amount_paid_note'           => $postData['pay_method_note'],
+                        'amount_paid_note'           => "Advance Payment Ref #Inst-" . $instModel->id,
                         'emi_other_adjustment'       => ($p1_status == 1) ? 0 : (-$advance_pay),
                         'emi_other_adjustment_date'  => date('Y-m-d'),
                         'emi_other_adjustment_note'  => "Advance Payment.#EMI-" . $instModel->id,
@@ -673,18 +695,6 @@ class SalesAccountController extends Controller
                         'emi_due_revised_note'       => ($p1_status == 1) ? "" : "After Advance Payment Adjusment Remianing Balance.",
                         'pay_due'                    => $advance_pay,
                         'status'                     => $p1_status
-                    ]);
-                    SalePaymentTransactions::create([
-                        'sale_id'                       => $nextEMIModel->sale_id,
-                        'sale_payment_account_id'       => $nextEMIModel->sale_payment_account_id,
-                        'transaction_title'             => $nextEMIModel->emi_title . "Advance Payment.#EMI-" . $instModel->id,
-                        'amount_paid'                   => $advance_pay,
-                        'amount_paid_source'            => $postData['pay_method'],
-                        'amount_paid_source_note'       => $postData['pay_method_note'],
-                        'amount_paid_date'              => date('Y-m-d'),
-                        'status'                        => 1,
-                        'payment_collected_by'          => Auth::user()->id,
-                        'sale_payment_installment_id'   => $nextEMIModel->id
                     ]);
                 } else {
                     DB::rollBack();

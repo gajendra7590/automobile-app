@@ -158,7 +158,15 @@
                                                 <th width="10%">ACTION</th>
                                             </tr>
                                             @isset($data['installments'])
+                                                @php
+                                                    $pending_emi = 0;
+                                                @endphp
                                                 @foreach ($data['installments'] as $k => $installment)
+                                                    @if ($installment->status == '0')
+                                                        @php
+                                                            $pending_emi++;
+                                                        @endphp
+                                                    @endif
                                                     <tr>
                                                         <td>{{ $installment->id }}</td>
                                                         <td>{{ $installment->emi_title }}</td>
@@ -183,7 +191,7 @@
                                                             @endif
                                                         </td>
                                                         </td>
-                                                        <td>{{ !empty($installment->amount_paid) ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
+                                                        <td>{{ !empty($installment->amount_paid) && $installment->amount_paid > 0 ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
                                                         </td>
                                                         <td>{{ !empty($installment->pay_due) ? priceFormate($installment->pay_due) : '--' }}
                                                         </td>
@@ -201,7 +209,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($installment->status == '0')
+                                                            @if ($installment->status == '0' && $pending_emi == 1)
                                                                 <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
                                                                     class="btn btn-success btn-sm ajaxModalPopup"
                                                                     data-modal_title="Make Due Payment"
@@ -218,6 +226,12 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <b>Important Note : </b> Your next installment payment option will
+                                                        visible if latest one will be mark as paid.
+                                                    </td>
+                                                </tr>
                                             @endisset
 
                                         </table>

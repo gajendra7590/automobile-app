@@ -127,6 +127,19 @@ if (!function_exists('emiTerms')) {
     }
 }
 
+if (!function_exists('emiTermsMonths')) {
+    function emiTermsMonths($id)
+    {
+        $data = [
+            '1'  => 1,
+            '2'  => 3,
+            '3'  => 6,
+            '4'  => 12
+        ];
+        return isset($data[$id]) ? $data[$id] : 1;
+    }
+}
+
 if (!function_exists('getStatus')) {
     function getStatus($id = 0)
     {
@@ -265,6 +278,17 @@ if (!function_exists('priceFormateWithSymbol')) {
     function priceFormate($price = 0, $only_symbol = false)
     {
         return ($only_symbol == true) ? "₹" : "₹" . number_format($price, 2);
+    }
+}
+
+if (!function_exists('myDateFormate')) {
+    function myDateFormate($date = null)
+    {
+        if ($date != null || ($date != "")) {
+            return date('Y-m-d', strtotime($date));
+        } else {
+            return date('Y-m-d');
+        }
     }
 }
 //₹
