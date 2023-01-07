@@ -4,8 +4,8 @@
 
     @php
         $isEdit = isset($method) && $method == 'PUT' ? true : false;
-        $editDisabled = $isEdit == true ? 'disabled="disabled"' : '';
-        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled="disabled"' : '';
+        $editDisabled = $isEdit == true ? 'readonly' : '';
+        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'readonly' : '';
     @endphp
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -44,13 +44,16 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : 0 }}"
-                            name="quotation_id">
+                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : null }}" name="quotation_id">
                         {{-- Purchase --}}
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label>In Stock Bikes(Purchases)</label>
-                                <select id="purchase" name="purchase_id" class="form-control" {{ $editDisabled }}>
+                                <select id="purchase" name="purchase_id" class="form-control" {{ $editDisabled }}
+                                data-getpurchases="{{ url('getPurchaseDetails') }}"
+                                data-getmodels="{{ url('getModelsList') }}"
+                                data-getcolors="{{ url('getColorsList') }}"
+                                >
                                     <option value="">---Select Purachse---</option>
                                     @if (isset($purchases))
                                         @foreach ($purchases as $key => $purchase)
@@ -115,7 +118,7 @@
                                 <label>Brand Name</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
@@ -130,7 +133,7 @@
                                 <label>Model Name</label>
                                 <select name="bike_model" data-dep_dd_name="bike_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Model---</option>
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
@@ -144,7 +147,7 @@
 
                             <div class="form-group col-md-3">
                                 <label>Model Color</label>
-                                <select name="bike_color" class="form-control" {{ $isDisabled }}>
+                                <select name="bike_color" class="form-control" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Model Color---</option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
@@ -556,52 +559,5 @@
 @endsection
 
 @push('after-script')
-    <script>
-        $(document).ready(function() {
-            $('#purchase').change(function() {
-                let id = $(this).val();
-                let URL = "{{ url('getPurchaseDetails') }}/" + id;
-                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                    let bike_model = res.data.bike_model
-                    let bike_color = res.data.bike_model_color
-                    $("[name=bike_brand]").val(res.data.bike_brand)
-                    URL = "{{ url('getModelsList') }}/" + res.data.bike_brand;
-                    CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                        $('select[name="bike_model"]').html(res.data)
-                        $("[name=bike_model]").val(bike_model)
-                        URL = "{{ url('getColorsList') }}/" + bike_model;
-                        CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                            $('select[name="bike_color"]').html(res.data)
-                            $("[name=bike_color]").val(bike_color)
-                        });
-                    });
-                    $("[name=bike_branch]").val(res.data.bike_branch)
-                    $("[name=bike_dealer]").val(res.data.bike_dealer)
-                    $("[name=bike_type]").val(res.data.bike_type)
-                    $("[name=bike_fuel_type]").val(res.data.bike_fuel_type)
-                    $("[name=break_type]").val(res.data.break_type)
-                    $("[name=wheel_type]").val(res.data.wheel_type)
-                    $("[name=dc_number]").val(res.data.dc_number)
-                    $("[name=dc_date]").val(res.data.dc_date)
-                    $("[name=vin_number]").val(res.data.vin_number)
-                    $("[name=vin_physical_status]").val(res.data.vin_physical_status)
-                    $("[name=sku]").val(res.data.sku)
-                    $("[name=sku_description]").val(res.data.sku_description)
-                    $("[name=hsn_number]").val(res.data.hsn_number)
-                    $("[name=engine_number]").val(res.data.engine_number)
-                    $("[name=key_number]").val(res.data.key_number)
-                    $("[name=service_book_number]").val(res.data.service_book_number)
-                    $("[name=tyre_brand_name]").val(res.data.tyre_brand_name)
-                    $("[name=tyre_front_number]").val(res.data.tyre_front_number)
-                    $("[name=tyre_rear_number]").val(res.data.tyre_rear_number)
-                    $("[name=battery_brand]").val(res.data.battery_brand)
-                    $("[name=battery_number]").val(res.data.battery_number)
-                    $("[name=purchase_invoice_amount]").val(res.data.purchase_invoice_amount)
-                    $("[name=purchase_invoice_number]").val(res.data.purchase_invoice_number)
-                    $("[name=purchase_invoice_date]").val(res.data.purchase_invoice_date)
-                    $("[name=bike_description]").val(res.data.bike_description)
-                });
-            });
-        });
-    </script>
+    <script src="{{ asset('assets/modules/sales.js') }}" ></script>
 @endpush
