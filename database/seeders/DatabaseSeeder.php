@@ -26,7 +26,14 @@ class DatabaseSeeder extends Seeder
             //Brands
             BrandSeeder::class,
             ModelSeeder::class,
-            ColorSeeder::class
+            ColorSeeder::class,
+            GstRateSeeder::class,
+            RtoGstRateSeeder::class,
+
+            RtoAgentSeeder::class,
+            FinancerSeeder::class,
+            DealerSeeder::class,
+            AgentSeeder::class
         ]);
     }
 }

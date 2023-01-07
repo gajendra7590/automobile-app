@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class BrandSeeder extends Seeder
+class DealerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,44 +16,36 @@ class BrandSeeder extends Seeder
     {
         DB::beginTransaction();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('bike_brands')->truncate();
+        DB::table('bike_dealers')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
         $today = date('Y-m-d H:i:s');
         $create = [
             [
                 'id' => '1',
-                'branch_id' => '1',
-                'name' => 'HERO MOTOCORP',
-                'code' => 'HR',
-                'description' =>  'HERO MOTOCORP description',
+                'dealer_code' => 'HRD',
+                'company_name' => 'Hero Dealers',
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
             ],
             [
-
-                'id' => '2',
-                'branch_id' => '2',
-                'name' => 'HONDA MOTOR COMPANY',
-                'code' => 'HND',
-                'description' =>  'HONDA description',
+                'id' => '1',
+                'dealer_code' => 'HDD',
+                'company_name' => 'Honda Dealers',
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
             ],
             [
-                'id' => '3',
-                'branch_id' => '3',
-                'name' => 'BAJAJ AUTO',
-                'code' => 'BJJ',
-                'description' =>  'BAJAJ AUTO description',
+                'id' => '1',
+                'dealer_code' => 'BJD',
+                'company_name' => 'Bajaj Dealers',
                 'active_status' => 1,
                 'created_at' => $today,
                 'updated_at' => $today,
             ],
         ];
-        DB::table('bike_brands')->insert($create);
+        DB::table('bike_dealers')->insert($create);
         DB::commit();
     }
 }
