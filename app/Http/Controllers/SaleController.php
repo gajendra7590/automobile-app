@@ -162,10 +162,7 @@ class SaleController extends Controller
         if (!empty(request('q'))) {
             $quotation = Quotation::select('*')->find(request('q'));
             if ($quotation) {
-
                 $data['purchases'] = self::_getInStockPurchases($quotation['branch_id']);
-
-
                 $data['data'] = $quotation;
                 $data['data']['bike_branch'] = $quotation->branch_id;
                 $data['data']['quotation_id'] = $quotation->id;
@@ -176,6 +173,8 @@ class SaleController extends Controller
             $data['colors']    = self::_getColors($quotation->bike_model);
             $data['districts'] = self::_getDistricts($quotation->customer_state);
             $data['cities']    = self::_getCities($quotation->customer_district);
+        } else {
+            $data['purchases'] = self::_getInStockPurchases();
         }
 
         return view('admin.sales.create', $data);
@@ -449,6 +448,12 @@ class SaleController extends Controller
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Sale"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('sales.destroy', ['sale' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Sale"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+
+        if (intval($row->sp_account_id) > 0) {
+            $action .= '<a href="' . route('sales-accounts.edit', ['sales_account' => $row->sp_account_id]) . '" class="btn btn-sm btn-success" data-title="View Account"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+        } else {
+            $action .= '<a href="' . route('sales-accounts.create') . '?sales_id=' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Open Account" data-modal_title="Create New Sales Account" data-modal_size="modal-lg"><i class="fa fa-plus" aria-hidden="true"></i></a>';
+        }
         $action .= '</div>';
         return $action;
     }
