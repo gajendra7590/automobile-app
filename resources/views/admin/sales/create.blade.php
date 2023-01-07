@@ -4,8 +4,8 @@
 
     @php
         $isEdit = isset($method) && $method == 'PUT' ? true : false;
-        $editDisabled = $isEdit == true ? 'disabled="disabled"' : '';
-        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled="disabled"' : '';
+        $editDisabled = $isEdit == true ? 'readonly' : '';
+        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'readonly' : '';
     @endphp
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : 0 }}" name="quotation_id">
+                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : null }}" name="quotation_id">
                         {{-- Purchase --}}
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -118,7 +118,7 @@
                                 <label>Brand Name</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
@@ -133,7 +133,7 @@
                                 <label>Model Name</label>
                                 <select name="bike_model" data-dep_dd_name="bike_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Model---</option>
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
@@ -147,7 +147,7 @@
 
                             <div class="form-group col-md-3">
                                 <label>Model Color</label>
-                                <select name="bike_color" class="form-control" {{ $isDisabled }}>
+                                <select name="bike_color" class="form-control" {{ $isDisabled }} {{ $editDisabled }}>
                                     <option value="">---Select Model Color---</option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
