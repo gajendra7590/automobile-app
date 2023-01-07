@@ -267,11 +267,19 @@
                                     {{ $isDisabled }} />
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Tyre Brand Name</label>
-                                <input type="text" class="form-control" placeholder="Tyre Brand Name"
-                                    name="tyre_brand_name"
-                                    value="{{ isset($data->tyre_brand_name) ? $data->tyre_brand_name : '' }}"
-                                    {{ $isDisabled }} />
+                                <label>Tyre Brand</label>
+                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control" {{ $isDisabled }}>
+                                    @if (isset($tyre_brands))
+                                        <option value="">---Select Tyre Brand---</option>
+                                        @foreach ($tyre_brands as $key => $tyre_brand)
+                                            <option
+                                                {{ isset($data->tyre_brand_id) && $data->tyre_brand_id == $tyre_brand->id ? 'selected' : '' }}
+                                                value="{{ $tyre_brand->id }}"
+                                                data-rate="{{ $tyre_brand->tyre_brand_id }}">
+                                                {{ $tyre_brand->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label>Tyre Front Number</label>
@@ -287,13 +295,19 @@
                                     value="{{ isset($data->tyre_rear_number) ? $data->tyre_rear_number : '' }}"
                                     {{ $isDisabled }} />
                             </div>
-
                             <div class="form-group col-md-3">
-                                <label>Battery Brand Name</label>
-                                <input type="text" class="form-control" placeholder="Battery Brand Name"
-                                    name="battery_brand"
-                                    value="{{ isset($data->battery_brand) ? $data->battery_brand : '' }}"
-                                    {{ $isDisabled }} />
+                                <label>Battery Brand</label>
+                                <select name="battery_brand_id" id="battery_brand_id" class="form-control" {{ $isDisabled }}>
+                                    @if (isset($battery_brands))
+                                        <option value="">---Select Battery Brand---</option>
+                                        @foreach ($battery_brands as $key => $battery_brand)
+                                            <option
+                                                {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->id ? 'selected' : '' }}
+                                                value="{{ $battery_brand->id }}" >
+                                                {{ $battery_brand->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label>Battery Number</label>
