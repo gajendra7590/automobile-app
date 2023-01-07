@@ -14,6 +14,7 @@ use App\Models\District;
 use App\Models\Purchase;
 use App\Models\Quotation;
 use App\Models\State;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -137,12 +138,15 @@ class SaleController extends Controller
      */
     public function create(Request $request)
     {
+        $auth = User::find(auth()->id());
         $data = array(
             'branches'              => self::_getBranches(),
             'dealers'               => self::_getDealers(),
             'states'                => self::_getStates(),
             'brands'                => self::_getBrands(),
             'bank_financers'        => self::_getFinaceirs(),
+            'tyre_brands'           => self::_getTyreBrands(!$auth->is_admin),
+            'battery_brands'        => self::_getBatteryBrands(!$auth->is_admin),
             'bike_types'            => bike_types(),
             'bike_fuel_types'       => bike_fuel_types(),
             'break_types'           => break_types(),
@@ -207,7 +211,7 @@ class SaleController extends Controller
                 'engine_number'  => "required|min:14",
                 'key_number' => 'required',
                 'service_book_number' => 'required',
-                'tyre_brand_name' => 'required',
+                'tyre_brand_id' => 'required',
                 'tyre_front_number' => 'required',
                 'tyre_rear_number' => 'required',
                 'battery_brand' => 'required',
@@ -293,6 +297,7 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
+        $auth = User::find(auth()->id());
         $bpModel = Sale::where(['id' => $id])->first();
         if (!$bpModel) {
             return response()->json([
@@ -312,6 +317,8 @@ class SaleController extends Controller
             'colors'                => self::_getColors($bpModel->bike_model),
             'bank_financers'        => self::_getFinaceirs(),
             'purchases'             => self::_getInStockPurchases(),
+            'tyre_brands'           => self::_getTyreBrands(!$auth->is_admin),
+            'battery_brands'        => self::_getBatteryBrands(!$auth->is_admin),
             'bike_types'            => bike_types(),
             'bike_fuel_types'       => bike_fuel_types(),
             'break_types'           => break_types(),
@@ -365,7 +372,7 @@ class SaleController extends Controller
                 'engine_number'  => "required|min:14",
                 'key_number' => 'required',
                 'service_book_number' => 'required',
-                'tyre_brand_name' => 'required',
+                'tyre_brand_id' => 'required',
                 'tyre_front_number' => 'required',
                 'tyre_rear_number' => 'required',
                 'battery_brand' => 'required',

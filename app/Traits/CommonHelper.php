@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\BankFinancer;
+use App\Models\BatteryBrand;
 use App\Models\BikeAgent;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
@@ -16,6 +17,7 @@ use App\Models\GstRtoRates;
 use App\Models\Purchase;
 use App\Models\RtoAgent;
 use App\Models\State;
+use App\Models\TyreBrand;
 use Illuminate\Support\Facades\Auth;
 
 trait CommonHelper
@@ -103,6 +105,33 @@ trait CommonHelper
             $model = $model->whereHas('bike_brand', function ($bb) {
                 $bb->where('branch_id', self::getCurrentUserBranch());
             });
+        }
+        return $model->get();
+    }
+
+
+    /**
+     * Get All Battery Brands
+     */
+    public static function _getBatteryBrands($select_all = false)
+    {
+        $model = BatteryBrand::where('active_status', '1');
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'name');
+        }
+        return $model->get();
+    }
+
+    /**
+     * Get All Battery Brands
+     */
+    public static function _getTyreBrands($select_all = false)
+    {
+        $model = TyreBrand::where('active_status', '1');
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'name');
         }
         return $model->get();
     }
