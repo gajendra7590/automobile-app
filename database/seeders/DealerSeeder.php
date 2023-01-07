@@ -29,7 +29,7 @@ class DealerSeeder extends Seeder
                 'updated_at' => $today,
             ],
             [
-                'id' => '1',
+                'id' => '2',
                 'dealer_code' => 'HDD',
                 'company_name' => 'Honda Dealers',
                 'active_status' => 1,
@@ -37,7 +37,7 @@ class DealerSeeder extends Seeder
                 'updated_at' => $today,
             ],
             [
-                'id' => '1',
+                'id' => '3',
                 'dealer_code' => 'BJD',
                 'company_name' => 'Bajaj Dealers',
                 'active_status' => 1,

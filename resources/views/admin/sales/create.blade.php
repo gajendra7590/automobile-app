@@ -49,7 +49,7 @@
                         {{-- Purchase --}}
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Purchase</label>
+                                <label>In Stock Bikes(Purchases)</label>
                                 <select id="purchase" name="purchase_id" class="form-control" {{ $editDisabled }}>
                                     <option value="">---Select Purachse---</option>
                                     @if (isset($purchases))
@@ -57,7 +57,27 @@
                                             <option
                                                 {{ isset($data['purchase_id']) && $data['purchase_id'] == $purchase->id ? 'selected="selected"' : '' }}
                                                 value="{{ $purchase->id }}">
-                                                {{ $purchase->sku . '(' . $purchase->vin_number . ')' }}</option>
+                                                @isset($purchase->branch->branch_name)
+                                                    {{ $purchase->branch->branch_name }} |
+                                                @endisset
+
+                                                @isset($purchase->brand->name)
+                                                    {{ $purchase->brand->name }} |
+                                                @endisset
+
+                                                @isset($purchase->model->model_name)
+                                                    {{ $purchase->model->model_name }} |
+                                                @endisset
+
+                                                @isset($purchase->modelColor->color_name)
+                                                    {{ $purchase->modelColor->color_name }} |
+                                                @endisset
+
+                                                @isset($purchase->sku)
+                                                    {{ $purchase->sku }}
+                                                @endisset
+
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -77,9 +97,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Branch</label>
-                                <select name="bike_branch"
-                                    data-dep_dd_name="bike_brand"
-                                    data-dep_dd2_name="bike_model"
+                                <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
                                     data-dep_dd3_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
                                     class="form-control ajaxChangeCDropDown" {{ $editDisabled }}>
@@ -96,8 +114,7 @@
                             <div class="form-group col-md-3">
                                 <label>Brand Name</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
-                                    data-dep_dd_name="bike_model"
-                                    data-dep_dd2_name="bike_model_color"
+                                    data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
                                     class="form-control ajaxChangeCDropDown" {{ $isDisabled }}>
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))

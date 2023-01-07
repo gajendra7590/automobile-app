@@ -90,7 +90,7 @@
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
                                             <option
-                                                {{ (isset($data->bike_brand) && $data->bike_brand == $brand->id) || ($method && $method == 'POST' && $key == 0)  ? 'selected="selected"' : '' }}
+                                                {{ (isset($data->bike_brand) && $data->bike_brand == $brand->id) || ($method && $method == 'POST' && $key == 0) ? 'selected="selected"' : '' }}
                                                 value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     @endif
@@ -105,7 +105,7 @@
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
                                             <option
-                                                {{ (isset($data->bike_model) && $data->bike_model == $model->id) ? 'selected="selected"' : '' }}
+                                                {{ isset($data->bike_model) && $data->bike_model == $model->id ? 'selected="selected"' : '' }}
                                                 value="{{ $model->id }}">{{ $model->model_name }}</option>
                                         @endforeach
                                     @endif
@@ -336,7 +336,7 @@
                                 <label>Discount Amount</label>
                                 <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
                                     name="discount_price"
-                                    value="{{ isset($data->discount_amount) ? $data->discount_amount : 0.0 }}"
+                                    value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
                                     {{ $isSoldOut }} />
                             </div>
                             <div class="form-group col-md-2">

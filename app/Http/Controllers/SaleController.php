@@ -143,7 +143,6 @@ class SaleController extends Controller
             'states'                => self::_getStates(),
             'brands'                => self::_getBrands(),
             'bank_financers'        => self::_getFinaceirs(),
-            'purchases'             => self::_getInStockPurchases(),
             'bike_types'            => bike_types(),
             'bike_fuel_types'       => bike_fuel_types(),
             'break_types'           => break_types(),
@@ -154,12 +153,20 @@ class SaleController extends Controller
             'action' => route('sales.store')
         );
 
+        // return $data['purchases'];
+
         if (!empty(request('q'))) {
             $quotation = Quotation::select('*')->find(request('q'));
             if ($quotation) {
+
+                $data['purchases'] = self::_getInStockPurchases($quotation['branch_id']);
+
+
                 $data['data'] = $quotation;
                 $data['data']['bike_branch'] = $quotation->branch_id;
                 $data['data']['quotation_id'] = $quotation->id;
+            } else {
+                $data['purchases'] = self::_getInStockPurchases();
             }
             $data['models']    = self::_getModels($quotation->bike_brand);
             $data['colors']    = self::_getColors($quotation->bike_model);
@@ -291,7 +298,7 @@ class SaleController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
             ]);
         }
         $data = array(
@@ -333,7 +340,7 @@ class SaleController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
