@@ -268,7 +268,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Tyre Brand</label>
-                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control" >
+                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control" {{ $isDisabled }}>
                                     @if (isset($tyre_brands))
                                         <option value="">---Select Tyre Brand---</option>
                                         @foreach ($tyre_brands as $key => $tyre_brand)
@@ -297,12 +297,12 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Battery Brand</label>
-                                <select name="battery_brand_id" id="battery_brand_id" class="form-control" >
+                                <select name="battery_brand_id" id="battery_brand_id" class="form-control" {{ $isDisabled }}>
                                     @if (isset($battery_brands))
                                         <option value="">---Select Battery Brand---</option>
                                         @foreach ($battery_brands as $key => $battery_brand)
                                             <option
-                                                {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->_id ? 'selected' : '' }}
+                                                {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->id ? 'selected' : '' }}
                                                 value="{{ $battery_brand->id }}" >
                                                 {{ $battery_brand->name }}</option>
                                         @endforeach
