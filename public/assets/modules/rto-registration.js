@@ -22,20 +22,48 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "branchName",
+                    name: "branchName",
+                },
+                {
+                    data: "agentName",
+                    name: "agentName",
+                },
+                {
                     data: "contact_name",
                     name: "contact_name",
                 },
                 {
-                    data: "contact_city",
-                    name: "contact_city",
+                    data: "total_amount",
+                    name: "total_amount",
                 },
                 {
-                    data: "contact_mobile_number",
-                    name: "contact_mobile_number",
+                    data: "payment_amount",
+                    name: "payment_amount",
                 },
                 {
-                    data: "active_status",
-                    name: "active_status",
+                    data: "payment_date",
+                    name: "payment_date",
+                },
+                {
+                    data: "rc_number",
+                    name: "rc_number",
+                },
+                {
+                    data: "rc_status",
+                    name: "rc_status",
+                },
+                {
+                    data: "bike_number",
+                    name: "bike_number",
+                },
+                {
+                    data: "submit_date",
+                    name: "submit_date",
+                },
+                {
+                    data: "recieved_date",
+                    name: "recieved_date",
                 },
                 {
                     data: "action",

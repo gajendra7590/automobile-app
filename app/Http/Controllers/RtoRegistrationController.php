@@ -30,15 +30,25 @@ class RtoRegistrationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = RtoRegistration::select('*');
+            $data = RtoRegistration::with([
+                'agent' => function ($agent) {
+                    $agent->select('id', 'agent_name');
+                },
+                'sale' => function ($sale) {
+                    $sale->select('id', 'sale_uuid', 'bike_branch')->with([
+                        'branch' => function ($branch) {
+                            $branch->select('id', 'branch_name');
+                        }
+                    ]);
+                }
+            ]);
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('active_status', function ($row) {
-                    if ($row->active_status == '1') {
-                        return '<span class="label label-success">Active</span>';
-                    } else {
-                        return '<span class="label label-warning">In Active</span>';
-                    }
+                ->addColumn('agentName', function ($row) {
+                    return isset($row->agent->agent_name) ? $row->agent->agent_name : '---';
+                })
+                ->addColumn('branchName', function ($row) {
+                    return isset($row->sale->branch->branch_name) ? $row->sale->branch->branch_name : '---';
                 })
                 ->addColumn('contact_city', function ($row) {
                     return $row->contact_city ? $row->contact_city->city_name : '---';
@@ -47,7 +57,7 @@ class RtoRegistrationController extends Controller
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['contact_city', 'action', 'active_status'])
+                ->rawColumns(['agentName', 'branchName', 'action'])
                 ->make(true);
         } else {
             $formDetails = [

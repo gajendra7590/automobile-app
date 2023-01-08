@@ -141,10 +141,17 @@
     <input type='text' class="form-control" placeholder="Outstanding" name="outstanding"
         value="{{ isset($data['outstanding']) ? $data['outstanding'] : '' }}" />
 </div>
+<div class="form-group col-md-12">
+    <label>RTO Registration Remark(If Any)</label>
+    <input type='textarea' class="form-control" placeholder="Remark" name="remark"
+        value="{{ isset($data['remark']) ? $data['remark'] : '' }}"
+        {{ isset($data['remark']) && !empty($data['remark']) ? 'disabled' : '' }} />
+</div>
 <div class="form-group col-md-4">
     <label>RC Number</label>
     <input type='text' class="form-control" placeholder="RC Number" name="rc_number"
-        value="{{ isset($data['rc_number']) ? $data['rc_number'] : '' }}" />
+        value="{{ isset($data['rc_number']) ? $data['rc_number'] : '' }}"
+        {{ isset($data['rc_number']) && !empty($data['rc_number']) ? 'disabled' : '' }} />
 </div>
 <div class="form-group col-md-4">
     <label>RC Status</label>
@@ -159,25 +166,38 @@
 <div class="form-group col-md-4">
     <label>Submit Date</label>
     <input type='date' class="form-control" placeholder="yyyy-mm-dd" name="submit_date"
-        value="{{ isset($data['submit_date']) ? $data['submit_date'] : '' }}" />
+        value="{{ isset($data['submit_date']) ? $data['submit_date'] : '' }}"
+        {{ isset($data['submit_date']) && !empty($data['submit_date']) ? 'disabled' : '' }} />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
     <label>Bike Number</label>
     <input type='text' class="form-control" placeholder="Bike Number" name="bike_number"
-        value="{{ isset($data['bike_number']) ? $data['bike_number'] : '' }}" />
+        value="{{ isset($data['bike_number']) ? $data['bike_number'] : '' }}"
+        {{ isset($data['bike_number']) && !empty($data['bike_number']) ? 'disabled' : '' }} />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
     <label>Recieved Date</label>
     <input type='date' class="form-control" placeholder="yyyy-mm-dd" name="recieved_date"
-        value="{{ isset($data['recieved_date']) ? $data['recieved_date'] : '' }}" />
+        value="{{ isset($data['recieved_date']) ? $data['recieved_date'] : '' }}"
+        {{ isset($data['recieved_date']) && !empty($data['recieved_date']) ? 'disabled' : '' }} />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
+    <label>Customer Given Name(Whom Given)</label>
+    <input type='text' class="form-control" name="customer_given_name"
+        value="{{ isset($data['customer_given_name']) ? $data['customer_given_name'] : '' }}"
+        {{ isset($data['customer_given_name']) && !empty($data['customer_given_name']) ? 'disabled' : '' }}
+        placeholder="Customer Given Name" />
+</div>
+<div class="form-group col-md-6">
     <label>Customer Given Date</label>
     <input type='date' class="form-control" placeholder="yyyy-mm-dd" name="customer_given_date"
-        value="{{ isset($data['customer_given_date']) ? $data['customer_given_date'] : '' }}" />
+        value="{{ isset($data['customer_given_date']) ? $data['customer_given_date'] : '' }}"
+        {{ isset($data['customer_given_date']) && !empty($data['customer_given_date']) ? 'disabled' : '' }} />
 </div>
 <div class="form-group col-md-12">
-    <label>Remark</label>
-    <input type='textarea' class="form-control" placeholder="Remark" name="remark"
-        value="{{ isset($data['remark']) ? $data['remark'] : '' }}" />
+    <label>Customer Given Note(If Any):</label>
+    <input type='text' class="form-control" name="customer_given_note"
+        value="{{ isset($data['customer_given_note']) ? $data['customer_given_note'] : '' }}"
+        {{ isset($data['customer_given_note']) && !empty($data['customer_given_note']) ? 'disabled' : '' }}
+        placeholder="Customer Given Note" />
 </div>

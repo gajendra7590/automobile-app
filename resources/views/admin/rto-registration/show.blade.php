@@ -10,13 +10,11 @@
       </tr>
       <tr>
           <th>CONTACT NAME</th>
-          <td colspan="2">{{ isset($data['contact_name']) ? $data['contact_name'] : '--' }}</td>
-          <th colspan="2">CONTACT MOBILE NUMBER</th>
+          <td>{{ isset($data['contact_name']) ? $data['contact_name'] : '--' }}</td>
+          <th>CONTACT MOBILE NUMBER</th>
           <td>{{ isset($data['contact_mobile_number']) ? $data['contact_mobile_number'] : '--' }}</td>
-      </tr>
-      <tr>
           <th>CONTACT ADDRESS LINE</th>
-          <td colspan="5">{{ isset($data['contact_address_line']) ? $data['contact_address_line'] : '--' }}</td>
+          <td>{{ isset($data['contact_address_line']) ? $data['contact_address_line'] : '--' }}</td>
       </tr>
       <tr>
           <th>STATE NAME</th>
@@ -28,88 +26,76 @@
           <td>{{ isset($data['city']['city_name']) ? $data['city']['city_name'] : '--' }}</td>
       </tr>
       <tr>
-          <th>INSTALLMENT AMOUNT</th>
-          <td>
-              <span class="badge bg-blue" style="padding:6px !important;">
-                  {{ isset($data['emi_due_amount']) ? priceFormate($data['emi_due_amount']) : '0.00' }}
-              </span>
+          <th>ZIP CODE</th>
+          <td> {{ isset($data['contact_zipcode']) ? $data['contact_zipcode'] : '--' }}</td>
+          <th>SKU</th>
+          <td> {{ isset($data['sku']) ? $data['sku'] : '--' }}</td>
+          <th>FINANCER NAME</th>
+          <td>{{ isset($data['financer_name']) ? $data['financer_name'] : '--' }}</td>
+      </tr>
+      <tr>
+          <th>EX SHOWROOM PRICE</th>
+          <td> {{ isset($data['ex_showroom_amount']) ? priceFormate($data['ex_showroom_amount']) : '--' }}
           </td>
-          <th>INSTALLMENT DUE DATE</th>
-          <td>{{ isset($data['emi_due_date']) & !empty($data['emi_due_date']) ? myDateFormate($data['emi_due_date']) : '--' }}
+          <th>TAX AMOUNT</th>
+          <td> {{ isset($data['tax_amount']) ? priceFormate($data['tax_amount']) : '--' }}</td>
+          <th>HYP AMOUNT</th>
+          <td>{{ isset($data['hyp_amount']) ? priceFormate($data['hyp_amount']) : '--' }}</td>
+      </tr>
+      <tr>
+          <th>TR AMOUNT</th>
+          <td> {{ isset($data['tr_amount']) ? priceFormate($data['tr_amount']) : '--' }}
+          </td>
+          <th>FEES</th>
+          <td> {{ isset($data['fees']) ? priceFormate($data['fees']) : '--' }}</td>
+          <th>GRAND TOTAL</th>
+          <td>{{ isset($data['total_amount']) ? priceFormate($data['total_amount']) : '--' }}</td>
+      </tr>
+
+      <tr>
+          <th>PAYMENT AMOUNT</th>
+          <td> {{ isset($data['rc_number']) ? priceFormate($data['payment_amount']) : '--' }}
+          </td>
+          <th>PAYMENT DATE</th>
+          <td> {{ isset($data['payment_date']) ? myDateFormate($data['payment_date']) : '--' }}</td>
+          <th>OUTSTANDING</th>
+          <td>{{ isset($data['outstanding']) ? $data['outstanding'] : '--' }}</td>
+      </tr>
+
+      <tr>
+          <th>REMARK</th>
+          <td colspan="5">
+              {{ isset($data['remark']) ? $data['remark'] : '--' }}
           </td>
       </tr>
 
-      @if (isset($data['account']['due_payment_source']) && $data['account']['due_payment_source'] == '3')
-          <tr>
-              <th>INSTALLMENT PRINCIPAL AMOUNT</th>
-              <td> {{ priceFormate($data['emi_due_principal']) }} </td>
-              <th>INTREST AMOUNT</th>
-              <td> {{ priceFormate($data['emi_due_intrest']) }} </td>
-          </tr>
-      @endif
       <tr>
-          <th>OTHER ADJUSTMENTS</th>
-          <td>
-              @if (isset($data['emi_other_adjustment']) && $data['emi_other_adjustment'] > 0)
-                  <span class="badge bg-red" style="padding:6px !important;">
-                      {{ isset($data['emi_other_adjustment']) ? priceFormate(-$data['emi_other_adjustment']) : '0.00' }}
-                  </span>
-              @else
-                  <span class="badge bg-green" style="padding:6px !important;">
-                      {{ isset($data['emi_other_adjustment']) ? '+' . priceFormate(-$data['emi_other_adjustment']) : '0.00' }}
-                  </span>
-              @endif
+          <th>RC NUMBER</th>
+          <td> {{ isset($data['rc_number']) ? $data['rc_number'] : '--' }}
           </td>
-          <th>ADJUSTMENT DATE</th>
-          <td>
-              {{ isset($data['emi_other_adjustment_date']) ? myDateFormate($data['emi_other_adjustment_date']) : '--' }}
+          <th>RC STATUS</th>
+          <td> {{ isset($data['rc_status']) ? $data['rc_status'] : '--' }}</td>
+          <th>SUBMIT DATE</th>
+          <td>{{ isset($data['submit_date']) ? myDateFormate($data['submit_date']) : '--' }}</td>
+      </tr>
+
+      <tr>
+          <th colspan="2">BIKE NUMBER</th>
+          <td> {{ isset($data['bike_number']) ? $data['bike_number'] : '--' }}
           </td>
+          <th colspan="2">RECIEVED DATE</th>
+          <td>{{ isset($data['recieved_date']) ? myDateFormate($data['recieved_date']) : '--' }}</td>
       </tr>
       <tr>
-          <th>ADJUSTMENT NOTES</th>
-          <td>
-              {{ isset($data['emi_other_adjustment_note']) ? $data['emi_other_adjustment_note'] : '--' }}
+          <th colspan="2">CUSTOMER GIVEN NAME</th>
+          <td>{{ isset($data['customer_given_name']) ? $data['customer_given_name'] : '--' }}</td>
           </td>
-          <th>FINAL PAYABLE AMOUNT</th>
+          <th colspan="2">CUSTOMER GIVEN DATE</th>
           <td>
-              <span class="badge bg-red" style="padding:6px !important;">
-                  {{ isset($data['emi_due_revised_amount']) ? priceFormate($data['emi_due_revised_amount']) : '0.00' }}
-              </span>
-          </td>
+              {{ isset($data['customer_given_date']) ? myDateFormate($data['customer_given_date']) : '--' }}</td>
       </tr>
       <tr>
-          <th>PAID AMOUNT</th>
-          <td>
-              <span class="badge bg-green" style="padding:6px !important;">
-                  {{ isset($data['amount_paid']) && !empty($data['amount_paid']) ? priceFormate($data['amount_paid']) : '0.00' }}
-              </span>
-          </td>
-          <th>PAID DATE</th>
-          <td>{{ isset($data['amount_paid_date']) && !empty($data['amount_paid_date']) ? myDateFormate($data['amount_paid_date']) : '--' }}
-          </td>
-      </tr>
-      <tr>
-          <th>PAID SOURCE</th>
-          <td>{{ isset($data['amount_paid_source']) ? $data['amount_paid_source'] : '--' }}</td>
-          <th>PAID NOTE</th>
-          <td>{{ isset($data['amount_paid_note']) ? $data['amount_paid_note'] : '--' }}</td>
-      </tr>
-      <tr>
-          <th>STATUS</th>
-          <td>
-              @isset($data['status'])
-                  @if ($data['status'] == '0')
-                      <span class="badge bg-red">Open</span>
-                  @else
-                      <span class="badge bg-green">Close</span>
-                  @endif
-              @endisset
-          </td>
-          <th>PAID DUE AMOUNT(+/-)</th>
-          <td>{{ isset($data['pay_due']) ? priceFormate($data['pay_due']) : '0.00' }}</td>
-      </tr>
-      <tr>
-          <td colspan="4">Note : If you will pay more then installment amount it will adjust in next
-              installment.</td>
+          <th colspan="2">CUSTOMER GIVEN NOTE</th>
+          <td colspan="4">{{ isset($data['customer_given_note']) ? $data['customer_given_note'] : '--' }}</td>
       </tr>
   </table>

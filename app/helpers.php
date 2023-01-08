@@ -274,7 +274,7 @@ if (!function_exists('custFullName')) {
     }
 }
 
-if (!function_exists('priceFormateWithSymbol')) {
+if (!function_exists('priceFormate')) {
     function priceFormate($price = 0, $only_symbol = false)
     {
         return ($only_symbol == true) ? "₹" : "₹" . number_format($price, 2);

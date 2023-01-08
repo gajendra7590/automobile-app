@@ -36,11 +36,18 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Contact Name</th>
-                                        <th>Contact City</th>
-                                        <th>Contact Mobile Number</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th>BRANCH NAME</th>
+                                        <th>AGENT NAME</th>
+                                        <th>CONTACT NAME</th>
+                                        <th>TOTAL AMOUNT</th>
+                                        <th>PAYMENT AMOUNT</th>
+                                        <th>PAYMENT DATE</th>
+                                        <th>RC NUMBER</th>
+                                        <th>RC STATUS</th>
+                                        <th>BIKE NUMBER</th>
+                                        <th>SUBMIT DATE</th>
+                                        <th>RECIEVED DATE</th>
+                                        <th width="8%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
