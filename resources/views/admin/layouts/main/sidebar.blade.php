@@ -116,8 +116,8 @@
                 <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES</span></a>
             </li>
 
-            <li class="{{ Request::is('sales-accounts*') ? 'active' : '' }}">
-                <a href="{{ route('sales-accounts.index') }}"><i class="fa fa-university"></i>
+            <li class="{{ Request::is('saleAccounts*') ? 'active' : '' }}">
+                <a href="{{ route('saleAccounts.index') }}"><i class="fa fa-university"></i>
                     <span>ACCOUNTS</span>
                 </a>
             </li>

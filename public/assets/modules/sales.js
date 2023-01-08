@@ -1,50 +1,60 @@
 $(document).ready(function () {
-
-    $('#purchase').change(function() {
+    $("#purchase").change(function () {
         $this = $(this);
         let id = $(this).val();
-        let URL = $this.data('getpurchases') + '/'+ id;
-        CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-            let bike_model = res.data.bike_model
-            let bike_color = res.data.bike_model_color
-            $("[name=bike_brand]").val(res.data.bike_brand)
-            URL = $this.data('getmodels') + '/' + res.data.bike_brand;
-            CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                $('select[name="bike_model"]').html(res.data)
-                $("[name=bike_model]").val(bike_model)
-                URL = $this.data('getcolors') + "/" + bike_model;
-                CRUD.AJAXDATA(URL, 'GET').then(function(res) {
-                    $('select[name="bike_color"]').html(res.data)
-                    $("[name=bike_color]").val(bike_color)
+        if (id > 0) {
+            $("#sale_show_more").removeClass("hideElement");
+        } else {
+            $("#sale_show_more").addClass("hideElement");
+        }
+        let URL = $this.data("getpurchases") + "/" + id;
+        CRUD.AJAXDATA(URL, "GET").then(function (res) {
+            let bike_model = res.data.bike_model;
+            let bike_color = res.data.bike_model_color;
+            $("[name=bike_brand]").val(res.data.bike_brand);
+            URL = $this.data("getmodels") + "/" + res.data.bike_brand;
+            CRUD.AJAXDATA(URL, "GET").then(function (res) {
+                $('select[name="bike_model"]').html(res.data);
+                $("[name=bike_model]").val(bike_model);
+                URL = $this.data("getcolors") + "/" + bike_model;
+                CRUD.AJAXDATA(URL, "GET").then(function (res) {
+                    $('select[name="bike_color"]').html(res.data);
+                    $("[name=bike_color]").val(bike_color);
                 });
             });
-            $("[name=bike_branch]").val(res.data.bike_branch)
-            $("[name=bike_dealer]").val(res.data.bike_dealer)
-            $("[name=bike_type]").val(res.data.bike_type)
-            $("[name=bike_fuel_type]").val(res.data.bike_fuel_type)
-            $("[name=break_type]").val(res.data.break_type)
-            $("[name=wheel_type]").val(res.data.wheel_type)
-            $("[name=dc_number]").val(res.data.dc_number)
-            $("[name=dc_date]").val(res.data.dc_date)
-            $("[name=vin_number]").val(res.data.vin_number)
-            $("[name=vin_physical_status]").val(res.data.vin_physical_status)
-            $("[name=sku]").val(res.data.sku)
-            $("[name=sku_description]").val(res.data.sku_description)
-            $("[name=hsn_number]").val(res.data.hsn_number)
-            $("[name=engine_number]").val(res.data.engine_number)
-            $("[name=key_number]").val(res.data.key_number)
-            $("[name=service_book_number]").val(res.data.service_book_number)
-            $("[name=tyre_brand_name]").val(res.data.tyre_brand_name)
-            $("[name=tyre_front_number]").val(res.data.tyre_front_number)
-            $("[name=tyre_rear_number]").val(res.data.tyre_rear_number)
-            $("[name=tyre_brand_id]").val(res.data.tyre_brand_id)
-            $("[name=battery_brand_id]").val(res.data.battery_brand_id)
-            $("[name=battery_brand]").val(res.data.battery_brand)
-            $("[name=battery_number]").val(res.data.battery_number)
-            $("[name=purchase_invoice_amount]").val(res.data.purchase_invoice_amount)
-            $("[name=purchase_invoice_number]").val(res.data.purchase_invoice_number)
-            $("[name=purchase_invoice_date]").val(res.data.purchase_invoice_date)
-            $("[name=bike_description]").val(res.data.bike_description)
+            $("[name=bike_branch]").val(res.data.bike_branch);
+            $("[name=bike_dealer]").val(res.data.bike_dealer);
+            $("[name=bike_type]").val(res.data.bike_type);
+            $("[name=bike_fuel_type]").val(res.data.bike_fuel_type);
+            $("[name=break_type]").val(res.data.break_type);
+            $("[name=wheel_type]").val(res.data.wheel_type);
+            $("[name=dc_number]").val(res.data.dc_number);
+            $("[name=dc_date]").val(res.data.dc_date);
+            $("[name=vin_number]").val(res.data.vin_number);
+            $("[name=vin_physical_status]").val(res.data.vin_physical_status);
+            $("[name=sku]").val(res.data.sku);
+            $("[name=sku_description]").val(res.data.sku_description);
+            $("[name=hsn_number]").val(res.data.hsn_number);
+            $("[name=engine_number]").val(res.data.engine_number);
+            $("[name=key_number]").val(res.data.key_number);
+            $("[name=service_book_number]").val(res.data.service_book_number);
+            $("[name=tyre_brand_name]").val(res.data.tyre_brand_name);
+            $("[name=tyre_front_number]").val(res.data.tyre_front_number);
+            $("[name=tyre_rear_number]").val(res.data.tyre_rear_number);
+            $("[name=tyre_brand_id]").val(res.data.tyre_brand_id);
+            $("[name=battery_brand_id]").val(res.data.battery_brand_id);
+            $("[name=battery_brand]").val(res.data.battery_brand);
+            $("[name=battery_number]").val(res.data.battery_number);
+            $("[name=purchase_invoice_amount]").val(
+                res.data.purchase_invoice_amount
+            );
+            $("[name=purchase_invoice_number]").val(
+                res.data.purchase_invoice_number
+            );
+            $("[name=purchase_invoice_date]").val(
+                res.data.purchase_invoice_date
+            );
+            $("[name=bike_description]").val(res.data.bike_description);
         });
     });
 

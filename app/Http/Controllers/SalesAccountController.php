@@ -103,7 +103,7 @@ class SalesAccountController extends Controller
             'duePaySources'   => duePaySources(),
             'emiTerms'        => emiTerms(),
             'salesList'       => $salesList,
-            'action'          => route('sales-accounts.store')
+            'action'          => route('saleAccounts.store')
         );
         return response()->json([
             'status'     => true,
@@ -413,7 +413,7 @@ class SalesAccountController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('sales-accounts.edit', ['sales_account' => $row->id]) . '" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('saleAccounts.edit', ['saleAccount' => $row->id]) . '" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

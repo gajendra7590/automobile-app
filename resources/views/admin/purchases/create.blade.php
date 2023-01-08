@@ -245,133 +245,126 @@
                                     placeholder="Service Book Number" name="service_book_number"
                                     value="{{ isset($data->service_book_number) ? $data->service_book_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-12">
-                                <div class="form-group col-md-3">
-                                    <label>Battery Brand</label>
-                                    <select name="battery_brand_id" id="battery_brand_id" class="form-control"
-                                        {{ $isSoldOut }} >
-                                        @if (isset($battery_brands))
-                                            <option value="">---Select Battery Brand---</option>
-                                            @foreach ($battery_brands as $key => $battery_brand)
-                                                <option
-                                                    {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->id ? 'selected' : '' }}
-                                                    value="{{ $battery_brand->id }}">
-                                                    {{ $battery_brand->name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Battery Number</label>
-                                    <input type="text" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Battery Number" name="battery_number"
-                                        value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Tyre Brand</label>
-                                    <select name="tyre_brand_id" id="tyre_brand_id" class="form-control"
-                                        {{ $isSoldOut }} >
-                                        @if (isset($tyre_brands))
-                                            <option value="">---Select Tyre Brand---</option>
-                                            @foreach ($tyre_brands as $key => $tyre_brand)
-                                                <option
-                                                    {{ isset($data->tyre_brand_id) && $data->tyre_brand_id == $tyre_brand->id ? 'selected' : '' }}
-                                                    value="{{ $tyre_brand->id }}">
-                                                    {{ $tyre_brand->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label>Tyre Front Number</label>
-                                    <input type="text" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Tyre Front Number" name="tyre_front_number"
-                                        value="{{ isset($data->tyre_front_number) ? $data->tyre_front_number : '' }}" />
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Tyre Rear Number</label>
-                                    <input type="text" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Tyre Rear Number" name="tyre_rear_number"
-                                        value="{{ isset($data->tyre_rear_number) ? $data->tyre_rear_number : '' }}" />
-                                </div>
 
-
-                                <div class="form-group col-md-4">
-                                    <label>Purchase Invoice Amount(₹)</label>
-                                    <input type="text" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Purchase Invoice Amount(₹)" name="purchase_invoice_amount"
-                                        value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}" />
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Purchase Invoice Number</label>
-                                    <input type="text" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Purchase Invoice Number" name="purchase_invoice_number"
-                                        value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}" />
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label>Purchase Invoice Date</label>
-                                    <input type="date" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Purchase Invoice Date" name="purchase_invoice_date"
-                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}" />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>GST Rate</label>
-                                    <select name="gst_rate" id="gst_rate" class="form-control" {{ $isSoldOut }}>
-                                        @if (isset($gst_rates))
-                                            @foreach ($gst_rates as $key => $gst_rate)
-                                                <option
-                                                    {{ isset($data->gst_rate) && $data->gst_rate == $gst_rate->gst_rate ? 'selected' : '' }}
-                                                    value="{{ $gst_rate->id }}" data-rate="{{ $gst_rate->gst_rate }}">
-                                                    {{ $gst_rate->gst_rate }}%</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <input type="hidden" name="gst_rate_percent" id="gst_rate_percent"
-                                        value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}">
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <label>Actual Price(Pred GST)</label>
-                                    <input type="number" class="form-control totalAmountCal totalAmountCal2"
-                                        placeholder="Pre GST Amount" name="pre_gst_amount" id="pre_gst_amount"
-                                        value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0.0 }}"
-                                        {{ $isSoldOut }} />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>GST Amount</label>
-                                    <input type="number" class="form-control totalAmountCal totalAmountCal2"
-                                        placeholder="GST Amount" name="gst_amount" readonly
-                                        value="{{ isset($data->gst_amount) ? $data->gst_amount : 0.0 }}" />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Ex Showroom Price(+GST)</label>
-                                    <input type="number" class="form-control " readonly placeholder="Ex Showroom Price"
-                                        name="ex_showroom_price"
-                                        value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0.0 }}" />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Discount Amount</label>
-                                    <input type="number" class="form-control totalAmountCal"
-                                        placeholder="Discount Amount" name="discount_price"
-                                        value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
-                                        {{ $isSoldOut }} />
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label>Grand Total</label>
-                                    <input type="number" class="form-control" {{ $isSoldOut }}
-                                        placeholder="Grand Total" name="grand_total" readonly
-                                        value="{{ isset($data->grand_total) ? $data->grand_total : 0.0 }}" />
-                                </div>
-
-
-                                <div class="form-group col-md-12">
-                                    <label>Vehicle Description</label>
-                                    <textarea name="bike_description" rows="5" class="form-control" {{ $isSoldOut }}>{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
-                                </div>
-
-                                <input type="hidden" value="1" name="active_status">
+                            <div class="form-group col-md-3">
+                                <label>Battery Brand</label>
+                                <select name="battery_brand_id" id="battery_brand_id" class="form-control"
+                                    {{ $isSoldOut }}>
+                                    @if (isset($battery_brands))
+                                        <option value="">---Select Battery Brand---</option>
+                                        @foreach ($battery_brands as $key => $battery_brand)
+                                            <option
+                                                {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->id ? 'selected' : '' }}
+                                                value="{{ $battery_brand->id }}">
+                                                {{ $battery_brand->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
+                            <div class="form-group col-md-3">
+                                <label>Battery Number</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Battery Number" name="battery_number"
+                                    value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Tyre Brand</label>
+                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control"
+                                    {{ $isSoldOut }}>
+                                    @if (isset($tyre_brands))
+                                        <option value="">---Select Tyre Brand---</option>
+                                        @foreach ($tyre_brands as $key => $tyre_brand)
+                                            <option
+                                                {{ isset($data->tyre_brand_id) && $data->tyre_brand_id == $tyre_brand->id ? 'selected' : '' }}
+                                                value="{{ $tyre_brand->id }}">
+                                                {{ $tyre_brand->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>Tyre Front Number</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Tyre Front Number" name="tyre_front_number"
+                                    value="{{ isset($data->tyre_front_number) ? $data->tyre_front_number : '' }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Tyre Rear Number</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Tyre Rear Number" name="tyre_rear_number"
+                                    value="{{ isset($data->tyre_rear_number) ? $data->tyre_rear_number : '' }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Purchase Invoice Amount(₹)</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Purchase Invoice Amount(₹)" name="purchase_invoice_amount"
+                                    value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Purchase Invoice Number</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Purchase Invoice Number" name="purchase_invoice_number"
+                                    value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}" />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Purchase Invoice Date</label>
+                                <input type="date" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Purchase Invoice Date" name="purchase_invoice_date"
+                                    value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>GST Rate</label>
+                                <select name="gst_rate" id="gst_rate" class="form-control" {{ $isSoldOut }}>
+                                    @if (isset($gst_rates))
+                                        @foreach ($gst_rates as $key => $gst_rate)
+                                            <option
+                                                {{ isset($data->gst_rate) && $data->gst_rate == $gst_rate->gst_rate ? 'selected' : '' }}
+                                                value="{{ $gst_rate->id }}" data-rate="{{ $gst_rate->gst_rate }}">
+                                                {{ $gst_rate->gst_rate }}%</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <input type="hidden" name="gst_rate_percent" id="gst_rate_percent"
+                                    value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Actual Price(Pred GST)</label>
+                                <input type="number" class="form-control totalAmountCal totalAmountCal2"
+                                    placeholder="Pre GST Amount" name="pre_gst_amount" id="pre_gst_amount"
+                                    value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0.0 }}"
+                                    {{ $isSoldOut }} />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>GST Amount</label>
+                                <input type="number" class="form-control totalAmountCal totalAmountCal2"
+                                    placeholder="GST Amount" name="gst_amount" readonly
+                                    value="{{ isset($data->gst_amount) ? $data->gst_amount : 0.0 }}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Ex Showroom Price(+GST)</label>
+                                <input type="number" class="form-control " readonly placeholder="Ex Showroom Price"
+                                    name="ex_showroom_price"
+                                    value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0.0 }}" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Discount Amount</label>
+                                <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
+                                    name="discount_price"
+                                    value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
+                                    {{ $isSoldOut }} />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label>Grand Total</label>
+                                <input type="number" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Grand Total" name="grand_total" readonly
+                                    value="{{ isset($data->grand_total) ? $data->grand_total : 0.0 }}" />
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Vehicle Description</label>
+                                <textarea name="bike_description" rows="5" class="form-control" {{ $isSoldOut }}>{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
+                            </div>
+                            <input type="hidden" value="1" name="active_status">
                         </div>
                     </div>
 

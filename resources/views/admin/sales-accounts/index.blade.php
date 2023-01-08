@@ -24,7 +24,7 @@
                                 <h3 class="box-title">Sales Accounts List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('sales-accounts.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('saleAccounts.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
                                     data-modal_title="Create New Sales Account" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Account
                                 </a>
@@ -32,7 +32,7 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('sales-accounts.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('saleAccounts.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>

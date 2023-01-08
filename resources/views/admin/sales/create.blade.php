@@ -6,6 +6,7 @@
         $isEdit = isset($method) && $method == 'PUT' ? true : false;
         $editDisabled = $isEdit == true ? 'readonly' : '';
         $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'readonly' : '';
+        $isDisabledSel = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '';
     @endphp
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -31,7 +32,13 @@
                 <div class="box box-default">
                     <div>
                         <div class="box-header with-border">
-                            <h3 class="box-title">Sale Detail</h3>
+                            <h3 class="box-title">
+                                @if (isset($method) && $method == 'PUT')
+                                    Update Sale
+                                @else
+                                    Create Sale
+                                @endif
+                            </h3>
 
                             <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                                 {{ $isDisabled }}>
@@ -44,16 +51,16 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : null }}" name="quotation_id">
+                        <input type="hidden" value="{{ isset($data['quotation_id']) ? $data['quotation_id'] : null }}"
+                            name="quotation_id">
                         {{-- Purchase --}}
                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <label>In Stock Bikes(Purchases)</label>
-                                <select id="purchase" name="purchase_id" class="form-control" {{ $editDisabled }}
-                                data-getpurchases="{{ url('getPurchaseDetails') }}"
-                                data-getmodels="{{ url('getModelsList') }}"
-                                data-getcolors="{{ url('getColorsList') }}"
-                                >
+                            <div class="form-group col-md-12">
+                                <label>Select Bike To Sale(Select From Avaliable Stock)</label>
+                                <select id="purchase" name="purchase_id" class="form-control"
+                                    data-getpurchases="{{ url('getPurchaseDetails') }}"
+                                    data-getmodels="{{ url('getModelsList') }}" data-getcolors="{{ url('getColorsList') }}"
+                                    {{ $isDisabledSel }}>
                                     <option value="">---Select Purachse---</option>
                                     @if (isset($purchases))
                                         @foreach ($purchases as $key => $purchase)
@@ -85,25 +92,15 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label>Bike Dealer</label>
-                                <select name="bike_dealer" class="form-control" {{ $editDisabled }}>
-                                    <option value="">---Select Dealer---</option>
-                                    @if (isset($dealers))
-                                        @foreach ($dealers as $key => $dealer)
-                                            <option
-                                                {{ isset($data['bike_dealer']) && $data['bike_dealer'] == $dealer->id ? 'selected="selected"' : '' }}
-                                                value="{{ $dealer->id }}">{{ $dealer->company_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                        </div>
+                        <div class="row {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? '' : 'hideElement' }}"
+                            id="sale_show_more">
                             <div class="form-group col-md-3">
                                 <label>Branch</label>
                                 <select name="bike_branch" data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
                                     data-dep_dd3_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=brands' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $editDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabledSel }}>
                                     <option value="">---Select Branch---</option>
                                     @if (isset($branches))
                                         @foreach ($branches as $key => $branch)
@@ -118,7 +115,7 @@
                                 <label>Brand Name</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $isDisabledSel }}>
                                     <option value="">---Select Brand---</option>
                                     @if (isset($brands))
                                         @foreach ($brands as $key => $brand)
@@ -133,7 +130,7 @@
                                 <label>Model Name</label>
                                 <select name="bike_model" data-dep_dd_name="bike_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $editDisabled }}>
+                                    class="form-control ajaxChangeCDropDown" {{ $isDisabled }} {{ $isDisabledSel }}>
                                     <option value="">---Select Model---</option>
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
@@ -147,7 +144,7 @@
 
                             <div class="form-group col-md-3">
                                 <label>Model Color</label>
-                                <select name="bike_color" class="form-control" {{ $isDisabled }} {{ $editDisabled }}>
+                                <select name="bike_color" class="form-control" {{ $isDisabled }} {{ $isDisabledSel }}>
                                     <option value="">---Select Model Color---</option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
@@ -173,7 +170,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Fuel Type</label>
-                                <select name="bike_fuel_type" class="form-control" {{ $isDisabled }}>
+                                <select name="bike_fuel_type" class="form-control" {{ $isDisabledSel }}>
                                     <option value="">---Select Fuel Type---</option>
                                     @if (isset($bike_fuel_types))
                                         @foreach ($bike_fuel_types as $key => $name)
@@ -186,7 +183,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Break Type</label>
-                                <select name="break_type" class="form-control" {{ $isDisabled }}>
+                                <select name="break_type" class="form-control" {{ $isDisabledSel }}>
                                     <option value="">---Select Break Type---</option>
                                     @if (isset($break_types))
                                         @foreach ($break_types as $key => $name)
@@ -199,7 +196,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Wheal Type</label>
-                                <select name="wheel_type" class="form-control" {{ $isDisabled }}>
+                                <select name="wheel_type" class="form-control" {{ $isDisabledSel }}>
                                     <option value="">---Select Wheal Type---</option>
                                     @if (isset($wheel_types))
                                         @foreach ($wheel_types as $key => $name)
@@ -215,11 +212,12 @@
                             <div class="form-group col-md-4">
                                 <label>VIN Number(Chasis Number)</label>
                                 <input type="text" class="form-control" placeholder="VIN Number" name="vin_number"
-                                    value="{{ isset($data->vin_number) ? $data->vin_number : '' }}" {{ $isDisabled }} />
+                                    value="{{ isset($data->vin_number) ? $data->vin_number : '' }}"
+                                    {{ $isDisabledSel }} />
                             </div>
                             <div class="form-group col-md-4">
                                 <label>VIN Physical Status</label>
-                                <select name="vin_physical_status" class="form-control" {{ $isDisabled }}>
+                                <select name="vin_physical_status" class="form-control" {{ $isDisabledSel }}>
                                     <option value="">---Select VIN Physical Status---</option>
                                     @if (isset($vin_physical_statuses))
                                         @foreach ($vin_physical_statuses as $key => $name)
@@ -271,7 +269,8 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Tyre Brand</label>
-                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control" {{ $isDisabled }}>
+                                <select name="tyre_brand_id" id="tyre_brand_id" class="form-control"
+                                    {{ $isDisabled }}>
                                     @if (isset($tyre_brands))
                                         <option value="">---Select Tyre Brand---</option>
                                         @foreach ($tyre_brands as $key => $tyre_brand)
@@ -300,13 +299,14 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Battery Brand</label>
-                                <select name="battery_brand_id" id="battery_brand_id" class="form-control" {{ $isDisabled }}>
+                                <select name="battery_brand_id" id="battery_brand_id" class="form-control"
+                                    {{ $isDisabled }}>
                                     @if (isset($battery_brands))
                                         <option value="">---Select Battery Brand---</option>
                                         @foreach ($battery_brands as $key => $battery_brand)
                                             <option
                                                 {{ isset($data->battery_brand_id) && $data->battery_brand_id == $battery_brand->id ? 'selected' : '' }}
-                                                value="{{ $battery_brand->id }}" >
+                                                value="{{ $battery_brand->id }}">
                                                 {{ $battery_brand->name }}</option>
                                         @endforeach
                                     @endif
@@ -326,11 +326,7 @@
                                     {{ isset($data->bike_description) ? $data->bike_description : '' }}
                                 </textarea>
                             </div>
-                        </div>
 
-
-                        {{-- Quotation --}}
-                        <div class="row">
                             <div class="form-group col-md-2">
                                 <label>Prefix</label>
                                 <select name="customer_gender" class="form-control" {{ $isDisabled }}>
@@ -538,8 +534,6 @@
                         </div>
                     </div>
                 </div>
-
-                {{-- submit button --}}
                 <div class="form-group">
                     <div class="box-footer">
                         <a href="{{ route('sales.index') }}" class="btn btn-danger">BACK</a>
@@ -559,5 +553,5 @@
 @endsection
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/sales.js') }}" ></script>
+    <script src="{{ asset('assets/modules/sales.js') }}"></script>
 @endpush

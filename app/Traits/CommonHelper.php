@@ -346,4 +346,40 @@ trait CommonHelper
         }
         return $model->get();
     }
+
+    /**
+     * Get Active Purchases
+     */
+    public static function _getOnePurchases($id = 0, $select_all = false)
+    {
+        //Filter By Status : Un Sold / InStock
+        $model = Purchase::with([
+            'branch' => function ($bb) {
+                $bb->select('id', 'branch_name');
+            },
+            'brand' => function ($bb) {
+                $bb->select('id', 'name');
+            },
+            'model' => function ($bb) {
+                $bb->select('id', 'model_name');
+            },
+            'modelColor' => function ($bb) {
+                $bb->select('id', 'color_name');
+            }
+        ]);
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'dc_number', 'vin_number', 'sku', 'bike_branch', 'bike_brand', 'bike_model', 'bike_model_color');
+        }
+
+        if ($id > 0) {
+            $model = $model->where('id', $id);
+        }
+
+        //Filter by branch
+        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+            $model = $model->where('id', self::getCurrentUserBranch());
+        }
+        return $model->get();
+    }
 }

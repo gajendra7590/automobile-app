@@ -133,7 +133,7 @@ class SaleController extends Controller
         $auth = User::find(auth()->id());
         $data = array(
             'branches'              => self::_getBranches(),
-            'dealers'               => self::_getDealers(),
+            // 'dealers'               => self::_getDealers(),
             'states'                => self::_getStates(),
             'brands'                => self::_getBrands(),
             'bank_financers'        => self::_getFinaceirs(),
@@ -185,7 +185,7 @@ class SaleController extends Controller
             $validator = Validator::make($postData, [
                 'purchase_id' => 'required|exists:purchases,id',
                 'bike_branch' => 'required|exists:branches,id',
-                'bike_dealer' => 'required|exists:bike_dealers,id',
+                // 'bike_dealer' => 'required|exists:bike_dealers,id',
                 'bike_brand' => 'required|exists:bike_brands,id',
                 'bike_model' => 'required|exists:bike_models,id',
                 'bike_color' => 'required|exists:bike_colors,id',
@@ -292,6 +292,7 @@ class SaleController extends Controller
     {
         $auth = User::find(auth()->id());
         $bpModel = Sale::where(['id' => $id])->first();
+        // return $bpModel;
         if (!$bpModel) {
             return response()->json([
                 'status'     => false,
@@ -301,7 +302,7 @@ class SaleController extends Controller
         }
         $data = array(
             'branches'              => self::_getBranches(),
-            'dealers'               => self::_getDealers(),
+            // 'dealers'               => self::_getDealers(),
             'states'                => self::_getStates(),
             'districts'             => self::_getDistricts($bpModel->customer_state),
             'cities'                => self::_getCities($bpModel->customer_district),
@@ -309,7 +310,7 @@ class SaleController extends Controller
             'models'                => self::_getModels($bpModel->bike_brand),
             'colors'                => self::_getColors($bpModel->bike_model),
             'bank_financers'        => self::_getFinaceirs(),
-            'purchases'             => self::_getInStockPurchases(),
+            'purchases'             => self::_getOnePurchases($bpModel->purchase_id),
             'tyre_brands'           => self::_getTyreBrands(!$auth->is_admin),
             'battery_brands'        => self::_getBatteryBrands(!$auth->is_admin),
             'bike_types'            => bike_types(),
@@ -349,7 +350,7 @@ class SaleController extends Controller
                 'purchase_id' => 'required|exists:purchases,id',
                 'quotation_id' => 'nullable|exists:quotations,id',
                 'bike_branch' => 'required|exists:branches,id',
-                'bike_dealer' => 'required|exists:bike_dealers,id',
+                // 'bike_dealer' => 'required|exists:bike_dealers,id',
                 'bike_brand' => 'required|exists:bike_brands,id',
                 'bike_model' => 'required|exists:bike_models,id',
                 'bike_color' => 'required|exists:bike_colors,id',
@@ -444,9 +445,9 @@ class SaleController extends Controller
         // $action .= '<a href="' . route('sales.destroy', ['sale' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Sale"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 
         if (intval($row->sp_account_id) > 0) {
-            $action .= '<a href="' . route('sales-accounts.edit', ['sales_account' => $row->sp_account_id]) . '" class="btn btn-sm btn-success" data-title="View Account"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('saleAccounts.edit', ['saleAccount' => $row->sp_account_id]) . '" class="btn btn-sm btn-success" data-title="View Account"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         } else {
-            $action .= '<a href="' . route('sales-accounts.create') . '?sales_id=' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Open Account" data-modal_title="Create New Sales Account" data-modal_size="modal-lg"><i class="fa fa-plus" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('saleAccounts.create') . '?sales_id=' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Open Account" data-modal_title="Create New Sales Account" data-modal_size="modal-lg"><i class="fa fa-plus" aria-hidden="true"></i></a>';
         }
         $action .= '</div>';
         return $action;

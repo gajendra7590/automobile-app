@@ -71,7 +71,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //quot-print
     // Sales
     Route::resource('sales', 'SaleController');
-    Route::resource('sales-accounts', 'SalesAccountController');
+    Route::resource('saleAccounts', 'SalesAccountController');
     Route::get('sales-detail-modal', 'SalesAccountController@salesDetailModal')->name('salesDetailModal');
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
 
