@@ -42,7 +42,6 @@ class Quotation extends Model
         'accessories_amount',
         'other_charges',
         'total_amount',
-        'active_status',
         'status',
         'created_by',
         'updated_by',

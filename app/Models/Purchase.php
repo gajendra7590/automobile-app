@@ -45,7 +45,6 @@ class Purchase extends Model
         'status',
         'created_by',
         'updated_by',
-        'active_status',
         'pre_gst_amount',
         'gst_amount',
         'ex_showroom_price',
@@ -108,5 +107,15 @@ class Purchase extends Model
     public function color()
     {
         return $this->belongsTo(BikeColor::class, 'bike_model_color');
+    }
+
+    public function tyreBrand()
+    {
+        return $this->belongsTo(tyreBrand::class, 'tyre_brand_id');
+    }
+
+    public function batteryBrand()
+    {
+        return $this->belongsTo(BatteryBrand::class, 'battery_brand_id');
     }
 }

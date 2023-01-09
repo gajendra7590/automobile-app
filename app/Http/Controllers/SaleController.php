@@ -132,43 +132,21 @@ class SaleController extends Controller
     {
         $auth = User::find(auth()->id());
         $data = array(
-            'branches'              => self::_getBranches(),
-            // 'dealers'               => self::_getDealers(),
-            'states'                => self::_getStates(),
-            'brands'                => self::_getBrands(),
-            'bank_financers'        => self::_getFinaceirs(),
-            'tyre_brands'           => self::_getTyreBrands(!$auth->is_admin),
-            'battery_brands'        => self::_getBatteryBrands(!$auth->is_admin),
-            'bike_types'            => bike_types(),
-            'bike_fuel_types'       => bike_fuel_types(),
-            'break_types'           => break_types(),
-            'wheel_types'           => wheel_types(),
-            'vin_physical_statuses' => vin_physical_statuses(),
-            //Other Important Data
             'method' => 'POST',
-            'action' => route('sales.store')
+            'action' => route('sales.store'),
+            'quotation_id' => null
         );
-
-        // return $data['purchases'];
-
         if (!empty(request('q'))) {
-            $quotation = Quotation::select('*')->find(request('q'));
+            $quotation = Quotation::select('id', 'branch_id')->find(request('q'));
             if ($quotation) {
                 $data['purchases'] = self::_getInStockPurchases($quotation['branch_id']);
-                $data['data'] = $quotation;
-                $data['data']['bike_branch'] = $quotation->branch_id;
-                $data['data']['quotation_id'] = $quotation->id;
+                $data['quotation_id'] = $quotation->id;
             } else {
                 $data['purchases'] = self::_getInStockPurchases();
             }
-            $data['models']    = self::_getModels($quotation->bike_brand);
-            $data['colors']    = self::_getColors($quotation->bike_model);
-            $data['districts'] = self::_getDistricts($quotation->customer_state);
-            $data['cities']    = self::_getCities($quotation->customer_district);
         } else {
             $data['purchases'] = self::_getInStockPurchases();
         }
-
         return view('admin.sales.create', $data);
     }
 
@@ -461,6 +439,61 @@ class SaleController extends Controller
             'statusCode' => 200,
             'message'    => trans('messages.retrieve_success'),
             'data'       => models_list($models)
+        ]);
+    }
+
+    public function ajaxLoadeView(Request $request)
+    {
+        $postData = $request->all();
+        $purhcaseModel = Purchase::with([
+            'branch' => function ($model) {
+                $model->select('id', 'branch_name');
+            },
+            'dealer' => function ($model) {
+                $model->select('id', 'company_name');
+            },
+            'brand' => function ($model) {
+                $model->select('id', 'name');
+            },
+            'model' => function ($model) {
+                $model->select('id', 'model_name');
+            },
+            'color' => function ($model) {
+                $model->select('id', 'color_name');
+            },
+            'tyreBrand' => function ($model) {
+                $model->select('id', 'name');
+            },
+            'batteryBrand' => function ($model) {
+                $model->select('id', 'name');
+            }
+        ])->where('id', $postData['id'])->first();
+
+
+
+        $data = array(
+            'states' => self::_getStates(1),
+            'districts' => [],
+            'cities' => [],
+            'gst_rto_rates' => self::_getRtoGstRates(),
+            'purchaseModel' => $purhcaseModel,
+            'action' => "add"
+        );
+        //Quotation data for prefield
+        if (!empty($postData['q'])) {
+            $quot = Quotation::select('*')->find(request('q'));
+            $data['data'] = $quot;
+            if ($quot) {
+                $data['districts'] = self::_getDistricts($purhcaseModel->customer_state);
+                $data['cities'] = self::_getCities($purhcaseModel->customer_state);
+            }
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => 'Load Form',
+            'data'       => (view('admin.sales.ajax.ajax-view')->with($data)->render())
         ]);
     }
 }

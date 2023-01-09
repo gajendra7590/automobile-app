@@ -71,9 +71,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //quot-print
     // Sales
     Route::resource('sales', 'SaleController');
+    Route::get('ajax-loade-view', 'SaleController@ajaxLoadeView')->name('ajaxLoadeView');
+
+
     Route::resource('saleAccounts', 'SalesAccountController');
     Route::get('sales-detail-modal', 'SalesAccountController@salesDetailModal')->name('salesDetailModal');
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
+
 
     // RTO
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
