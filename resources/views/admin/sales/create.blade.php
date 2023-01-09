@@ -4,9 +4,7 @@
 
     @php
         $isEdit = isset($method) && $method == 'PUT' ? true : false;
-        $editDisabled = $isEdit == true ? 'readonly' : '';
-        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'readonly' : '';
-        $isDisabledSel = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '';
+        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '';
     @endphp
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -51,13 +49,17 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <input type="hidden" value="{{ isset($quotation_id) ? $quotation_id : null }}" name="quotation_id">
+                        @if ($isEdit == false)
+                            <input type="hidden" value="{{ isset($quotation_id) ? $quotation_id : null }}"
+                                name="quotation_id">
+                        @endif
                         {{-- Purchase --}}
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label>Select Bike To Sale(Select From Avaliable Stock)</label>
                                 <select id="purchase" name="purchase_id" class="form-control"
-                                    data-ajax_load="{{ route('ajaxLoadeView') }}" {{ $isDisabledSel }}>
+                                    data-ajax_load="{{ route('ajaxLoadeView') }}"
+                                    {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
                                     <option value="">---Select Purachse---</option>
                                     @if (isset($purchases))
                                         @foreach ($purchases as $key => $purchase)
@@ -90,7 +92,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? '' : 'hideElement' }}"
+                        <div class="row {{ isset($htmlData) && $htmlData != '' ? '' : 'hideElement' }}"
                             id="ajaxLoadContainer">
                             {!! isset($htmlData) ? $htmlData : '' !!}
                         </div>
