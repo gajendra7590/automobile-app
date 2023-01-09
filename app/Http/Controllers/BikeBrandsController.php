@@ -24,9 +24,9 @@ class BikeBrandsController extends Controller
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
                     if ($row->active_status == '1') {
-                        return '<span class="label label-success">Active</span>';
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='brand' class='active_status' checked><span class='slider round'></span></label>";
                     } else {
-                        return '<span class="label label-warning">In Active</span>';
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='brand' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
                 ->addColumn('action', function ($row) {
