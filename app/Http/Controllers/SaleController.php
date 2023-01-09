@@ -308,7 +308,7 @@ class SaleController extends Controller
         ])->where('id', $bpModel['purchase_id'])->first();
         $data = array(
             'method' => 'PUT',
-            'action' => route('sales.update', ['sale', $bpModel->id]),
+            'action' => route('sales.update', ['sale' => $bpModel->id]),
             'states' => self::_getStates(1),
             'districts' => [],
             'cities' => [],
@@ -325,7 +325,7 @@ class SaleController extends Controller
             }
         }
         $data['htmlData'] = (view('admin.sales.ajax.ajax-view')->with($data)->render());
-        $data['purchases'] = self::_getInStockPurchases($bpModel->branch_id);
+        $data['purchases'] = self::_getOnePurchases($bpModel->purchase_id);
         return view('admin.sales.create', $data);
     }
 
@@ -339,7 +339,7 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $bpModel = Sale::where(['id' => $id]);
+            $bpModel = Sale::where(['id' => $id])->first();
             if (!$bpModel) {
                 return response()->json([
                     'status'     => false,
@@ -416,9 +416,7 @@ class SaleController extends Controller
             }
             $postData['updated_by'] = Auth::user()->id;
 
-            dd($postData);
-
-
+            // dd($postData);
             $bpModel->update($postData);
             return response()->json([
                 'status'     => true,

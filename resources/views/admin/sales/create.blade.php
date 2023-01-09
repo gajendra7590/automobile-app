@@ -60,7 +60,9 @@
                                 <select id="purchase" name="purchase_id" class="form-control"
                                     data-ajax_load="{{ route('ajaxLoadeView') }}"
                                     {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
-                                    <option value="">---Select Purachse---</option>
+                                    @if ($isEdit == false)
+                                        <option value="">---Select Purachse---</option>
+                                    @endif
                                     @if (isset($purchases))
                                         @foreach ($purchases as $key => $purchase)
                                             <option
