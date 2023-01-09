@@ -255,5 +255,16 @@ $(document).ready(function () {
         });
     }
 
+    $(document).on("change", ".active_status", function (e) {
+        e.preventDefault();
+        let _this = $(this);
+        let id = _this.val();
+        let type = _this.data('type');
+        let URL = `/status/${id}?type=${type}`;
+        CRUD.AJAXDATA(URL, "POST").then(function (res) {
+        });
+    });
+
+
     //ajaxChangeCDropDown
 });

@@ -2,6 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankFinancer;
+use App\Models\BikeAgent;
+use App\Models\BikeBrand;
+use App\Models\BikeColor;
+use App\Models\BikeDealer;
+use App\Models\BikeModel;
+use App\Models\Branch;
+use App\Models\City;
+use App\Models\District;
+use App\Models\GstRates;
+use App\Models\GstRtoRates;
+use App\Models\RtoAgent;
+use App\Models\State;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Traits\DropdownHelper;
@@ -55,6 +69,88 @@ class AjaxCommonController extends Controller
                     'message'    => "Sorry! invalid request"
                 ]);
             }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
+    }
+
+    public function status(Request $request,$id)
+    {
+        $model = null;
+        try {
+            $postData = $request->all();
+            if (isset($postData['type']) && ($postData['type'] != '')) {
+                switch ($postData['type']) {
+                    case 'state':
+                        $model = new State;
+                        break;
+                    case 'district':
+                        $model = new District;
+                        break;
+                    case 'city':
+                        $model = new City;
+                        break;
+                    case 'branch':
+                        $model = new Branch;
+                        break;
+                    case 'brand':
+                        $model = new BikeBrand;
+                        break;
+                    case 'model':
+                        $model = new BikeModel;
+                        break;
+                    case 'color':
+                        $model = new BikeColor;
+                        break;
+                    case 'bankFinancer':
+                        $model = new BankFinancer;
+                        break;
+                    case 'bikeAgent':
+                        $model = new BikeAgent;
+                        break;
+                    case 'dealer':
+                        $model = new BikeDealer;
+                        break;
+                    case 'gstRate':
+                        $model = new GstRates;
+                        break;
+                    case 'gstRtoRate':
+                        $model = new GstRtoRates;
+                        break;
+                    case 'RtoAgent':
+                        $model = new RtoAgent;
+                        break;
+                    case 'user':
+                        $model = new User;
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+            } else {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! invalid request"
+                ]);
+            }
+
+            $model = $model->where('id',$id);
+            if((clone $model)->value('active_status')){
+                $model->update(['active_status' => 0]);
+            } else {
+                $model->update(['active_status' => 1]);
+            }
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => 'Update Successfully'
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status'     => false,

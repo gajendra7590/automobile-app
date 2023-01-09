@@ -23,6 +23,9 @@ Route::get('forgotPassword', 'AuthController@forgotPasswordGet')->name('forgotPa
 Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgotPasswordPost');
 
 Route::prefix('/')->middleware('auth')->group(function () {
+
+    Route::post('status/{id}', 'AjaxCommonController@status')->name('status');
+
     Route::get('logout', 'AuthController@logout')->name('logout');
     Route::get('profile', 'AuthController@profile')->name('profile');
     Route::get('dashboard', 'DashboardController@dashboardIndex')->name('dashboardIndex');

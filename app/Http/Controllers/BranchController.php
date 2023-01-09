@@ -26,9 +26,9 @@ class BranchController extends Controller
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
                     if ($row->active_status == '1') {
-                        return '<span class="label label-success">Active</span>';
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='branch' class='active_status' checked><span class='slider round'></span></label>";
                     } else {
-                        return '<span class="label label-warning">In Active</span>';
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='branch' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
                 ->addColumn('action', function ($row) {
@@ -265,7 +265,7 @@ class BranchController extends Controller
         //data-modal_size="modal-lg"
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('branches.edit', ['branch' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Branch" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        //$action .= '<a href="' . route('branches.destroy', ['branch' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('branches.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
+        //$ .= '<a href="' . route('branches.destroy', ['branch' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('branches.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;
     }
