@@ -102,4 +102,11 @@ class Purchase extends Model
     {
         return $this->belongsTo(BikeColor::class, 'bike_model_color');
     }
+    /**
+     * Mapping with color
+     */
+    public function color()
+    {
+        return $this->belongsTo(BikeColor::class, 'bike_model_color');
+    }
 }
