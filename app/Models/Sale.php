@@ -78,38 +78,6 @@ class Sale extends Model
         return $this->belongsTo(Branch::class, 'bike_branch');
     }
 
-    /**
-     * Mapping with dealers
-     */
-    public function dealer()
-    {
-        return $this->belongsTo(BikeDealer::class, 'bike_dealer');
-    }
-
-    /**
-     * Mapping with brand
-     */
-    public function brand()
-    {
-        return $this->belongsTo(BikeBrand::class, 'bike_brand');
-    }
-
-    /**
-     * Mapping with model
-     */
-    public function model()
-    {
-        return $this->belongsTo(BikeModel::class, 'bike_model');
-    }
-
-    /**
-     * Mapping with color
-     */
-    public function modelColor()
-    {
-        return $this->belongsTo(BikeColor::class, 'bike_color');
-    }
-
     public function state()
     {
         return $this->belongsTo(State::class, 'customer_state');
@@ -123,5 +91,34 @@ class Sale extends Model
     public function district()
     {
         return $this->belongsTo(District::class, 'customer_district');
+    }
+
+    public function purchases()
+    {
+        return $this->belongsTo(Purchase::class, 'purchase_id');
+    }
+
+
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class, 'purchase_id')
+            ->select('id', 'bike_branch', 'bike_dealer', 'bike_brand', 'bike_model', 'bike_model_color')
+            ->with([
+                'branch' => function ($model) {
+                    $model->select('id', 'branch_name');
+                },
+                'dealer' => function ($model) {
+                    $model->select('id', 'company_name');
+                },
+                'brand' => function ($model) {
+                    $model->select('id', 'name');
+                },
+                'model' => function ($model) {
+                    $model->select('id', 'model_name');
+                },
+                'modelColor' => function ($model) {
+                    $model->select('id', 'color_name');
+                }
+            ]);
     }
 }

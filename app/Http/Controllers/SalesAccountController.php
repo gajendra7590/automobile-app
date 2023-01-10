@@ -17,10 +17,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 //Trait
 use App\Traits\CronHelper;
+use App\Traits\CommonHelper;
 
 class SalesAccountController extends Controller
 {
-    use CronHelper;
+    use CronHelper, CommonHelper;
 
     /**
      * Display a listing of the resource.
@@ -92,18 +93,30 @@ class SalesAccountController extends Controller
         $where = array('sp_account_id' => "0");
 
         //In Case IF Create From Sales List
+        $salesModel = null;
+        $financersList = [];
         if (isset($postData['sales_id']) && ($postData['sales_id'] > 0)) {
             $where['id'] = $postData['sales_id'];
+            $salesModel = Sale::where('id', $postData['sales_id'])->select('id', 'total_amount', 'payment_type', 'hyp_financer', 'hyp_financer_description')->first();
+            if ($salesModel) {
+                $financersList = self::_getFinaceirs(($salesModel['payment_type'] - 1));
+            }
         }
 
-        $salesList = Sale::select('id', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'sku', 'total_amount')
+        $salesList = Sale::with([
+            'purchases' => function ($p) {
+                $p->select('id', 'sku');
+            }
+        ])->select('id', 'purchase_id', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'total_amount')
             ->where($where)->get();
         $data = array(
             'depositeSources' => depositeSources(),
             'duePaySources'   => duePaySources(),
             'emiTerms'        => emiTerms(),
             'salesList'       => $salesList,
-            'action'          => route('saleAccounts.store')
+            'action'          => route('saleAccounts.store'),
+            'data'            => $salesModel,
+            'financersList'   => $financersList
         );
         return response()->json([
             'status'     => true,

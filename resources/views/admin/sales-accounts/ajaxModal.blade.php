@@ -14,10 +14,11 @@
                     <option value="0">---Select Sale Model---</option>
                     @isset($salesList)
                         @foreach ($salesList as $saleModel)
-                            <option value="{{ $saleModel->id }}" data-total_amount="{{ $saleModel->total_amount }}">
+                            <option value="{{ $saleModel->id }}" data-total_amount="{{ $saleModel->total_amount }}"
+                                {{ isset($data['id']) && $data['id'] == $saleModel->id ? 'selected="selected"' : '' }}>
                                 {{ ucfirst($saleModel->customer_name) . '/' . ucfirst($saleModel->customer_guardian_name) }}
                                 -
-                                {{ $saleModel->sku }}
+                                {{ $saleModel->purchases->sku }}
                             </option>
                         @endforeach
                     @endisset
@@ -26,14 +27,15 @@
             </div>
             <div class="form-group col-md-3">
                 <label>Total Sales Amount</label>
-                <input name="sales_total_amount" type="number" class="form-control" value="" placeholder="₹ 0.00"
+                <input name="sales_total_amount" type="number" class="form-control"
+                    value="{{ isset($data['total_amount']) ? $data['total_amount'] : 0.0 }}" placeholder="₹ 0.00"
                     readonly>
             </div>
         </div>
         <!-- DEPOSITE SECTION-->
-        <div class="row common_depended hideElement" id="deposite_section">
+        <div class="row common_depended {{ isset($data['id']) ? '' : 'hideElement' }}" id="deposite_section">
             <div class="form-group col-md-4">
-                <label>Deposite Amount</label>
+                <label>Deposite Amount(Down Payment)</label>
                 <input name="deposite_amount" type="number" class="form-control" value="" placeholder="₹ 0.00">
             </div>
             <div class="form-group col-md-4">
@@ -60,7 +62,8 @@
             </div>
             <div class="form-group col-md-4">
                 <label>Due Amount</label>
-                <input name="due_amount" type="number" class="form-control" value="" placeholder="₹ 0.00"
+                <input name="due_amount" type="number" class="form-control"
+                    value="{{ isset($data['total_amount']) ? $data['total_amount'] : 0.0 }}" placeholder="₹ 0.00"
                     readonly>
             </div>
             <div class="form-group col-md-4">
@@ -69,7 +72,8 @@
                     data-dep_dd_name="financier_id" data-url="{{ route('getAjaxDropdown') }}?req=financiers_list">
                     @isset($duePaySources)
                         @foreach ($duePaySources as $k => $duePaySource)
-                            <option value="{{ $k }}">
+                            <option value="{{ $k }}"
+                                {{ isset($data['payment_type']) && $data['payment_type'] == $k ? 'selected="selected"' : '' }}>
                                 {{ $duePaySource }}
                             </option>
                         @endforeach
@@ -84,16 +88,24 @@
             </div>
             <div class="form-group col-md-12">
                 <label>Due Description(If Any)</label>
-                <textarea class="form-control" name="due_note" placeholder="Ex : Add description about how remaining amount is due"></textarea>
+                <textarea class="form-control" name="due_note" placeholder="Ex : Add description about how remaining amount is due">{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}</textarea>
             </div>
         </div>
 
         <!-- FINANCIERS SECTION-->
-        <div class="row common_depended hideElement" id="finance_section">
+        <div class="row common_depended {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'hideElement' }}"
+            id="finance_section">
             <div class="form-group col-md-4">
                 <label>Financier</label>
                 <select class="form-control" name="financier_id">
                     <option value="">---Select Financier---</option>
+                    @isset($financersList)
+                        @foreach ($financersList as $financer)
+                            <option value="{{ $financer->id }}"
+                                {{ isset($data['hyp_financer']) && $data['hyp_financer'] == $financer->id ? 'selected="selected"' : '' }}>
+                                {{ $financer->bank_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-8">
@@ -104,7 +116,8 @@
         </div>
 
         <!-- EMI SECTION-->
-        <div class="row common_depended hideElement" id="emi_section">
+        <div class="row common_depended {{ isset($data['payment_type']) && in_array($data['payment_type'], [3]) ? '' : 'hideElement' }}"
+            id="emi_section">
             <div class="form-group col-md-3">
                 <label>EMI Term</label>
                 <select class="form-control" name="finance_terms">
@@ -138,6 +151,7 @@
                     placeholder="₹ 0.00">
             </div> --}}
         </div>
+
     </div>
     <!-- /.box-body -->
     <div class="box-footer">

@@ -52,16 +52,16 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "branch.branch_name",
-                    name: "branch.branch_name",
+                    data: "branch_name",
+                    name: "branch_name",
                 },
                 {
-                    data: "dealer.company_name",
-                    name: "dealer.company_name",
+                    data: "dealer_name",
+                    name: "dealer_name",
                 },
                 {
-                    data: "customer",
-                    name: "customer",
+                    data: "customer_name",
+                    name: "customer_name",
                 },
                 {
                     data: "bike_detail",
@@ -87,7 +87,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [-1, 4],
                 },
                 {
                     searchable: false,

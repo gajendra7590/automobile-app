@@ -31,74 +31,46 @@ class SaleController extends Controller
 
             $data = Sale::select('*')
                 ->branchWise()
+                ->select('id', 'branch_id', 'purchase_id', 'customer_name', 'total_amount', 'created_at', 'status', 'sp_account_id')
                 ->with([
-                    'branch' => function ($model) {
-                        $model->select('id', 'branch_name');
-                    },
-                    'dealer' => function ($model) {
-                        $model->select('id', 'company_name');
-                    },
-                    'brand' => function ($model) {
-                        $model->select('id', 'name');
-                    },
-                    'model' => function ($model) {
-                        $model->select('id', 'model_name');
-                    },
-                    'modelColor' => function ($model) {
-                        $model->select('id', 'color_name');
-                    }
+                    'purchase'
                 ]);
+
+            // dd($data->limit(10)->get()->toArray());
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->addColumn('branch.branch_name', function ($row) {
-                    if ($row->branch) {
-                        return $row->branch->branch_name;
+                ->addColumn('branch_name', function ($row) {
+                    if (isset($row->purchase->branch)) {
+                        return $row->purchase->branch->branch_name;
                     } else {
                         return 'N/A';
                     }
                 })
-                ->addColumn('dealer.company_name', function ($row) {
-                    if ($row->dealer) {
-                        return $row->dealer->company_name;
+                ->addColumn('dealer_name', function ($row) {
+                    if (isset($row->purchase->dealer)) {
+                        return $row->purchase->dealer->company_name;
                     } else {
                         return 'N/A';
                     }
                 })
-                ->addColumn('customer', function ($row) {
-                    // $str = '';
-                    // if ($row->customer_gender) {
-                    //     $str .= custPrefix($row->customer_gender) . ' ';
-                    // }
-
-                    // if ($row->customer_name) {
-                    //     $str .= ucwords($row->customer_name) . ' ';
-                    // }
-
-                    // if ($row->customer_relationship) {
-                    //     $str .= custRel($row->customer_relationship) . ' ';
-                    // }
-
-                    // if ($row->customer_guardian_name) {
-                    //     $str .= ucwords($row->customer_guardian_name);
-                    // }
-                    // return $str;
+                ->addColumn('customer_name', function ($row) {
                     return ucwords($row->customer_name);
                 })
                 ->addColumn('bike_detail', function ($row) {
                     $str = '';
-                    if (isset($row->brand->name)) {
-                        $str .= $row->brand->name . ' | ';
+                    if (isset($row->purchase->brand)) {
+                        $str .= $row->purchase->brand->name . ' | ';
                     }
 
-                    if (isset($row->model->model_name)) {
-                        $str .= $row->model->model_name . ' | ';
+                    if (isset($row->purchase->model)) {
+                        $str .= $row->purchase->model->model_name . ' | ';
                     }
 
-                    if (isset($row->modelColor->color_name)) {
-                        $str .= $row->modelColor->color_name;
+                    if (isset($row->purchase->modelColor)) {
+                        $str .= $row->purchase->modelColor->color_name;
                     }
                     return $str;
                 })
@@ -116,7 +88,7 @@ class SaleController extends Controller
                     }
                 })
                 ->rawColumns([
-                    'action', 'branch.branch_name', 'dealer.company_name', 'customer',
+                    'action', 'branch_name', 'dealer_name', 'customer_name',
                     'bike_detail', 'total_amount', 'created_at', 'status'
                 ])
                 ->make(true);

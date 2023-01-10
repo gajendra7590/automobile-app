@@ -1,12 +1,12 @@
 function loaderHide() {
-    $('.ajax_loader').hide();
+    $(".ajax_loader").hide();
 }
 
 function loaderShow() {
-    $('.ajax_loader').show();
+    $(".ajax_loader").show();
 }
 
-$(window).on('load', function() {
+$(window).on("load", function () {
     loaderHide();
 });
 
@@ -259,12 +259,10 @@ $(document).ready(function () {
         e.preventDefault();
         let _this = $(this);
         let id = _this.val();
-        let type = _this.data('type');
+        let type = _this.data("type");
         let URL = `/status/${id}?type=${type}`;
-        CRUD.AJAXDATA(URL, "POST").then(function (res) {
-        });
+        CRUD.AJAXDATA(URL, "POST").then(function (res) {});
     });
-
 
     //ajaxChangeCDropDown
 });
