@@ -74,7 +74,13 @@
           <td> {{ isset($data['rc_number']) ? $data['rc_number'] : '--' }}
           </td>
           <th>RC STATUS</th>
-          <td> {{ isset($data['rc_status']) ? $data['rc_status'] : '--' }}</td>
+          <td>
+              @if (isset($data['rc_status']) && $data['rc_status'] == '1')
+                  Yes
+              @elseif (isset($data['rc_status']) && $data['rc_status'] == '0')
+                  NO
+              @endif
+          </td>
           <th>SUBMIT DATE</th>
           <td>{{ isset($data['submit_date']) ? myDateFormate($data['submit_date']) : '--' }}</td>
       </tr>

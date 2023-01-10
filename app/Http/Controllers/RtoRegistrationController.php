@@ -35,7 +35,7 @@ class RtoRegistrationController extends Controller
                     $agent->select('id', 'agent_name');
                 },
                 'sale' => function ($sale) {
-                    $sale->select('id', 'sale_uuid', 'bike_branch')->with([
+                    $sale->select('id', 'sale_uuid', 'branch_id')->with([
                         'branch' => function ($branch) {
                             $branch->select('id', 'branch_name');
                         }
@@ -52,6 +52,13 @@ class RtoRegistrationController extends Controller
                 })
                 ->addColumn('contact_city', function ($row) {
                     return $row->contact_city ? $row->contact_city->city_name : '---';
+                })
+                ->addColumn('rc_status', function ($row) {
+                    if (isset($row->rc_status) && ($row->rc_status == '1')) {
+                        return 'Yes';
+                    } else if (isset($row->rc_status) && ($row->rc_status == '0')) {
+                        return 'No';
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
@@ -206,7 +213,7 @@ class RtoRegistrationController extends Controller
                     $tax->select('id', 'gst_rate');
                 },
                 'sale' => function ($sale) {
-                    $sale->select('id', 'sale_uuid', 'bike_branch')->with([
+                    $sale->select('id', 'sale_uuid', 'branch_id')->with([
                         'branch' => function ($branch) {
                             $branch->select('id', 'branch_name');
                         }

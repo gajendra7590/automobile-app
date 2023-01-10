@@ -75,7 +75,7 @@ class Sale extends Model
      */
     public function branch()
     {
-        return $this->belongsTo(Branch::class, 'bike_branch');
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     public function state()
