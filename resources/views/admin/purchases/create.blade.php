@@ -364,7 +364,6 @@
                                 <label>Vehicle Description</label>
                                 <textarea name="bike_description" rows="5" class="form-control" {{ $isSoldOut }}>{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
                             </div>
-                            <input type="hidden" value="1" name="active_status">
                         </div>
                     </div>
 
