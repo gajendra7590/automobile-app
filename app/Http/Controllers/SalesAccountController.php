@@ -7,7 +7,6 @@ use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentInstallments;
 use App\Models\SalePaymentTransactions;
-use App\Models\State;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,8 +32,6 @@ class SalesAccountController extends Controller
         if (!request()->ajax()) {
             return view('admin.sales-accounts.index');
         } else {
-
-
             $data = SalePaymentAccounts::with([
                 'sale' => function ($model) {
                     $model->select('id', 'branch_id', 'purchase_id', 'customer_name', 'created_at')
