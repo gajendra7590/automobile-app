@@ -308,7 +308,8 @@
  <div class="form-group col-md-4">
      <label>Registration Amount</label>
      <input name="registration_amount" type="text" class="form-control totalAmountCal"
-         value="{{ isset($data['registration_amount']) ? $data['registration_amount'] : '' }}" placeholder="₹ XXXX">
+         value="{{ isset($data['registration_amount']) ? $data['registration_amount'] : '' }}" placeholder="₹ XXXX"
+         {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
  </div>
  <div class="form-group col-md-4">
      <label>Insurance Amount</label>
