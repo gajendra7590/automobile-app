@@ -127,7 +127,7 @@
                     <span>RTO REGISTRATIONS</span></a>
             </li>
 
-            <li class="treeview">
+            {{-- <li class="treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
                     <span>REPORT MANAGEMENT</span>
@@ -142,7 +142,7 @@
                     <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
             <li class="treeview">
                 <a href="#">
