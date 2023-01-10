@@ -118,7 +118,13 @@ class Sale extends Model
                 },
                 'modelColor' => function ($model) {
                     $model->select('id', 'color_name');
-                }
+                },
+                'tyreBrand' => function ($model) {
+                    $model->select('id', 'name');
+                },
+                'batteryBrand' => function ($model) {
+                    $model->select('id', 'name');
+                },
             ]);
     }
 }

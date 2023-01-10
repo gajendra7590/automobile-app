@@ -37,13 +37,13 @@
                                 <thead>
                                     <tr>
                                         <th>#ID</th>
-                                        <th>Title</th>
-                                        <th>Sale Price</th>
-                                        <th>Down Payment</th>
-                                        <th>Due Amount</th>
-                                        <th>Status</th>
-                                        <th>OpenAt</th>
-                                        <th>Action</th>
+                                        <th>TITLE</th>
+                                        <th>SALES PRICE</th>
+                                        <th>DOWN PAYMENT</th>
+                                        <th>TOTAL DUE</th>
+                                        <th>STATUS</th>
+                                        <th>CREATED DATE</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
