@@ -141,4 +141,13 @@ $(document).ready(function () {
             $('input[name="hyp_financer_description"]').removeAttr("disabled");
         }
     });
+
+    $(".QuotBrandChange").change(function () {
+        let id = $(this).val();
+        if (id > 0) {
+            $("#quotation_more").removeClass("hideElement");
+        } else {
+            $("#quotation_more").addClass("hideElement");
+        }
+    });
 });

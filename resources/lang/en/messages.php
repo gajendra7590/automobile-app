@@ -15,5 +15,6 @@ return [
     'on_user_associate'         => 'There is no user associated with this id',
     'user_not_exist'            => "Opps! user does not exist.",
     'cant_delete_brand'         => 'Sorry! You cant delete brand,first you have to delete modals.',
-    'id_not_exist'              => "Sorry! This id(:ID) not exist"
+    'id_not_exist'              => "Sorry! This id(:ID) not exist",
+    'not_authorized_user'       => "Sorry! you are not an authorise user to crate/update data for this branch."
 ];

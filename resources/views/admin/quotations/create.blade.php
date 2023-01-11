@@ -5,9 +5,7 @@
         $action_type = isset($method) && $method == 'PUT' ? 'update' : 'create';
         $is_disabled = isset($method) && $method == 'PUT' ? 'disabled' : '';
         $is_readonly = isset($method) && $method == 'PUT' ? 'readonly' : '';
-
         $isClosed = isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '';
-
     @endphp
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -35,7 +33,7 @@
                     <div>
                         <div class="box-header with-border">
                             @if (!isset($data['status']))
-                                <h3 class="box-title">Quotation Detail</h3>
+                                <h3 class="box-title">Customer Quotations</h3>
                             @endif
                             <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                                 {{ $isClosed }}>
@@ -57,6 +55,27 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
+                            <div class="form-group col-md-3">
+                                <label>Select Branch</label>
+                                <select name="branch_id" class="form-control ajaxChangeCDropDown QuotBrandChange"
+                                    data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
+                                    data-dep_dd3_name="bike_model_color"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=brands' }}" {{ $isClosed }}
+                                    {{ $is_disabled }}>
+                                    <option value="">---Select Branch---</option>
+                                    @if (isset($branches))
+                                        @foreach ($branches as $key => $branch)
+                                            <option
+                                                {{ isset($data['branch_id']) && $data['branch_id'] == $branch->id ? 'selected' : '' }}
+                                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row {{ isset($method) && $method == 'PUT' ? '' : 'hideElement' }}" id="quotation_more">
+
                             <div class="form-group col-md-1">
                                 <label>Prefix</label>
                                 <select name="customer_gender" class="form-control" {{ $isClosed }}>
@@ -68,7 +87,7 @@
                                         value="2">Mrs.</option>
                                     <option
                                         {{ isset($data['customer_gender']) && $data['customer_gender'] == '3' ? 'selected' : '' }}
-                                        value="2">Miss</option>
+                                        value="3">Miss</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-5">
@@ -98,24 +117,7 @@
                                     placeholder="Customer Guardian Name.." {{ $isClosed }}>
                             </div>
 
-                            <div class="form-group col-md-3">
-                                <label>Branch</label>
-                                <select name="branch_id" class="form-control ajaxChangeCDropDown"
-                                    data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
-                                    data-dep_dd3_name="bike_model_color"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=brands' }}" {{ $isClosed }}>
-                                    <option value="">---Select Branch---</option>
-                                    @if (isset($branches))
-                                        @foreach ($branches as $key => $branch)
-                                            <option
-                                                {{ (isset($data['branch_id']) && $data['branch_id'] == $branch->id) || ($method == 'POST' && $key == 0) ? 'selected' : '' }}
-                                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-9">
+                            <div class="form-group col-md-12">
                                 <label>Customer Address Line</label>
                                 <input name="customer_address_line" type="text" class="form-control"
                                     value="{{ isset($data['customer_address_line']) ? $data['customer_address_line'] : '' }}"
@@ -257,7 +259,7 @@
                                 <select name="bike_brand" data-dep_dd_name="bike_model"
                                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd2_name="bike_color" class="form-control ajaxChangeCDropDown"
-                                    {{ $isClosed }}>
+                                    {{ $is_disabled }} {{ $isClosed }}>
                                     <option value="">---Select Brand----</option>
                                     @isset($brands)
                                         @foreach ($brands as $key => $brand)
@@ -347,14 +349,14 @@
                                 <label>Purchase Visit Date</label>
                                 <input name="purchase_visit_date" type="date" class="form-control"
                                     {{ isset($is_readonly) && $is_readonly ? $is_readonly : '' }}
-                                    value="{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : '' }}"
+                                    value="{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : date('Y-m-d') }}"
                                     placeholder="0000-00-00" {{ $isClosed }}>
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label>Purchase Estimated Date</label>
                                 <input name="purchase_est_date" type="date" class="form-control"
-                                    value="{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : '' }}"
+                                    value="{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : date('Y-m-d', strtotime('+1 month')) }}"
                                     placeholder="0000-00-00" {{ $isClosed }}>
                             </div>
                         </div>

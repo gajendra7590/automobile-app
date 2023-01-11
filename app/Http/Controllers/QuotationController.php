@@ -93,11 +93,10 @@ class QuotationController extends Controller
      */
     public function create()
     {
-        config(['type' => true]);
         $auth = User::find(auth()->id());
         $formData = [];
         $formData['method'] = 'POST';
-        $formData['branches'] = self::_getbranches(!$auth->is_admin);
+        $formData['branches'] = self::_getbranches();
         $formData['brands'] = self::_getbrands(!$auth->is_admin);
         $formData['models'] = self::_getmodels(config('brand_id'), !$auth->is_admin);
         $formData['states'] = self::_getStates();
@@ -119,26 +118,25 @@ class QuotationController extends Controller
             $postData = $request->all();
             // dd($postData);
             $validator = Validator::make($postData, [
-                'customer_gender'           => "required|string",
+                'branch_id'                 => "required|exists:branches,id",
+                'customer_gender'           => "required|in:1,2,3",
                 'customer_name'             => "required|string",
-                'customer_relationship'     => "required|string",
+                'customer_relationship'     => "required|in:1,2,3",
                 'customer_guardian_name'    => "required|string",
                 'customer_address_line'     => "required|string",
-                'customer_state'            => "required",
-                'customer_district'         => "required",
-                'customer_city'             => "required",
+                'customer_state'            => "required|exists:u_states,id",
+                'customer_district'         => "required|exists:u_districts,id",
+                'customer_city'             => "required|exists:u_cities,id",
                 'customer_zipcode'          => "required|numeric",
-                'customer_mobile_number'    => "required",
-                'customer_email_address'    => "nullable",
-                'payment_type'              => "required",
-                'is_exchange_avaliable'     => "required",
-                'hyp_financer'              => "nullable",
-                'hyp_financer_description'  => "nullable",
-                'purchase_visit_date'       => "required|date",
-                'purchase_est_date'         => "required|date",
-                'bike_brand'                => "required",
-                'bike_model'                => "required",
-                'bike_color'                => "required",
+                'customer_mobile_number'    => "required|numeric|min:10",
+                'customer_email_address'    => "nullable|email",
+                'payment_type'              => "required|in:1,2,3",
+                'is_exchange_avaliable'     => "required|in:Yes,No",
+                'hyp_financer'              => "nullable|exists:bank_financers,id",
+                'hyp_financer_description'  => "nullable|string",
+                'bike_brand'                => "required|exists:bike_brands,id",
+                'bike_model'                => "required|exists:bike_models,id",
+                'bike_color'                => "required|exists:bike_colors,id",
                 'ex_showroom_price'         => "required|numeric",
                 'registration_amount'       => "required|numeric",
                 'insurance_amount'          => "required|numeric",
@@ -146,7 +144,8 @@ class QuotationController extends Controller
                 'accessories_amount'        => "required|numeric",
                 'other_charges'             => "nullable|numeric",
                 'total_amount'              => "required|numeric",
-                // 'active_status'             => "required|in:0,1"
+                'purchase_visit_date'       => "required|date",
+                'purchase_est_date'         => "required|date",
             ]);
 
             //If Validation failed
@@ -159,8 +158,16 @@ class QuotationController extends Controller
                 ]);
             }
 
-            unset($postData['_token']);
+            //Add Check For Add
+            if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $postData['branch_id'])) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    =>  trans('messages.not_authorized_user'),
+                ]);
+            }
 
+            unset($postData['_token']);
             $postData['created_by'] = Auth::user()->id;
 
             //Create
@@ -203,17 +210,20 @@ class QuotationController extends Controller
         $auth = User::find(auth()->id());
         $quotModel = Quotation::find($id);
         if (!$quotModel) {
-            return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.id_not_exist',['id' => $id])]);
+            return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.id_not_exist', ['id' => $id])]);
         }
 
         $formData = [];
-        $formData['branches'] = self::_getBranches(!$auth->is_admin);
-        $formData['states'] = self::_getStates(!$auth->is_admin);
-        $formData['districts'] = self::_getDistricts($quotModel->customer_state, !$auth->is_admin);
-        $formData['cities'] = self::_getCities($quotModel->customer_district, !$auth->is_admin);
-        $formData['brands'] = self::_getBrands(!$auth->is_admin, $quotModel->branch_id);
-        $formData['models'] = self::_getModels($quotModel->bike_brand, !$auth->is_admin);
-        $formData['colors'] = self::_getColors($quotModel->bike_model, !$auth->is_admin);
+
+        $formData['states'] = self::_getStatesByCountry();
+        $formData['districts'] = self::_getDistrictsByStateId($quotModel->customer_state);
+        $formData['cities'] = self::_getCitiesByDistrictId($quotModel->customer_district);
+
+        $formData['branches'] = self::_getBranchById($quotModel->branch_id);
+        $formData['brands'] = self::_getBrandByBranch($quotModel->branch_id);
+        $formData['models'] = self::_getModelByBrand($quotModel->bike_brand);
+        $formData['colors'] = self::_getColorByModel($quotModel->bike_model);
+
         $formData['bank_financers'] = self::_getFinaceirs();
         $formData['action'] = route('quotations.store');
         $formData['data']  = $quotModel;
@@ -238,39 +248,40 @@ class QuotationController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'customer_gender'           => "required|string",
-                'customer_name'             => "required|string",
-                'customer_relationship'     => "required|string",
-                'customer_guardian_name'    => "required|string",
-                'customer_address_line'     => "required|string",
-                'customer_state'            => "required",
-                'customer_district'         => "required",
-                'customer_city'             => "required",
+                'branch_id'                 => "nullable|exists:branches,id",
+                'customer_gender'           => "nullable|in:1,2,3",
+                'customer_name'             => "nullable|string",
+                'customer_relationship'     => "nullable|in:1,2,3",
+                'customer_guardian_name'    => "nullable|string",
+                'customer_address_line'     => "nullable|string",
+                'customer_state'            => "required|exists:u_states,id",
+                'customer_district'         => "required|exists:u_districts,id",
+                'customer_city'             => "required|exists:u_cities,id",
                 'customer_zipcode'          => "required|numeric",
-                'customer_mobile_number'    => "required",
-                'customer_email_address'    => "nullable",
-                'payment_type'              => "required",
-                'is_exchange_avaliable'     => "required",
-                'hyp_financer'              => "nullable",
-                'hyp_financer_description'  => "nullable",
-                'purchase_visit_date'       => "required|date",
-                'purchase_est_date'         => "required|date",
-                'bike_brand'                => "required",
-                'bike_model'                => "required",
-                'bike_color'                => "required",
+                'customer_mobile_number'    => "required|numeric|min:10",
+                'customer_email_address'    => "nullable|email",
+                'payment_type'              => "required|in:1,2,3",
+                'is_exchange_avaliable'     => "required|in:Yes,No",
+                'hyp_financer'              => "nullable|exists:bank_financers,id",
+                'hyp_financer_description'  => "nullable|string",
+                'bike_brand'                => "nullable|exists:bike_brands,id",
+                'bike_model'                => "required|exists:bike_models,id",
+                'bike_color'                => "required|exists:bike_colors,id",
                 'ex_showroom_price'         => "required|numeric",
                 'registration_amount'       => "required|numeric",
                 'insurance_amount'          => "required|numeric",
                 'hypothecation_amount'      => "required|numeric",
                 'accessories_amount'        => "required|numeric",
                 'other_charges'             => "nullable|numeric",
-                'total_amount'              => "required|numeric"
+                'total_amount'              => "required|numeric",
+                'purchase_visit_date'       => "required|date",
+                'purchase_est_date'         => "required|date",
             ]);
 
             //If Validation failed
@@ -280,6 +291,15 @@ class QuotationController extends Controller
                     'statusCode' => 419,
                     'message'    => $validator->errors()->first(),
                     'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Add Check For Add
+            if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $quotModel->branch_id)) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    =>  trans('messages.not_authorized_user'),
                 ]);
             }
 

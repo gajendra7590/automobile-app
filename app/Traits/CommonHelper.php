@@ -58,6 +58,20 @@ trait CommonHelper
     }
 
     /**
+     * Get One Branch
+     */
+    public static function _getBranchById($branch_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = Branch::select('id', 'branch_name');
+        } else {
+            $model =  Branch::select('*');
+        }
+        return $model->where('id', $branch_id)->get();
+    }
+
+    /**
      * Get All Brands
      */
     public static function _getBrands($select_all = false, $branch_id = null)
@@ -71,18 +85,22 @@ trait CommonHelper
         if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
-        if ($branch_id || config('first_brand')) {
-            if (!$branch_id) {
-                $branch_id = Branch::value('id');
-            }
-            $model = $model->where('branch_id', $branch_id);
-            $model_one = clone $model;
-            $model_one = $model_one->value('id');
-            config(['brand_id' => $model_one]);
-        }
         return $model->get();
     }
 
+    /**
+     * Get One Brand
+     */
+    public static function _getBrandByBranch($branch_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeBrand::select('id', 'name');
+        } else {
+            $model =  BikeBrand::select('*');
+        }
+        return $model->where('branch_id', $branch_id)->get();
+    }
 
     /**
      * Get All Models
@@ -107,6 +125,59 @@ trait CommonHelper
             });
         }
         return $model->get();
+    }
+
+    /**
+     * Get One Model
+     */
+    public static function _getModelByBrand($brand_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeModel::select('id', 'model_name');
+        } else {
+            $model =  BikeModel::select('*');
+        }
+        return $model->where('brand_id', $brand_id)->get();
+    }
+
+    /**
+     * Get All Colors
+     */
+    public static function _getColors($model_id = 0, $select_all = false)
+    {
+        $model = BikeColor::where('active_status', '1');
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'color_name');
+        }
+
+        //Filter by model
+        if (intval($model_id) > 0) {
+            $model = $model->where('bike_model', $model_id);
+        }
+
+        //Filter by branch
+        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+            $model = $model->whereHas('model.bike_brand', function ($bb) {
+                $bb->where('branch_id', self::getCurrentUserBranch());
+            });
+        }
+        return $model->get();
+    }
+
+    /**
+     * Get One Model
+     */
+    public static function _getColorByModel($model_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeColor::select('id', 'color_name');
+        } else {
+            $model =  BikeColor::select('*');
+        }
+        return $model->where('bike_model', $model_id)->get();
     }
 
 
@@ -136,30 +207,6 @@ trait CommonHelper
         return $model->get();
     }
 
-    /**
-     * Get All Colors
-     */
-    public static function _getColors($model_id = 0, $select_all = false)
-    {
-        $model = BikeColor::where('active_status', '1');
-        //Select Specific
-        if ($select_all == false) {
-            $model = $model->select('id', 'color_name');
-        }
-
-        //Filter by model
-        if (intval($model_id) > 0) {
-            $model = $model->where('bike_model', $model_id);
-        }
-
-        //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
-            $model = $model->whereHas('model.bike_brand', function ($bb) {
-                $bb->where('branch_id', self::getCurrentUserBranch());
-            });
-        }
-        return $model->get();
-    }
 
     /**
      * Get All States
@@ -181,22 +228,48 @@ trait CommonHelper
     }
 
     /**
+     * Get States by country id
+     */
+    public static function _getStatesByCountry($country_id = 1, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = State::select('id', 'state_name');
+        } else {
+            $model = State::select('*');
+        }
+        return $model->where('country_id', $country_id)->get();
+    }
+
+    /**
      * Get All Districts
      */
     public static function _getDistricts($state_id = 0, $select_all = false)
     {
         $model = District::where('active_status', '1');
-
         //Select Specific
         if ($select_all == false) {
             $model = $model->select('id', 'district_name');
         }
-
         //Filter by state
         if (intval($state_id) > 0) {
             $model = $model->where('state_id', $state_id);
         }
         return $model->get();
+    }
+
+    /**
+     * Get District by state id
+     */
+    public static function _getDistrictsByStateId($state_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = District::select('id', 'district_name');
+        } else {
+            $model = District::select('*');
+        }
+        return $model->where('state_id', $state_id)->get();
     }
 
     /**
@@ -216,6 +289,20 @@ trait CommonHelper
             $model = $model->where('district_id', $dist_id);
         }
         return $model->get();
+    }
+
+    /**
+     * Get Cities by district id
+     */
+    public static function _getCitiesByDistrictId($district_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = City::select('id', 'city_name');
+        } else {
+            $model = City::select('*');
+        }
+        return $model->where('district_id', $district_id)->get();
     }
 
     /**
