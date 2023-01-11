@@ -108,7 +108,7 @@
                                     @if (isset($branches))
                                         @foreach ($branches as $key => $branch)
                                             <option
-                                                {{ (isset($data['branch_id']) && $data['branch_id'] == $branch->id ) || ($method == "POST" && $key == 0)  ? 'selected' : '' }}
+                                                {{ (isset($data['branch_id']) && $data['branch_id'] == $branch->id) || ($method == 'POST' && $key == 0) ? 'selected' : '' }}
                                                 value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                         @endforeach
                                     @endif
@@ -207,22 +207,32 @@
                                     </option>
                                 </select>
                             </div>
+
                             <div class="form-group col-md-3">
                                 <label>Payment Type</label>
-                                <select class="form-control" name="payment_type" {{ $isClosed }}>
-                                    <option value="Cash"
-                                        {{ isset($data['payment_type']) && $data['payment_type'] == 'Cash' ? 'selected="selected"' : '' }}>
-                                        Cash
+                                <select name="payment_type" class="form-control ajaxChangeCDropDown"
+                                    data-dep_dd_name="hyp_financer"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=financiers_list' }}" data-dep_dd2_name=""
+                                    {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+                                    <option value="1"
+                                        {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
+                                        By Cash
                                     </option>
-                                    <option value="Finance"
-                                        {{ isset($data['payment_type']) && $data['payment_type'] == 'Finance' ? 'selected="selected"' : '' }}>
-                                        Finance
+                                    <option value="2"
+                                        {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
+                                        Bank Finance
+                                    </option>
+                                    <option value="3"
+                                        {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
+                                        Personal Finance
                                     </option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Hypothecation Financer</label>
-                                <select name="hyp_financer" class="form-control" {{ $isClosed }}>
+                                <select name="hyp_financer" class="form-control"
+                                    {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
+                                    {{ $isClosed }}>
                                     <option value="">---Select Hypothecation Financer----</option>
                                     @isset($bank_financers)
                                         @foreach ($bank_financers as $bank_financer)
@@ -237,7 +247,9 @@
                                 <label>Hypothecation Financer Description</label>
                                 <input name="hyp_financer_description" type="text" class="form-control"
                                     value="{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}"
-                                    placeholder="Description..." {{ $isClosed }}>
+                                    placeholder="Description..."
+                                    {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
+                                    {{ $isClosed }}>
                             </div>
 
                             <div class="form-group col-md-4">

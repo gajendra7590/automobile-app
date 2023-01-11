@@ -98,23 +98,6 @@
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box">
-                        <span class="info-box-icon bg-green" style="height: 101px"><i class="fa fa-book"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">OPEN</span>
-                            <span class="info-box-number">
-                                {{ isset($data['totalSalesOpen']) ? $data['totalSalesOpen'] : '0' }}
-                            </span>
-
-                            <span class="info-box-text">CLOSED</span>
-                            <span class="info-box-number">
-                                {{ isset($data['totalSalesClose']) ? $data['totalSalesClose'] : '0' }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
                         <span class="info-box-icon bg-yellow" style="height: 101px"><i class="fa fa-motorcycle"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">OPEN</span>
@@ -125,6 +108,23 @@
                             <span class="info-box-text">CLOSED</span>
                             <span class="info-box-number">
                                 {{ isset($data['totalQuotationClose']) ? $data['totalQuotationClose'] : '0' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green" style="height: 101px"><i class="fa fa-book"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">OPEN</span>
+                            <span class="info-box-number">
+                                {{ isset($data['totalSalesOpen']) ? $data['totalSalesOpen'] : '0' }}
+                            </span>
+
+                            <span class="info-box-text">CLOSED</span>
+                            <span class="info-box-number">
+                                {{ isset($data['totalSalesClose']) ? $data['totalSalesClose'] : '0' }}
                             </span>
                         </div>
                     </div>

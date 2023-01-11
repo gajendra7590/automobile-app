@@ -42,6 +42,8 @@ class DashboardController extends Controller
             'totalRegistionDone'        => $total_registration,
             'totalRegistionPending'       => ($total_sales - $total_registration),
         );
+
+        // dd($data);
         return view('admin.dashboard.index', ['data' => $data]);
     }
 }
