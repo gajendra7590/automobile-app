@@ -224,7 +224,7 @@ class QuotationController extends Controller
         $formData['models'] = self::_getModelByBrand($quotModel->bike_brand);
         $formData['colors'] = self::_getColorByModel($quotModel->bike_model);
 
-        $formData['bank_financers'] = self::_getFinaceirs();
+        $formData['bank_financers'] = self::_getFinaceirs(($quotModel->financer_type - 1));
         $formData['action'] = route('quotations.store');
         $formData['data']  = $quotModel;
         $formData['action'] = route('quotations.update', ['quotation' => $id]);

@@ -477,7 +477,7 @@ class SalesAccountController extends Controller
                     // return ['status' => true, 'data' => $data];
                     break;
                 case 'due-pay-form':
-                    $data['data'] = SalePaymentInstallments::where('id', $postData['id'])->with([
+                    $installModel = SalePaymentInstallments::where('id', $postData['id'])->with([
                         'account' => function ($account) {
                             $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
                         },
@@ -485,6 +485,9 @@ class SalesAccountController extends Controller
                             $account->select('id', 'customer_name', 'status');
                         }
                     ])->first();
+
+                    $data['data'] = $installModel;
+                    $data['totalDueCounts'] = SalePaymentInstallments::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
                     $data['depositeSources'] = depositeSources();
                     // return ['status' => true, 'data' => $data];
                     break;
@@ -513,9 +516,10 @@ class SalesAccountController extends Controller
                 'id'              => 'required|exists:sale_payment_installments,id',
                 'emi_due_amount'  => 'required|numeric|min:1',
                 'pay_method'      => 'required',
-                'pay_method_note' => 'nullable|string',
+                'pay_method_note' => 'required|string',
                 'pay_option'      => 'required|in:full,partial',
-                'pay_amount'      => 'required|numeric|min:1'
+                'pay_amount'      => 'required|numeric|min:1',
+                'next_due_Date'   => 'nullable|date|after:today',
             ]);
             //If Validation failed
             if ($validator->fails()) {
@@ -612,7 +616,7 @@ class SalesAccountController extends Controller
                                 $emi_due_date = date('Y-m-d', strtotime("+ $months months"));
                                 break;
                             default:
-                                $emi_due_date = date('Y-m-d', strtotime("+ 1 months"));
+                                $emi_due_date = isset($postData['next_due_Date']) ? date('Y-m-d', strtotime($postData['next_due_Date'])) : date('Y-m-d', strtotime("+ 1 months"));
                                 break;
                         }
                     }

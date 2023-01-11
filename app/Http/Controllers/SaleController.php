@@ -293,11 +293,12 @@ class SaleController extends Controller
             if ($bpModel) {
                 $data['districts'] = self::_getDistricts($bpModel->customer_state);
                 $data['cities'] = self::_getCities($bpModel->customer_district);
-                $data['bank_financers'] = self::_getFinaceirs($bpModel->payment_type);
+                $data['bank_financers'] = self::_getFinaceirs($bpModel->payment_type - 1);
             }
         }
+
         $data['htmlData'] = (view('admin.sales.ajax.ajax-view')->with($data)->render());
-        $data['purchases'] = self::_getOnePurchases($bpModel->purchase_id);
+        $data['purchases'] = self::_getPurchasesById($bpModel->purchase_id);
         return view('admin.sales.create', $data);
     }
 
@@ -483,6 +484,7 @@ class SaleController extends Controller
             if ($quot) {
                 $data['districts'] = self::_getDistricts($purhcaseModel->customer_state);
                 $data['cities'] = self::_getCities($purhcaseModel->customer_district);
+                $data['bank_financers'] = self::_getFinaceirs(($quot->payment_type - 1));
             }
         }
 

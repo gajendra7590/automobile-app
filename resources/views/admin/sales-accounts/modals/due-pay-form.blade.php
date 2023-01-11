@@ -44,6 +44,15 @@
                     value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
                     placeholder="₹ 0.00" readonly>
             </div>
+            @if (isset($totalDueCounts) && $totalDueCounts == '1')
+                <div class="form-group col-md-6 hideElement" id="due_date_ele">
+                    <label>NEXT DUE DATE</label>
+                    <input name="next_due_Date" type="date" class="form-control"
+                        value="{{ isset($data['emi_due_date']) ? date('Y-m-d', strtotime($data['emi_due_date'])) : date('Y-m-d') }}"
+                        placeholder="YYYY-MM-DD" disabled>
+                </div>
+            @endif
+
             <div class="form-group col-md-12">
                 <p class="text-danger" style="font-size: 15px;">
                     <b>Important Note :</b> If You are paying advance partial payment, then can only pay for next emi
@@ -71,6 +80,18 @@
                 $('input[name="pay_amount"]').attr('readonly', true).val(total_pay);
             }
         });
+
+        $('input[name="pay_amount"]').keyup(function() {
+            let payable_amount = $(this).val();
+            let emi_due_amount = $('input[name="emi_due_amount"]').val();
+            if (parseFloat(emi_due_amount) == parseFloat(payable_amount)) {
+                $('#due_date_ele').addClass('hideElement');
+                $('input[name="next_due_Date"]').attr('disabled', 'disabled');
+            } else {
+                $('#due_date_ele').removeClass('hideElement');
+                $('input[name="next_due_Date"]').removeAttr('disabled');
+            }
+        })
 
     })
 </script>
