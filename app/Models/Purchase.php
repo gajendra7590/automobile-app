@@ -111,7 +111,7 @@ class Purchase extends Model
 
     public function tyreBrand()
     {
-        return $this->belongsTo(tyreBrand::class, 'tyre_brand_id');
+        return $this->belongsTo(TyreBrand::class, 'tyre_brand_id');
     }
 
     public function batteryBrand()

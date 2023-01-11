@@ -273,7 +273,7 @@ class PurchaseController extends Controller
     {
         try {
             DB::beginTransaction();
-            $bpModel = Purchase::where(['uuid' => $id]);
+            $bpModel = Purchase::where(['id' => $id])->first();
             if (!$bpModel) {
                 return response()->json([
                     'status'     => false,
