@@ -13,7 +13,7 @@ class ReportController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.reports.index', ['data' => []]);
     }
 
     /**
@@ -80,5 +80,41 @@ class ReportController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function loadReportSection(Request $request)
+    {
+        $postData = $request->all();
+
+        $type = isset($postData['type']) ? $postData['type'] : 'purchase';
+        $view = 'purchase';
+        $data = array();
+        switch ($type) {
+            case 'purchase':
+                $view = 'purchase';
+                break;
+            case 'sales':
+                $view = 'sales';
+                break;
+            case 'quotations':
+                $view = 'quotations';
+                break;
+            case 'dues':
+                $view = 'dues';
+                break;
+            case 'rto':
+                $view = 'rto';
+                break;
+            default:
+                $view = 'purchase';
+                break;
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => ucfirst($view) . " report data loaded.",
+            'data'       => view('admin.reports.ajax.' . $view, $data)->render()
+        ]);
     }
 }

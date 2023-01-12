@@ -32,18 +32,24 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::post('profileUpdate', 'AuthController@profileUpdate')->name('profileUpdate');
     Route::post('passwordUpdate', 'AuthController@passwordUpdate')->name('passwordUpdate');
+
     //Bike - Make/Model/Colors
     Route::resource('brands', 'BikeBrandsController');
 
+    //Branches
     Route::resource('branches', 'BranchController');
 
-    Route::resource('bankFinancers', 'BankFinancerController');
-
+    //Models
     Route::resource('models', 'BikeModelController');
 
+    //Colors
     Route::resource('colors', 'BikeColorController');
     Route::get('getColorsList/{id}', 'BikeColorController@getColorsList')->name('getColorsList');
 
+    //Bike financers
+    Route::resource('bankFinancers', 'BankFinancerController');
+
+    //Dealers
     Route::resource('dealers', 'BikeDealerController');
 
     //Address Module
@@ -53,44 +59,44 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('create/cities/bulk', 'CityController@createBulk')->name('city.create.popup');
     Route::get('store/cities/bulk', 'CityController@storeBulk')->name('city.create.bulk');
 
-    //GST
+    //GST Rates
     Route::resource('gst-rates', 'GstRateController');
+
+    //Rto Rates
     Route::resource('gst-rto-rates', 'GstRtoRateController');
 
-
-    //RTO
+    //RTO Agents
     Route::resource('rto-agents', 'RtoAgentController');
 
-    // Purchases
+    //Purchases
     Route::resource('purchases', 'PurchaseController');
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
-    //getPurchaseModels
 
     //Quotations
     Route::resource('quotations', 'QuotationController');
     Route::get('getQuotationDetails/{id}', 'QuotationController@getQuotationDetails')->name('getQuotationDetails');
     Route::get('print-quotation/{id}', 'QuotationController@printQuotation')->name('print-quotation');
-    //quot-print
+
     // Sales
     Route::resource('sales', 'SaleController');
     Route::get('ajax-loade-view', 'SaleController@ajaxLoadeView')->name('ajaxLoadeView');
 
-
+    // SALES ACCOUNT
     Route::resource('saleAccounts', 'SalesAccountController');
     Route::get('sales-detail-modal', 'SalesAccountController@salesDetailModal')->name('salesDetailModal');
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
 
-
-    // RTO
+    //RTO Registration
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
     Route::resource('rtoRegistration', 'RtoRegistrationController');
 
-    //Users Module
-    // Agents
+    //Agents
     Route::resource('agents', 'BikeAgentController');
+
     //Roles
     Route::resource('roles', 'RoleController');
+
     //Users
     Route::resource('users', 'UserController');
     Route::get('changePassword/{user}', 'UserController@changePassword')->name('user.changePassword');
@@ -98,6 +104,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //AjaxCommonController
     Route::post('getAjaxDropdown', 'AjaxCommonController@index')->name('getAjaxDropdown');
+
+    //Reports
+    Route::get('loadReportSection', 'ReportController@loadReportSection')->name('loadReportSection');
+    Route::resource('reports', 'ReportController');
 });
 
 

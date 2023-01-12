@@ -68,9 +68,6 @@
                         </li>
                     </ul>
                 </li>
-
-
-
                 <li
                     class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
                     <a href="#">
@@ -105,7 +102,6 @@
                     </ul>
                 </li>
             @endif
-
             <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
                 <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>PURCHASES</span></a>
             </li>
@@ -130,22 +126,10 @@
                     <span>RTO REGISTRATIONS</span></a>
             </li>
 
-            {{-- <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-pie-chart"></i>
-                    <span>REPORT MANAGEMENT</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-                    <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-                    <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                    <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a>
-                    </li>
-                </ul>
-            </li> --}}
+            <li class="{{ Request::is('reports*') ? 'active' : '' }}">
+                <a href="{{ route('reports.index') }}"><i class="fa fa-bar-chart"></i>
+                    <span>REPORTS</span></a>
+            </li>
 
             <li class="treeview {{ Request::is('profile*') ? 'active' : '' }}">
                 <a href="#">
