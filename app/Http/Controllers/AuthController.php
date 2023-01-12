@@ -108,7 +108,8 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        $user = auth()->user();
+        $user = User::with(['branch'])->where('id', auth()->user()->id)->first();
+        // return $user;
         return view('admin.auth.profile', ['user' => $user, 'actionProfileUpdate' => route('profileUpdate'), 'actionPasswordUpdate' => route('passwordUpdate')]);
     }
 
