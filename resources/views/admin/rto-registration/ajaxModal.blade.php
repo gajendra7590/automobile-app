@@ -13,7 +13,7 @@
         <div class="form-group col-md-6">
             <label>RTO Agent </label>
             <select name="rto_agent_id" class="form-control" {{ $editDisable }}>
-                <option value="">---Select RTO Agent---</option>
+                {{-- <option value="">---Select RTO Agent---</option> --}}
                 @if (isset($rto_agents))
                     @foreach ($rto_agents as $key => $rto_agent)
                         <option

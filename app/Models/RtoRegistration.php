@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CommonHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RtoRegistration extends Model
 {
-    use HasFactory;
+
+    use HasFactory, CommonHelper;
 
     protected $table = 'rto_registration';
 
@@ -52,6 +54,17 @@ class RtoRegistration extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    //Fitler by branch - local scope
+    public function scopeBranchWise($query)
+    {
+        $branch_id = self::getCurrentUserBranch();
+        if ($branch_id != '0' || $branch_id != 'null') {
+            return $query->whereHas('sale', function ($sale) use ($branch_id) {
+                $sale->where('branch_id', $branch_id);
+            });
+        }
+    }
 
     public function agent()
     {

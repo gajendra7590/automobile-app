@@ -208,7 +208,7 @@ class SaleController extends Controller
                 Quotation::where('id', $postData['quotation_id'])->update(['status' => 'close']);
             }
             //Change status of purchase - Mark as sold
-            Purchase::where(['id' => $postData['purchase_id']])->update(['status' => '1']);
+            Purchase::where(['id' => $postData['purchase_id']])->update(['status' => '2']);
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,

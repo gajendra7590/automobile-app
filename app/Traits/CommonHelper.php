@@ -429,7 +429,7 @@ trait CommonHelper
 
         //Filter by branch
         if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
-            $model = $model->where('id', self::getCurrentUserBranch());
+            $model = $model->where('bike_branch', self::getCurrentUserBranch());
         }
         return $model->get();
     }

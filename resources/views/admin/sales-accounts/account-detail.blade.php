@@ -157,82 +157,89 @@
                                                 <th>STATUS</th>
                                                 <th width="10%">ACTION</th>
                                             </tr>
-                                            @isset($data['installments'])
-                                                @php
-                                                    $pending_emi = 0;
-                                                @endphp
-                                                @foreach ($data['installments'] as $k => $installment)
-                                                    @if ($installment->status == '0')
-                                                        @php
-                                                            $pending_emi++;
-                                                        @endphp
-                                                    @endif
-                                                    <tr>
-                                                        <td>{{ $installment->id }}</td>
-                                                        <td>{{ $installment->emi_title }}</td>
-                                                        <td>
-                                                            <span class="label label-primary" style="padding: 5px;">
-                                                                {{ priceFormate($installment->emi_due_amount) }}
-                                                            </span>
-                                                        </td>
-                                                        <td>{{ date('d/m/Y', strtotime($installment->emi_due_date)) }}</td>
-                                                        <td>
-                                                            <span class="label label-danger" style="padding: 5px;">
-                                                                {{ priceFormate($installment->emi_due_revised_amount) }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            @if (!empty($installment->amount_paid))
-                                                                <span class="label label-success" style="padding: 5px;">
-                                                                    {{ priceFormate($installment->amount_paid) }}
+
+                                            @if (isset($data['installments']) && count($data['installments']) > 0)
+                                                @isset($data['installments'])
+                                                    @php
+                                                        $pending_emi = 0;
+                                                    @endphp
+                                                    @foreach ($data['installments'] as $k => $installment)
+                                                        @if ($installment->status == '0')
+                                                            @php
+                                                                $pending_emi++;
+                                                            @endphp
+                                                        @endif
+                                                        <tr>
+                                                            <td>{{ $installment->id }}</td>
+                                                            <td>{{ $installment->emi_title }}</td>
+                                                            <td>
+                                                                <span class="label label-primary" style="padding: 5px;">
+                                                                    {{ priceFormate($installment->emi_due_amount) }}
                                                                 </span>
-                                                            @else
-                                                                --
-                                                            @endif
-                                                        </td>
-                                                        </td>
-                                                        <td>{{ !empty($installment->amount_paid) && $installment->amount_paid > 0 ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
-                                                        </td>
-                                                        <td>{{ !empty($installment->pay_due) ? priceFormate($installment->pay_due) : '--' }}
-                                                        </td>
-                                                        <td>
-                                                            @if ($installment->status == '0')
-                                                                <span title="Payment Not Done" class="label label-danger"
-                                                                    style="padding: 5px 8px;">
-                                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                            </td>
+                                                            <td>{{ date('d/m/Y', strtotime($installment->emi_due_date)) }}</td>
+                                                            <td>
+                                                                <span class="label label-danger" style="padding: 5px;">
+                                                                    {{ priceFormate($installment->emi_due_revised_amount) }}
                                                                 </span>
-                                                            @else
-                                                                <span title="Payment Done" class="label label-success"
-                                                                    style="padding: 5px 8px;">
-                                                                    <i class="fa fa-check" aria-hidden="true"></i>
-                                                                </span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if ($installment->status == '0' && $pending_emi == 1)
-                                                                <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
-                                                                    class="btn btn-success btn-sm ajaxModalPopup"
-                                                                    data-modal_title="Make Due Payment"
+                                                            </td>
+                                                            <td>
+                                                                @if (!empty($installment->amount_paid))
+                                                                    <span class="label label-success" style="padding: 5px;">
+                                                                        {{ priceFormate($installment->amount_paid) }}
+                                                                    </span>
+                                                                @else
+                                                                    --
+                                                                @endif
+                                                            </td>
+                                                            </td>
+                                                            <td>{{ !empty($installment->amount_paid) && $installment->amount_paid > 0 ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
+                                                            </td>
+                                                            <td>{{ !empty($installment->pay_due) ? priceFormate($installment->pay_due) : '--' }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($installment->status == '0')
+                                                                    <span title="Payment Not Done" class="label label-danger"
+                                                                        style="padding: 5px 8px;">
+                                                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                                                    </span>
+                                                                @else
+                                                                    <span title="Payment Done" class="label label-success"
+                                                                        style="padding: 5px 8px;">
+                                                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                                                    </span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($installment->status == '0' && $pending_emi == 1)
+                                                                    <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
+                                                                        class="btn btn-success btn-sm ajaxModalPopup"
+                                                                        data-modal_title="Make Due Payment"
+                                                                        data-modal_size="modal-lg">
+                                                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                                                    </a>
+                                                                @endif
+                                                                <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
+                                                                    class="btn btn-warning btn-sm ajaxModalPopup"
+                                                                    data-modal_title="Due Payment Detail"
                                                                     data-modal_size="modal-lg">
-                                                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>
                                                                 </a>
-                                                            @endif
-                                                            <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
-                                                                class="btn btn-warning btn-sm ajaxModalPopup"
-                                                                data-modal_title="Due Payment Detail"
-                                                                data-modal_size="modal-lg">
-                                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                                            </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    <tr>
+                                                        <td colspan="10">
+                                                            <b>Important Note : </b> Your next installment payment option will
+                                                            visible if latest one will be mark as paid.
                                                         </td>
                                                     </tr>
-                                                @endforeach
-                                                <tr>
-                                                    <td colspan="10">
-                                                        <b>Important Note : </b> Your next installment payment option will
-                                                        visible if latest one will be mark as paid.
-                                                    </td>
+                                                @endisset
+                                            @else
+                                                <tr style="font-size: 17px; color: red;text-align: center;">
+                                                    <td colspan="10">No data available in table.</td>
                                                 </tr>
-                                            @endisset
+                                            @endif
 
                                         </table>
                                     </div>

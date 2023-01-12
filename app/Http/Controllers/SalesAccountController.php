@@ -32,19 +32,20 @@ class SalesAccountController extends Controller
         if (!request()->ajax()) {
             return view('admin.sales-accounts.index');
         } else {
-            $data = SalePaymentAccounts::with([
-                'sale' => function ($model) {
-                    $model->select('id', 'branch_id', 'purchase_id', 'customer_name', 'created_at')
-                        ->with([
-                            'branch' => function ($b) {
-                                $b->select('id', 'branch_name');
-                            },
-                            'purchases' => function ($b) {
-                                $b->select('id', 'sku');
-                            }
-                        ]);
-                }
-            ])->select('id', 'account_uuid', 'sale_id', 'sales_total_amount', 'deposite_amount', 'due_amount', 'due_payment_source', 'status', 'created_at');
+            $data = SalePaymentAccounts::branchWise()
+                ->with([
+                    'sale' => function ($model) {
+                        $model->select('id', 'branch_id', 'purchase_id', 'customer_name', 'created_at')
+                            ->with([
+                                'branch' => function ($b) {
+                                    $b->select('id', 'branch_name');
+                                },
+                                'purchases' => function ($b) {
+                                    $b->select('id', 'sku');
+                                }
+                            ]);
+                    }
+                ])->select('id', 'account_uuid', 'sale_id', 'sales_total_amount', 'deposite_amount', 'due_amount', 'due_payment_source', 'status', 'created_at');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('title', function ($row) {

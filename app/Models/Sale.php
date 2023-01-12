@@ -65,7 +65,7 @@ class Sale extends Model
     {
         $branch_id = self::getCurrentUserBranch();
         if ($branch_id != '0' || $branch_id != 'null') {
-            return $query->where('bike_branch', $branch_id);
+            return $query->where('branch_id', $branch_id);
         }
     }
 
@@ -97,7 +97,6 @@ class Sale extends Model
     {
         return $this->belongsTo(Purchase::class, 'purchase_id');
     }
-
 
     public function purchase()
     {

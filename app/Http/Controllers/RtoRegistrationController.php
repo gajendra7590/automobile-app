@@ -30,18 +30,19 @@ class RtoRegistrationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = RtoRegistration::with([
-                'agent' => function ($agent) {
-                    $agent->select('id', 'agent_name');
-                },
-                'sale' => function ($sale) {
-                    $sale->select('id', 'sale_uuid', 'branch_id')->with([
-                        'branch' => function ($branch) {
-                            $branch->select('id', 'branch_name');
-                        }
-                    ]);
-                }
-            ]);
+            $data = RtoRegistration::branchWise()
+                ->with([
+                    'agent' => function ($agent) {
+                        $agent->select('id', 'agent_name');
+                    },
+                    'sale' => function ($sale) {
+                        $sale->select('id', 'sale_uuid', 'branch_id')->with([
+                            'branch' => function ($branch) {
+                                $branch->select('id', 'branch_name');
+                            }
+                        ]);
+                    }
+                ]);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('agentName', function ($row) {
@@ -85,19 +86,11 @@ class RtoRegistrationController extends Controller
             'action' => route('rtoRegistration.store'),
             'method' => 'POST',
         ];
-        $data['sales'] = Sale::select(['id', 'customer_name'])->where('rto_account_id', '0')->orWhereNull('rto_account_id')->get();
-        $data['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->get();
-        // $data['gst_rto_rates'] = GstRtoRates::select(['id', 'gst_rate'])->get();
-        // $data['states'] = State::select(['id', 'state_name'])->get();
-        // $data['states'] = State::select(['id', 'state_name'])->get();
-        // $data['districts'] = [];
-        // $data['cities'] = [];
-        // if (count($data['states'])) {
-        //     $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $data['states'][0]['id'])->get();
-        // }
-        // if (count($data['districts'])) {
-        //     $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $data['districts'][0]['id'])->get();
-        // }
+        $data['sales'] = Sale::select(['id', 'customer_name'])
+            ->branchWise()
+            ->where('rto_account_id', '0')
+            ->orWhereNull('rto_account_id')->get();
+        $data['rto_agents'] = self::_getRtoAgents();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -117,8 +110,8 @@ class RtoRegistrationController extends Controller
         try {
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'sale_id' => 'required|exists:sales,id',
                 'rto_agent_id' => 'required|exists:rto_agents,id',
+                'sale_id' => 'required|exists:sales,id',
                 'contact_name' => 'required|string',
                 'contact_mobile_number' => 'required|numeric|min:10',
                 'contact_address_line'  => 'required|string',
@@ -380,7 +373,11 @@ class RtoRegistrationController extends Controller
     public function ajaxChangeContent(Request $request)
     {
         $postData = $request->all();
-        $salesModel = Sale::find($postData['id']);
+        $salesModel = Sale::with([
+            'purchase' => function ($purchase) {
+                $purchase->select('id', 'sku');
+            }
+        ])->where('id', $postData['id'])->first();
         $data = array(
             'states' => self::_getStates(1),
             'districts' => self::_getDistricts($salesModel->customer_state),
