@@ -131,6 +131,11 @@
                     <span>REPORTS</span></a>
             </li>
 
+            <li class="{{ Request::is('documentUploads*') ? 'active' : '' }}">
+                <a href="{{ route('documentUploads.index') }}"><i class="fa fa-upload"></i>
+                    <span>DOCUMENT UPLOADS</span></a>
+            </li>
+
             <li class="treeview {{ Request::is('profile*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-key"></i>

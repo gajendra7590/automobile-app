@@ -111,8 +111,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('loadReportSection', 'ReportController@loadReportSection')->name('loadReportSection');
     Route::resource('reports', 'ReportController');
 
+    //Document Uploads
+    Route::resource('documentUploads', 'DocumentUploadController');
     Route::post('cityStore', 'PlusActionController@cityStore')->name('cityStore');
-
 });
 
 
