@@ -98,6 +98,7 @@
                     data-type="city"
                     data-ddname="city"
                     data-ddchange="district"
+                    data-modalid="ajaxModalCommon2"
                     aria-hidden="true"
                     data-modal_title="Add New City/Village/Town"
                     data-modal-index="1200"

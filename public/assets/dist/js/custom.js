@@ -247,11 +247,12 @@ $(document).ready(function () {
     $(document).on("click", ".plusAction", function (e) {
         e.preventDefault();
         var ddchange = $(this).data('ddchange');
+        var modalId = $(this).data('modalid');
         var ddchange = ddchange ? ddchange : 'customer_district';
         var district_id = $(`[name=${ddchange}]`).val();
         var type = $(this).data("type");
         var ddname = $(this).data("ddname");
-        var url = $(this).attr("href")+`?type=${type}&district_id=${district_id}&ddname=${ddname}`;
+        var url = $(this).attr("href")+`?type=${type}&district_id=${district_id}&ddname=${ddname}&modalId=${modalId}`;
         var modal_title = $(this).data("modal_title");
         var modal_size = $(this).data("modal_size");
         if(!district_id){

@@ -172,7 +172,7 @@ class AjaxCommonController extends Controller
                     'ddname' => request('ddname'),
                     'redirect' => 'closeModal',
                     'type' => 'customer_city',
-                    'modalId' => 'ajaxModalCommon',
+                    'modalId' => request('modalId') ? request('modalId') : 'ajaxModalCommon',
                 ])->render();
                 break;
             default :
