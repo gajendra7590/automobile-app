@@ -23,16 +23,16 @@ class DocumentTypeSeeder extends Seeder
     public function insertDocumentTypes()
     {
         $types = array(
-            ['id' => 1,  'name' => 'USER PROFILE'],
-            ['id' => 2,  'name' => 'PURCHASES'],
-            ['id' => 3,  'name' => 'QUOTATIONS'],
-            ['id' => 4,  'name' => 'SALES'],
-            ['id' => 5,  'name' => 'SALES ACCOUNTS'],
+            ['id' => 1,  'name' => 'USER PROFILE DOCUMENTS'],
+            ['id' => 2,  'name' => 'PURCHASE DOCUMENTS'],
+            ['id' => 3,  'name' => 'QUOTATION DOCUMENTS'],
+            ['id' => 4,  'name' => 'SALE DOCUMENTS'],
+            ['id' => 5,  'name' => 'SALES ACCOUNT DOCUMENTS'],
             ['id' => 6,  'name' => 'RTO REGISTRATION'],
-            ['id' => 7,  'name' => 'RTO AGENTS DOCUMENT'],
-            ['id' => 8,  'name' => 'FINANCER DOCUMENT'],
-            ['id' => 9,  'name' => 'DEALERS DUCUMENT'],
-            ['id' => 10, 'name' => 'OTHER'],
+            ['id' => 7,  'name' => 'RTO AGENT DOCUMENTS'],
+            ['id' => 8,  'name' => 'FINANCER DOCUMENTS'],
+            ['id' => 9,  'name' => 'DEALER DUCUMENTS'],
+            ['id' => 10, 'name' => 'OTHER DOCUMENTS'],
         );
 
         foreach ($types as $type) {
