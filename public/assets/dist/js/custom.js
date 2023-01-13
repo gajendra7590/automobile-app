@@ -120,7 +120,10 @@ $(document).ready(function () {
                 if (redirect == "closeModal") {
                     $(`#${ajaxModalCommon}`).modal("hide");
                     $("#ajaxModalDialog").modal("hide");
-                } else if (redirect == "ajaxModalCommon") {
+                    if(result.data.html && result.data.type){
+                        $(`[name='${result.data.type}']`).append( result.data.html );
+                    }
+                }else if (redirect == "ajaxModalCommon") {
                     $("#ajaxModalCommon").modal("hide");
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
@@ -154,29 +157,6 @@ $(document).ready(function () {
         CRUD.AJAXMODAL(url, "GET", null).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
                 $(".ajaxModalBody").html(result.data);
-            } else {
-                toastr.error("Something went wrong");
-                // to do
-            }
-        });
-    });
-
-    $(document).on("click", ".ajaxModalPopupOnPopup", function (e) {
-        e.preventDefault();
-        var url = $(this).attr("href");
-        var modal_title = $(this).data("modal_title");
-        var modal_size = $(this).data("modal_size");
-        $("#ajaxModalSize2").addClass(modal_size);
-        $(".ajaxModalTitle2").html(modal_title);
-        // $(".ajaxModalCommon2").attr("tabindex",1)
-
-        $(".ajaxModalBody2").html(
-            `<div style="text-align: center;min-height: 174px;padding: 57px;"><i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true" style="color: #ea6d09;"></i></div>`
-        );
-        $("#ajaxModalCommon2").modal("show");
-        CRUD.AJAXMODAL(url, "GET", null).then(function (result) {
-            if (typeof result.status != "undefined" && result.status == true) {
-                $(".ajaxModalBody2").html(result.data);
             } else {
                 toastr.error("Something went wrong");
                 // to do
@@ -262,6 +242,34 @@ $(document).ready(function () {
         let type = _this.data("type");
         let URL = `/status/${id}?type=${type}`;
         CRUD.AJAXDATA(URL, "POST").then(function (res) {});
+    });
+
+    $(document).on("click", ".plusAction", function (e) {
+        e.preventDefault();
+        var ddchange = $(this).data('ddchange');
+        var ddchange = ddchange ? ddchange : 'customer_district';
+        var district_id = $(`[name=${ddchange}]`).val();
+        var type = $(this).data("type");
+        var ddname = $(this).data("ddname");
+        var url = $(this).attr("href")+`?type=${type}&district_id=${district_id}&ddname=${ddname}`;
+        var modal_title = $(this).data("modal_title");
+        var modal_size = $(this).data("modal_size");
+        if(!district_id){
+            toastr.error("Please select district first");
+        }else{
+            var modal_type = $(this).data('modal_type');
+            $(`#ajaxModalSize${modal_type}`).addClass(modal_size);
+            $(`.ajaxModalTitle${modal_type}`).html(modal_title);
+            $(`.ajaxModalCommon${modal_type}`).attr("tabindex",1200);
+            $(`#ajaxModalCommon${modal_type}`).modal("show");
+            CRUD.AJAXMODAL(url, "GET").then(function (result) {
+                if (typeof result.status != "undefined" && result.status == true) {
+                    $(`.ajaxModalBody${modal_type}`).html(result.data);
+                } else {
+                    toastr.error("Something went wrong");
+                }
+            });
+        }
     });
 
     //ajaxChangeCDropDown

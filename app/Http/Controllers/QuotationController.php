@@ -2,15 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BankFinancer;
-use App\Models\BikeBrand;
-use App\Models\BikeColor;
-use App\Models\BikeModel;
-use App\Models\Branch;
-use App\Models\City;
-use App\Models\District;
 use App\Models\Quotation;
-use App\Models\State;
 use App\Models\User;
 use App\Traits\CommonHelper;
 use Illuminate\Http\Request;

@@ -160,4 +160,29 @@ class AjaxCommonController extends Controller
             ]);
         }
     }
+
+    public function plusAction(Request $request)
+    {
+        $data = "";
+        switch(request('type')) {
+            case 'city':
+                $data = view('admin.models.plusModals.cityModal', [
+                    'action' => route('cityStore'),
+                    'district_id' => request('district_id'),
+                    'ddname' => request('ddname'),
+                    'redirect' => 'closeModal',
+                    'type' => 'customer_city',
+                    'modalId' => 'ajaxModalCommon',
+                ])->render();
+                break;
+            default :
+                break;
+        }
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => $data
+        ]);
+    }
 }

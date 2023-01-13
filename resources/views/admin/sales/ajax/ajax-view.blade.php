@@ -78,9 +78,15 @@
  <div class="form-group col-md-3">
      <label>Customer City/Village
          <span style="margin-left: 40px;">
-             <a href="{{ route('city.create.popup') }}" class="ajaxModalPopupOnPopup" aria-hidden="true"
-                 data-modal_title="Add New City/Village/Town" data-modal-index="1200" data-modal_size="modal-md">
-                 <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
+             <a href="{{ route('plusAction') }}"
+                class="plusAction"
+                id="city"
+                data-type="city"
+                aria-hidden="true"
+                data-modal_title="Add New City/Village/Town"
+                data-modal-index="1200"
+                data-modal_size="modal-md">
+                <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
              </a>
          </span>
      </label>
