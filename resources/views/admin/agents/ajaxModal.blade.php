@@ -90,6 +90,22 @@
         </div>
         <div class="form-group col-md-3">
             <label>City</label>
+            <span style="margin-left: 40px;">
+                <a href="{{ route('plusAction') }}"
+                    class="plusAction"
+                    id="city"
+                    data-type="city"
+                    data-type="city"
+                    data-ddname="city"
+                    data-ddchange="district"
+                    aria-hidden="true"
+                    data-modal_title="Add New City/Village/Town"
+                    data-modal-index="1200"
+                    data-modal_type="2"
+                    data-modal_size="modal-md" >
+                    <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
+                </a>
+            </span>
             <select name="city" class="form-control">
                 <option value="">---Select City---</option>
                 @if (isset($cities))

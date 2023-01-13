@@ -59,7 +59,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('create/cities/bulk', 'CityController@createBulk')->name('city.create.popup');
     Route::get('store/cities/bulk', 'CityController@storeBulk')->name('city.create.bulk');
 
-    //GST Rates
+    Route::get('plusAction', 'AjaxCommonController@plusAction')->name('plusAction');
+
+    //GST
     Route::resource('gst-rates', 'GstRateController');
 
     //Rto Rates
@@ -108,6 +110,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Reports
     Route::get('loadReportSection', 'ReportController@loadReportSection')->name('loadReportSection');
     Route::resource('reports', 'ReportController');
+
+    Route::post('cityStore', 'PlusActionController@cityStore')->name('cityStore');
+
 });
 
 
