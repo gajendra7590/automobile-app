@@ -120,9 +120,13 @@ class Purchase extends Model
         return $this->belongsTo(BatteryBrand::class, 'battery_brand_id');
     }
 
-
     public function invoice()
     {
         return $this->hasOne(PurchaseInvoice::class, 'purchase_id');
+    }
+
+    public function transfers()
+    {
+        return $this->hasOne(PurchaseTransfer::class, 'purchase_id');
     }
 }

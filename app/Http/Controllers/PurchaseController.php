@@ -43,7 +43,8 @@ class PurchaseController extends Controller
                     },
                     'modelColor' => function ($model) {
                         $model->select('id', 'color_name');
-                    }
+                    },
+                    'transfers'
                 ])->when(!$auth->is_admin, function ($q) use ($auth) {
                     $q->where('bike_branch', $auth->branch_id);
                 });
@@ -362,7 +363,14 @@ class PurchaseController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+
+
+        $action .= '<a href="' . route('purchaseTransfer', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Create Transfer For Purchase"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('purchaseInvoice', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_title="Create Purchase Invoice"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
+
+        $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+
+
         $action .= '</div>';
         return $action;
     }
@@ -386,6 +394,28 @@ class PurchaseController extends Controller
             'statusCode' => 200,
             'message'    => trans('messages.retrieve_success'),
             'data'       => $models
+        ]);
+    }
+
+    public function purchaseTransfer(Request $request, $id)
+    {
+        $models = Purchase::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.retrieve_success'),
+            'data'       => (view('admin.purchases.ajax.purchaseTransfer')->render())
+        ]);
+    }
+
+    public function purchaseInvoice(Request $request, $id)
+    {
+        $models = Purchase::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.retrieve_success'),
+            'data'       => (view('admin.purchases.ajax.purchaseInvoice')->render())
         ]);
     }
 }
