@@ -79,10 +79,6 @@ $(document).ready(function () {
                     name: "file_description",
                 },
                 {
-                    data: "file_name",
-                    name: "file_name",
-                },
-                {
                     data: "file_extention",
                     name: "file_extention",
                 },

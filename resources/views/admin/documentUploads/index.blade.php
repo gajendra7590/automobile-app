@@ -39,7 +39,6 @@
                                         <th>#</th>
                                         <th>SECTION TYPE</th>
                                         <th>UPLOAD NOTE</th>
-                                        <th>FILE NAME</th>
                                         <th>FILE EXTENTION</th>
                                         <th>FILE SIZE</th>
                                         <th>UPLOADED AT</th>
