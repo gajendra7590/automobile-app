@@ -1,15 +1,51 @@
 $(document).ready(function () {
     // $(".select2").select2();
 
-    // let
+    $('select[name="document_section_type"]').change(function () {
+        let val = $(this).val();
+        $(".select2").val(null).trigger("change");
+        $("#nextContainer").addClass("hideElement");
+        if (val == "") {
+            $(".select2").prop("disabled", true);
+        } else {
+            $(".select2").prop("disabled", false);
+        }
+    });
 
     $(".select2").select2({
         ajax: {
-            delay: 250,
-            url: "https://api.github.com/search/repositories",
+            delay: 1000,
+            allowClear: true,
+            minimumInputLength: 1,
             dataType: "json",
-            // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+            url: function () {
+                return $("#select2SearchURL").val();
+            },
+            beforeSend: function () {
+                let selVal = $(
+                    'select[name="document_section_type"] option:selected'
+                ).val();
+                if (selVal == "") {
+                    return false;
+                }
+            },
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                    type_id: $(
+                        'select[name="document_section_type"] option:selected'
+                    ).val(),
+                };
+                return query;
+            },
         },
+    });
+
+    $(".select2").on("select2:selecting", function (e) {
+        let data = e.params.args.data;
+        if (data.id > 0) {
+            $("#nextContainer").removeClass("hideElement");
+        }
     });
 
     function mainDataTable() {

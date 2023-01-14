@@ -12,7 +12,8 @@ class DocumentSectionTypes extends Model
     protected $table = 'document_section_types';
 
     protected $fillable = [
-        'name'
+        'name',
+        'short_name'
     ];
 
     protected  $hidden = [];

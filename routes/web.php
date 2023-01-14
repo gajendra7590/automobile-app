@@ -112,7 +112,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('reports', 'ReportController');
 
     //Document Uploads
+    Route::get('getSectionTypeDropdown', 'DocumentUploadController@getSectionTypeDropdown')->name('getSectionTypeDropdown');
     Route::resource('documentUploads', 'DocumentUploadController');
+
+
     Route::post('cityStore', 'PlusActionController@cityStore')->name('cityStore');
 });
 
