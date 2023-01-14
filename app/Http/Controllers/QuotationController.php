@@ -364,7 +364,7 @@ class QuotationController extends Controller
         $quotationModel = Quotation::with([
             'branch'
         ])->where(['id' => $id])->first();
-        // return view('admin.quotations.invoice-print');
+        // return view('admin.quotations.invoice-print',['data' => $quotationModel]);
         $pdf = Pdf::loadView('admin.quotations.invoice-print', ['data' => $quotationModel]);
         return $pdf->stream('invoice.pdf');
     }

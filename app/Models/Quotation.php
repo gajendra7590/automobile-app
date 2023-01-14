@@ -96,6 +96,23 @@ class Quotation extends Model
         }
     }
 
+    public function getPaymentTypeAccessorAttribute(){
+        switch($this->payment_type){
+            case 1 :
+                return 'By Cash';
+                break;
+            case 2 :
+                return 'Bank Finance';
+                break;
+            case 3 :
+                return 'Personal Finance';
+                break;
+            default :
+                return $this->payment_type;
+                break;
+        }
+    }
+
     public function getCustNameAttribute()
     {
         $str = '';
