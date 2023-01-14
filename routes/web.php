@@ -101,6 +101,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Agents
     Route::resource('agents', 'BikeAgentController');
 
+    //Salesmans
+    Route::resource('salesmans', 'SalesmanController');
+
     //Roles
     Route::resource('roles', 'RoleController');
 

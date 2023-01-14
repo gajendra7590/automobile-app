@@ -69,7 +69,7 @@
                     </ul>
                 </li>
                 <li
-                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-database"></i>
                         <span>ALL USERS</span>
@@ -78,11 +78,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'display:"block"' : '' }}>
 
                         {{-- <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-                        <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
-                    </li> --}}
+                            <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
+                        </li> --}}
                         <li class="{{ Request::is('users*') ? 'active' : '' }}">
                             <a href="{{ route('users.index') }}"><i class="fa fa-users"></i>USERS</a>
                         </li>
@@ -95,7 +95,9 @@
                         <li class="{{ Request::is('bankFinancers*') ? 'active' : '' }}">
                             <a href="{{ route('bankFinancers.index') }}"><i class="fa fa-bank"></i>BANK FINANCERS</a>
                         </li>
-
+                        <li class="{{ Request::is('salesmans*') ? 'active' : '' }}">
+                            <a href="{{ route('salesmans.index') }}"><i class="fa fa-male"></i>SALESMANS</a>
+                        </li>
                         <li class="{{ Request::is('rto-agents*') ? 'active' : '' }}">
                             <a href="{{ route('rto-agents.index') }}"><i class="fa fa-user-secret"></i>RTO AGENTS</a>
                         </li>

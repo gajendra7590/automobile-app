@@ -14,6 +14,7 @@ use App\Models\District;
 use App\Models\GstRates;
 use App\Models\GstRtoRates;
 use App\Models\RtoAgent;
+use App\Models\Salesman;
 use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -127,6 +128,9 @@ class AjaxCommonController extends Controller
                         break;
                     case 'user':
                         $model = new User;
+                        break;
+                    case 'salesman':
+                        $model = new Salesman;
                         break;
                     default:
                         # code...
