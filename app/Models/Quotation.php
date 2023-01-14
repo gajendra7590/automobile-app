@@ -62,23 +62,57 @@ class Quotation extends Model
         });
     }
 
+    public function getGenderAttribute(){
+        switch($this->customer_gender){
+            case 1 :
+                return 'Mr.';
+                break;
+            case 2 :
+                return 'Mrs.';
+                break;
+            case 3 :
+                return 'Miss';
+                break;
+            default :
+                return $this->customer_gender;
+                break;
+        }
+    }
+
+    public function getRelationshipAttribute(){
+        switch($this->customer_relationship){
+            case 1 :
+                return 'S/O';
+                break;
+            case 2 :
+                return 'W/O';
+                break;
+            case 3 :
+                return 'D/O';
+                break;
+            default :
+                return $this->customer_relationship;
+                break;
+        }
+    }
+
     public function getCustNameAttribute()
     {
         $str = '';
-        if (!empty($this->customer_first_name)) {
-            $str .= $this->customer_first_name;
+        if (!empty($this->customer_gender)) {
+            $str .= $this->gender . ' ';
         }
 
-        if (!empty($this->customer_middle_name)) {
-            $str .= ' ' . $this->customer_middle_name;
+        if (!empty($this->customer_name)) {
+            $str .= $this->customer_name . ' ';
         }
 
-        if (!empty($this->customer_last_name)) {
-            $str .= ' ' . $this->customer_last_name;
+        if (!empty($this->customer_relationship)) {
+            $str .= $this->relationship . ' ';
         }
 
-        if (!empty($this->customer_father_name)) {
-            $str .= ' S/O ' . $this->customer_father_name;
+        if (!empty($this->customer_guardian_name)) {
+            $str .= $this->customer_guardian_name;
         }
         return $str;
     }
