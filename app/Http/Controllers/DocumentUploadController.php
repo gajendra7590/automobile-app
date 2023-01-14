@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankFinancer;
+use App\Models\BikeAgent;
+use App\Models\BikeDealer;
 use App\Models\DocumentSectionTypes;
 use App\Models\DocumentUploads;
 use App\Models\Purchase;
 use App\Models\Quotation;
+use App\Models\RtoRegistration;
 use App\Models\Sale;
+use App\Models\SalePaymentAccounts;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,13 +25,27 @@ class DocumentUploadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
             return view('admin.documentUploads.index');
         } else {
+
+            $postData = $request->all();
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
+
             $data = DocumentUploads::with(['sectionType'])->select('*');
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+
+                    if ($search_string != "") {
+                        $query->where('file_name', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('file_extention', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('sectionType', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            });
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('section_type', function ($row) {
                     return isset($row->sectionType->name) ? $row->sectionType->name : '--';
@@ -140,7 +159,20 @@ class DocumentUploadController extends Controller
      */
     public function edit($id)
     {
-        //
+        $docModel = DocumentUploads::where(['id' => $id])->select('*')->first();
+        if (!$docModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
+            ]);
+        }
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.documentUploads.ajaxModal', ['data' => $docModel])->render()
+        ]);
     }
 
     /**
@@ -169,8 +201,7 @@ class DocumentUploadController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('documentUploads.edit', ['documentUpload' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update GST Rate"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        // $action .= '<a href="' . route('gst-rates.destroy', ['gst-rate' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete State"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('documentUploads.edit', ['documentUpload' => $row->id]) . '" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Preview of uploaded document" data-modal_size="modal-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }
@@ -201,35 +232,111 @@ class DocumentUploadController extends Controller
                 case '3':
                     $data = Quotation::select('id', DB::raw('customer_name	 as text'));
                     if (isset($postData['search']) && ($postData['search'] != "")) {
-                        $data = $data->where('customer_name	', 'LIKE', '%' . $postData['search'] . '%');
+                        $data = $data->where('customer_name', 'LIKE', '%' . $postData['search'] . '%');
                     }
                     $data = $data->get();
                     break;
                 case '4':
-                    $data = Sale::select('id', 'purchase_id', DB::raw('CONCAT(customer_name) AS text'))->with(['purchase']);
+                    $Query = Sale::select('id', 'purchase_id', 'customer_name')->with([
+                        'purchases' => function ($q) {
+                            $q->select('id', 'sku', 'vin_number', 'hsn_number', 'engine_number');
+                        }
+                    ]);
+                    $data = array();
                     if (isset($postData['search']) && ($postData['search'] != "")) {
-                        $data = $data->where('customer_gender', 'LIKE', '%' . $postData['search'] . '%')
-                            ->orwhere('customer_relationship', 'LIKE', '%' . $postData['search'] . '%')
-                            ->orwhere('customer_relationship', 'LIKE', '%' . $postData['search'] . '%')
-                            ->orwhere('customer_guardian_name', 'LIKE', '%' . $postData['search'] . '%');
+                        $search_string = $postData['search'];
+                        $Query = $Query->where('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('purchases', function ($q) use ($search_string) {
+                                $q->where('sku', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('vin_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('hsn_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('engine_number', 'LIKE', '%' . $search_string . '%');
+                            });
                     }
-                    $data = $data->get();
-                    dd($data->toArray());
+                    $results = $Query->limit(100)->get();
+                    foreach ($results as $k => $result) {
+                        $data[$k] = array(
+                            'id' => $result->id,
+                            'text' => createStringSales($result)
+                        );
+                    }
                     break;
                 case '5':
-                    # code...
+                    $Query = SalePaymentAccounts::select('id', 'sale_id')->with([
+                        'sale' => function ($sale) {
+                            $sale->with(['purchases' => function ($q) {
+                                $q->select('id', 'sku', 'vin_number', 'hsn_number', 'engine_number');
+                            }]);
+                        }
+
+                    ]);
+                    $data = array();
+                    if (isset($postData['search']) && ($postData['search'] != "")) {
+                        $search_string = $postData['search'];
+                        $Query = $Query->where('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('sale.purchases', function ($q) use ($search_string) {
+                                $q->where('sku', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('vin_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('hsn_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('engine_number', 'LIKE', '%' . $search_string . '%');
+                            });
+                    }
+                    $results = $Query->limit(100)->get();
+                    foreach ($results as $k => $result) {
+                        $data[$k] = array(
+                            'id' => $result->id,
+                            'text' => createStringSales($result->sale)
+                        );
+                    }
                     break;
                 case '6':
-                    # code...
+                    $Query = RtoRegistration::select('id', 'sale_id')->with([
+                        'sale' => function ($sale) {
+                            $sale->with(['purchases' => function ($q) {
+                                $q->select('id', 'sku', 'vin_number', 'hsn_number', 'engine_number');
+                            }]);
+                        }
+
+                    ]);
+                    $data = array();
+                    if (isset($postData['search']) && ($postData['search'] != "")) {
+                        $search_string = $postData['search'];
+                        $Query = $Query->where('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('sale.purchases', function ($q) use ($search_string) {
+                                $q->where('sku', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('vin_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('hsn_number', 'LIKE', '%' . $search_string . '%')
+                                    ->orWhere('engine_number', 'LIKE', '%' . $search_string . '%');
+                            });
+                    }
+                    $results = $Query->limit(100)->get();
+                    foreach ($results as $k => $result) {
+                        $data[$k] = array(
+                            'id' => $result->id,
+                            'text' => createStringSales($result->sale)
+                        );
+                    }
                     break;
                 case '7':
-                    # code...
+                    $data = BikeAgent::select('id', DB::raw('name as text'));
+                    if (isset($postData['search']) && ($postData['search'] != "")) {
+                        $data = $data->where('name', 'LIKE', '%' . $postData['search'] . '%');
+                    }
+                    $data = $data->get();
                     break;
                 case '8':
-                    # code...
+                    $data = BankFinancer::select('id', DB::raw('bank_name as text'));
+                    if (isset($postData['search']) && ($postData['search'] != "")) {
+                        $data = $data->where('bank_name', 'LIKE', '%' . $postData['search'] . '%');
+                    }
+                    $data = $data->get();
                     break;
                 case '9':
-                    # code...
+                    $data = BikeDealer::select('id', DB::raw('company_name as text'));
+                    if (isset($postData['search']) && ($postData['search'] != "")) {
+                        $data = $data->where('company_name', 'LIKE', '%' . $postData['search'] . '%');
+                    }
+                    $data = $data->get();
                     break;
                 case '10':
                     # code...

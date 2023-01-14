@@ -25,6 +25,11 @@ class DocumentUploads extends Model
 
     protected $casts = [];
 
+    public function getFileNameAttribute($value)
+    {
+        return asset("/uploads/$value");
+    }
+
 
     /**
      * section_type

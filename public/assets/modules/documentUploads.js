@@ -75,8 +75,8 @@ $(document).ready(function () {
                     name: "section_type",
                 },
                 {
-                    data: "section_id",
-                    name: "section_id",
+                    data: "file_description",
+                    name: "file_description",
                 },
                 {
                     data: "file_name",
@@ -109,7 +109,7 @@ $(document).ready(function () {
                     targets: [],
                 },
             ],
-            order: [[0, "asc"]],
+            order: [[0, "desc"]],
         });
     }
     mainDataTable();
