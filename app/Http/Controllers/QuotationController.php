@@ -329,18 +329,35 @@ class QuotationController extends Controller
 
     public function getActions($row)
     {
+
         $action = '<div class="action-btn-container">';
-        $action .= '<a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print" aria-hidden="true"></i></a>';
+        // $action .= '<a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" class="btn btn-sm btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        // $action .= '<a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-print" aria-hidden="true"></i></a>';
+        // if ($row->status == 'open') {
+        //     $action .= '<a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-recycle" aria-hidden="true"></i></a>';
+        // }
+        // // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+
+        $action .= '<div class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" >Edit</a></li>
+                    <li><a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank">Print</a></li>';
 
         if ($row->status == 'open') {
-            $action .= '<a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-recycle" aria-hidden="true"></i></a>';
+            $action .= '<li><a title="Close Quotation"
+                href="' . route('quotation.close', ['id' => $row->id]) . '"
+                class="ajaxModalPopup"
+                data-modal_title="Close Quotation"
+                data-modal_size="modal-md"
+                aria-hidden="true"
+                >Close Quotation</a></li>';
+            $action .= '<li><a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" >Create Sale</a></li>';
         }
-        // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
-        $action .= '</div>';
+
+        $action .=  '</ul></div></div>';
         return $action;
     }
-
 
     public function printQuotation(Request $request, $id)
     {
@@ -351,6 +368,57 @@ class QuotationController extends Controller
         $pdf = Pdf::loadView('admin.quotations.invoice-print', ['data' => $quotationModel]);
         return $pdf->stream('invoice.pdf');
     }
+
+    public function closeQuotation(Request $request, $id)
+    {
+        $data  = [
+            'action' => route('quotationclosepost',['id' => $id]),
+            'method' => 'POST',
+        ];
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.quotations.closeQuotation', $data)->render()
+        ]);
+    }
+
+    public function closeQuotationPost(Request $request,$id)    {
+        try {
+            $postData = $request->all();
+            $validator = Validator::make($postData, [
+                'close_note' => "required|string"
+            ]);
+            // If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+            $quotation = Quotation::find($id);
+            $quotation->close_note = request('close_note');
+            $quotation->status = 'close';
+            $quotation->closed_by = auth()->id();
+            $quotation->save();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Closed Successfully",
+                'data'       => $quotation
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
+    }
+
 
     public function getQuotationDetails($id)
     {

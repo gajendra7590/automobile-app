@@ -43,6 +43,8 @@ class Quotation extends Model
         'other_charges',
         'total_amount',
         'status',
+        'close_note',
+        'closed_by',
         'created_by',
         'updated_by',
     ];
