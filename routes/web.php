@@ -79,6 +79,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('quotations', 'QuotationController');
     Route::get('getQuotationDetails/{id}', 'QuotationController@getQuotationDetails')->name('getQuotationDetails');
     Route::get('print-quotation/{id}', 'QuotationController@printQuotation')->name('print-quotation');
+    Route::get('close-quotation/{id}', 'QuotationController@closeQuotation')->name('quotation.close');
+    Route::post('close-quotation-post/{id}', 'QuotationController@closeQuotationPost')->name('quotationclosepost');
 
     // Sales
     Route::resource('sales', 'SaleController');
