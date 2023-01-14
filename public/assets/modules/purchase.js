@@ -72,16 +72,20 @@ $(document).ready(function () {
                     name: "bike_detail",
                 },
                 {
-                    data: "purchase_invoice_number",
-                    name: "purchase_invoice_number",
+                    data: "sku",
+                    name: "sku",
                 },
                 {
-                    data: "purchase_invoice_date",
-                    name: "purchase_invoice_date",
+                    data: "variant",
+                    name: "variant",
                 },
                 {
-                    data: "purchase_invoice_amount",
-                    name: "purchase_invoice_amount",
+                    data: "dc_number",
+                    name: "dc_number",
+                },
+                {
+                    data: "dc_date",
+                    name: "dc_date",
                 },
                 {
                     data: "grand_total",

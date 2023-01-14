@@ -63,13 +63,6 @@ class PurchaseController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('dealer.company_name', function ($row) {
-                    if ($row->dealer) {
-                        return $row->dealer->company_name;
-                    } else {
-                        return 'N/A';
-                    }
-                })
                 ->addColumn('bike_detail', function ($row) {
                     $str = '';
                     if ($row->brand) {
@@ -83,9 +76,6 @@ class PurchaseController extends Controller
                     }
                     return $str;
                 })
-                ->addColumn('purchase_invoice_amount', function ($row) {
-                    return '₹' . $row->purchase_invoice_amount;
-                })
                 ->addColumn('grand_total', function ($row) {
                     return '₹' . $row->grand_total;
                 })
@@ -97,7 +87,7 @@ class PurchaseController extends Controller
                     }
                 })
                 ->rawColumns([
-                    'action', 'purchase_id', 'branch.branch_name', 'dealer.company_name', 'bike_detail', 'purchase_invoice_amount', 'grand_total', 'status'
+                    'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'status'
                 ])
                 ->make(true);
         }
@@ -158,9 +148,10 @@ class PurchaseController extends Controller
                 'dc_date'                   => "nullable",
                 'vin_number'                => "required|min:17",
                 'vin_physical_status'       => "nullable",
-                'hsn_number'                => "nullable|min:6",
-                'engine_number'             => "nullable|min:14",
-                'sku'                       => "nullable",
+                'hsn_number'                => "required|min:6",
+                'engine_number'             => "required|min:14",
+                'variant'                   => "required",
+                'sku'                       => "required",
                 'sku_description'           => "nullable",
                 'key_number'                => "nullable|",
                 'service_book_number'       => "nullable",
@@ -169,9 +160,9 @@ class PurchaseController extends Controller
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
                 'tyre_front_number'         => "nullable",
                 'tyre_rear_number'          => "nullable",
-                'purchase_invoice_amount'   => "required|numeric",
-                'purchase_invoice_number'   => "required",
-                'purchase_invoice_date'     => "required|date",
+                // 'purchase_invoice_amount'   => "required|numeric",
+                // 'purchase_invoice_number'   => "required",
+                // 'purchase_invoice_date'     => "required|date",
                 'status'                    => "nullable|in:1,2",
                 //'active_status'             => "required|in:0,1",
                 'gst_rate'                  => 'required|numeric',
@@ -237,7 +228,7 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $auth = User::find(auth()->id());
-        $bpModel = Purchase::where(['id' => $id])->first();
+        $bpModel = Purchase::where(['id' => $id])->with(['invoice'])->first();
         if (!$bpModel) {
             return redirect()->back();
         }
@@ -299,6 +290,7 @@ class PurchaseController extends Controller
                 'vin_physical_status'       => "nullable",
                 'hsn_number'                => "nullable|min:6",
                 'engine_number'             => "nullable|min:14",
+                'variant'                   => "nullable",
                 'sku'                       => "nullable",
                 'sku_description'           => "nullable",
                 'key_number'                => "nullable|",
@@ -308,9 +300,9 @@ class PurchaseController extends Controller
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
                 'tyre_front_number'         => "nullable",
                 'tyre_rear_number'          => "nullable",
-                'purchase_invoice_amount'   => "required|numeric",
-                'purchase_invoice_number'   => "required",
-                'purchase_invoice_date'     => "required|date",
+                // 'purchase_invoice_amount'   => "required|numeric",
+                // 'purchase_invoice_number'   => "required",
+                // 'purchase_invoice_date'     => "required|date",
                 'status'                    => "nullable|in:1,2",
                 'gst_rate'                  => 'required|numeric|exists:gst_rates,id',
                 'gst_rate_percent'          => 'required|numeric',

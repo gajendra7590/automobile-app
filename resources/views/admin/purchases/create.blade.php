@@ -51,7 +51,6 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
-
                             <div class="form-group col-md-3">
                                 <label>Bike Dealer</label>
                                 <select name="bike_dealer" class="form-control" {{ $isSoldOut }} {{ $isSoldOut }}>
@@ -111,7 +110,9 @@
                                     @endif
                                 </select>
                             </div>
+                        </div>
 
+                        <div class="row">
                             <div class="form-group col-md-3">
                                 <label>Model Color</label>
                                 <select name="bike_model_color" class="form-control" {{ $isSoldOut }}
@@ -126,7 +127,6 @@
                                     @endif
                                 </select>
                             </div>
-
                             <div class="form-group col-md-3">
                                 <label>Vehicle Type</label>
                                 <select name="bike_type" class="form-control" {{ $isSoldOut }} {{ $isSoldOut }}>
@@ -179,21 +179,13 @@
                                     @endif
                                 </select>
                             </div>
+                        </div>
 
+                        <div class="row">
                             <div class="form-group col-md-3">
-                                <label>DC Number</label>
-                                <input type="text" class="form-control" {{ $isSoldOut }} placeholder="DC Number"
-                                    name="dc_number" value="{{ isset($data->dc_number) ? $data->dc_number : '' }}" />
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>DC Date</label>
-                                <input type="date" class="form-control" {{ $isSoldOut }} placeholder="DC Date"
-                                    name="dc_date" value="{{ isset($data->dc_date) ? $data->dc_date : date('Y-m-d') }}" />
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>VIN Number(Chasis Number)</label>
+                                <label>VIN Number(Chasis Number) </label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
-                                    placeholder="VIN Number(Chasis Number)r" name="vin_number"
+                                    placeholder="VIN Number(Chasis Number)" name="vin_number"
                                     value="{{ isset($data->vin_number) ? $data->vin_number : '' }}" />
                             </div>
                             <div class="form-group col-md-3">
@@ -209,19 +201,27 @@
                                     @endif
                                 </select>
                             </div>
-
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label>HSN Number</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }} placeholder="HSN Number"
                                     name="hsn_number" value="{{ isset($data->hsn_number) ? $data->hsn_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label>Engine Number</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
                                     placeholder="Engine Number" name="engine_number"
                                     value="{{ isset($data->engine_number) ? $data->engine_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-2">
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label>Variant(Code)</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                    placeholder="Variant(Code)" name="variant"
+                                    value="{{ isset($data->variant) ? $data->variant : '' }}" />
+                            </div>
+                            <div class="form-group col-md-3">
                                 <label>SKU</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }} placeholder="SKU"
                                     name="sku" value="{{ isset($data->sku) ? $data->sku : '' }}" />
@@ -232,7 +232,8 @@
                                     placeholder="SKU Description" name="sku_description"
                                     value="{{ isset($data->sku_description) ? $data->sku_description : '' }}" />
                             </div>
-
+                        </div>
+                        <div class="row">
 
                             <div class="form-group col-md-3">
                                 <label>Key Number</label>
@@ -245,7 +246,6 @@
                                     placeholder="Service Book Number" name="service_book_number"
                                     value="{{ isset($data->service_book_number) ? $data->service_book_number : '' }}" />
                             </div>
-
                             <div class="form-group col-md-3">
                                 <label>Battery Brand</label>
                                 <select name="battery_brand_id" id="battery_brand_id" class="form-control"
@@ -268,7 +268,10 @@
                                     placeholder="Battery Number" name="battery_number"
                                     value="{{ isset($data->battery_number) ? $data->battery_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-3">
+                        </div>
+                        <div class="row">
+
+                            <div class="form-group col-md-4">
                                 <label>Tyre Brand</label>
                                 <select name="tyre_brand_id" id="tyre_brand_id" class="form-control"
                                     {{ $isSoldOut }}>
@@ -283,7 +286,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label>Tyre Front Number</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
                                     placeholder="Tyre Front Number" name="tyre_front_number"
@@ -295,24 +298,83 @@
                                     placeholder="Tyre Rear Number" name="tyre_rear_number"
                                     value="{{ isset($data->tyre_rear_number) ? $data->tyre_rear_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-4">
-                                <label>Purchase Invoice Amount(₹)</label>
-                                <input type="text" class="form-control" {{ $isSoldOut }}
-                                    placeholder="Purchase Invoice Amount(₹)" name="purchase_invoice_amount"
-                                    value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}" />
+                        </div>
+
+                        @if (isset($data['invoice']) && $data['invoice'])
+                            <div class="row">
+                                <!-- PURCHASE INVOICE DETAIL -->
+                                <div class="form-group col-md-4">
+                                    <label>Purchase Invoice Number</label>
+                                    <input type="text" class="form-control" placeholder="XXXXXXXXX"
+                                        value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Purchase Invoice Amount(₹)</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_amount) ? $data->purchase_invoice_amount : '' }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Purchase Invoice Date</label>
+                                    <input type="date" class="form-control" placeholder="dd-mm-yyyy"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label>Invoice GST Rate</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Invoice Actual Price</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Invoice GST Amount</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Invoice Ex Showroom Price</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Invoice Discount Amount</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label>Invoice Grand Total</label>
+                                    <input type="text" class="form-control" placeholder="₹0.00"
+                                        value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}"
+                                        disabled />
+                                </div>
+                                <!-- PURCHASE INVOICE DETAIL END-->
                             </div>
-                            <div class="form-group col-md-4">
-                                <label>Purchase Invoice Number</label>
-                                <input type="text" class="form-control" {{ $isSoldOut }}
-                                    placeholder="Purchase Invoice Number" name="purchase_invoice_number"
-                                    value="{{ isset($data->purchase_invoice_number) ? $data->purchase_invoice_number : '' }}" />
+                        @endif
+
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label>DC Number</label>
+                                <input type="text" class="form-control" {{ $isSoldOut }} placeholder="DC Number"
+                                    name="dc_number" value="{{ isset($data->dc_number) ? $data->dc_number : '' }}" />
                             </div>
-                            <div class="form-group col-md-4">
-                                <label>Purchase Invoice Date</label>
-                                <input type="date" class="form-control" {{ $isSoldOut }}
-                                    placeholder="Purchase Invoice Date" name="purchase_invoice_date"
-                                    value="{{ isset($data->purchase_invoice_date) ? $data->purchase_invoice_date : date('Y-m-d') }}" />
+                            <div class="form-group col-md-3">
+                                <label>DC Date</label>
+                                <input type="date" class="form-control" {{ $isSoldOut }} placeholder="DC Date"
+                                    name="dc_date"
+                                    value="{{ isset($data->dc_date) ? $data->dc_date : date('Y-m-d') }}" />
                             </div>
+
                             <div class="form-group col-md-2">
                                 <label>GST Rate</label>
                                 <select name="gst_rate" id="gst_rate" class="form-control" {{ $isSoldOut }}>
@@ -360,6 +422,7 @@
                                     placeholder="Grand Total" name="grand_total" readonly
                                     value="{{ isset($data->grand_total) ? $data->grand_total : 0.0 }}" />
                             </div>
+
                             <div class="form-group col-md-12">
                                 <label>Vehicle Description</label>
                                 <textarea name="bike_description" rows="5" class="form-control" {{ $isSoldOut }}>{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>
