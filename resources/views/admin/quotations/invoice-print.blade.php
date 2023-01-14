@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE 2 | Invoice</title>
+    <title>Aakash Automobile | Invoice</title>
 </head>
 
 <body>
@@ -176,26 +176,28 @@
             <td style="text-align: left;border: 1px solid;width:100%;padding: 50px 15px; height: 2rem;">
                 <table style="width:70%;border-collapse: collapse;">
                     <tr style="border: 1px solid;">
-                        <td style="border: 1px solid ;text-align: center; height: 2rem;" colspan="2">BANK DETAIL
+                        <td style="border: 1px solid ;text-align: center; height: 2rem;" colspan="2">
+                            BANK DETAIL
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
-                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">A/C :
-                            1212121211212
+                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
+                            A/C : 1212121211212
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
-                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">IFSC CODE:
-                            454daasdsad
+                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
+                            IFSC CODE: 454daasdsad
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
-                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">BANK : BANK OF
-                            INDIA
+                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
+                            BANK : BANK OF INDIA
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
-                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">BRANCH : SINGOT
+                        <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
+                            BRANCH : SINGOT
                         </td>
                     </tr>
                 </table>
