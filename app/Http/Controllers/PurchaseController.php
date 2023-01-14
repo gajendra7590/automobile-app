@@ -43,7 +43,8 @@ class PurchaseController extends Controller
                     },
                     'modelColor' => function ($model) {
                         $model->select('id', 'color_name');
-                    }
+                    },
+                    'transfers'
                 ])->when(!$auth->is_admin, function ($q) use ($auth) {
                     $q->where('bike_branch', $auth->branch_id);
                 });
@@ -63,13 +64,6 @@ class PurchaseController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('dealer.company_name', function ($row) {
-                    if ($row->dealer) {
-                        return $row->dealer->company_name;
-                    } else {
-                        return 'N/A';
-                    }
-                })
                 ->addColumn('bike_detail', function ($row) {
                     $str = '';
                     if ($row->brand) {
@@ -83,9 +77,6 @@ class PurchaseController extends Controller
                     }
                     return $str;
                 })
-                ->addColumn('purchase_invoice_amount', function ($row) {
-                    return '₹' . $row->purchase_invoice_amount;
-                })
                 ->addColumn('grand_total', function ($row) {
                     return '₹' . $row->grand_total;
                 })
@@ -97,7 +88,7 @@ class PurchaseController extends Controller
                     }
                 })
                 ->rawColumns([
-                    'action', 'purchase_id', 'branch.branch_name', 'dealer.company_name', 'bike_detail', 'purchase_invoice_amount', 'grand_total', 'status'
+                    'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'status'
                 ])
                 ->make(true);
         }
@@ -158,9 +149,10 @@ class PurchaseController extends Controller
                 'dc_date'                   => "nullable",
                 'vin_number'                => "required|min:17",
                 'vin_physical_status'       => "nullable",
-                'hsn_number'                => "nullable|min:6",
-                'engine_number'             => "nullable|min:14",
-                'sku'                       => "nullable",
+                'hsn_number'                => "required|min:6",
+                'engine_number'             => "required|min:14",
+                'variant'                   => "required",
+                'sku'                       => "required",
                 'sku_description'           => "nullable",
                 'key_number'                => "nullable|",
                 'service_book_number'       => "nullable",
@@ -169,9 +161,9 @@ class PurchaseController extends Controller
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
                 'tyre_front_number'         => "nullable",
                 'tyre_rear_number'          => "nullable",
-                'purchase_invoice_amount'   => "required|numeric",
-                'purchase_invoice_number'   => "required",
-                'purchase_invoice_date'     => "required|date",
+                // 'purchase_invoice_amount'   => "required|numeric",
+                // 'purchase_invoice_number'   => "required",
+                // 'purchase_invoice_date'     => "required|date",
                 'status'                    => "nullable|in:1,2",
                 //'active_status'             => "required|in:0,1",
                 'gst_rate'                  => 'required|numeric',
@@ -237,7 +229,7 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $auth = User::find(auth()->id());
-        $bpModel = Purchase::where(['id' => $id])->first();
+        $bpModel = Purchase::where(['id' => $id])->with(['invoice'])->first();
         if (!$bpModel) {
             return redirect()->back();
         }
@@ -299,6 +291,7 @@ class PurchaseController extends Controller
                 'vin_physical_status'       => "nullable",
                 'hsn_number'                => "nullable|min:6",
                 'engine_number'             => "nullable|min:14",
+                'variant'                   => "nullable",
                 'sku'                       => "nullable",
                 'sku_description'           => "nullable",
                 'key_number'                => "nullable|",
@@ -308,9 +301,9 @@ class PurchaseController extends Controller
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
                 'tyre_front_number'         => "nullable",
                 'tyre_rear_number'          => "nullable",
-                'purchase_invoice_amount'   => "required|numeric",
-                'purchase_invoice_number'   => "required",
-                'purchase_invoice_date'     => "required|date",
+                // 'purchase_invoice_amount'   => "required|numeric",
+                // 'purchase_invoice_number'   => "required",
+                // 'purchase_invoice_date'     => "required|date",
                 'status'                    => "nullable|in:1,2",
                 'gst_rate'                  => 'required|numeric|exists:gst_rates,id',
                 'gst_rate_percent'          => 'required|numeric',
@@ -370,7 +363,14 @@ class PurchaseController extends Controller
     {
         $action = '<div class="action-btn-container">';
         $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        // $action .= '<a href="' . route('purchases.destroy', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Purchase"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+
+
+        $action .= '<a href="' . route('purchaseTransfer', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Create Transfer For Purchase"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('purchaseInvoice', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_title="Create Purchase Invoice"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
+
+        $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+
+
         $action .= '</div>';
         return $action;
     }
@@ -394,6 +394,28 @@ class PurchaseController extends Controller
             'statusCode' => 200,
             'message'    => trans('messages.retrieve_success'),
             'data'       => $models
+        ]);
+    }
+
+    public function purchaseTransfer(Request $request, $id)
+    {
+        $models = Purchase::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.retrieve_success'),
+            'data'       => (view('admin.purchases.ajax.purchaseTransfer')->render())
+        ]);
+    }
+
+    public function purchaseInvoice(Request $request, $id)
+    {
+        $models = Purchase::find($id);
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.retrieve_success'),
+            'data'       => (view('admin.purchases.ajax.purchaseInvoice')->render())
         ]);
     }
 }

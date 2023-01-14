@@ -75,6 +75,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
 
+    Route::get('purchaseTransfer/{id}', 'PurchaseController@purchaseTransfer')->name('purchaseTransfer');
+    Route::get('purchaseInvoice/{id}', 'PurchaseController@purchaseInvoice')->name('purchaseInvoice');
+
     //Quotations
     Route::resource('quotations', 'QuotationController');
     Route::get('getQuotationDetails/{id}', 'QuotationController@getQuotationDetails')->name('getQuotationDetails');

@@ -36,9 +36,10 @@
                                         <th>#</th>
                                         <th>BRANCH</th>
                                         <th width="18%">BIKE INFO</th>
-                                        <th>INVOICE NUMBER</th>
-                                        <th>INVOICE DATE</th>
-                                        <th>INVOICE AMOUNT</th>
+                                        <th>SKU</th>
+                                        <th>VARIANT CODE</th>
+                                        <th>DC NUMBER</th>
+                                        <th>DC DATE</th>
                                         <th>GRAND TOTAL</th>
                                         <th>STATUS</th>
                                         <th>ACTION</th>

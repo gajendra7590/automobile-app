@@ -27,6 +27,7 @@ class Purchase extends Model
         'dc_date',
         'vin_number',
         'vin_physical_status',
+        'variant',
         'sku',
         'sku_description',
         'hsn_number',
@@ -38,9 +39,9 @@ class Purchase extends Model
         'tyre_rear_number',
         'battery_brand_id',
         'battery_number',
-        'purchase_invoice_number',
-        'purchase_invoice_amount',
-        'purchase_invoice_date',
+        //'purchase_invoice_number',
+        //'purchase_invoice_amount',
+        //'purchase_invoice_date',
         'bike_description',
         'status',
         'created_by',
@@ -117,5 +118,15 @@ class Purchase extends Model
     public function batteryBrand()
     {
         return $this->belongsTo(BatteryBrand::class, 'battery_brand_id');
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(PurchaseInvoice::class, 'purchase_id');
+    }
+
+    public function transfers()
+    {
+        return $this->hasOne(PurchaseTransfer::class, 'purchase_id');
     }
 }
