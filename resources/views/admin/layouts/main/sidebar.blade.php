@@ -69,8 +69,7 @@
                     </ul>
                 </li>
                 <li
-                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
-                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-database"></i>
                         <span>ALL USERS</span>
@@ -79,12 +78,8 @@
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'display:"block"' : '' }}>
-                        {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') || Request::is('salesmans*') ? 'display:"block"' : '' }}>
 
-                        {{-- <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-                            <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
-                        </li> --}}
                         <li class="{{ Request::is('users*') ? 'active' : '' }}">
                             <a href="{{ route('users.index') }}"><i class="fa fa-users"></i>USERS</a>
                         </li>
