@@ -291,7 +291,9 @@ class PurchaseTransfersController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="btn btn-xs btn-danger ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Create Return">RETURN</a>';
+        if ($row->status == '1') {
+            $action .= '<a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="btn btn-xs btn-danger ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Create Return">RETURN</a>';
+        }
         $action .= '</div>';
         return $action;
     }

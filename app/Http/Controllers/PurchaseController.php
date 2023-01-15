@@ -224,7 +224,39 @@ class PurchaseController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $purchaseModel = Purchase::with([
+            'branch' => function ($model) {
+                $model->select('id', 'branch_name');
+            },
+            'dealer' => function ($model) {
+                $model->select('id', 'company_name');
+            },
+            'brand' => function ($model) {
+                $model->select('id', 'name');
+            },
+            'model' => function ($model) {
+                $model->select('id', 'model_name');
+            },
+            'color' => function ($model) {
+                $model->select('id', 'color_name');
+            },
+            'tyreBrand' => function ($model) {
+                $model->select('id', 'name');
+            },
+            'batteryBrand' => function ($model) {
+                $model->select('id', 'name');
+            }
+        ])->branchWise()->where('id', $id)->first();
+
+        $data = array('data' => $purchaseModel);
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.purchases.show', $data)->render()
+        ]);
     }
 
     /**
