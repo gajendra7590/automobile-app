@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Models\BankFinancer;
 use App\Models\BatteryBrand;
-use App\Models\BikeAgent;
+use App\Models\Broker;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
@@ -342,11 +342,11 @@ trait CommonHelper
     }
 
     /**
-     * Get All Agents
+     * Get All Brokers
      */
-    public static function _getAgents($select_all = false)
+    public static function _getBrokers($select_all = false)
     {
-        $model = BikeAgent::where('active_status', '1');
+        $model = Broker::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
             $model = $model->select('id', 'name', 'email');

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankFinancer;
-use App\Models\BikeAgent;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
 use App\Models\Branch;
+use App\Models\Broker;
 use App\Models\City;
 use App\Models\District;
 use App\Models\GstRates;
@@ -79,7 +79,7 @@ class AjaxCommonController extends Controller
         }
     }
 
-    public function status(Request $request,$id)
+    public function status(Request $request, $id)
     {
         $model = null;
         try {
@@ -110,8 +110,8 @@ class AjaxCommonController extends Controller
                     case 'bankFinancer':
                         $model = new BankFinancer;
                         break;
-                    case 'bikeAgent':
-                        $model = new BikeAgent;
+                    case 'Broker':
+                        $model = new Broker;
                         break;
                     case 'dealer':
                         $model = new BikeDealer;
@@ -140,8 +140,8 @@ class AjaxCommonController extends Controller
                 ]);
             }
 
-            $model = $model->where('id',$id);
-            if((clone $model)->value('active_status')){
+            $model = $model->where('id', $id);
+            if ((clone $model)->value('active_status')) {
                 $model->update(['active_status' => 0]);
             } else {
                 $model->update(['active_status' => 1]);
@@ -164,7 +164,7 @@ class AjaxCommonController extends Controller
     public function plusAction(Request $request)
     {
         $data = "";
-        switch(request('type')) {
+        switch (request('type')) {
             case 'city':
                 $data = view('admin.models.plusModals.cityModal', [
                     'action' => route('cityStore'),
@@ -175,7 +175,7 @@ class AjaxCommonController extends Controller
                     'modalId' => request('modalId') ? request('modalId') : 'ajaxModalCommon',
                 ])->render();
                 break;
-            default :
+            default:
                 break;
         }
         return response()->json([

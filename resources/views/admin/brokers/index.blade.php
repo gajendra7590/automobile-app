@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                All Agents
+                All Brokers
                 <small>List</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Agents List</li>
+                <li class="active">Brokers List</li>
             </ol>
         </section>
 
@@ -20,19 +20,17 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> All Agents List</h3>
+                            <h3 class="box-title"> All Brokers List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('agents.create') }}"
-                                class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New Agent"
-                                    data-modal_size="modal-lg">
+                                <a href="{{ route('brokers.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Broker" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('agents.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('brokers.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -60,5 +58,5 @@
 
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/agents.js') }}"></script>
+    <script src="{{ asset('assets/modules/brokers.js') }}"></script>
 @endpush

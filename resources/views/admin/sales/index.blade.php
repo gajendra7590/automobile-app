@@ -24,7 +24,7 @@
                             <h3 class="box-title"> {{ isset($title) && $title ? $title : '' }} List Of All Sales</h3>
                             <div class="pull-right">
                                 <a href="{{ route('sales.create') }}" class="btn btn-sm btn-success">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Sale
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Sale
                                 </a>
                             </div>
                         </div>

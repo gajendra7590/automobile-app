@@ -7,42 +7,40 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label>Name</label>
-            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name" required
-                name="name" value='{{ isset($data) && $data ? $data->name : '' }}' />
+            <input type="text" class="form-control" placeholder="Enter name.." name="name"
+                value='{{ isset($data) && $data ? $data->name : '' }}' />
         </div>
         <div class="form-group col-md-6">
             <label>Email</label>
-            <input type='email' class="form-control my-colorpicker1 colorpicker-element" placeholder="Email" required
-                name="email" value="{{ isset($data) && $data ? $data->email : '' }}" />
+            <input type='text' class="form-control" placeholder="Enter email address.." name="email"
+                value="{{ isset($data) && $data ? $data->email : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Mobile Number</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Mobile Number"
-                required name="mobile_number" value="{{ isset($data) && $data ? $data->mobile_number : '' }}" />
+            <input type='text' class="form-control" placeholder="Enter nmbile number.." name="mobile_number"
+                value="{{ isset($data) && $data ? $data->mobile_number : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Mobile Number Alternate</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Mobile Number Alternate" name="mobile_number2"
+            <input type='text' class="form-control" placeholder="Mobile Number Alternate" name="mobile_number2"
                 value="{{ isset($data) && $data ? $data->mobile_number2 : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Aadhar Card Number(12 digits)</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Aadhar Card Number" name="aadhar_card"
+            <input type='text' class="form-control" placeholder="Aadhar Card Number" name="aadhar_card"
                 value="{{ isset($data) && $data ? $data->aadhar_card : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Pan Card Number(10 digits)</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Pancard Number"
-                name="pan_card" value="{{ isset($data) && $data ? $data->pan_card : '' }}" />
+            <input type='text' class="form-control" placeholder="Pancard Number" name="pan_card"
+                value="{{ isset($data) && $data ? $data->pan_card : '' }}" />
         </div>
         <div class="form-group col-md-4">
             <label>Gender</label>
-            <select class="form-control select2" style="width: 100%">
-                <option value='male' {{ isset($data) && $data->gender == 'male' ? 'selected' : '' }}>Male</option>
-                <option value='female' {{ isset($data) && $data->gender == 'female' ? 'selected' : '' }}>Female
-                </option>
+            <select name="gender" class="form-control select2" style="width: 100%">
+                <option value='1' {{ isset($data) && $data->gender == '1' ? 'selected' : '' }}>Male</option>
+                <option value='2' {{ isset($data) && $data->gender == '2' ? 'selected' : '' }}>Female</option>
+                <option value='3' {{ isset($data) && $data->gender == '3' ? 'selected' : '' }}>Other </option>
             </select>
         </div>
         <div class="form-group col-md-4">
@@ -53,14 +51,13 @@
         </div>
         <div class="form-group col-md-4">
             <label>Highest Qualification</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element"
-                placeholder="Highest Qualification" name="highest_qualification"
+            <input type='text' class="form-control" placeholder="Highest Qualification" name="highest_qualification"
                 value="{{ isset($data) && $data ? $data->highest_qualification : '' }}" />
         </div>
         <div class="form-group col-md-12">
             <label>Address Line</label>
-            <input type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="Address Line"
-                name="address_line" value="{{ isset($data) && $data->address_line ? $data->address_line : '' }}" />
+            <input type='text' class="form-control" placeholder="Address Line" name="address_line"
+                value="{{ isset($data) && $data->address_line ? $data->address_line : '' }}" />
         </div>
         <div class="form-group col-md-3">
             <label>State</label>
@@ -69,7 +66,8 @@
                 <option value="">---Select State---</option>
                 @if (isset($states))
                     @foreach ($states as $key => $state)
-                        <option {{ (isset($data->state) && $data->state == $state->id) || (!isset($data) && $key == 0)  ? 'selected' : '' }}
+                        <option
+                            {{ (isset($data->state) && $data->state == $state->id) || (!isset($data) && $key == 0) ? 'selected' : '' }}
                             value="{{ $state->id }}">{{ $state->state_name }}</option>
                     @endforeach
                 @endif
@@ -82,7 +80,8 @@
                 <option value="">---Select District---</option>
                 @if (isset($districts))
                     @foreach ($districts as $key => $district)
-                        <option {{ (isset($data->district) && $data->district == $district->id)  || (!isset($data) && $key == 0) ? 'selected' : '' }}
+                        <option
+                            {{ (isset($data->district) && $data->district == $district->id) || (!isset($data) && $key == 0) ? 'selected' : '' }}
                             value="{{ $district->id }}">{{ $district->district_name }}</option>
                     @endforeach
                 @endif
@@ -91,19 +90,10 @@
         <div class="form-group col-md-3">
             <label>City</label>
             <span style="margin-left: 40px;">
-                <a href="{{ route('plusAction') }}"
-                    class="plusAction"
-                    id="city"
-                    data-type="city"
-                    data-type="city"
-                    data-ddname="city"
-                    data-ddchange="district"
-                    data-modalid="ajaxModalCommon2"
-                    aria-hidden="true"
-                    data-modal_title="Add New City/Village/Town"
-                    data-modal-index="1200"
-                    data-modal_type="2"
-                    data-modal_size="modal-md" >
+                <a href="{{ route('plusAction') }}" class="plusAction" id="city" data-type="city" data-type="city"
+                    data-ddname="city" data-ddchange="district" data-modalid="ajaxModalCommon2" aria-hidden="true"
+                    data-modal_title="Add New City/Village/Town" data-modal-index="1200" data-modal_type="2"
+                    data-modal_size="modal-md">
                     <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
                 </a>
             </span>
@@ -111,7 +101,8 @@
                 <option value="">---Select City---</option>
                 @if (isset($cities))
                     @foreach ($cities as $key => $city)
-                        <option {{ (isset($data->city) && $data->city == $city->id) || (!isset($data) && $key == 0) ? 'selected="selected"' : '' }}
+                        <option
+                            {{ (isset($data->city) && $data->city == $city->id) || (!isset($data) && $key == 0) ? 'selected="selected"' : '' }}
                             value="{{ $city->id }}">{{ $city->city_name }}</option>
                     @endforeach
                 @endif
@@ -119,8 +110,8 @@
         </div>
         <div class="form-group col-md-3">
             <label>Zipcode</label>
-            <input type='number' class="form-control my-colorpicker1 colorpicker-element" placeholder="Zipcode"
-                name="zipcode" value="{{ isset($data) && $data->zipcode ? $data->zipcode : '' }}" />
+            <input type='number' class="form-control" placeholder="Zipcode" name="zipcode"
+                value="{{ isset($data) && $data->zipcode ? $data->zipcode : '' }}" />
         </div>
         <div class="form-group col-md-12">
             <label>Status : </label>
@@ -138,8 +129,7 @@
         </div>
         <div class="form-group col-md-12">
             <label>More Details</label>
-            <textarea type='text' class="form-control my-colorpicker1 colorpicker-element" placeholder="More Details"
-                name="more_details">{{ isset($data) && $data->more_details ? $data->more_details : '' }} </textarea>
+            <textarea type='text' class="form-control" placeholder="More Details" name="more_details">{{ isset($data) && $data->more_details ? $data->more_details : '' }} </textarea>
         </div>
     </div>
     <div class="row">

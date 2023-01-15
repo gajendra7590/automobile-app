@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BikeAgent;
-use App\Models\City;
-use App\Models\District;
-use App\Models\GstRtoRates;
 use App\Models\RtoAgent;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
-use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;

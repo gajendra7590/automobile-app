@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BikeAgent extends Model
+class Broker extends Model
 {
     use HasFactory;
 
-    protected $table = 'bike_agents';
+    protected $table = 'brokers';
 
     protected $fillable = [
         'name',
@@ -27,7 +27,7 @@ class BikeAgent extends Model
         'state',
         'zipcode',
         'joined_at',
-        'more_detail',
+        'more_details',
         'active_status'
     ];
 

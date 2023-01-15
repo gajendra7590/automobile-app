@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BikeAgent;
+use App\Models\Broker;
 use App\Models\City;
 use App\Models\District;
 use App\Models\State;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-class BikeAgentController extends Controller
+class BrokerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,14 +21,14 @@ class BikeAgentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = BikeAgent::select('*');
+            $data = Broker::select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
                     if ($row->active_status == '1') {
-                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='bikeAgent' class='active_status' checked><span class='slider round'></span></label>";
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='Broker' class='active_status' checked><span class='slider round'></span></label>";
                     } else {
-                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='bikeAgent' class='active_status'><span class='slider round'></span></label>";
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='Broker' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
                 ->addColumn('action', function ($row) {
@@ -39,9 +39,9 @@ class BikeAgentController extends Controller
                 ->make(true);
         } else {
             $formDetails = [
-                'title' => 'Bike Agent',
+                'title' => 'Brokers List',
             ];
-            return view('admin.agents.index', $formDetails);
+            return view('admin.brokers.index', $formDetails);
         }
     }
 
@@ -53,7 +53,7 @@ class BikeAgentController extends Controller
     public function create()
     {
         $data  = [
-            'action' => route('agents.store'),
+            'action' => route('brokers.store'),
             'method' => 'POST',
         ];
         $data['states'] = State::select(['id', 'state_name'])->get();
@@ -69,7 +69,7 @@ class BikeAgentController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.agents.ajaxModal', $data)->render()
+            'data'       => view('admin.brokers.ajaxModal', $data)->render()
         ]);
     }
 
@@ -88,17 +88,18 @@ class BikeAgentController extends Controller
                 'name' => "required|string",
                 'email' => "required|email",
                 'mobile_number' => 'required|string|min:10|max:13',
-                'mobile_number2' => 'string|min:10|max:13',
-                'aadhar_card' => 'string|min:12|max:12',
-                'pan_card' => 'string|min:10|max:10',
-                'date_of_birth' => 'date_format:Y-m-d',
-                'highest_qualification' => 'string',
-                'gender' => 'string|in:male,female',
-                'address_line' => 'string',
-                'state' => 'string',
-                'district' => 'string',
-                'city' => 'string',
-                'more_details' => 'string',
+                'mobile_number2' => 'nullable|string|min:10|max:13',
+                'aadhar_card' => 'nullable|string|min:12|max:12',
+                'pan_card' => 'nullable|string|min:10|max:10',
+                'date_of_birth' => 'nullable|date_format:Y-m-d',
+                'highest_qualification' => 'nullable|string',
+                'gender' => 'required|in:1,2,3',
+                'address_line' => 'nullable|string',
+                'state' => 'nullable|exists:u_states,id',
+                'district' => 'nullable|exists:u_districts,id',
+                'city' => 'nullable|exists:u_cities,id',
+                'zipcode' => 'nullable|numeric|min:6',
+                'more_details' => 'nullable|string',
                 'active_status'      => 'required|in:0,1'
             ]);
 
@@ -112,7 +113,9 @@ class BikeAgentController extends Controller
                 ]);
             }
 
-            BikeAgent::create($request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'city', 'more_details', 'active_status']));
+            $createData = $request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'zipcode', 'city', 'more_details', 'active_status']);
+
+            Broker::create($createData);
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -138,8 +141,8 @@ class BikeAgentController extends Controller
      */
     public function show($id)
     {
-        $bikeAgent = BikeAgent::find($id);
-        return view('admin.agents.show', ['agents' => $bikeAgent]);
+        $brokers = Broker::find($id);
+        return view('admin.brokers.show', ['brokers' => $brokers]);
     }
 
     /**
@@ -150,24 +153,22 @@ class BikeAgentController extends Controller
      */
     public function edit($id)
     {
-        $bikeAgent = BikeAgent::find($id);
-        $data = ['data' => $bikeAgent, 'action' => route('agents.update', ['agent' => $id]), 'method' => 'PUT'];
+        $brokers = Broker::find($id);
+        $data = ['data' => $brokers, 'action' => route('brokers.update', ['broker' => $id]), 'method' => 'PUT'];
         $data['states'] = State::select(['id', 'state_name'])->get();
         $data['districts'] = [];
         $data['cities'] = [];
-        if ($bikeAgent->state) {
-            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $bikeAgent->state)->get();
+        if ($brokers->state) {
+            $data['districts'] = District::select(['id', 'district_name'])->where('state_id', $brokers->state)->get();
         }
-        if ($bikeAgent->district) {
-            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $bikeAgent->district)->get();
+        if ($brokers->district) {
+            $data['cities'] = City::select(['id', 'city_name'])->where('district_id', $brokers->district)->get();
         }
-
-        $bikeAgent = BikeAgent::find($id);
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.agents.ajaxModal', $data)->render()
+            'data'       => view('admin.brokers.ajaxModal', $data)->render()
         ]);
     }
 
@@ -184,30 +185,34 @@ class BikeAgentController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'name' => "nullable|string",
-                'email' => "nullable|email",
-                'mobile_number' => 'nullable|string|min:10|max:13',
+                'name' => "required|string",
+                'email' => "required|email",
+                'mobile_number' => 'required|string|min:10|max:13',
                 'mobile_number2' => 'nullable|string|min:10|max:13',
                 'aadhar_card' => 'nullable|string|min:12|max:12',
                 'pan_card' => 'nullable|string|min:10|max:10',
                 'date_of_birth' => 'nullable|date_format:Y-m-d',
                 'highest_qualification' => 'nullable|string',
-                'gender' => 'nullable|string|in:male,female',
+                'gender' => 'required|in:1,2,3',
                 'address_line' => 'nullable|string',
-                'state' => 'nullable|string',
-                'district' => 'nullable|string',
-                'city' => 'nullable|string',
+                'state' => 'nullable|exists:u_states,id',
+                'district' => 'nullable|exists:u_districts,id',
+                'city' => 'nullable|exists:u_cities,id',
+                'zipcode' => 'nullable|numeric|min:6',
                 'more_details' => 'nullable|string',
                 'active_status'      => 'required|in:0,1'
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
             }
-            $bikeAgent = BikeAgent::find($id);
-            if (!$bikeAgent) {
+            $broker = Broker::find($id);
+            if (!$broker) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
-            $bikeAgent->update($request->all());
+
+            $updateData = $request->only(['name', 'email', 'mobile_number', 'mobile_number2', 'aadhar_card', 'pan_card', 'date_of_birth', 'highest_qualification', 'gender', 'address_line', 'state', 'district', 'zipcode', 'city', 'more_details', 'active_status']);
+
+            $broker->update($updateData);
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
@@ -231,11 +236,11 @@ class BikeAgentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $bikeAgent = BikeAgent::find($id);
-            if (!$bikeAgent) {
+            $broker = Broker::find($id);
+            if (!$broker) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
-            $bikeAgent->delete();
+            $broker->delete();
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.delete_success'),], 200);
         } catch (\Exception $e) {
@@ -252,7 +257,7 @@ class BikeAgentController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('agents.edit', ['agent' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('brokers.edit', ['broker' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Broker Detail" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('agents.destroy', ['agent' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('agents.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

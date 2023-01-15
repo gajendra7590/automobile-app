@@ -69,7 +69,7 @@
                     </ul>
                 </li>
                 <li
-                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-database"></i>
                         <span>ALL USERS</span>
@@ -78,7 +78,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('roles*') || Request::is('users*') || Request::is('agents*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('roles*') || Request::is('users*') || Request::is('brokers*') || Request::is('dealers*') || Request::is('bankFinancers*') || Request::is('rto-agents*') ? 'display:"block"' : '' }}>
 
                         {{-- <li class="{{ Request::is('roles*') ? 'active' : '' }}">
                         <a href="{{ route('roles.index') }}"><i class="fa fa-tasks"></i>USER ROLES</a>
@@ -86,8 +86,8 @@
                         <li class="{{ Request::is('users*') ? 'active' : '' }}">
                             <a href="{{ route('users.index') }}"><i class="fa fa-users"></i>USERS</a>
                         </li>
-                        <li class="{{ Request::is('agents*') ? 'active' : '' }}">
-                            <a href="{{ route('agents.index') }}"><i class="fa fa-user-secret"></i>AGENTS</a>
+                        <li class="{{ Request::is('brokers*') ? 'active' : '' }}">
+                            <a href="{{ route('brokers.index') }}"><i class="fa fa-user-secret"></i>BROKERS</a>
                         </li>
                         <li class="{{ Request::is('dealers*') ? 'active' : '' }}">
                             <a href="{{ route('dealers.index') }}"><i class="fa fa-vcard"></i> DEALERS</a>

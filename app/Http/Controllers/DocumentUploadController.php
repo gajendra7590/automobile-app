@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankFinancer;
-use App\Models\BikeAgent;
+use App\Models\Broker;
 use App\Models\BikeDealer;
 use App\Models\DocumentSectionTypes;
 use App\Models\DocumentUploads;
@@ -318,7 +318,7 @@ class DocumentUploadController extends Controller
                     }
                     break;
                 case '7':
-                    $data = BikeAgent::select('id', DB::raw('name as text'));
+                    $data = Broker::select('id', DB::raw('name as text'));
                     if (isset($postData['search']) && ($postData['search'] != "")) {
                         $data = $data->where('name', 'LIKE', '%' . $postData['search'] . '%');
                     }

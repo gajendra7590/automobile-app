@@ -98,8 +98,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
     Route::resource('rtoRegistration', 'RtoRegistrationController');
 
-    //Agents
-    Route::resource('agents', 'BikeAgentController');
+    //Brokers
+    Route::resource('brokers', 'BrokerController');
 
     //Roles
     Route::resource('roles', 'RoleController');
