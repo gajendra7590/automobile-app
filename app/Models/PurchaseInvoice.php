@@ -14,7 +14,6 @@ class PurchaseInvoice extends Model
     protected $fillable = [
         'purchase_id',
         'purchase_invoice_number',
-        'purchase_invoice_amount',
         'purchase_invoice_date',
         'gst_rate',
         'gst_rate_percent',

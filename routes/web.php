@@ -81,8 +81,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('purchaseReturn/{id}', 'PurchaseTransferController@returnIndex')->name('returnIndex');
     Route::post('purchaseReturn/{id}', 'PurchaseTransferController@returnSave')->name('returnSave');
 
-    Route::get('purchaseInvoice/{id}', 'PurchaseController@purchaseInvoice')->name('purchaseInvoice');
-    Route::post('purchaseInvoice/{id}', 'PurchaseController@purchaseInvoiceStore')->name('purchaseInvoiceStore');
+    Route::get('purchaseInvoice/{id}', 'PurchaseInvoiceController@invoiceIndex')->name('invoiceIndex');
+    Route::post('purchaseInvoice/{id}', 'PurchaseInvoiceController@invoiceSave')->name('invoiceSave');
 
     //Quotations
     Route::resource('quotations', 'QuotationController');

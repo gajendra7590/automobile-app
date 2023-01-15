@@ -373,7 +373,7 @@ class PurchaseController extends Controller
                 $action .= '<a href="' . route('returnIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-title="Create Return" data-modal_title="Create Return"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
             }
 
-            $action .= '<a href="' . route('purchaseInvoice', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Create Purchase Invoice" data-modal_title="Create Purchase Invoice"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('invoiceIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Create Purchase Invoice" data-modal_title="Save Purchase Invoice" data-modal_size="modal-lg"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>';
         }
         $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-title="Purchase Detail" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
@@ -399,18 +399,6 @@ class PurchaseController extends Controller
             'statusCode' => 200,
             'message'    => trans('messages.retrieve_success'),
             'data'       => $models
-        ]);
-    }
-
-
-    public function purchaseInvoice(Request $request, $id)
-    {
-        $models = Purchase::find($id);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.retrieve_success'),
-            'data'       => (view('admin.purchases.ajax.purchaseInvoice')->render())
         ]);
     }
 }

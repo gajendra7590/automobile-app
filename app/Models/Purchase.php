@@ -51,7 +51,8 @@ class Purchase extends Model
         'created_by',
         'updated_by',
         'is_editable',
-        'transfer_status'
+        'transfer_status',
+        'invoice_status'
     ];
 
     protected  $hidden = [];
