@@ -9,12 +9,12 @@ class Salesman extends Model
 {
     use HasFactory;
 
-    protected $table = "salesman";
+    protected $table = "salesmans";
 
     protected $fillable = [
         'name',
         'email',
-        'phone',
+        'mobile_number',
         'active_status',
         'is_editable'
     ];

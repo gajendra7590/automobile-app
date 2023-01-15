@@ -101,6 +101,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Brokers
     Route::resource('brokers', 'BrokerController');
 
+    //Salesmans
+    Route::resource('salesmans', 'SalesmanController');
+
     //Roles
     Route::resource('roles', 'RoleController');
 
