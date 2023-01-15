@@ -319,6 +319,19 @@ trait CommonHelper
         return $model->get();
     }
 
+    /**
+     * Get All GST Rates
+     */
+    public static function _getGstRatesById($id, $select_all = false)
+    {
+        $model = GstRates::where('id', $id);
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate');
+        }
+        return $model->get();
+    }
+
 
     /**
      * Get All RTO Gst Rates

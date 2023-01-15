@@ -101,8 +101,28 @@
                     </ul>
                 </li>
             @endif
-            <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
-                <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i> <span>PURCHASES</span></a>
+            <li
+                class="treeview {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-database"></i>
+                    <span>PURCHASE MANAGEMENT</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu"
+                    {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'display:"block"' : '' }}>
+
+                    <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i>PURCHASES</a>
+                    </li>
+                    <li class="{{ Request::is('purchaseInvoices*') ? 'active' : '' }}">
+                        <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>INVOICES</a>
+                    </li>
+                    <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
+                        <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i> TRANSFERS</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="{{ Request::is('quotations*') ? 'active' : '' }}">

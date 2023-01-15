@@ -1,9 +1,29 @@
 <form role="form" method="POST" class="ajaxFormSubmit" action="{{ isset($action) ? $action : '' }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
+    @if (isset($method) && $method == 'PUT')
+        @method('PUT')
+    @endif
     <div class="box-body">
         <div class="row">
-            <input type="hidden" name="purchase_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
+            @if ($method == 'POST')
+                <div class="form-group col-md-12">
+                    <label>Purchase Model</label>
+                    <select name="purchase_id" class="form-control">
+                        @if (isset($purchases))
+                            @foreach ($purchases as $key => $purchase)
+                                <option value="{{ $purchase->id }}">
+                                    SKU - {{ $purchase->sku }} | VAR - {{ $purchase->variant }} | DCN
+                                    -{{ $purchase->dc_number }} |
+                                    VIN - {{ $purchase->vin_number }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+            @else
+                <input type="hidden" name="purchase_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
+            @endif
             <div class="form-group col-md-6">
                 <label>Purchase Invoice Number</label>
                 <input type="text" name="purchase_invoice_number" class="form-control"
@@ -19,11 +39,11 @@
         <div class="row">
             <div class="form-group col-md-2">
                 <label>GST Rate</label>
-                <select name="gst_rate" id="gst_rate" class="form-control">
+                <select name="gst_rate_id" id="gst_rate" class="form-control">
                     @if (isset($gst_rates))
                         @foreach ($gst_rates as $key => $gst_rate)
                             <option
-                                {{ isset($data['gst_rate']) && $data['gst_rate'] == $gst_rate->gst_rate ? 'selected' : '' }}
+                                {{ isset($data['gst_rate_id']) && $data['gst_rate_id'] == $gst_rate->gst_rate ? 'selected' : '' }}
                                 value="{{ $gst_rate->id }}" data-rate="{{ $gst_rate->gst_rate }}">
                                 {{ $gst_rate->gst_rate }}%</option>
                         @endforeach
@@ -48,7 +68,7 @@
             <div class="form-group col-md-4">
                 <label>Invoice Ex Showroom Price</label>
                 <input type="text" name="ex_showroom_price" class="form-control" placeholder="₹0.00"
-                    value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}" />
+                    value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}" readonly />
             </div>
             <div class="form-group col-md-4">
                 <label>Invoice Discount Amount</label>
@@ -77,4 +97,8 @@
         </div>
     </div>
 </form>
-<script src="{{ asset('assets/modules/purchaseInvoices.js') }}"></script>
+<script>
+    $(document).ready(function() {
+
+    });
+</script>

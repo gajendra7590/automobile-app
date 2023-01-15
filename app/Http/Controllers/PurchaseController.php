@@ -365,17 +365,12 @@ class PurchaseController extends Controller
 
         if ($row->status == '1') {
             $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-title="Update Purchase Detail" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-
-
             if ($row->transfer_status == '0') {
                 $action .= '<a href="' . route('transferIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-title="Create Transfer" data-modal_title="Create Transfer"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
-            } else {
-                $action .= '<a href="' . route('returnIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-title="Create Return" data-modal_title="Create Return"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
             }
-
-            $action .= '<a href="' . route('invoiceIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Create Purchase Invoice" data-modal_title="Save Purchase Invoice" data-modal_size="modal-lg"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>';
+        } else {
+            $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-title="Purchase Detail" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         }
-        $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-title="Purchase Detail" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }
