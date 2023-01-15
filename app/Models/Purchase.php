@@ -39,18 +39,19 @@ class Purchase extends Model
         'tyre_rear_number',
         'battery_brand_id',
         'battery_number',
-        //'purchase_invoice_number',
-        //'purchase_invoice_amount',
-        //'purchase_invoice_date',
-        'bike_description',
-        'status',
-        'created_by',
-        'updated_by',
+        'gst_rate',
+        'gst_rate_percent',
         'pre_gst_amount',
         'gst_amount',
         'ex_showroom_price',
         'discount_price',
         'grand_total',
+        'bike_description',
+        'status',
+        'created_by',
+        'updated_by',
+        'is_editable',
+        'transfer_status'
     ];
 
     protected  $hidden = [];
@@ -127,6 +128,6 @@ class Purchase extends Model
 
     public function transfers()
     {
-        return $this->hasOne(PurchaseTransfer::class, 'purchase_id');
+        return $this->hasOne(PurchaseTransfer::class, 'purchase_id')->orderBy('id', 'DESC');
     }
 }

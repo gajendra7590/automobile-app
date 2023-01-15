@@ -19,7 +19,9 @@ class PurchaseTransfer extends Model
         'return_date',
         'return_note',
         'status',
-        'created_by'
+        'active_status',
+        'created_by',
+        'updated_by'
     ];
 
     protected $hidden = [];

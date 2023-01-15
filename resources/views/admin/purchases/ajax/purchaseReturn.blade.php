@@ -3,15 +3,16 @@
     @csrf
     <div class="box-body">
         <div class="row">
-            <input type="hidden" name="purchase_id" value="{{ isset($purchase_id) ? $purchase_id : '' }}">
+            <input type="hidden" name="transfer_id"
+                value="{{ isset($data['transfers']['id']) ? $data['transfers']['id'] : '0' }}">
             <div class="form-group col-md-12">
                 <label>Bike Brokers : </label>
-                <select class="form-control" name="broker_id">
+                <select class="form-control" disabled>
                     <option value="">---- Select Broker ----</option>
                     @isset($brokers)
                         @foreach ($brokers as $broker)
                             <option
-                                {{ isset($data['broker_id']) && $data['broker_id'] == $broker->id ? 'selected="selected"' : '' }}
+                                {{ isset($data['transfers']['broker_id']) && $data['transfers']['broker_id'] == $broker->id ? 'selected="selected"' : '' }}
                                 value="{{ $broker->id }}">{{ $broker->name }}</option>
                         @endforeach
                     @endisset
@@ -19,13 +20,23 @@
             </div>
             <div class="form-group col-md-12">
                 <label>Transfer Date</label>
-                <input name="transfer_date" type="date" class="form-control"
-                    value="{{ isset($data['transfer_date']) ? $data['transfer_date'] : date('Y-m-d') }}"
-                    placeholder="yyyy-mm-dd">
+                <input type="date" class="form-control"
+                    value="{{ isset($data['transfers']['transfer_date']) ? $data['transfers']['transfer_date'] : '' }}"
+                    placeholder="yyyy-mm-dd" disabled>
             </div>
             <div class="form-group col-md-12">
                 <label>Transfer Note</label>
-                <textarea name="transfer_note" class="form-control">{{ isset($data['transfer_note']) ? $data['transfer_note'] : '' }}</textarea>
+                <textarea class="form-control" disabled>{{ isset($data['transfers']['transfer_note']) ? $data['transfers']['transfer_note'] : '' }}</textarea>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label>Return Date</label>
+                <input name="return_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
+                    placeholder="yyyy-mm-dd">
+            </div>
+            <div class="form-group col-md-12">
+                <label>Return Note</label>
+                <textarea name="return_note" class="form-control"></textarea>
             </div>
         </div>
     </div>
