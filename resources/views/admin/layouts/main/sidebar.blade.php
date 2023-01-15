@@ -104,8 +104,8 @@
             <li
                 class="treeview {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-database"></i>
-                    <span>PURCHASE MANAGEMENT</span>
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>PURCHASE INVENTORIES</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>

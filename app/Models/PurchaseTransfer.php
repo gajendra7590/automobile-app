@@ -27,4 +27,9 @@ class PurchaseTransfer extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    public function broker()
+    {
+        return $this->belongsTo(Broker::class, 'broker_id');
+    }
 }

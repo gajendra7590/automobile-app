@@ -68,6 +68,10 @@ $(document).ready(function () {
                     name: "branch.branch_name",
                 },
                 {
+                    data: "broker_name",
+                    name: "broker_name",
+                },
+                {
                     data: "bike_detail",
                     name: "bike_detail",
                 },
@@ -90,10 +94,6 @@ $(document).ready(function () {
                 {
                     data: "grand_total",
                     name: "grand_total",
-                },
-                {
-                    data: "transfer_status",
-                    name: "transfer_status",
                 },
                 {
                     data: "status",

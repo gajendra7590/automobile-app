@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CommonHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rules\Enum;
 
 class Purchase extends Model
 {
+    use CommonHelper;
     use HasFactory;
 
     protected $table = 'purchases';
@@ -58,6 +60,20 @@ class Purchase extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    //Fitler by branch - local scope
+    public function scopeBranchWise($query)
+    {
+        $branch_id = self::getCurrentUserBranch();
+        if ($branch_id != '0' || $branch_id != 'null') {
+            return $query->whereHas('purchase', function ($purchase) use ($branch_id) {
+                $purchase->where('bike_branch', $branch_id);
+            });
+        }
+    }
+
+
 
     public function getFullNameAttribute()
     {

@@ -87,8 +87,15 @@ class PurchaseController extends Controller
                         return '<span class="label label-danger">SOLD_OUT</span>';
                     }
                 })
+                ->addColumn('transfer_status', function ($row) {
+                    if ($row->transfer_status == '1') {
+                        return '<span class="label label-success">YES</span>';
+                    } else {
+                        return '<span class="label label-danger">NO</span>';
+                    }
+                })
                 ->rawColumns([
-                    'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'status'
+                    'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'transfer_status', 'status'
                 ])
                 ->make(true);
         }
@@ -362,14 +369,10 @@ class PurchaseController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-
         if ($row->status == '1') {
             $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-title="Update Purchase Detail" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-            if ($row->transfer_status == '0') {
-                $action .= '<a href="' . route('transferIndex', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-primary ajaxModalPopup" data-title="Create Transfer" data-modal_title="Create Transfer"><i class="fa fa-exchange" aria-hidden="true"></i></a>';
-            }
         } else {
-            $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-title="Purchase Detail" data-modal_title="Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         }
         $action .= '</div>';
         return $action;
