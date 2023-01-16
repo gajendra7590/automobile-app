@@ -127,7 +127,7 @@
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem; padding-left: 0.5rem;">
                             EX SHOWROOM PRICE</td>
                         <td style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;  padding-left: 0.5rem;">
-                            {{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}</td>
+                            {{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}
                         </td>
                     </tr>
                     <tr>
@@ -182,30 +182,32 @@
                     </tr>
                     <tr style="border: 1px solid;">
                         <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
-                            A/C : 1212121211212
+                            A/C : {{ isset($data->branch->account_number) ? $data->branch->account_number : '' }}
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
                         <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
-                            IFSC CODE: 454daasdsad
+                            IFSC CODE: {{ isset($data->branch->ifsc_code) ? $data->branch->ifsc_code : '' }}
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
                         <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
-                            BANK : BANK OF INDIA
+                            BANK : {{ isset($data->branch->bank_name) ? $data->branch->bank_name : '' }}
                         </td>
                     </tr>
                     <tr style="border: 1px solid;">
                         <td style="border: 1px solid; text-align: center; height: 2rem;" colspan="2">
-                            BRANCH : SINGOT
+                            BRANCH : {{ isset($data->branch->bank_branch) ? $data->branch->bank_branch : '' }}
                         </td>
                     </tr>
                 </table>
             </td>
-            <td style="padding-left: 5rem; height: 2rem;">
+            <td style="padding-left: 7rem; height: 2rem;">
                 <table>
                     <tr style="border: 1px solid; text-align: center; height: 2rem;">
-                        AKASH MOTORS
+                        <td style="text-align: center; height: 2rem;">
+                            {{ isset($data->branch->branch_name) ? $data->branch->branch_name : '' }}
+                        </td>
                     </tr>
                     <tr style="border: 1px solid;">
                         <td style="text-align: center; height: 2rem;">

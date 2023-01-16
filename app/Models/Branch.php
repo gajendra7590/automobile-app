@@ -24,6 +24,10 @@ class Branch extends Model
         'branch_pincode',
         'branch_more_detail',
         'gstin_number',
+        'account_number',
+        'ifsc_code',
+        'bank_name',
+        'bank_branch',
         'active_status'
     ];
 
