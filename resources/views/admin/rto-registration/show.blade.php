@@ -86,22 +86,18 @@
       </tr>
 
       <tr>
-          <th colspan="2">BIKE NUMBER</th>
-          <td> {{ isset($data['bike_number']) ? $data['bike_number'] : '--' }}
-          </td>
-          <th colspan="2">RECIEVED DATE</th>
+          <th>RECIEVED DATE</th>
           <td>{{ isset($data['recieved_date']) ? myDateFormate($data['recieved_date']) : '--' }}</td>
-      </tr>
-      <tr>
-          <th colspan="2">CUSTOMER GIVEN NAME</th>
+          <th>CUSTOMER GIVEN NAME</th>
           <td>{{ isset($data['customer_given_name']) ? $data['customer_given_name'] : '--' }}</td>
           </td>
-          <th colspan="2">CUSTOMER GIVEN DATE</th>
+          <th>CUSTOMER GIVEN DATE</th>
           <td>
-              {{ isset($data['customer_given_date']) ? myDateFormate($data['customer_given_date']) : '--' }}</td>
+              {{ isset($data['customer_given_date']) ? myDateFormate($data['customer_given_date']) : '--' }}
+          </td>
       </tr>
       <tr>
-          <th colspan="2">CUSTOMER GIVEN NOTE</th>
-          <td colspan="4">{{ isset($data['customer_given_note']) ? $data['customer_given_note'] : '--' }}</td>
+          <th>CUSTOMER GIVEN NOTE</th>
+          <td colspan="5">{{ isset($data['customer_given_note']) ? $data['customer_given_note'] : '--' }}</td>
       </tr>
   </table>

@@ -132,10 +132,8 @@ $(document).ready(function () {
         let tr_amount = $('input[name="tr_amount"]').val();
         let fees = $('input[name="fees"]').val();
         let total =
-            parseFloat(ex_showroom_amount) +
-            parseFloat(hyp_amount) +
-            parseFloat(tr_amount) +
-            parseFloat(fees);
+            // parseFloat(tax_amount) +
+            parseFloat(hyp_amount) + parseFloat(tr_amount) + parseFloat(fees);
         $('input[name="total_amount"]').val(total);
     }
 });

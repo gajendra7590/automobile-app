@@ -102,6 +102,11 @@ class Sale extends Model
         return $this->belongsTo(Purchase::class, 'purchase_id');
     }
 
+    public function financer()
+    {
+        return $this->belongsTo(BankFinancer::class, 'hyp_financer');
+    }
+
     public function salesman()
     {
         return $this->belongsTo(Salesman::class, 'salesman_id');

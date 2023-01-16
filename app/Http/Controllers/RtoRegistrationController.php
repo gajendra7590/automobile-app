@@ -130,7 +130,6 @@ class RtoRegistrationController extends Controller
                 'rc_number' => "nullable|string",
                 'rc_status' => "required|in:0,1",
                 'submit_date' => "nullable|date",
-                'bike_number' => "nullable|string",
                 'recieved_date' => "nullable|date",
                 'customer_given_date' => "nullable|date",
                 'remark' => "nullable|string"
@@ -312,7 +311,6 @@ class RtoRegistrationController extends Controller
                 'rc_number' => "nullable|string",
                 'rc_status' => "required|in:0,1",
                 'submit_date' => "nullable|date",
-                'bike_number' => "nullable|string",
                 'recieved_date' => "nullable|date",
                 'customer_given_date' => "nullable|date",
                 'remark' => "nullable|string"
@@ -371,7 +369,10 @@ class RtoRegistrationController extends Controller
         $salesModel = Sale::with([
             'purchase' => function ($purchase) {
                 $purchase->select('id', 'sku');
-            }
+            },
+            'financer' => function ($purchase) {
+                $purchase->select('id', 'bank_name');
+            },
         ])->where('id', $postData['id'])->first();
         $data = array(
             'states' => self::_getStates(1),

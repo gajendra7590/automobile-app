@@ -44,7 +44,6 @@ class RtoRegistration extends Model
         'customer_given_name',
         'customer_given_date',
         'customer_given_note',
-        'bike_number',
         'remark',
         'created_by',
         'updated_by',
