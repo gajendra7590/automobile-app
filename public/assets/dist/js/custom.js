@@ -258,7 +258,7 @@ $(document).ready(function () {
         if(!district_id){
             toastr.error("Please select district first");
         }else{
-            var modal_type = $(this).data('modal_type');
+            var modal_type = $(this).data('modal_type') != undefined ? $(this).data('modal_type') : "";
             $(`#ajaxModalSize${modal_type}`).addClass(modal_size);
             $(`.ajaxModalTitle${modal_type}`).html(modal_title);
             $(`.ajaxModalCommon${modal_type}`).attr("tabindex",1200);
