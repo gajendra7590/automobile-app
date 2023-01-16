@@ -33,7 +33,10 @@ class SaleController extends Controller
                 ->branchWise()
                 ->select('id', 'branch_id', 'purchase_id', 'customer_name', 'total_amount', 'created_at', 'status', 'sp_account_id')
                 ->with([
-                    'purchase'
+                    'purchase',
+                    'salesman' => function ($model) {
+                        $model->select('id', 'name');
+                    },
                 ]);
 
             // dd($data->limit(10)->get()->toArray());
@@ -109,15 +112,23 @@ class SaleController extends Controller
             'quotation_id' => null
         );
         if (!empty(request('q'))) {
-            $quotation = Quotation::select('id', 'branch_id')->find(request('q'));
+            $quotation = Quotation::select('id', 'branch_id', 'salesman_id')->find(request('q'));
             if ($quotation) {
-                $data['purchases'] = self::_getInStockPurchases($quotation['branch_id']);
+                $data['purchases'] = self::_getInStockPurchases($quotation->branch_id);
+                if (intval($quotation->salesman_id) > 0) {
+                    $data['salesmans'] = self::_getSalesmanById($quotation->salesman_id);
+                } else {
+                    $data['salesmans'] = self::_getSalesman();
+                }
                 $data['quotation_id'] = $quotation->id;
+                $data['data']['salesman_id'] = $quotation->salesman_id;
             } else {
                 $data['purchases'] = self::_getInStockPurchases();
+                $data['salesmans'] = self::_getSalesman();
             }
         } else {
             $data['purchases'] = self::_getInStockPurchases();
+            $data['salesmans'] = self::_getSalesman();
         }
         return view('admin.sales.create', $data);
     }
@@ -134,6 +145,7 @@ class SaleController extends Controller
             $postData = $request->only(
                 'purchase_id',
                 'quotation_id',
+                'salesman_id',
                 'customer_gender',
                 'customer_name',
                 'customer_relationship',
@@ -144,7 +156,10 @@ class SaleController extends Controller
                 'customer_city',
                 'customer_zipcode',
                 'customer_mobile_number',
+                'customer_mobile_number_alt',
                 'customer_email_address',
+                'witness_person_name',
+                'witness_person_phone',
                 'payment_type',
                 'is_exchange_avaliable',
                 'hyp_financer',
@@ -160,6 +175,7 @@ class SaleController extends Controller
             $formValidationArr = [
                 'purchase_id' => 'required|exists:purchases,id',
                 'quotation_id' => 'nullable|exists:quotations,id',
+                'salesman_id' => 'nullable|exists:salesmans,id',
                 'customer_gender' => 'required|in:1,2,3',
                 'customer_name' => 'required|string',
                 'customer_relationship' => 'required|in:1,2,3',
@@ -170,7 +186,10 @@ class SaleController extends Controller
                 'customer_city' => 'required|exists:u_cities,id',
                 'customer_zipcode' => 'required|numeric',
                 'customer_mobile_number' => 'required|numeric',
+                'customer_mobile_number_alt' => 'nullable|required|numeric',
                 'customer_email_address' => 'nullable|email',
+                'witness_person_name' => 'required',
+                'witness_person_phone' => 'required|numeric|min:10',
                 'payment_type' => 'required|in:1,2,3',
                 'is_exchange_avaliable' => 'required|in:Yes,No',
                 'hyp_financer' => 'nullable|exists:bank_financers,id',
@@ -285,6 +304,7 @@ class SaleController extends Controller
             'districts' => [],
             'cities' => [],
             'gst_rto_rates' => self::_getRtoGstRates(),
+            'salesmans' => self::_getSalesmanById($bpModel->salesman_id),
             'purchaseModel' => $purhcaseModel
         );
         //Quotation data for prefield
@@ -324,6 +344,7 @@ class SaleController extends Controller
             $postData = $request->only(
                 'purchase_id',
                 'quotation_id',
+                'salesman_id',
                 'customer_gender',
                 'customer_name',
                 'customer_relationship',
@@ -334,7 +355,10 @@ class SaleController extends Controller
                 'customer_city',
                 'customer_zipcode',
                 'customer_mobile_number',
+                'customer_mobile_number_alt',
                 'customer_email_address',
+                'witness_person_name',
+                'witness_person_phone',
                 'payment_type',
                 'is_exchange_avaliable',
                 'hyp_financer',
@@ -350,6 +374,7 @@ class SaleController extends Controller
             $formValidationArr = [
                 'purchase_id' => 'nullable|exists:purchases,id',
                 'quotation_id' => 'nullable|exists:quotations,id',
+                'salesman_id' => 'nullable|exists:salesmans,id',
                 'customer_gender' => 'nullable|in:1,2,3',
                 'customer_name' => 'nullable|string',
                 'customer_relationship' => 'nullable|in:1,2,3',
@@ -360,7 +385,10 @@ class SaleController extends Controller
                 'customer_city' => 'nullable|exists:u_cities,id',
                 'customer_zipcode' => 'nullable|numeric',
                 'customer_mobile_number' => 'nullable|numeric',
+                'customer_mobile_number_alt' => 'nullable|numeric|min:10',
                 'customer_email_address' => 'nullable|email',
+                'witness_person_name' => 'nullable',
+                'witness_person_phone' => 'nullable|numeric|min:10',
                 'payment_type' => 'nullable|in:1,2,3',
                 'is_exchange_avaliable' => 'nullable|in:Yes,No',
                 'hyp_financer' => 'nullable|exists:bank_financers,id',

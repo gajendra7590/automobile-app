@@ -15,6 +15,7 @@ class Quotation extends Model
 
     protected $fillable = [
         'branch_id',
+        'salesman_id',
         'customer_gender',
         'customer_name',
         'customer_relationship',
@@ -25,6 +26,7 @@ class Quotation extends Model
         'customer_city',
         'customer_zipcode',
         'customer_mobile_number',
+        'customer_mobile_number_alt',
         'customer_email_address',
         'payment_type',
         'is_exchange_avaliable',
@@ -62,52 +64,55 @@ class Quotation extends Model
         });
     }
 
-    public function getGenderAttribute(){
-        switch($this->customer_gender){
-            case 1 :
+    public function getGenderAttribute()
+    {
+        switch ($this->customer_gender) {
+            case 1:
                 return 'Mr.';
                 break;
-            case 2 :
+            case 2:
                 return 'Mrs.';
                 break;
-            case 3 :
+            case 3:
                 return 'Miss';
                 break;
-            default :
+            default:
                 return $this->customer_gender;
                 break;
         }
     }
 
-    public function getRelationshipAttribute(){
-        switch($this->customer_relationship){
-            case 1 :
+    public function getRelationshipAttribute()
+    {
+        switch ($this->customer_relationship) {
+            case 1:
                 return 'S/O';
                 break;
-            case 2 :
+            case 2:
                 return 'W/O';
                 break;
-            case 3 :
+            case 3:
                 return 'D/O';
                 break;
-            default :
+            default:
                 return $this->customer_relationship;
                 break;
         }
     }
 
-    public function getPaymentTypeAccessorAttribute(){
-        switch($this->payment_type){
-            case 1 :
+    public function getPaymentTypeAccessorAttribute()
+    {
+        switch ($this->payment_type) {
+            case 1:
                 return 'By Cash';
                 break;
-            case 2 :
+            case 2:
                 return 'Bank Finance';
                 break;
-            case 3 :
+            case 3:
                 return 'Personal Finance';
                 break;
-            default :
+            default:
                 return $this->payment_type;
                 break;
         }
@@ -172,5 +177,10 @@ class Quotation extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function salesman()
+    {
+        return $this->belongsTo(Salesman::class, 'salesman_id');
     }
 }

@@ -16,6 +16,7 @@ use App\Models\GstRates;
 use App\Models\GstRtoRates;
 use App\Models\Purchase;
 use App\Models\RtoAgent;
+use App\Models\Salesman;
 use App\Models\State;
 use App\Models\TyreBrand;
 use Illuminate\Support\Facades\Auth;
@@ -409,6 +410,27 @@ trait CommonHelper
             $model = $model->select('id', 'agent_name');
         }
         return $model->get();
+    }
+
+    /**
+     * Get All Salemans list
+     */
+    public static function _getSalesman($select_all = false)
+    {
+        $model = Salesman::where('active_status', '1');
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'name');
+        }
+        return $model->get();
+    }
+
+    /**
+     * Get Saleman
+     */
+    public static function _getSalesmanById($id = false)
+    {
+        return Salesman::select('id', 'name')->where('id', $id)->get();
     }
 
     /**

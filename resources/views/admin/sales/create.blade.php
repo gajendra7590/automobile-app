@@ -55,7 +55,7 @@
                         @endif
                         {{-- Purchase --}}
                         <div class="row">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
                                 <label>Select Bike To Sale(Select From Avaliable Stock)</label>
                                 <select id="purchase" name="purchase_id" class="form-control"
                                     data-ajax_load="{{ route('ajaxLoadeView') }}"
@@ -88,6 +88,21 @@
                                                     {{ $purchase->sku }}
                                                 @endisset
 
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Select Salesman</label>
+                                <select name="salesman_id" class="form-control"
+                                    {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+                                    <option value="">---Select Salesman---</option>
+                                    @if (isset($salesmans))
+                                        @foreach ($salesmans as $key => $salesman)
+                                            <option
+                                                {{ isset($data['salesman_id']) && $data['salesman_id'] == $salesman->id ? 'selected' : '' }}
+                                                value="{{ $salesman->id }}">{{ $salesman->name }}
                                             </option>
                                         @endforeach
                                     @endif
