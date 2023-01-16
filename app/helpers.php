@@ -281,6 +281,42 @@ if (!function_exists('priceFormate')) {
     }
 }
 
+if (!function_exists('leadingZero')) {
+    function leadingZero($number, $len = 5, $pos = STR_PAD_LEFT)
+    {
+        return str_pad($number, $len, 0, $pos);
+    }
+}
+
+if (!function_exists('convertBadges')) {
+    function convertBadges($type = "string", $label = "")
+    {
+        if ($type == 'string') {
+            switch (strtolower($label)) {
+                case 'yes':
+                case 'YES':
+                    return '<span class="label label-success">YES</span>';
+                    break;
+                case 'no':
+                case 'NO':
+                    return '<span class="label label-danger">NO</span>';
+                    break;
+            }
+        } else if ($type = 'price') {
+            switch (strtolower($label)) {
+                case 'red':
+                case 'YES':
+                    return '<span class="label label-success">YES</span>';
+                    break;
+                case 'no':
+                case 'NO':
+                    return '<span class="label label-danger">NO</span>';
+                    break;
+            }
+        }
+    }
+}
+
 if (!function_exists('myDateFormate')) {
     function myDateFormate($date = null)
     {

@@ -224,7 +224,6 @@ class PurchaseController extends Controller
      */
     public function show($id)
     {
-
         $purchaseModel = Purchase::with([
             'branch' => function ($model) {
                 $model->select('id', 'branch_name');
@@ -246,8 +245,11 @@ class PurchaseController extends Controller
             },
             'batteryBrand' => function ($model) {
                 $model->select('id', 'name');
+            },
+            'invoice' => function ($model) {
+                $model->select('id', 'purchase_id', 'grand_total');
             }
-        ])->branchWise()->where('id', $id)->first();
+        ])->where('id', $id)->first();
 
         $data = array('data' => $purchaseModel);
 

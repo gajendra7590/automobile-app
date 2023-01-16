@@ -1,46 +1,104 @@
-@extends('admin.layouts.admin-layout')
-@section('container')
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Branch
-                <small>Detail</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="#">Branch</a></li>
-                <li class="active">View</li>
-            </ol>
-        </section>
+<table class="table table-bordered">
+    {{-- <caption>This is caption-top example</caption> --}}
+    <tr>
+        <th>SOLD STATUS</th>
+        <td>{{ isset($data['status']) ? ($data['status'] == '1' ? 'NO' : 'YES') : '--' }}</td>
+        <th>INVOICE AMOUNT</th>
+        <td>{{ isset($data['invoice']['grand_total']) ? priceFormate($data['invoice']['grand_total']) : '--' }}</td>
+        <th>TRANSFER STATUS</th>
+        <td>{{ isset($data['transfer_status']) ? ($data['transfer_status'] == 'NO' ? 'NO' : 'YES') : '--' }}</td>
+    </tr>
+    <tr>
+        <th>PURCHASE ID</th>
+        <td>{{ isset($data['id']) ? leadingZero($data['id'], 6) : '--' }}</td>
+        <th>BRANCH NAME</th>
+        <td>{{ isset($data['branch']['branch_name']) ? $data['branch']['branch_name'] : '--' }}</td>
+        <th>DEALER NAME</th>
+        <td>{{ isset($data['dealer']['company_name']) ? $data['dealer']['company_name'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>BRAND NAME</th>
+        <td>{{ isset($data['brand']['name']) ? $data['brand']['name'] : '--' }}</td>
+        <th>MODEL NAME</th>
+        <td>{{ isset($data['model']['model_name']) ? $data['model']['model_name'] : '--' }}</td>
+        <th>COLOR NAME</th>
+        <td>{{ isset($data['color']['color_name']) ? $data['color']['color_name'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>BIKE TYPE</th>
+        <td>{{ isset($data['bike_type']) ? $data['bike_type'] : '--' }}</td>
+        <th>FUEL TYPE</th>
+        <td>{{ isset($data['bike_fuel_type']) ? $data['bike_fuel_type'] : '--' }}</td>
+        <th>BREAK TYPE</th>
+        <td>{{ isset($data['break_type']) ? $data['break_type'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>BIKE TYPE</th>
+        <td>{{ isset($data['wheel_type']) ? $data['wheel_type'] : '--' }}</td>
+        <th>DC NUMBER</th>
+        <td>{{ isset($data['dc_number']) ? $data['dc_number'] : '--' }}</td>
+        <th>DC DATE</th>
+        <td>{{ isset($data['dc_date']) ? $data['dc_date'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>VIN NUMBER</th>
+        <td>{{ isset($data['vin_number']) ? $data['vin_number'] : '--' }}</td>
+        <th>VIN PHYSICAL STATUS</th>
+        <td>{{ isset($data['vin_physical_status']) ? $data['vin_physical_status'] : '--' }}</td>
+        <th>VARIANT</th>
+        <td>{{ isset($data['variant']) ? $data['variant'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>SKU</th>
+        <td>{{ isset($data['sku']) ? $data['sku'] : '--' }}</td>
+        <th>SKU DESCRIPTION</th>
+        <td colspan="3">{{ isset($data['sku_description']) ? $data['sku_description'] : '--' }}</td>
+    </tr>
 
-        <section class="content">
-            <!-- SELECT2 EXAMPLE -->
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Details</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <p>{{$bikeBrand->name}}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Description</label>
-                                <p>{{$bikeBrand->description}}</p>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                </div>
-            </div>
-        </section>
-    </div>
-@endsection
+    <tr>
+        <th>HSN NUMBER</th>
+        <td>{{ isset($data['hsn_number']) ? $data['hsn_number'] : '--' }}</td>
+        <th>ENGINE NUMBER</th>
+        <td>{{ isset($data['engine_number']) ? $data['engine_number'] : '--' }}</td>
+        <th>KEY NUMBER</th>
+        <td>{{ isset($data['key_number']) ? $data['key_number'] : '--' }}</td>
+    </tr>
+    <tr>
+        <th>SERVICE BOOK NUMBER</th>
+        <td>{{ isset($data['service_book_number']) ? $data['service_book_number'] : '--' }}</td>
+        <th>TYRE BRAND</th>
+        <td>{{ isset($data['tyreBrand']['name']) ? $data['tyreBrand']['name'] : '--' }}</td>
+        <th>TYRE FRONT NUMBER</th>
+        <td>{{ isset($data['tyre_front_number']) ? $data['tyre_front_number'] : '--' }}</td>
+    </tr>
+
+    <tr>
+        <th>TYRE REAR NUMBER</th>
+        <td>{{ isset($data['tyre_rear_number']) ? $data['tyre_rear_number'] : '--' }}</td>
+        <th>BATTERY BRAND NAME</th>
+        <td>{{ isset($data['batteryBrand']['name']) ? $data['batteryBrand']['name'] : '--' }}</td>
+        <th>BATTERY NUMBER</th>
+        <td>{{ isset($data['battery_number']) ? $data['battery_number'] : '--' }}</td>
+    </tr>
+
+    <tr>
+        <th>GST RATE</th>
+        <td>{{ isset($data['gst_rate_percent']) ? $data['gst_rate_percent'] . '%' : '--' }}</td>
+        <th>PRE GST PRICE</th>
+        <td>{{ isset($data['pre_gst_amount']) ? priceFormate($data['pre_gst_amount']) : '--' }}</td>
+        <th>GST AMOUNT</th>
+        <td>{{ isset($data['gst_amount']) ? priceFormate($data['gst_amount']) : '--' }}</td>
+    </tr>
+    <tr>
+        <th>EX SHOWROOM PRICE</th>
+        <td>{{ isset($data['ex_showroom_price']) ? priceFormate($data['ex_showroom_price']) : '--' }}</td>
+        <th>DISCOUNT PRICE</th>
+        <td>{{ isset($data['discount_price']) ? priceFormate($data['discount_price']) : '--' }}</td>
+        <th>GRAND TOTAL</th>
+        <td>{{ isset($data['grand_total']) ? priceFormate($data['grand_total']) : '--' }}</td>
+    </tr>
+    <tr>
+        <th>DESCRIPTION</th>
+        <td>{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
+    </tr>
+</table>
