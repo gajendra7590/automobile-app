@@ -50,7 +50,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->where('id', self::getCurrentUserBranch());
         }
 
@@ -82,7 +82,7 @@ trait CommonHelper
             $model = $model->select('id', 'name');
         }
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
         }
         return $model->get();
@@ -119,7 +119,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->whereHas('bike_brand', function ($bb) {
                 $bb->where('branch_id', self::getCurrentUserBranch());
             });
@@ -158,7 +158,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->whereHas('model.bike_brand', function ($bb) {
                 $bb->where('branch_id', self::getCurrentUserBranch());
             });
@@ -441,7 +441,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->where('bike_branch', self::getCurrentUserBranch());
         }
         return $model->get();
@@ -477,7 +477,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0' || self::getCurrentUserBranch() != 'null') {
+        if (self::getCurrentUserBranch() != '0') {
             $model = $model->where('id', self::getCurrentUserBranch());
         }
         return $model->get();
