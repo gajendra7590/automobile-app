@@ -11,7 +11,6 @@
                 Purchase <small>{{ isset($method) && $method == 'PUT' ? 'Update' : 'Create' }}</small>
             </h1>
         </section>
-
         <section class="content">
             <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
                 enctype="multipart/form-data" data-redirect="{{ isset($method) && $method == 'PUT' ? 'edit' : '{id}/edit' }}">
@@ -48,6 +47,15 @@
                                 </button>
                             @endif
                         </div>
+                        @if (isset($data['transfer_status']) && $data['transfer_status'] == '1')
+                            <p>
+                                <span class="text-danger" style="padding-left: 10px;font-size: 16px;">
+                                    Note : This inventory is available at
+                                    broker({{ isset($data['transfers']['broker']) ? $data['transfers']['broker']['name'] : '' }})
+                                    showroom.
+                                </span>
+                            </p>
+                        @endif
                     </div>
                     <div class="box-body">
                         <div class="row">

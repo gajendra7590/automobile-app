@@ -75,10 +75,10 @@ $(document).ready(function () {
                     data: "sku",
                     name: "sku",
                 },
-                {
-                    data: "variant",
-                    name: "variant",
-                },
+                // {
+                //     data: "variant",
+                //     name: "variant",
+                // },
                 {
                     data: "dc_number",
                     name: "dc_number",

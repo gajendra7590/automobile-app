@@ -37,7 +37,7 @@
                                         <th>BRANCH</th>
                                         <th width="18%">BIKE INFO</th>
                                         <th>SKU</th>
-                                        <th>VARIANT CODE</th>
+                                        {{-- <th>VARIANT CODE</th> --}}
                                         <th>DC NUMBER</th>
                                         <th>DC DATE</th>
                                         <th>GRAND TOTAL</th>

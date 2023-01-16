@@ -248,6 +248,9 @@ class PurchaseController extends Controller
             },
             'invoice' => function ($model) {
                 $model->select('id', 'purchase_id', 'grand_total');
+            },
+            'transfers' => function ($transfers) {
+                $transfers->with(['broker'])->select('id', 'broker_id', 'purchase_id');
             }
         ])->where('id', $id)->first();
 
@@ -270,10 +273,18 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         $auth = User::find(auth()->id());
-        $bpModel = Purchase::where(['id' => $id])->with(['invoice'])->first();
+        $bpModel = Purchase::where(['id' => $id])
+            ->with([
+                'invoice',
+                'transfers' => function ($transfers) {
+                    $transfers->with(['broker'])->select('id', 'broker_id', 'purchase_id');
+                }
+            ])->first();
         if (!$bpModel) {
             return redirect()->back();
         }
+
+        // return $bpModel;
         $data = [];
         config(['first_brand' => true]);
         $data['branches'] = self::_getbranches(!$auth->is_admin);
@@ -405,9 +416,8 @@ class PurchaseController extends Controller
         $action = '<div class="action-btn-container">';
         if ($row->status == '1') {
             $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-title="Update Purchase Detail" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        } else {
-            $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         }
+        $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

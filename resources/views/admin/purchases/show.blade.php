@@ -1,12 +1,21 @@
 <table class="table table-bordered">
-    {{-- <caption>This is caption-top example</caption> --}}
+    @if (isset($data['transfer_status']) && $data['transfer_status'] == '1')
+        <caption>
+            <span class="text-danger">Note : This inventory is available at
+                broker({{ isset($data['transfers']['broker']) ? $data['transfers']['broker']['name'] : '' }}) showroom.
+            </span>
+        </caption>
+    @endif
     <tr>
         <th>SOLD STATUS</th>
-        <td>{{ isset($data['status']) ? ($data['status'] == '1' ? 'NO' : 'YES') : '--' }}</td>
+        <td>{!! isset($data['status']) ? convertBadgesStr($data['status'], 'purSold') : '--' !!}
+        </td>
         <th>INVOICE AMOUNT</th>
-        <td>{{ isset($data['invoice']['grand_total']) ? priceFormate($data['invoice']['grand_total']) : '--' }}</td>
+        <td>{!! isset($data['invoice']['grand_total']) ? convertBadgesPrice($data['invoice']['grand_total']) : '--' !!}
+        </td>
         <th>TRANSFER STATUS</th>
-        <td>{{ isset($data['transfer_status']) ? ($data['transfer_status'] == 'NO' ? 'NO' : 'YES') : '--' }}</td>
+        <td>{!! isset($data['transfer_status']) ? convertBadgesStr($data['transfer_status']) : '--' !!}
+        </td>
     </tr>
     <tr>
         <th>PURCHASE ID</th>

@@ -145,6 +145,6 @@ class Purchase extends Model
 
     public function transfers()
     {
-        return $this->hasOne(PurchaseTransfer::class, 'purchase_id')->orderBy('id', 'DESC');
+        return $this->hasOne(PurchaseTransfer::class, 'purchase_id')->where('active_status', '1')->orderBy('id', 'DESC');
     }
 }

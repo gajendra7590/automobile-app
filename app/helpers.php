@@ -288,31 +288,46 @@ if (!function_exists('leadingZero')) {
     }
 }
 
-if (!function_exists('convertBadges')) {
-    function convertBadges($type = "string", $label = "")
+if (!function_exists('convertBadgesStr')) {
+    function convertBadgesStr($value, $type = "")
     {
-        if ($type == 'string') {
-            switch (strtolower($label)) {
-                case 'yes':
-                case 'YES':
-                    return '<span class="label label-success">YES</span>';
-                    break;
-                case 'no':
-                case 'NO':
+        switch ($value) {
+            case '0':
+                return '<span class="label label-danger">NO</span>';
+                break;
+            case '1':
+                if ($type == 'purSold') {
                     return '<span class="label label-danger">NO</span>';
-                    break;
-            }
-        } else if ($type = 'price') {
-            switch (strtolower($label)) {
-                case 'red':
-                case 'YES':
+                } else {
                     return '<span class="label label-success">YES</span>';
-                    break;
-                case 'no':
-                case 'NO':
-                    return '<span class="label label-danger">NO</span>';
-                    break;
-            }
+                }
+                break;
+            case '2':
+                return '<span class="label label-success">YES</span>';
+                break;
+        }
+    }
+}
+
+if (!function_exists('convertBadgesPrice')) {
+    function convertBadgesPrice($value, $class = 'success')
+    {
+        switch (strtolower($class)) {
+            case 'danger':
+                return '<span class="label label-danger">' . priceFormate($value) . '</span>';
+                break;
+            case 'success':
+                return '<span class="label label-success">' . priceFormate($value) . '</span>';
+                break;
+            case 'warning':
+                return '<span class="label label-warning">' . priceFormate($value) . '</span>';
+                break;
+            case 'info':
+                return '<span class="label label-info">' . priceFormate($value) . '</span>';
+                break;
+            case 'primary':
+                return '<span class="label label-primary">' . priceFormate($value) . '</span>';
+                break;
         }
     }
 }
