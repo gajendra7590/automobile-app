@@ -164,7 +164,8 @@
                     <tr>
                         <td style="text-align: left; height: 2rem;  padding-left: 0.5rem;font-weight: bold;">TOTAL
                             AMOUNT</td>
-                        <td style="border-left: 1px solid; text-align: center; height: 2rem;font-weight: bold;">&#8377;
+                        <td style="border-left: 1px solid; text-align: center; height: 2rem;font-weight: bold;">
+                            <span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>
                             {{ isset($data->total_amount) ? $data->total_amount : '' }}
                         </td>
                     </tr>
