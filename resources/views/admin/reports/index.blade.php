@@ -22,7 +22,7 @@
                             <li class="active">
                                 <a href="{{ route('loadReportSection') }}?type=purchase" id="current_active"
                                     class="loadeReport">
-                                    PURCHASE REPORT
+                                    VEHICLE PURCHASES REGISTER REPORT
                                 </a>
                             </li>
                             <li>
