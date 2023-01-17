@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BikeBrand;
+use App\Models\BikeModel;
+use App\Models\Purchase;
+use App\Models\Quotation;
+use App\Models\Sale;
+use Database\Seeders\BrandSeeder;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -85,13 +91,14 @@ class ReportController extends Controller
     public function loadReportSection(Request $request)
     {
         $postData = $request->all();
-
         $type = isset($postData['type']) ? $postData['type'] : 'purchase';
         $view = 'purchase';
         $data = array();
+        $dropdowns = [];
         switch ($type) {
             case 'purchase':
                 $view = 'purchase';
+                $dropdowns = ['brands'];
                 break;
             case 'sales':
                 $view = 'sales';
@@ -108,6 +115,49 @@ class ReportController extends Controller
             default:
                 $view = 'purchase';
                 break;
+        }
+        if (in_array('brands', $dropdowns)) {
+            $data['brands'] = BikeBrand::get();
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => ucfirst($view) . " report data loaded.",
+            'data'       => view('admin.reports.ajax.' . $view, $data)->render()
+        ]);
+    }
+
+    public function downloadReport(Request $request)
+    {
+        $postData = $request->all();
+        $type = isset($postData['type']) ? $postData['type'] : 'purchase';
+        $view = 'purchase';
+        $data = array();
+        $dropdowns = [];
+        switch ($type) {
+            case 'purchase':
+                $view = 'purchase';
+                $dropdowns = ['brands'];
+                break;
+            case 'sales':
+                $view = 'sales';
+                break;
+            case 'quotations':
+                $view = 'quotations';
+                break;
+            case 'dues':
+                $view = 'dues';
+                break;
+            case 'rto':
+                $view = 'rto';
+                break;
+            default:
+                $view = 'purchase';
+                break;
+        }
+        if (in_array('brands', $dropdowns)) {
+            $data['brands'] = BikeBrand::get();
         }
 
         return response()->json([
