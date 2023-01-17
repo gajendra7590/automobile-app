@@ -68,12 +68,12 @@
 </div>
 <div class="form-group col-md-3">
     <label>SKU</label>
-    <input type='text' class="form-control" placeholder="SKU" name="sku"
+    <input type='text' class="form-control" placeholder="SKU" name="sku" readonly
         value="{{ isset($data['sku']) ? $data['sku'] : '' }}" />
 </div>
 <div class="form-group col-md-4">
     <label>Financer Name</label>
-    <input type='text' class="form-control" placeholder="Financer Name" name="financer_name"
+    <input type='text' class="form-control" placeholder="Financer Name" name="financer_name" readonly
         value="{{ isset($data['financer_name']) ? $data['financer_name'] : '' }}" />
 </div>
 <div class="form-group col-md-2">
@@ -147,13 +147,13 @@
         value="{{ isset($data['remark']) ? $data['remark'] : '' }}"
         {{ isset($data['remark']) && !empty($data['remark']) ? 'disabled' : '' }} />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
     <label>RC Number</label>
     <input type='text' class="form-control" placeholder="RC Number" name="rc_number"
         value="{{ isset($data['rc_number']) ? $data['rc_number'] : '' }}"
         {{ isset($data['rc_number']) && !empty($data['rc_number']) ? 'disabled' : '' }} />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
     <label>RC Status</label>
     <select name="rc_status" class="form-control">
         <option value="">---Select RC Status---</option>
@@ -163,17 +163,11 @@
         </option>
     </select>
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-6">
     <label>Submit Date</label>
     <input type='date' class="form-control" placeholder="yyyy-mm-dd" name="submit_date"
         value="{{ isset($data['submit_date']) ? $data['submit_date'] : '' }}"
         {{ isset($data['submit_date']) && !empty($data['submit_date']) ? 'disabled' : '' }} />
-</div>
-<div class="form-group col-md-6">
-    <label>Bike Number</label>
-    <input type='text' class="form-control" placeholder="Bike Number" name="bike_number"
-        value="{{ isset($data['bike_number']) ? $data['bike_number'] : '' }}"
-        {{ isset($data['bike_number']) && !empty($data['bike_number']) ? 'disabled' : '' }} />
 </div>
 <div class="form-group col-md-6">
     <label>Recieved Date</label>

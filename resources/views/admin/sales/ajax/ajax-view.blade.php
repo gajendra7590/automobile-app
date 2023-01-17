@@ -78,15 +78,9 @@
  <div class="form-group col-md-3">
      <label>Customer City/Village
          <span style="margin-left: 40px;">
-             <a href="{{ route('plusAction') }}"
-                class="plusAction"
-                id="city"
-                data-type="city"
-                aria-hidden="true"
-                data-modal_title="Add New City/Village/Town"
-                data-modal-index="1200"
-                data-modal_size="modal-md">
-                <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
+             <a href="{{ route('plusAction') }}" class="plusAction" id="city" data-type="city" aria-hidden="true"
+                 data-modal_title="Add New City/Village/Town" data-modal-index="1200" data-modal_size="modal-md">
+                 <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
              </a>
          </span>
      </label>
@@ -108,18 +102,41 @@
          value="{{ isset($data['customer_zipcode']) ? $data['customer_zipcode'] : '' }}" placeholder="XXXXXX"
          {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
  </div>
- <div class="form-group col-md-6">
+ <div class="form-group col-md-4">
      <label>Customer Phone</label>
      <input name="customer_mobile_number" type="text" class="form-control"
          value="{{ isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : '' }}"
          placeholder="Customer Phone.."
          {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
  </div>
- <div class="form-group col-md-6">
+ <div class="form-group col-md-4">
+     <label>Customer Alternate Phone</label>
+     <input name="customer_mobile_number_alt" type="text" class="form-control"
+         value="{{ isset($data['customer_mobile_number_alt']) ? $data['customer_mobile_number_alt'] : '' }}"
+         placeholder="Customer Alternate Phone.."
+         {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+ </div>
+ <div class="form-group col-md-4">
      <label>Customer Email</label>
      <input name="customer_email_address" type="text" class="form-control"
          value="{{ isset($data['customer_email_address']) ? $data['customer_email_address'] : '' }}"
          placeholder="Customer Email.."
+         {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+ </div>
+
+ <div class="form-group col-md-6">
+     <label>Witness Person Name</label>
+     <input name="witness_person_name" type="text" class="form-control"
+         value="{{ isset($data['witness_person_name']) ? $data['witness_person_name'] : '' }}"
+         placeholder="Witness Person Name.."
+         {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+ </div>
+
+ <div class="form-group col-md-6">
+     <label>Witness Person Phone</label>
+     <input name="witness_person_phone" type="text" class="form-control"
+         value="{{ isset($data['witness_person_phone']) ? $data['witness_person_phone'] : '' }}"
+         placeholder="Witness Person Phone.."
          {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
  </div>
  <!-- CUSTOMER INFO START CLOSE -->

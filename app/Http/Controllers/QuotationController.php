@@ -47,7 +47,10 @@ class QuotationController extends Controller
                 },
                 'financer' => function ($s) {
                     $s->select('id', 'bank_name');
-                }
+                },
+                // 'salesman' => function ($s) {
+                //     $s->select('id', 'name');
+                // },
             ]);
 
             if (!$auth->is_admin) {
@@ -92,6 +95,7 @@ class QuotationController extends Controller
         $formData['brands'] = self::_getbrands(!$auth->is_admin);
         $formData['models'] = self::_getmodels(config('brand_id'), !$auth->is_admin);
         $formData['states'] = self::_getStates();
+        $formData['salesmans'] = self::_getSalesman();
         $formData['action'] = route('quotations.store');
         $formData['bank_financers'] = self::_getFinaceirs();
         $formData['method'] = 'POST';
@@ -111,6 +115,7 @@ class QuotationController extends Controller
             // dd($postData);
             $validator = Validator::make($postData, [
                 'branch_id'                 => "required|exists:branches,id",
+                'salesman_id'               => "nullable|exists:salesmans,id",
                 'customer_gender'           => "required|in:1,2,3",
                 'customer_name'             => "required|string",
                 'customer_relationship'     => "required|in:1,2,3",
@@ -121,6 +126,7 @@ class QuotationController extends Controller
                 'customer_city'             => "required|exists:u_cities,id",
                 'customer_zipcode'          => "required|numeric",
                 'customer_mobile_number'    => "required|numeric|min:10",
+                'customer_mobile_number_alt' => "nullable|numeric|min:10",
                 'customer_email_address'    => "nullable|email",
                 'payment_type'              => "required|in:1,2,3",
                 'is_exchange_avaliable'     => "required|in:Yes,No",
@@ -216,6 +222,8 @@ class QuotationController extends Controller
         $formData['models'] = self::_getModelByBrand($quotModel->bike_brand);
         $formData['colors'] = self::_getColorByModel($quotModel->bike_model);
 
+        $formData['salesmans'] = self::_getSalesmanById($quotModel->salesman_id);
+
         $formData['bank_financers'] = self::_getFinaceirs(($quotModel->financer_type - 1));
         $formData['action'] = route('quotations.store');
         $formData['data']  = $quotModel;
@@ -247,6 +255,7 @@ class QuotationController extends Controller
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'branch_id'                 => "nullable|exists:branches,id",
+                'salesman_id'               => "nullable|exists:salesmans,id",
                 'customer_gender'           => "nullable|in:1,2,3",
                 'customer_name'             => "nullable|string",
                 'customer_relationship'     => "nullable|in:1,2,3",
@@ -257,6 +266,7 @@ class QuotationController extends Controller
                 'customer_city'             => "required|exists:u_cities,id",
                 'customer_zipcode'          => "required|numeric",
                 'customer_mobile_number'    => "required|numeric|min:10",
+                'customer_mobile_number_alt' => "nullable|numeric|min:10",
                 'customer_email_address'    => "nullable|email",
                 'payment_type'              => "required|in:1,2,3",
                 'is_exchange_avaliable'     => "required|in:Yes,No",
@@ -372,7 +382,7 @@ class QuotationController extends Controller
     public function closeQuotation(Request $request, $id)
     {
         $data  = [
-            'action' => route('quotationclosepost',['id' => $id]),
+            'action' => route('quotationclosepost', ['id' => $id]),
             'method' => 'POST',
         ];
         return response()->json([
@@ -383,7 +393,8 @@ class QuotationController extends Controller
         ]);
     }
 
-    public function closeQuotationPost(Request $request,$id)    {
+    public function closeQuotationPost(Request $request, $id)
+    {
         try {
             $postData = $request->all();
             $validator = Validator::make($postData, [

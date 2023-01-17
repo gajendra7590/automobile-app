@@ -21,6 +21,7 @@ class Sale extends Model
         'branch_id',
         'purchase_id',
         'quotation_id',
+        'salesman_id',
         'customer_gender',
         'customer_name',
         'customer_relationship',
@@ -31,7 +32,10 @@ class Sale extends Model
         'customer_city',
         'customer_zipcode',
         'customer_mobile_number',
+        'customer_mobile_number_alt',
         'customer_email_address',
+        'witness_person_name',
+        'witness_person_phone',
         'payment_type',
         'is_exchange_avaliable',
         'hyp_financer',
@@ -98,6 +102,16 @@ class Sale extends Model
         return $this->belongsTo(Purchase::class, 'purchase_id');
     }
 
+    public function financer()
+    {
+        return $this->belongsTo(BankFinancer::class, 'hyp_financer');
+    }
+
+    public function salesman()
+    {
+        return $this->belongsTo(Salesman::class, 'salesman_id');
+    }
+
     public function purchase()
     {
         return $this->belongsTo(Purchase::class, 'purchase_id')
@@ -123,7 +137,7 @@ class Sale extends Model
                 },
                 'batteryBrand' => function ($model) {
                     $model->select('id', 'name');
-                },
+                }
             ]);
     }
 }

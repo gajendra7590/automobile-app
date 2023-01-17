@@ -355,7 +355,7 @@ if (!function_exists('sales2RtoPayload')) {
             'contact_city_id' => isset($data['customer_city']) ? $data['customer_city'] : "",
             'contact_zipcode' => isset($data['customer_zipcode']) ? $data['customer_zipcode'] : "",
             'sku' => isset($data['purchase']['sku']) ? $data['purchase']['sku'] : "",
-            'financer_name' => "",
+            'financer_name' => isset($data['financer']['bank_name']) ? $data['financer']['bank_name'] : "",
             'ex_showroom_amount' => isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : "",
             'tax_amount' => 0.00,
             'hyp_amount' => isset($data['hypothecation_amount']) ? $data['hypothecation_amount'] : "",

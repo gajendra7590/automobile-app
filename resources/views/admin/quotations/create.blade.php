@@ -55,7 +55,7 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-6">
                                 <label>Select Branch</label>
                                 <select name="branch_id" class="form-control ajaxChangeCDropDown QuotBrandChange"
                                     data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
@@ -68,6 +68,20 @@
                                             <option
                                                 {{ isset($data['branch_id']) && $data['branch_id'] == $branch->id ? 'selected' : '' }}
                                                 value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Select Salesman</label>
+                                <select name="salesman_id" class="form-control" {{ $isClosed }} {{ $is_disabled }}>
+                                    <option value="">---Select Salesman---</option>
+                                    @if (isset($salesmans))
+                                        @foreach ($salesmans as $key => $salesman)
+                                            <option
+                                                {{ isset($data['salesman_id']) && $data['salesman_id'] == $salesman->id ? 'selected' : '' }}
+                                                value="{{ $salesman->id }}">{{ $salesman->name }}
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -158,15 +172,9 @@
                             <div class="form-group col-md-3">
                                 <label>Customer City/Village
                                     <span style="margin-left: 40px;">
-                                        <a href="{{ route('plusAction') }}"
-                                            class="plusAction"
-                                            id="city"
-                                            data-type="city"
-                                            aria-hidden="true"
-                                            data-modal_title="Add New City/Village/Town"
-                                            data-modal-index="1200"
-                                            data-modal_size="modal-md"
-                                            {{ $isClosed }} >
+                                        <a href="{{ route('plusAction') }}" class="plusAction" id="city"
+                                            data-type="city" aria-hidden="true" data-modal_title="Add New City/Village/Town"
+                                            data-modal-index="1200" data-modal_size="modal-md" {{ $isClosed }}>
                                             <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
                                         </a>
                                     </span>
@@ -189,13 +197,19 @@
                                     placeholder="XXXXXX" {{ $isClosed }}>
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label>Customer Phone</label>
                                 <input name="customer_mobile_number" type="text" class="form-control"
                                     value="{{ isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : '' }}"
                                     placeholder="Customer Phone.." {{ $isClosed }}>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
+                                <label>Customer Altenate Phone</label>
+                                <input name="customer_mobile_number_alt" type="text" class="form-control"
+                                    value="{{ isset($data['customer_mobile_number_alt']) ? $data['customer_mobile_number_alt'] : '' }}"
+                                    placeholder="Customer Altenate Phone.." {{ $isClosed }}>
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label>Customer Email</label>
                                 <input name="customer_email_address" type="text" class="form-control"
                                     value="{{ isset($data['customer_email_address']) ? $data['customer_email_address'] : '' }}"
