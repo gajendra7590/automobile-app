@@ -112,7 +112,8 @@ class SalesAccountController extends Controller
             'salesList'       => $salesList,
             'action'          => route('saleAccounts.store'),
             'data'            => $salesModel,
-            'financersList'   => $financersList
+            'financersList'   => $financersList,
+            'salemans'        => self::_getSalesman()
         );
         return response()->json([
             'status'     => true,
@@ -198,7 +199,7 @@ class SalesAccountController extends Controller
             }
 
             //Default Value Set
-            $postData['deposite_collected_by'] = Auth::user()->id;
+            $postData['deposite_collected_by'] = isset($postData['deposite_collected_by']) ? $postData['deposite_collected_by'] : Auth::user()->id;
             $postData['status'] = 0;
 
             //Create Account
@@ -228,6 +229,7 @@ class SalesAccountController extends Controller
 
                     //IF PAY_LATER SET
                     if (isset($postData['pay_later_amount']) && (floatval($postData['pay_later_amount']) > 0)) {
+                        $total_pay_with_intrest += floatval($postData['pay_later_amount']);
                         SalePaymentInstallments::create([
                             'sale_id'                 => $postData['sale_id'],
                             'sale_payment_account_id' => $accountModel->id,
@@ -535,6 +537,7 @@ class SalesAccountController extends Controller
                     $data['data'] = $installModel;
                     $data['totalDueCounts'] = SalePaymentInstallments::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
                     $data['depositeSources'] = depositeSources();
+                    $data['salemans'] = self::_getSalesman();
                     // return ['status' => true, 'data' => $data];
                     break;
                 default:
@@ -566,6 +569,7 @@ class SalesAccountController extends Controller
                 'pay_option'      => 'required|in:full,partial',
                 'pay_amount'      => 'required|numeric|min:1',
                 'next_due_Date'   => 'nullable|date|after:today',
+                'collected_by_salesman_id' => 'required|exists:salesmans,id',
             ]);
             //If Validation failed
             if ($validator->fails()) {
@@ -597,7 +601,8 @@ class SalesAccountController extends Controller
                     'amount_paid_source' => $postData['pay_method'],
                     'amount_paid_note'   => $postData['pay_method_note'],
                     'pay_due'            => 0.00,
-                    'status'             => 1
+                    'status'             => 1,
+                    'collected_by_salesman_id'   => $postData['collected_by_salesman_id'],
                 ]);
                 //Add Transaction
                 SalePaymentTransactions::create([
@@ -623,7 +628,8 @@ class SalesAccountController extends Controller
                     'amount_paid_source'         => $postData['pay_method'],
                     'amount_paid_note'           => $postData['pay_method_note'],
                     'pay_due'                    => - ($p1_due),
-                    'status'                     => 1
+                    'status'                     => 1,
+                    'collected_by_salesman_id'   => $postData['collected_by_salesman_id'],
                 ]);
                 SalePaymentTransactions::create([
                     'sale_id'                       => $instModel->sale_id,
@@ -734,7 +740,8 @@ class SalesAccountController extends Controller
                         'amount_paid_source' => $postData['pay_method'],
                         'amount_paid_note'   => $postData['pay_method_note'],
                         'pay_due'            => 0,
-                        'status'             => 1
+                        'status'             => 1,
+                        'collected_by_salesman_id'   => $postData['collected_by_salesman_id'],
                     ]);
                     SalePaymentTransactions::create([
                         'sale_id'                     => $instModel->sale_id,
@@ -762,7 +769,8 @@ class SalesAccountController extends Controller
                         'emi_due_revised_amount'     => ($p1_status == 1) ? 0 : ($nextEMITotal - $advance_pay),
                         'emi_due_revised_note'       => ($p1_status == 1) ? "" : "After Advance Payment Adjusment Remianing Balance.",
                         'pay_due'                    => $advance_pay,
-                        'status'                     => $p1_status
+                        'status'                     => $p1_status,
+                        'collected_by_salesman_id'   => $postData['collected_by_salesman_id'],
                     ]);
                 } else {
                     DB::rollBack();

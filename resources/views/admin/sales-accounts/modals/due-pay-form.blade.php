@@ -44,6 +44,17 @@
                     value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
                     placeholder="₹ 0.00" readonly>
             </div>
+            <div class="form-group col-md-12">
+                <label>PAYMENT COLLECTED BY SALESMAN</label>
+                <select class="form-control" name="collected_by_salesman_id">
+                    <option value="0">---SELECT SALESMAN---</option>
+                    @isset($salemans)
+                        @foreach ($salemans as $k => $saleman)
+                            <option value="{{ $saleman->id }}">{{ $saleman->name }} </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
             @if (isset($totalDueCounts) && $totalDueCounts == '1')
                 <div class="form-group col-md-6 hideElement" id="due_date_ele">
                     <label>NEXT DUE DATE</label>
