@@ -413,12 +413,14 @@ class PurchaseController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
         if ($row->status == '1') {
-            $action .= '<a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="btn btn-sm btn-warning" data-title="Update Purchase Detail" data-modal_title="Update Purchase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            $action .= '<li><a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="" data-title="Update Purchase Detail" data-modal_title="Update Purchase">UPDATE</a></li>';
         }
-        $action .= '<a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-info ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-        $action .= '</div>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 

@@ -447,16 +447,14 @@ class SaleController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="btn btn-sm btn-warning" data-modal_title="Update Sale"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        // $action .= '<a href="' . route('sales.destroy', ['sale' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Sale"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
-
-        if (intval($row->sp_account_id) > 0) {
-            $action .= '<a href="' . route('saleAccounts.edit', ['saleAccount' => $row->sp_account_id]) . '" class="btn btn-sm btn-success" data-title="View Account"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-        } else {
-            $action .= '<a href="' . route('saleAccounts.create') . '?sales_id=' . $row->id . '" class="btn btn-sm btn-success ajaxModalPopup" data-title="Open Account" data-modal_title="Create New Sales Account" data-modal_size="modal-lg"><i class="fa fa-plus" aria-hidden="true"></i></a>';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        if ($row->status == 'open') {
+            $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
         }
-        $action .= '</div>';
+        $action .= '<li><a href="' . route('sales.show', ['sale' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 

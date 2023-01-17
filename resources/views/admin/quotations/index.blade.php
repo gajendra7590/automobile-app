@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('quotations.create') }}" class="btn btn-sm btn-success">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Quotation
                                 </a>
                             </div>
                         </div>
@@ -38,13 +38,13 @@
                                         <th>#</th>
                                         <th width="12%">CUSTOMER NAME</th>
                                         <th width="13%">CUSTOMER PHONE</th>
-                                        <th width="13%">BIKE</th>
+                                        <th width="25%">BIKE</th>
                                         <th width="12%">PAY TYPE</th>
-                                        <th>TOTAL AMOUNT</th>
+                                        <th width="12%">TOTAL AMOUNT</th>
                                         <th>VISIT DATE</th>
                                         {{-- <th>PURCHASE DATE</th> --}}
-                                        <th>STATUS</th>
-                                        <th width="10%">ACTION</th>
+                                        <th width="4%">STATUS</th>
+                                        <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
