@@ -393,28 +393,13 @@ class QuotationController extends Controller
 
     public function getActions($row)
     {
-        // $action = '<div class="action-btn-container">';
-        // $action .= '<div class="dropdown">
-        //         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-        //         <ul class="dropdown-menu" role="menu">';
-
-        // $action .= '<li><a title="View Quotation" href="' . route('quotations.show', ['quotation' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="View Quotation" data-modal_size="modal-lg">PREVIEW</a></li>';
-        // $action .= '<li><a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank">PRINT</a></li>';
-        // if ($row->status == 'open') {
-        //     $action .= '<li><a title="Close Quotation" href="' . route('quotation.close', ['id' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="Mark Close" data-modal_size="modal-md" aria-hidden="true">SELF CLOSE</a></li>';
-        //     $action .= '<li><a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" >CREATE SALE</a></li>';
-        //     $action .= '<li><a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" >UPDATE</a></li>';
-        // }
-
-        // $action .=  '</ul>';
-        // $action .= '</div></div>';
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a title="View Quotation" href="' . route('quotations.show', ['quotation' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="View Quotation" data-modal_size="modal-lg">PREVIEW</a></li>';
+        $action .= '<li><a title="View Quotation" href="' . route('quotations.show', ['quotation' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="View Quotation" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
         $action .= '<li><a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank">PRINT</a></li>';
         if ($row->status == 'open') {
             $action .= '<li><a title="Close Quotation If Already Sale OR Customer Denied." href="' . route('quotation.close', ['id' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="Mark Close" data-modal_size="modal-md" aria-hidden="true">SELF CLOSE</a></li>';
-            $action .= '<li><a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" >CREATE SALE</a></li>';
+            $action .= '<li><a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" >CREATE NEW SALE</a></li>';
             $action .= '<li><a title="Update Quotation" href="' . route('quotations.edit', ['quotation' => $row->id]) . '" >UPDATE</a></li>';
         }
         $action  .= '</ul>';

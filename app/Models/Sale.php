@@ -16,6 +16,8 @@ class Sale extends Model
 
     protected $table = 'sales';
 
+    protected $appends = ['cust_name'];
+
     protected $fillable = [
         'sale_uuid',
         'branch_id',
@@ -73,6 +75,27 @@ class Sale extends Model
         }
     }
 
+    public function getCustNameAttribute()
+    {
+        $str = '';
+        if (!empty($this->customer_gender)) {
+            $str .= $this->gender . ' ';
+        }
+
+        if (!empty($this->customer_name)) {
+            $str .= $this->customer_name . ' ';
+        }
+
+        if (!empty($this->customer_relationship)) {
+            $str .= $this->relationship . ' ';
+        }
+
+        if (!empty($this->customer_guardian_name)) {
+            $str .= $this->customer_guardian_name;
+        }
+        return $str;
+    }
+
 
     /**
      * Mapping with branch
@@ -110,6 +133,11 @@ class Sale extends Model
     public function salesman()
     {
         return $this->belongsTo(Salesman::class, 'salesman_id');
+    }
+
+    public function quotation()
+    {
+        return $this->belongsTo(Quotation::class, 'quotation_id');
     }
 
     public function purchase()

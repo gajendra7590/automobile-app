@@ -252,7 +252,47 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        //
+        $modals = Sale::where('id', $id)->with([
+            'state' => function ($s) {
+                $s->select('id', 'state_name');
+            },
+            'district' => function ($s) {
+                $s->select('id', 'district_name');
+            },
+            'city' => function ($s) {
+                $s->select('id', 'city_name');
+            },
+            'financer' => function ($s) {
+                $s->select('id', 'bank_name');
+            },
+            'branch' => function ($s) {
+                $s->select('id', 'branch_name');
+            },
+            'salesman' => function ($s) {
+                $s->select('id', 'name');
+            },
+            'quotation' => function ($s) {
+                $s->select('id', 'uuid');
+            },
+            'purchase'
+        ])->first();
+        if (!$modals) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
+            ]);
+        }
+
+        $data = array(
+            'data' => $modals
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.sales.show', $data)->render()
+        ]);
     }
 
     /**
@@ -449,10 +489,10 @@ class SaleController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('sales.show', ['sale' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
         if ($row->status == 'open') {
             $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
         }
-        $action .= '<li><a href="' . route('sales.show', ['sale' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;
