@@ -43,7 +43,7 @@
                                         <th>TOTAL DUE</th>
                                         <th>STATUS</th>
                                         <th>CREATED DATE</th>
-                                        <th>ACTION</th>
+                                        <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>

@@ -290,11 +290,13 @@ class PurchaseTransfersController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
         if ($row->status == '1') {
-            $action .= '<a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="btn btn-xs btn-danger ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Create Return">RETURN</a>';
+            $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="GENERATE NEW RETURN">CREATE RETURN</a></li>';
         }
-        $action .= '</div>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 

@@ -42,7 +42,7 @@
                                         <th>FILE EXTENTION</th>
                                         <th>FILE SIZE</th>
                                         <th>UPLOADED AT</th>
-                                        <th>ACTION</th>
+                                        <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>

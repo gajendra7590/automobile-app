@@ -54,8 +54,8 @@ $(document).ready(function () {
                 //     name: "rc_status",
                 // },
                 {
-                    data: "bike_number",
-                    name: "bike_number",
+                    data: "rc_number",
+                    name: "rc_number",
                 },
                 {
                     data: "submit_date",

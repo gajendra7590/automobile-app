@@ -431,9 +431,11 @@ class SalesAccountController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('saleAccounts.edit', ['saleAccount' => $row->id]) . '" class="btn btn-sm btn-success"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-        $action .= '</div>';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('saleAccounts.edit', ['saleAccount' => $row->id]) . '" class="">VIEW DETAIL</a></li>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 

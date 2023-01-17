@@ -24,7 +24,7 @@
                                 <a href="{{ route('purchaseTransfers.create') }}"
                                     class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New Transfer"
                                     data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Transfer
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE NEW TRANSFER
                                 </a>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                         <th>DC DATE</th>
                                         <th>GRAND TOTAL</th>
                                         <th>STATUS</th>
-                                        <th>ACTION</th>
+                                        <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>

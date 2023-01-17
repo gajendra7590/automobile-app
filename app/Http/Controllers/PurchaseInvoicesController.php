@@ -303,9 +303,11 @@ class PurchaseInvoicesController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('purchaseInvoices.edit', ['purchaseInvoice' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Edit Purchase Invoice Detail" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '</div>';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('purchaseInvoices.edit', ['purchaseInvoice' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_title="Edit Purchase Invoice Detail" data-modal_size="modal-lg">UPDATE</a></li>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 }

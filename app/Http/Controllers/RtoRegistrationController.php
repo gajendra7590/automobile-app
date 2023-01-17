@@ -49,12 +49,14 @@ class RtoRegistrationController extends Controller
                 ->addColumn('contact_city', function ($row) {
                     return $row->contact_city ? $row->contact_city->city_name : '---';
                 })
-                ->addColumn('rc_status', function ($row) {
-                    if (isset($row->rc_status) && ($row->rc_status == '1')) {
-                        return 'Yes';
-                    } else if (isset($row->rc_status) && ($row->rc_status == '0')) {
-                        return 'No';
-                    }
+                ->addColumn('rc_number', function ($row) {
+                    return (!empty($row->rc_number)) ? $row->rc_number : '--';
+                })
+                ->addColumn('recieved_date', function ($row) {
+                    return (!empty($row->recieved_date)) ? $row->recieved_date : '--';
+                })
+                ->addColumn('submit_date', function ($row) {
+                    return (!empty($row->submit_date)) ? $row->submit_date : '--';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
@@ -392,10 +394,12 @@ class RtoRegistrationController extends Controller
 
     public function getActions($id)
     {
-        $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Edit Registration Data" data-title="Edit" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-        $action .= '<a href="' . route('rtoRegistration.show', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-success ajaxModalPopup"  data-modal_size="modal-lg" data-modal_title="Preview Registration Data" data-title="View"><i class="fa fa-eye" aria-hidden="true"> </i></a>';
-        $action .= '</div>';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('rtoRegistration.show', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-success ajaxModalPopup"  data-modal_size="modal-lg" data-modal_title="Preview Registration Data" data-title="View">VIEW DETAIL</a></li>';
+        $action .= '<li><a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Edit Registration Data" data-title="Edit" data-modal_size="modal-lg">UPDATE</a></li>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 }

@@ -12,10 +12,9 @@
     display: none !important;
 }
 
-
-
-
-
+#ajaxDataTable {
+    width: auto !important;
+}
 
 
 /* The switch - the box around the slider */

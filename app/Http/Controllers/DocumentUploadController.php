@@ -200,9 +200,11 @@ class DocumentUploadController extends Controller
 
     public function getActions($row)
     {
-        $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('documentUploads.edit', ['documentUpload' => $row->id]) . '" class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Preview of uploaded document" data-modal_size="modal-lg"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-        $action .= '</div>';
+        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+        $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('documentUploads.edit', ['documentUpload' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="Preview of uploaded document" data-modal_size="modal-lg">VIEW DOCUMENT</a></li>';
+        $action  .= '</ul>';
+        $action  .= '</div>';
         return $action;
     }
 
