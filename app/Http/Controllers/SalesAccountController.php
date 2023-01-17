@@ -132,7 +132,26 @@ class SalesAccountController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sale_id', 'sales_total_amount', 'deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'due_amount', 'due_date', 'due_payment_source', 'due_note', 'financier_id', 'financier_note', 'finance_terms', 'no_of_emis', 'rate_of_interest', 'processing_fees');
+            $postData = $request->only(
+                'sale_id',
+                'sales_total_amount',
+                'deposite_amount',
+                'deposite_date',
+                'deposite_source',
+                'deposite_source_note',
+                'due_amount',
+                'due_date',
+                'due_payment_source',
+                'due_note',
+                'financier_id',
+                'financier_note',
+                'finance_terms',
+                'no_of_emis',
+                'rate_of_interest',
+                'processing_fees',
+                'pay_later_amount',
+                'pay_later_date'
+            );
             $validationArray = [
                 'sale_id'               => "required|exists:sales,id|unique:sale_payment_accounts,sale_id",
                 'sales_total_amount'    => "required|numeric|min:1",
@@ -206,6 +225,30 @@ class SalesAccountController extends Controller
 
                 if ((floatval($postData['due_amount']) > 0)) {
                     $total_pay_with_intrest = 0.00;
+
+                    //IF PAY_LATER SET
+                    if (isset($postData['pay_later_amount']) && (floatval($postData['pay_later_amount']) > 0)) {
+                        SalePaymentInstallments::create([
+                            'sale_id'                 => $postData['sale_id'],
+                            'sale_payment_account_id' => $accountModel->id,
+                            'emi_title'               => "Customer has given pay later.",
+                            'loan_total_amount'       => $postData['pay_later_amount'],
+                            'emi_due_amount'          => $postData['pay_later_amount'],
+                            'emi_due_date'            => $postData['pay_later_date'],
+                            'emi_other_charges'       => null,
+                            'emi_other_charges_date'  => null,
+                            'emi_other_charges_note'  => null,
+                            'emi_due_revised_amount'  => $postData['pay_later_amount'],
+                            'emi_due_revised_note'    => null,
+                            'amount_paid'             => null,
+                            'amount_paid_date'        => null,
+                            'amount_paid_source'      => null,
+                            'amount_paid_note'        => null,
+                            'pay_due'                 => null,
+                            'status'                  => 0
+                        ]);
+                    }
+
                     //EMI Table IF Pay Source Self Pay / Bank Finance
                     if ((in_array($postData['due_payment_source'], [1, 2]))) {
                         $emi_title = "Customer Self Pay.";
@@ -282,7 +325,7 @@ class SalesAccountController extends Controller
                             SalePaymentInstallments::create([
                                 'sale_id'                 => $postData['sale_id'],
                                 'sale_payment_account_id' => $accountModel->id,
-                                'emi_title'               => 'Customer Pay With Email Installment - ' . $i,
+                                'emi_title'               => 'Customer Pay With EMI Installment - ' . $i,
                                 'loan_total_amount'       => $postData['sales_total_amount'],
                                 'emi_due_amount'          => $installment_amount,
                                 'emi_due_principal'       => $installment_prin,
