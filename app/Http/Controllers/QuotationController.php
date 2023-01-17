@@ -76,7 +76,13 @@ class QuotationController extends Controller
                     $str .= (isset($row->color->color_name) ? $row->color->color_name : '');
                     return $str;
                 })
-                ->rawColumns(['status', 'bike_detail', 'action'])
+                ->addColumn('payment_type', function ($row) {
+                    return ((intval($row->payment_type) > 0) ? duePaySources($row->payment_type) : $row->payment_type);
+                })
+                ->addColumn('total_amount', function ($row) {
+                    return '₹' . $row->total_amount;
+                })
+                ->rawColumns(['status', 'bike_detail', 'payment_type', 'action'])
                 ->make(true);
         }
     }
@@ -387,7 +393,6 @@ class QuotationController extends Controller
 
     public function getActions($row)
     {
-
         $action = '<div class="action-btn-container">';
         $action .= '<div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>

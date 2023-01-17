@@ -58,10 +58,10 @@ $(document).ready(function () {
                     data: "purchase_visit_date",
                     name: "purchase_visit_date",
                 },
-                {
-                    data: "purchase_est_date",
-                    name: "purchase_est_date",
-                },
+                // {
+                //     data: "purchase_est_date",
+                //     name: "purchase_est_date",
+                // },
                 {
                     data: "status",
                     name: "status",

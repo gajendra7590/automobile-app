@@ -42,7 +42,7 @@
                                         <th width="12%">PAY TYPE</th>
                                         <th>TOTAL AMOUNT</th>
                                         <th>VISIT DATE</th>
-                                        <th>PURCHASE DATE</th>
+                                        {{-- <th>PURCHASE DATE</th> --}}
                                         <th>STATUS</th>
                                         <th width="10%">ACTION</th>
                                     </tr>
