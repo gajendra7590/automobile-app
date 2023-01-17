@@ -293,9 +293,11 @@ if (!function_exists('convertBadgesStr')) {
     {
         switch ($value) {
             case '0':
+            case 'open':
                 return '<span class="label label-danger">NO</span>';
                 break;
             case '1':
+            case 'close':
                 if ($type == 'purSold') {
                     return '<span class="label label-danger">NO</span>';
                 } else {

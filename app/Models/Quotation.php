@@ -183,4 +183,9 @@ class Quotation extends Model
     {
         return $this->belongsTo(Salesman::class, 'salesman_id');
     }
+
+    public function closedByUser()
+    {
+        return $this->belongsTo(User::class, 'closed_by');
+    }
 }
