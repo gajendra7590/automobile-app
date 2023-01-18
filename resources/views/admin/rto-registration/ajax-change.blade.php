@@ -126,22 +126,7 @@
     <input type='text' class="form-control" placeholder="₹0.00" name="total_amount"
         value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}" readonly {{ $editReadOnly }} />
 </div>
-<div class="form-group col-md-3">
-    <label>Payment Amount</label>
-    <input type='text' class="form-control" placeholder="₹0.00" name="payment_amount"
-        value="{{ isset($data['payment_amount']) ? $data['payment_amount'] : '' }}" />
-</div>
-<div class="form-group col-md-3">
-    <label>Payment Date</label>
-    <input type='date' class="form-control" placeholder="yyyy-mm-dd" name="payment_date"
-        value="{{ isset($data['payment_date']) ? $data['payment_date'] : '' }}" />
-</div>
-<div class="form-group col-md-3">
-    <label>Outstanding</label>
-    <input type='text' class="form-control" placeholder="Outstanding" name="outstanding"
-        value="{{ isset($data['outstanding']) ? $data['outstanding'] : '' }}" />
-</div>
-<div class="form-group col-md-12">
+<div class="form-group col-md-9">
     <label>RTO Registration Remark(If Any)</label>
     <input type='textarea' class="form-control" placeholder="Remark" name="remark"
         value="{{ isset($data['remark']) ? $data['remark'] : '' }}"

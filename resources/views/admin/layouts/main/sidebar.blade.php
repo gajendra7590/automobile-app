@@ -140,9 +140,27 @@
                 </a>
             </li>
 
-            <li class="{{ Request::is('rto*') ? 'active' : '' }}">
-                <a href="{{ route('rtoRegistration.index') }}"><i class="fa fa-share"></i>
-                    <span>RTO REGISTRATIONS</span></a>
+            <li
+                class="treeview {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-snowflake-o"></i>
+                    <span>RTO</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu"
+                    {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'display:"block"' : '' }}>
+
+                    <li class="{{ Request::is('rtoRegistration*') ? 'active' : '' }}">
+                        <a href="{{ route('rtoRegistration.index') }}"><i
+                                class="fa fa-registered"></i>REGISTRATIONS</a>
+                    </li>
+                    <li class="{{ Request::is('rtoAgentPayments*') ? 'active' : '' }}">
+                        <a href="{{ route('rtoAgentPayments.index') }}"><i class="fa fa-credit-card"></i>AGENT
+                            PAYMENTS</a>
+                    </li>
+                </ul>
             </li>
 
             <li class="{{ Request::is('reports*') ? 'active' : '' }}">

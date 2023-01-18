@@ -21,4 +21,15 @@ class RtoAgent extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+
+    public function payments()
+    {
+        return $this->hasMany(RtoAgentPaymentHistory::class, 'rto_agent_id');
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(RtoRegistration::class, 'rto_agent_id');
+    }
 }
