@@ -77,9 +77,9 @@
         value="{{ isset($data['financer_name']) ? $data['financer_name'] : '' }}" />
 </div>
 <div class="form-group col-md-2">
-    <label>GST Rate</label>
+    <label>GST Rate (TAX RATE)</label>
     <select name="gst_rto_rate_id" class="form-control onChangeSelect" {{ $editDisable }}>
-        <option value="">---GST Rate---</option>
+        <option value="">---GST Rate (TAX RATE)---</option>
         @if (isset($gst_rto_rates))
             @foreach ($gst_rto_rates as $key => $gst_rto_rate)
                 <option
