@@ -1,42 +1,76 @@
 <section class="content">
-    <ol class="breadcrumb">
-        <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{ route('purchases.index') }}">Purchase</a></li>
-        <li class="active">Report</li>
-    </ol>
-    <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
-        enctype="multipart/form-data">
-        @csrf
-        <div class="form-group col-md-4">
-            <label>Bike Brand</label>
-            <select name="bike_brand" data-dep_dd_name="bike_model"
-                data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
-                <option value="">---Select Brand----</option>
-                @isset($brands)
-                    @foreach ($brands as $key => $brand)
-                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                    @endforeach
-                @endisset
-            </select>
+    <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" >
+        <input type="hidden" name="type" value="{{isset($type) && !empty($type) ? $type : 'purchase' }}">
+        <div class='col-md-12'>
+            <div class="form-group col-md-2">
+                <label>Bike Brand</label>
+                <select name="bike_brand" data-dep_dd_name="bike_model"
+                    data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
+                    <option value="">---Select Brand----</option>
+                    @isset($brands)
+                        @foreach ($brands as $key => $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Bike Model</label>
+                <select name="bike_model" class="form-control">
+                    <option value="">---Select Model----</option>
+                    @isset($models)
+                        @foreach ($models as $model)
+                            <option value="{{ $model->id }}">{{ $model->model_name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label>Duration</label>
+                <select name="duration" class="form-control">
+                    <option value="last_month">Last Month</option>
+                    <option value="last_six_months">Last Six Months</option>
+                    <option value="last_one_year">Last One Year</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            <div class="col-md-6 pull-right dateshow" hidden>
+                <div class="form-group col-md-6">
+                    <label>Start Date</label>
+                    <input type='date' name="start_date" class="form-control" value="{{date('Y-m-d')}}" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>End Date</label>
+                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
+                </div>
+            </div>
         </div>
-        <div class="form-group col-md-4">
-            <label>Bike Model</label>
-            <select name="bike_model" class="form-control ajaxChangeCDropDown">
-                <option value="">---Select Model----</option>
-                @isset($models)
-                    @foreach ($models as $model)
-                        <option value="{{ $model->id }}">{{ $model->model_name }}</option>
-                    @endforeach
-                @endisset
-            </select>
-        </div>
-        {{-- submit button --}}
-        <div class="form-group">
+        <div class="form-group col-md-12 pull-left">
             <div class="box-footer">
-                <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit">
+                <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
                     Download
                 </button>
             </div>
         </div>
     </form>
 </section>
+
+<script>
+    $(document).ready(function (){
+        $("[name=start_date]").on('change',function (e){
+            $('[name=end_date]').attr("min",$(this).val());
+        })
+
+        $("[name=end_date]").on('change',function (e){
+            $('[name=start_date]').attr("max",$(this).val());
+        })
+
+        $("[name=duration]").on('change',function (e){
+            if($(this).val() == 'custom'){
+                $('.dateshow').show();
+            }else{
+                $('.dateshow').hide();
+            }
+        })
+    })
+</script>

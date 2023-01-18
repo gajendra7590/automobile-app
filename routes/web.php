@@ -130,7 +130,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Reports
     Route::get('loadReportSection', 'ReportController@loadReportSection')->name('loadReportSection');
-    Route::get('loadReportSection', 'ReportController@loadReportSection')->name('loadReportSection');
+    Route::get('downloadReport', 'ReportController@downloadReport')->name('downloadReport');
 
     Route::resource('reports', 'ReportController');
 
