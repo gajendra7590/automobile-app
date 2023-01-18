@@ -5,12 +5,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                RTO
-                <small>Registrations</small>
+                AGENTS PAYMENT HISTORY
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">RTO Registrations</li>
+                <li class="active">AGENTS PAYMENT HISTORY</li>
             </ol>
         </section>
 
@@ -20,29 +19,24 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> All Registrations</h3>
-                            <div class="pull-right">
-                                <a href="{{ route('rtoRegistration.create') }}"
-                                    class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New Registration"
-                                    data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Registration
-                                </a>
+                            <div class="pull-left">
+                                <h3 class="box-title">AGENTS PAYMENT HISTORY</h3>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('rtoRegistration.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('rtoAgentPayments.index') }}"
                                 class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>BRANCH NAME</th>
-                                        <th>CONTACT NAME</th>
-                                        <th>TOTAL AMOUNT</th>
-                                        <th>RC NUMBER</th>
-                                        <th>SUBMIT DATE</th>
-                                        <th>RECIEVED DATE</th>
-                                        <th width="6%">ACTION</th>
+                                        <th>AGENT NAME</th>
+                                        <th>TOTAL FILES</th>
+                                        <th>TOTAL BALANCE</th>
+                                        <th>TOTAL PAID</th>
+                                        <th>TOTAL OUTSTANDING</th>
+                                        <th>BUFFER AMOUNT(+)</th>
+                                        <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -59,7 +53,6 @@
     </div>
 @endsection
 
-
 @push('after-script')
-    <script src="{{ asset('assets/modules/rto-registration.js') }}"></script>
+    <script src="{{ asset('assets/modules/rtoAgentPayments.js') }}"></script>
 @endpush

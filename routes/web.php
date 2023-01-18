@@ -108,6 +108,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
     Route::resource('rtoRegistration', 'RtoRegistrationController');
 
+    //RTO Agent PAyment
+    Route::resource('rtoAgentPayments', 'RtoAgentPaymentHistoryController');
+
     //Brokers
     Route::resource('brokers', 'BrokerController');
 

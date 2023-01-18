@@ -53,16 +53,6 @@
       </tr>
 
       <tr>
-          <th>PAYMENT AMOUNT</th>
-          <td> {{ isset($data['rc_number']) ? priceFormate($data['payment_amount']) : '--' }}
-          </td>
-          <th>PAYMENT DATE</th>
-          <td> {{ isset($data['payment_date']) ? myDateFormate($data['payment_date']) : '--' }}</td>
-          <th>OUTSTANDING</th>
-          <td>{{ isset($data['outstanding']) ? $data['outstanding'] : '--' }}</td>
-      </tr>
-
-      <tr>
           <th>REMARK</th>
           <td colspan="5">
               {{ isset($data['remark']) ? $data['remark'] : '--' }}

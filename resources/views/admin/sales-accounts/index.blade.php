@@ -37,7 +37,7 @@
                                 <thead>
                                     <tr>
                                         <th>#ID</th>
-                                        <th>TITLE</th>
+                                        <th>ACCOUNT NAME</th>
                                         <th>SALES PRICE</th>
                                         <th>DOWN PAYMENT</th>
                                         <th>TOTAL DUE</th>
