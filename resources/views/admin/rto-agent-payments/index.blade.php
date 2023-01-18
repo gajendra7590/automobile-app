@@ -5,11 +5,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                AGENTS PAYMENT HISTORY
+                AGENTS PAYMENTS
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">AGENTS PAYMENT HISTORY</li>
+                <li class="active">AGENTS PAYMENTS</li>
             </ol>
         </section>
 
@@ -20,7 +20,7 @@
                     <div class="box">
                         <div class="box-header">
                             <div class="pull-left">
-                                <h3 class="box-title">AGENTS PAYMENT HISTORY</h3>
+                                <h3 class="box-title">AGENTS PAYMENTS</h3>
                             </div>
                         </div>
                         <!-- /.box-header -->

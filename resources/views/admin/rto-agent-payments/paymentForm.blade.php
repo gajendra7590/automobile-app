@@ -6,22 +6,36 @@
     @endif
     <div class="box-body">
         <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-12">
                 <label>AGENT NAME</label>
                 <input type="text" class="form-control"
                     value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" disabled>
             </div>
+            <div class="form-group col-md-4">
+                <label>TOTAL BALANCE</label>
+                <input type="text" class="form-control" value="{{ isset($total_balance) ? $total_balance : '' }}"
+                    disabled>
+            </div>
+            <div class="form-group col-md-4">
+                <label>TOTAL PAID</label>
+                <input type="text" class="form-control" value="{{ isset($total_paid) ? $total_paid : '' }}" disabled>
+            </div>
+            <div class="form-group col-md-4">
+                <label>TOTAL OUTSTANDING</label>
+                <input type="text" class="form-control"
+                    value="{{ isset($total_outstanding) ? $total_outstanding : '' }}" disabled>
+            </div>
             <input type="hidden" name="rto_agent_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>PAYMENT AMOUNT</label>
                 <input name="payment_amount" type="text" class="form-control" value="" placeholder="₹0.00">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>PAYMENT DATE</label>
                 <input name="payment_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
                     placeholder="yyyy-mm-dd">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>PAYMENT MODE</label>
                 <select class="form-control" name="payment_mode">
                     @if (isset($paymentSources))

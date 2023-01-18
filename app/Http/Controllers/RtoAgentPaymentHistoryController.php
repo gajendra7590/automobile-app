@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RtoAgent;
 use App\Models\RtoAgentPaymentHistory;
+use App\Models\RtoRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -71,11 +72,17 @@ class RtoAgentPaymentHistoryController extends Controller
         }
 
         $model = RtoAgent::find($postData['agent_id']);
+        $total_paid = RtoAgentPaymentHistory::where('rto_agent_id', $postData['agent_id'])->sum('payment_amount');
+        $total_balance = RtoRegistration::where('rto_agent_id', $postData['agent_id'])->sum('total_amount');
+        $total_outstanding = (($total_balance - $total_paid) > 0) ? ($total_balance - $total_paid) : 0;
         $data = array(
             'action' => route('rtoAgentPayments.store'),
             'method' => 'POST',
             'data'   => $model,
-            'paymentSources' => depositeSources()
+            'paymentSources' => depositeSources(),
+            'total_balance'  => $total_balance,
+            'total_paid'     => $total_paid,
+            'total_outstanding'  => $total_outstanding,
         );
         return response()->json([
             'status'     => true,
@@ -141,7 +148,8 @@ class RtoAgentPaymentHistoryController extends Controller
      */
     public function show($id)
     {
-        $transactions = RtoAgentPaymentHistory::where('rto_agent_id', $id)->with(['agent'])->get();
+        $transactions = RtoAgentPaymentHistory::where('rto_agent_id', $id)
+            ->with(['agent'])->get();
         $data = array(
             'transactions'   => $transactions,
             'agent_name'     => RtoAgent::where('id', $id)->value('agent_name')
@@ -191,7 +199,7 @@ class RtoAgentPaymentHistoryController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('rtoAgentPayments.show', ['rtoAgentPayment' => $data->id]) . '" class="ajaxModalPopup" data="VIEW PAYMENT HISTORY" data-modal_title="VIEW PAYMENT HISTORY" data-modal_size="modal-lg" data-title="View">VIEW PAYMENT HISTORY</a></li>';
+        $action .= '<li><a href="' . route('rtoAgentPayments.show', ['rtoAgentPayment' => $data->id]) . '" class="ajaxModalPopup" data="VIEW TRANSACTIONS" data-modal_title="VIEW TRANSACTIONS" data-modal_size="modal-lg" data-title="View">VIEW TRANSACTIONS</a></li>';
         $action .= '<li><a href="' . route('rtoAgentPayments.create') . '?agent_id=' . $data->id . '" class="ajaxModalPopup" data-modal_title="CREATE NEW PAYMENT" data-title="CREATE NEW PAYMENT" data-modal_size="modal-lg">CREATE NEW PAYMENT</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
