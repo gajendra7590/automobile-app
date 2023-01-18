@@ -20,9 +20,8 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a href="{{ route('loadReportSection') }}?type=purchase" id="current_active"
-                                    class="loadeReport">
-                                    VEHICLE PURCHASES REGISTER REPORT
+                                <a href="{{ route('loadReportSection') }}?type=purchase" id="current_active" class="loadeReport">
+                                    PURCHASE
                                 </a>
                             </li>
                             <li>
