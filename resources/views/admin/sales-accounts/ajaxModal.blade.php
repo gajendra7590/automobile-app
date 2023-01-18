@@ -60,6 +60,27 @@
                 <textarea class="form-control" name="deposite_source_note"
                     placeholder="Ex : Cheque No / Bank Detail | UPI Trans ID Etc.."></textarea>
             </div>
+            <div class="form-group col-md-12">
+                <label>Deposite Collected By Salesman</label>
+                <select class="form-control" name="deposite_collected_by">
+                    <option value="0">====================SELECT SALESMAN(IF ANY :)====================</option>
+                    @isset($salemans)
+                        @foreach ($salemans as $k => $saleman)
+                            <option value="{{ $saleman->id }}">{{ $saleman->name }} </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-6 payLater hideElement">
+                <label>Pay Later Amount</label>
+                <input name="pay_later_amount" type="number" class="form-control" value="0" placeholder="₹ 0.00">
+            </div>
+            <div class="form-group col-md-6 payLater hideElement">
+                <label>Pay Later Date</label>
+                <input name="pay_later_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
+                    placeholder="yyyy-mm-dd">
+            </div>
+
             <div class="form-group col-md-4">
                 <label>Due Amount</label>
                 <input name="due_amount" type="number" class="form-control"

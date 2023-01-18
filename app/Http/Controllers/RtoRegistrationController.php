@@ -396,8 +396,8 @@ class RtoRegistrationController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('rtoRegistration.show', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-success ajaxModalPopup"  data-modal_size="modal-lg" data-modal_title="Preview Registration Data" data-title="View">VIEW DETAIL</a></li>';
-        $action .= '<li><a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Edit Registration Data" data-title="Edit" data-modal_size="modal-lg">UPDATE</a></li>';
+        $action .= '<li><a href="' . route('rtoRegistration.show', ['rtoRegistration' => $id]) . '" class="ajaxModalPopup"  data-modal_size="modal-lg" data-modal_title="Preview Registration Data" data-title="View">VIEW DETAIL</a></li>';
+        $action .= '<li><a href="' . route('rtoRegistration.edit', ['rtoRegistration' => $id]) . '" class="ajaxModalPopup" data-modal_title="Edit Registration Data" data-title="Edit" data-modal_size="modal-lg">UPDATE</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;

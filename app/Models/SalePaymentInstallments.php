@@ -31,7 +31,8 @@ class SalePaymentInstallments extends Model
         'amount_paid_source',
         'amount_paid_note',
         'pay_due',
-        'status'
+        'status',
+        'collected_by_salesman_id'
     ];
 
 

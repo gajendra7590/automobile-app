@@ -92,6 +92,8 @@ $(document).ready(function () {
         if (id == "1") {
             $("#finance_section").addClass("hideElement");
             $("#emi_section").addClass("hideElement");
+            $(".payLater").addClass("hideElement");
+            $("input[name='pay_later_amount']").val(0);
 
             //Reset
             $("input[name='financier_note']").val("");
@@ -100,14 +102,17 @@ $(document).ready(function () {
             $("input[name='due_date']").attr("readonly", false);
             $("#finance_section").removeClass("hideElement");
             $("#emi_section").addClass("hideElement");
+            $(".payLater").removeClass("hideElement");
         } else if (id == "3") {
             $("#finance_section").removeClass("hideElement");
             $("#emi_section").removeClass("hideElement");
+            $(".payLater").removeClass("hideElement");
             //due_date_today
             $("input[name='due_date']")
                 .val(due_date_today)
                 .attr("readonly", true);
         }
+        PaymentCalculate();
 
         //REset Fields
         $("input[name='no_of_emis']").val("");
@@ -120,25 +125,53 @@ $(document).ready(function () {
         "keyup keypress",
         "input[name='deposite_amount']",
         function () {
-            let deposite_amount = $(this).val();
-            let sales_total_amount = $('input[name="sales_total_amount"').val();
-            if (deposite_amount > 0) {
-                let due_maount = sales_total_amount - deposite_amount;
-                if (due_maount < 0) {
-                    toastr.error(
-                        "Sorry! Deposite amount can't be exceeded Total Sales Amount"
-                    );
-                    $('input[name="due_amount"').val("");
-                }
-
-                if (due_maount > 0) {
-                    $("#due_section").removeClass("hideElement");
-                }
-                $('input[name="due_amount"').val(due_maount);
-            } else {
-                $('input[name="due_amount"').val(sales_total_amount);
-            }
+            PaymentCalculate();
         }
     );
+
+    $(document).on(
+        "keyup keypress",
+        "input[name='pay_later_amount']",
+        function () {
+            PaymentCalculate();
+        }
+    );
+
+    function PaymentCalculate() {
+        let deposite_amount = $('input[name="deposite_amount"]').val();
+        let sales_total_amount = $('input[name="sales_total_amount"').val();
+        let pay_type = $('select[name="due_payment_source"] :selected').val();
+        let later_pay_amount = $("input[name='pay_later_amount']").val();
+        if (deposite_amount > 0) {
+            let due_amount =
+                sales_total_amount - deposite_amount - later_pay_amount;
+            if (due_amount < 0) {
+                $('input[name="due_amount"').val(sales_total_amount);
+                $('input[name="deposite_amount"]').val(0);
+                $('input[name="pay_later_amount"]').val(0);
+                toastr.error(
+                    "Sorry! Deposite amount can't be exceeded Total Sales Amount"
+                );
+                return false;
+            }
+
+            // if (due_amount > 0) {
+            //     $("#due_section").removeClass("hideElement");
+            // }
+
+            if ((pay_type == "2" || pay_type == "3") && due_amount > 0) {
+                $(".payLater").removeClass("hideElement");
+            } else {
+                $(".payLater").addClass("hideElement");
+                $('input[name="pay_later_amount"]').val(0);
+            }
+
+            $('input[name="due_amount"').val(due_amount);
+        } else {
+            $('input[name="due_amount"').val(sales_total_amount);
+            $('input[name="pay_later_amount"]').val(0);
+            $(".payLater").addClass("hideElement");
+        }
+    }
     //Document Ready Close Here
 });

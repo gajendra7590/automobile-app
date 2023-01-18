@@ -71,15 +71,15 @@
     <input type='text' class="form-control" placeholder="SKU" name="sku" readonly
         value="{{ isset($data['sku']) ? $data['sku'] : '' }}" />
 </div>
-<div class="form-group col-md-4">
+<div class="form-group col-md-3">
     <label>Financer Name</label>
     <input type='text' class="form-control" placeholder="Financer Name" name="financer_name" readonly
         value="{{ isset($data['financer_name']) ? $data['financer_name'] : '' }}" />
 </div>
-<div class="form-group col-md-2">
-    <label>GST Rate</label>
+<div class="form-group col-md-3">
+    <label>GST Rate (TAX RATE)</label>
     <select name="gst_rto_rate_id" class="form-control onChangeSelect" {{ $editDisable }}>
-        <option value="">---GST Rate---</option>
+        <option value="">---GST Rate (TAX RATE)---</option>
         @if (isset($gst_rto_rates))
             @foreach ($gst_rto_rates as $key => $gst_rto_rate)
                 <option
