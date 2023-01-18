@@ -6,12 +6,17 @@ use App\Models\BikeBrand;
 use App\Models\BikeModel;
 use App\Models\Purchase;
 use App\Models\Quotation;
+use App\Models\RtoRegistration;
 use App\Models\Sale;
+use App\Traits\DownloadReportHelper;
 use Database\Seeders\BrandSeeder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use League\CommonMark\Extension\SmartPunct\Quote;
 
 class ReportController extends Controller
 {
+    use DownloadReportHelper;
     /**
      * Display a listing of the resource.
      *
@@ -119,6 +124,7 @@ class ReportController extends Controller
         if (in_array('brands', $dropdowns)) {
             $data['brands'] = BikeBrand::get();
         }
+        $data['action'] = route('downloadReport');
 
         return response()->json([
             'status'     => true,
@@ -132,39 +138,19 @@ class ReportController extends Controller
     {
         $postData = $request->all();
         $type = isset($postData['type']) ? $postData['type'] : 'purchase';
-        $view = 'purchase';
-        $data = array();
-        $dropdowns = [];
-        switch ($type) {
-            case 'purchase':
-                $view = 'purchase';
-                $dropdowns = ['brands'];
-                break;
-            case 'sales':
-                $view = 'sales';
-                break;
-            case 'quotations':
-                $view = 'quotations';
-                break;
-            case 'dues':
-                $view = 'dues';
-                break;
-            case 'rto':
-                $view = 'rto';
-                break;
-            default:
-                $view = 'purchase';
-                break;
+        $report = self::getReport($postData);
+        $result = [];
+        foreach($report as $value) {
+            $result[] = (array)$value;
         }
-        if (in_array('brands', $dropdowns)) {
-            $data['brands'] = BikeBrand::get();
+        $filename = $type . "_report.csv";
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+        $f = fopen('php://output', 'w');
+        foreach ($result as $line) {
+            fputcsv($f, $line);
         }
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => ucfirst($view) . " report data loaded.",
-            'data'       => view('admin.reports.ajax.' . $view, $data)->render()
-        ]);
+        fclose($f);
+        exit();
     }
 }

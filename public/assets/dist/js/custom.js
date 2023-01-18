@@ -113,6 +113,7 @@ $(document).ready(function () {
         var url = $(this).attr("action");
         var method = $(this).attr("method");
         var redirect = $(this).data("redirect");
+        console.log(redirect)
         var ajaxModalCommon = $(this).data("modal-id");
         var data = new FormData($(this)[0]);
         CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
@@ -127,13 +128,15 @@ $(document).ready(function () {
                     $("#ajaxModalCommon").modal("hide");
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
-                } else if (redirect != "undefined") {
+                } else if (redirect == "nothing") {
+                    //
+                } else if (redirect != undefined) {
                     if (result.data?.id) {
                         redirect = redirect.replace("{id}", result.data.id);
                     }
                     window.location.href = redirect;
                 } else {
-                    window.location.href = "";
+                    // window.location.href = "";
                 }
             } else {
                 // to do
