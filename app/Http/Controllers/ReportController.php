@@ -125,6 +125,7 @@ class ReportController extends Controller
             $data['brands'] = BikeBrand::get();
         }
         $data['action'] = route('downloadReport');
+        $data['type'] = $type;
 
         return response()->json([
             'status'     => true,
@@ -134,16 +135,13 @@ class ReportController extends Controller
         ]);
     }
 
-    public function downloadReport(Request $request)
-    {
-        $postData = $request->all();
-        $type = isset($postData['type']) ? $postData['type'] : 'purchase';
-        $report = self::getReport($postData);
+    public function downloadReport(Request $request) {
+        $report = self::getReport();
         $result = [];
         foreach($report as $value) {
             $result[] = (array)$value;
         }
-        $filename = $type . "_report.csv";
+        $filename = (request('type') ?? 'purchase') . "_report.csv";
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '";');
         $f = fopen('php://output', 'w');

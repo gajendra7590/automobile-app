@@ -11,11 +11,36 @@ use Illuminate\Support\Facades\DB;
 trait DownloadReportHelper
 {
 
-    public static function getReport($request)
+    public static function getReport()
     {
         $heading = [];
         try {
-            $type = isset($postData['type']) ? $postData['type'] : 'purchase';
+            $start_date = null;
+            $end_date = null;
+            $type = request('type') ?? 'purchase';
+            if(!empty(request('duration'))){
+                switch(request('duration')){
+                    case 'last_month':
+                        $end_date = date('Y-m-d');
+                        $start_date = date('Y-m-d',strtotime("$end_date -1 month"));
+                        break;
+                    case 'last_six_months':
+                        $end_date = date('Y-m-d');
+                        $start_date = date('Y-m-d',strtotime("$end_date -6 months"));
+                        break;
+                    case 'last_one_year':
+                        $end_date = date('Y-m-d');
+                        $start_date = date('Y-m-d',strtotime("$end_date -1 year"));
+                        break;
+                    case 'custom':
+                        $end_date = request('end_date') ?? date('Y-m-d');
+                        $start_date = request('end_date') ?? date('Y-m-d',strtotime("$end_date -1 month"));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             $query = null;
             $heading = [];
             switch ($type) {
@@ -65,7 +90,7 @@ trait DownloadReportHelper
                         'discount_price',
                         'grand_total',
                         'bike_description',
-                        'transfer_status'
+                        'transfer_status',
                     );
                     $heading = [
                         'Branch',
@@ -118,6 +143,11 @@ trait DownloadReportHelper
                     //
                     break;
             }
+
+            if($start_date && $end_date) {
+                $query->whereDate('purchases.created_at','>=',$start_date)->whereDate('purchases.created_at','<=',$end_date);
+            }
+
             $query = $query->get()->toArray();
 
             if(count($heading)){
