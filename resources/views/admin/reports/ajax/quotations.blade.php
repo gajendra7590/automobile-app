@@ -1,1 +1,0 @@
-<p>Quotations Report</p>

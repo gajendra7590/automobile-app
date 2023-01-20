@@ -20,28 +20,58 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a href="{{ route('loadReportSection') }}?type=purchase" id="current_active" class="loadeReport">
-                                    PURCHASE
+                                <a href="{{ route('loadReportSection') }}?type=vehicle_purchase_register" id="current_active" class="loadeReport">
+                                    VEHICLE PURCHASES REGISTER
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('loadReportSection') }}?type=sales" class="loadeReport">
-                                    SALES REPORT
+                                <a href="{{ route('loadReportSection') }}?type=pending_purchase_invoice" class="loadeReport">
+                                    PENDING PURCHASES INVOICE
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('loadReportSection') }}?type=quotations" class="loadeReport">
-                                    QUOTATIONS REPORT
+                                <a href="{{ route('loadReportSection') }}?type=vehicle_stock_inventory" class="loadeReport">
+                                    VEHICLE STOKE INVENTORY
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('loadReportSection') }}?type=dues" class="loadeReport">
-                                    DUE REPORTS
+                                <a href="{{ route('loadReportSection') }}?type=quotation_list" class="loadeReport">
+                                    QUOTATION LIST
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=sales_register" class="loadeReport">
+                                    SALES REGISTER
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=brokers_agents" class="loadeReport">
+                                    BROKERS / AGENTS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=financers" class="loadeReport">
+                                    FINANCERS
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('loadReportSection') }}?type=rto" class="loadeReport">
-                                    RTO REPORT
+                                    RTO
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=accounts" class="loadeReport">
+                                    ACCOUNTS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=receipt_voucher" class="loadeReport">
+                                    RECEIPT VOUCHER
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=payment_voucher" class="loadeReport">
+                                    PAYMENT VOUCHER
                                 </a>
                             </li>
                         </ul>
@@ -50,16 +80,10 @@
                                 PURCHASE REPORT
                             </div>
                         </div>
-                        <!-- /.tab-content -->
                     </div>
-                    <!-- /.nav-tabs-custom -->
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
-
         </section>
-        <!-- /.content -->
     </div>
 @endsection
 
