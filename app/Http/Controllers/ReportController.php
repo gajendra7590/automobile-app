@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankFinancer;
 use App\Models\BikeBrand;
+use App\Models\Broker;
 use App\Traits\DownloadReportHelper;
+use Facade\Ignition\QueryRecorder\Query;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -33,15 +38,15 @@ class ReportController extends Controller
                 break;
             case 'vehicle_stock_inventory' :
                 $view = 'vehicle-stock-inventory';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brands','brokers'];
                 break;
             case 'quotation_list' :
                 $view = 'quotation-list';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brands','financers'];
                 break;
             case 'sales_register' :
                 $view = 'sales-register';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brands','financers'];
                 break;
             case 'brokers_agents' :
                 $view = 'brokers-agents';
@@ -74,6 +79,12 @@ class ReportController extends Controller
         if (in_array('brands', $dropdowns)) {
             $data['brands'] = BikeBrand::get();
         }
+        if (in_array('brokers', $dropdowns)) {
+            $data['brokers'] = Broker::get();
+        }
+        if (in_array('financers', $dropdowns)) {
+            $data['financers'] = BankFinancer::get();
+        }
         $data['action'] = route('downloadReport');
         $data['type'] = $type;
 
@@ -86,11 +97,7 @@ class ReportController extends Controller
     }
 
     public function downloadReport(Request $request) {
-        $report = self::getReport();
-        $result = [];
-        foreach($report as $value) {
-            $result[] = (array)$value;
-        }
+        $result = self::getReport();
         $filename = (request('type') ?? 'purchase') . "_report.csv";
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '";');

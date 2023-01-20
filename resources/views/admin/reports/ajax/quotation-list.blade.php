@@ -26,23 +26,23 @@
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label>DURATION</label>
-                <select name="duration" class="form-control">
-                    <option value="last_month">Last Month</option>
-                    <option value="last_six_months">Last Six Months</option>
-                    <option value="last_one_year">Last One Year</option>
-                    <option value="custom">Custom</option>
+                <label>STATUS</label>
+                <select name="status" class="form-control">
+                    <option value="">---Select Status----</option>
+                    <option value="open">Open</option>
+                    <option value="close">Close</option>
                 </select>
             </div>
-            <div class="col-md-6 pull-right dateshow" hidden>
-                <div class="form-group col-md-6">
-                    <label>START DATE</label>
-                    <input type='date' name="start_date" class="form-control" value="{{date('Y-m-d')}}" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>END DATE</label>
-                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
-                </div>
+            <div class="form-group col-md-2">
+                <label>Financers</label>
+                <select name="financer_id" class="form-control">
+                    <option value="">---Select Model----</option>
+                    @isset($financers)
+                        @foreach ($financers as $financer)
+                            <option value="{{ $financer->id }}">{{ $financer->bank_name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
             </div>
         </div>
         <div class="form-group col-md-12 pull-left">
@@ -55,22 +55,3 @@
     </form>
 </section>
 
-<script>
-    $(document).ready(function (){
-        $("[name=start_date]").on('change',function (e){
-            $('[name=end_date]').attr("min",$(this).val());
-        })
-
-        $("[name=end_date]").on('change',function (e){
-            $('[name=start_date]').attr("max",$(this).val());
-        })
-
-        $("[name=duration]").on('change',function (e){
-            if($(this).val() == 'custom'){
-                $('.dateshow').show();
-            }else{
-                $('.dateshow').hide();
-            }
-        })
-    })
-</script>
