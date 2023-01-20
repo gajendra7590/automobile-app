@@ -143,6 +143,15 @@ class Purchase extends Model
         return $this->hasOne(PurchaseInvoice::class, 'purchase_id');
     }
 
+    public function brokers() {
+        return $this->belongsToMany(Broker::class,'purchase_transfer')->latest();
+    }
+
+    public function purchase_transfer_latest()
+    {
+        return $this->hasOne(PurchaseTransfer::class)->latest();
+    }
+
     public function transfers()
     {
         return $this->hasOne(PurchaseTransfer::class, 'purchase_id')->where('active_status', '1')->orderBy('id', 'DESC');
