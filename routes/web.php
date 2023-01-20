@@ -91,13 +91,14 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Quotations
     Route::resource('quotations', 'QuotationController');
     Route::get('getQuotationDetails/{id}', 'QuotationController@getQuotationDetails')->name('getQuotationDetails');
-    Route::get('print-quotation/{id}', 'QuotationController@printQuotation')->name('print-quotation');
+    Route::get('printQuotation/{id}', 'QuotationController@printQuotation')->name('printQuotation');
     Route::get('close-quotation/{id}', 'QuotationController@closeQuotation')->name('quotation.close');
     Route::post('close-quotation-post/{id}', 'QuotationController@closeQuotationPost')->name('quotationclosepost');
 
     // Sales
     Route::resource('sales', 'SaleController');
     Route::get('ajax-loade-view', 'SaleController@ajaxLoadeView')->name('ajaxLoadeView');
+    Route::get('deliveryChallan/{id}', 'SaleController@deliveryChallan')->name('deliveryChallan');
 
     // SALES ACCOUNT
     Route::resource('saleAccounts', 'SalesAccountController');
