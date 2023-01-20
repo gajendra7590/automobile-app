@@ -1,7 +1,7 @@
 <section class="content">
     <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" >
         <input type="hidden" name="type" value="{{isset($type) && !empty($type) ? $type : 'purchase' }}">
-        <div class='col-md-12'>
+        {{-- <div class='col-md-12'>
             <div class="form-group col-md-2">
                 <label>REPORT TYPE</label>
                 <select name="report_type" class="form-control">
@@ -9,7 +9,7 @@
                     <option value="purchase_pending_invoice">Pending Invoice Purchase</option>
                 </select>
             </div>
-        </div>
+        </div> --}}
         <div class='col-md-12'>
             <div class="form-group col-md-2">
                 <label>BIKE BRAND</label>

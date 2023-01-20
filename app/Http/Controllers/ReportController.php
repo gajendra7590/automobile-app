@@ -3,94 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\BikeBrand;
-use App\Models\BikeModel;
-use App\Models\Purchase;
-use App\Models\Quotation;
-use App\Models\RtoRegistration;
-use App\Models\Sale;
 use App\Traits\DownloadReportHelper;
-use Database\Seeders\BrandSeeder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use League\CommonMark\Extension\SmartPunct\Quote;
 
 class ReportController extends Controller
 {
     use DownloadReportHelper;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('admin.reports.index', ['data' => []]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public function loadReportSection(Request $request)
@@ -101,21 +23,49 @@ class ReportController extends Controller
         $data = array();
         $dropdowns = [];
         switch ($type) {
-            case 'purchase':
-                $view = 'purchase';
+            case 'vehicle_purchase_register' :
+                $view = 'vehicle-purchase-register';
                 $dropdowns = ['brands'];
                 break;
-            case 'sales':
-                $view = 'sales';
+            case 'pending_purchase_invoice' :
+                $view = 'pending-purchase-invoice';
+                $dropdowns = ['brands'];
                 break;
-            case 'quotations':
-                $view = 'quotations';
+            case 'vehicle_stock_inventory' :
+                $view = 'vehicle-stock-inventory';
+                $dropdowns = ['brands'];
                 break;
-            case 'dues':
-                $view = 'dues';
+            case 'quotation_list' :
+                $view = 'quotation-list';
+                $dropdowns = ['brands'];
                 break;
-            case 'rto':
+            case 'sales_register' :
+                $view = 'sales-register';
+                $dropdowns = ['brands'];
+                break;
+            case 'brokers_agents' :
+                $view = 'brokers-agents';
+                $dropdowns = ['brands'];
+                break;
+            case 'financers' :
+                $view = 'financers';
+                $dropdowns = ['brands'];
+                break;
+            case 'accounts' :
+                $view = 'accounts';
+                $dropdowns = ['brands'];
+                break;
+            case 'rto' :
                 $view = 'rto';
+                $dropdowns = ['brands'];
+                break;
+            case 'receipt_voucher' :
+                $view = 'receipt-voucher';
+                $dropdowns = ['brands'];
+                break;
+            case 'payment_voucher' :
+                $view = 'payment-voucher';
+                $dropdowns = ['brands'];
                 break;
             default:
                 $view = 'purchase';
