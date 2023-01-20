@@ -13,6 +13,8 @@ class RtoRegistration extends Model
 
     protected $table = 'rto_registration';
 
+    protected $appends = ['cust_name'];
+
     protected $fillable = [
         'sale_id',
         'rto_agent_id',
@@ -60,6 +62,28 @@ class RtoRegistration extends Model
                 $sale->where('branch_id', $branch_id);
             });
         }
+    }
+
+    public function getCustNameAttribute()
+    {
+
+        $str = '';
+        if (!empty($this->customer_gender)) {
+            $str .= custPrefix($this->customer_gender) . '. ';
+        }
+
+        if (!empty($this->customer_name)) {
+            $str .= $this->customer_name . ' ';
+        }
+
+        if (!empty($this->customer_relationship)) {
+            $str .= custRel($this->customer_relationship) . ' ';
+        }
+
+        if (!empty($this->customer_guardian_name)) {
+            $str .= $this->customer_guardian_name;
+        }
+        return $str;
     }
 
     public function agent()

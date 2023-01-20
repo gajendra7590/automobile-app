@@ -14,6 +14,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 //Helpr
 use App\Traits\CommonHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SaleController extends Controller
 {
@@ -485,6 +486,31 @@ class SaleController extends Controller
         //
     }
 
+    public function deliveryChallan(Request $request, $id)
+    {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $saleModel = Sale::where('id', $id)
+            ->where($where)
+            ->with([
+                'branch',
+                'purchase'
+            ])
+            ->first();
+        if (!$saleModel) {
+            return view('admin.accessDenied');
+        }
+
+        // return view('admin.sales.delivery-challan', ['data' => $saleModel]);
+        $pdf = Pdf::loadView('admin.sales.delivery-challan', ['data' => $saleModel]);
+        return $pdf->stream('invoice.pdf');
+    }
+
     public function getActions($row)
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
@@ -493,6 +519,11 @@ class SaleController extends Controller
         if ($row->status == 'open') {
             $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
         }
+
+        if ($row->sp_account_id  > 0) {
+            $action .= '<li><a href="' . route('deliveryChallan', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN</a></li>';
+        }
+
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;

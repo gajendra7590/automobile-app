@@ -396,7 +396,7 @@ class QuotationController extends Controller
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
         $action .= '<li><a title="View Quotation" href="' . route('quotations.show', ['quotation' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="View Quotation" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
-        $action .= '<li><a title="Print Quotation" href="' . route('print-quotation', ['id' => $row->id]) . '" target="_blank">PRINT</a></li>';
+        $action .= '<li><a title="Print Quotation" href="' . route('printQuotation', ['id' => base64_encode($row->id)]) . '" target="_blank">PRINT</a></li>';
         if ($row->status == 'open') {
             $action .= '<li><a title="Close Quotation If Already Sale OR Customer Denied." href="' . route('quotation.close', ['id' => $row->id]) . '" class="ajaxModalPopup" data-modal_title="Mark Close" data-modal_size="modal-md" aria-hidden="true">SELF CLOSE</a></li>';
             $action .= '<li><a title="Create Sale" href="' . route('sales.create') . "?q=$row->id" . '" target="_blank" >CREATE NEW SALE</a></li>';
@@ -409,9 +409,20 @@ class QuotationController extends Controller
 
     public function printQuotation(Request $request, $id)
     {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
         $quotationModel = Quotation::with([
             'branch'
-        ])->where(['id' => $id])->first();
+        ])->where(['id' => $id])->where($where)->first();
+
+        if (!$quotationModel) {
+            return view('admin.accessDenied');
+        }
         // return view('admin.quotations.invoice-print',['data' => $quotationModel]);
         $pdf = Pdf::loadView('admin.quotations.invoice-print', ['data' => $quotationModel]);
         return $pdf->stream('invoice.pdf');

@@ -77,9 +77,10 @@ class Sale extends Model
 
     public function getCustNameAttribute()
     {
+
         $str = '';
         if (!empty($this->customer_gender)) {
-            $str .= $this->gender . ' ';
+            $str .= custPrefix($this->customer_gender) . '. ';
         }
 
         if (!empty($this->customer_name)) {
@@ -87,7 +88,7 @@ class Sale extends Model
         }
 
         if (!empty($this->customer_relationship)) {
-            $str .= $this->relationship . ' ';
+            $str .= custRel($this->customer_relationship) . ' ';
         }
 
         if (!empty($this->customer_guardian_name)) {
@@ -143,7 +144,7 @@ class Sale extends Model
     public function purchase()
     {
         return $this->belongsTo(Purchase::class, 'purchase_id')
-            ->select('id', 'bike_branch', 'bike_dealer', 'bike_brand', 'bike_model', 'bike_model_color')
+            ->select('id', 'bike_branch', 'bike_dealer', 'bike_brand', 'bike_model', 'bike_model_color', 'sku', 'engine_number', 'hsn_number', 'key_number')
             ->with([
                 'branch' => function ($model) {
                     $model->select('id', 'branch_name');

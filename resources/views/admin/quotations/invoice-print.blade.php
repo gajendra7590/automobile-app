@@ -108,13 +108,17 @@
                     </tr>
                     <tr style="border-top: 1px solid;">
                         <td style="border-right: 1px solid;width:25%;text-align: center; height: 2rem;">
-                            {{ isset($data->branch) && $data->branch ? $data->branch->branch_name : '' }}</td>
+                            {{ isset($data->branch) && $data->branch ? $data->branch->branch_name : '' }}
+                        </td>
                         <td style="border-right: 1px solid;width:25%;text-align: center; height: 2rem;">
-                            {{ isset($data->model) && $data->model ? $data->model->model_name : '' }}</td>
+                            {{ isset($data->model) && $data->model ? $data->model->model_name : '' }}
+                        </td>
                         <td style="border-right: 1px solid;width:25%;text-align: center; height: 2rem;">
-                            {{ isset($data->color) && $data->color ? $data->color->color_name : '' }}</td>
+                            {{ isset($data->color) && $data->color ? $data->color->color_name : '' }}
+                        </td>
                         <td style="width:25%;text-align: center; height: 2rem;">
-                            {{ isset($data->payment_type_accessor) ? $data->payment_type_accessor : '' }}</td>
+                            {{ isset($data->payment_type_accessor) ? $data->payment_type_accessor : '' }}
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -126,20 +130,23 @@
                     <tr style="width: 100%;">
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem; padding-left: 0.5rem;">
                             EX SHOWROOM PRICE</td>
-                        <td style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;  padding-left: 0.5rem;">
+                        <td
+                            style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;  padding-left: 0.5rem;">
                             {{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem;  padding-left: 0.5rem;">
                             REGISTRATION AMOUNT</td>
-                        <td style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;  padding-left: 0.5rem;">
+                        <td
+                            style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;  padding-left: 0.5rem;">
                             {{ isset($data->registration_amount) ? $data->registration_amount : '' }}</td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem;  padding-left: 0.5rem;">
                             INSURANCE AMOUNT</td>
-                        <td style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem; padding: 0rem 0.5rem 0rem 0.5rem;">
+                        <td
+                            style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem; padding: 0rem 0.5rem 0rem 0.5rem;">
                             {{ isset($data->insurance_amount) ? $data->insurance_amount : '' }}</td>
                     </tr>
                     <tr>
@@ -151,12 +158,13 @@
                     <tr>
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem;  padding-left: 0.5rem;">
                             ACCESSORIES AMOUNT</td>
-                        <td style="border-left: 1px solid; border-bottom: 1px solid;  text-align: center; height: 2rem;">
+                        <td
+                            style="border-left: 1px solid; border-bottom: 1px solid;  text-align: center; height: 2rem;">
                             {{ isset($data->accessories_amount) ? $data->accessories_amount : '' }}</td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem;  padding-left: 0.5rem;">
-                        OTHER CHARGES</td>
+                            OTHER CHARGES</td>
                         <td style="border-left: 1px solid; border-bottom: 1px solid; text-align: center; height: 2rem;">
                             {{ isset($data->other_charges) ? $data->other_charges : '' }}</td>
                     </tr>
@@ -165,7 +173,6 @@
                         <td style="text-align: left; height: 2rem;  padding-left: 0.5rem;font-weight: bold;">TOTAL
                             AMOUNT</td>
                         <td style="border-left: 1px solid; text-align: center; height: 2rem;font-weight: bold;">
-                            <span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>
                             {{ isset($data->total_amount) ? $data->total_amount : '' }}
                         </td>
                     </tr>
