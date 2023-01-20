@@ -104,6 +104,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('saleAccounts', 'SalesAccountController');
     Route::get('sales-detail-modal', 'SalesAccountController@salesDetailModal')->name('salesDetailModal');
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
+    Route::get('printPayemntReciept/{id}', 'SalesAccountController@printPayemntReciept')->name('printPayemntReciept');
 
     //RTO Registration
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use NumberToWords\NumberToWords;
 
 
 if (!function_exists('action_buttons')) {
@@ -19,7 +20,6 @@ if (!function_exists('action_buttons')) {
         </div>';
     }
 }
-
 
 if (!function_exists('bike_types')) {
     function bike_types()
@@ -342,6 +342,17 @@ if (!function_exists('myDateFormate')) {
         } else {
             return date('Y-m-d');
         }
+    }
+}
+
+if (!function_exists('number2WordConvert')) {
+    function number2WordConvert($value)
+    {
+        $numberToWords = new NumberToWords();
+        $numberTransformer = $numberToWords->getNumberTransformer('en');
+        $str = $numberTransformer->toWords($value);
+
+        return strtoupper('Rupees ' . $str . ' Only');
     }
 }
 

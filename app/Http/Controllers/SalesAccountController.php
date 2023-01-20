@@ -17,6 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 //Trait
 use App\Traits\CronHelper;
 use App\Traits\CommonHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SalesAccountController extends Controller
 {
@@ -800,5 +801,42 @@ class SalesAccountController extends Controller
                 'message'    => $e->getMessage()
             ]);
         }
+    }
+
+    public function printPayemntReciept(Request $request, $id)
+    {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $paymentInstallmentModel = SalePaymentInstallments::where('id', $id)
+            ->whereHas('sale', function ($sale) use ($where) {
+                $sale->where($where);
+            })
+            ->with([
+                'sale' => function ($sale) {
+                    $sale->with(['branch', 'purchase']);
+                },
+                'account' => function ($account) {
+                    $account->select('id', 'financier_id')->with([
+                        'financier' => function ($financier) {
+                            $financier->select('id', 'bank_name');
+                        }
+                    ]);
+                }
+            ])
+            ->first();
+
+
+        if (!$paymentInstallmentModel) {
+            return view('admin.accessDenied');
+        }
+
+        // return view('admin.sales-accounts.printPaymentReciept', ['data' => $paymentInstallmentModel]);
+        $pdf = Pdf::loadView('admin.sales-accounts.printPaymentReciept', ['data' => $paymentInstallmentModel]);
+        return $pdf->stream('invoice.pdf');
     }
 }
