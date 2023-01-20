@@ -120,6 +120,9 @@
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('assets/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
+    <!-- Bootstrap 1.19.5 -->
+    <script src="{{ asset('assets/dist//js/jquery.validate.min.js') }}"></script>
+
     <!-- Select2 -->
     <script src="{{ asset('assets/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
     <!-- DataTables -->

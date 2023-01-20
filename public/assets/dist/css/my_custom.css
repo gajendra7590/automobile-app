@@ -81,3 +81,9 @@
   }
 
 
+  /* FORM VALIDATION */
+  input.error {
+      border-color: red;
+  }
+
+
