@@ -155,7 +155,7 @@
                                                 <th width="10%">PAID DATE</th>
                                                 <th>+/-</th>
                                                 <th>STATUS</th>
-                                                <th width="10%">ACTION</th>
+                                                <th width="5%">ACTION</th>
                                             </tr>
 
                                             @if (isset($data['installments']) && count($data['installments']) > 0)
@@ -211,20 +211,41 @@
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                @if ($installment->status == '0' && $pending_emi == 1)
-                                                                    <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
-                                                                        class="btn btn-success btn-sm ajaxModalPopup"
-                                                                        data-modal_title="Make Due Payment"
-                                                                        data-modal_size="modal-lg">
-                                                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
-                                                                    </a>
-                                                                @endif
-                                                                <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
-                                                                    class="btn btn-warning btn-sm ajaxModalPopup"
-                                                                    data-modal_title="Due Payment Detail"
-                                                                    data-modal_size="modal-lg">
-                                                                    <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                </a>
+                                                                <div class="dropdown pull-right customDropDownOption">
+                                                                    <button class="btn btn-xs btn-primary dropdown-toggle"
+                                                                        type="button" data-toggle="dropdown"
+                                                                        style="padding: 3px 10px !important;">
+                                                                        <span class="caret"></span>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        @if ($installment->status == '0' && $pending_emi == 1)
+                                                                            <li>
+                                                                                <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
+                                                                                    class="ajaxModalPopup"
+                                                                                    data-modal_title="Make Due Payment"
+                                                                                    data-modal_size="modal-lg">
+                                                                                    PAY NOW
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
+                                                                        <li>
+                                                                            <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
+                                                                                class="ajaxModalPopup"
+                                                                                data-modal_title="Due Payment Detail"
+                                                                                data-modal_size="modal-lg">
+                                                                                VIEW DETAIL
+                                                                            </a>
+                                                                        </li>
+                                                                        @if ($installment->status == '1')
+                                                                            <li>
+                                                                                <a href="{{ route('printPayemntReciept', ['id' => base64_encode($installment->id)]) }}"
+                                                                                    target="_blank">
+                                                                                    PRINT RECIEPT
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
+                                                                    </ul>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                     @endforeach

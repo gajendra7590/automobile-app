@@ -64,17 +64,17 @@
                     <tr>
                         <td style="width:25%; padding-left: 0.5rem; height: 2rem;">NAME</td>
                         <td style="border-left: 1px solid;width:75%;text-align: center; height: 2rem;">
-                            {{ isset($data->cust_name) ? $data->cust_name : ' ' }}
+                            {{ isset($data->cust_name) ? strtoupper($data->cust_name) : ' ' }}
                         </td>
                     </tr>
                     <tr style="border-top: 1px solid;">
                         <td style="width:25%; padding-left: 0.5rem; height: 2rem;">ADDRESS : </td>
                         <td style="border-left: 1px solid;width:75%;text-align: center; height: 2rem;">
-                            {{ isset($data->customer_address_line) ? $data->customer_address_line . ',' : ' ' }}
-                            {{ isset($data->city->city_name) ? $data->city->city_name . ',' : ' ' }}
-                            {{ isset($data->district->district_name) ? $data->district->district_name . ',' : ' ' }}
-                            {{ isset($data->state->state_name) ? $data->state->state_name . ',' : ' ' }}
-                            {{ isset($data->customer_zipcode) ? $data->customer_zipcode : ' ' }}
+                            {{ isset($data->customer_address_line) ? ucwords($data->customer_address_line) . ',' : ' ' }}
+                            {{ isset($data->city->city_name) ? ucwords($data->city->city_name) . ',' : ' ' }}
+                            {{ isset($data->district->district_name) ? ucwords($data->district->district_name) . ',' : ' ' }}
+                            {{ isset($data->state->state_name) ? ucwords($data->state->state_name) . ',' : ' ' }}
+                            {{ isset($data->customer_zipcode) ? ucwords($data->customer_zipcode) : ' ' }}
                         </td>
                     </tr>
                     <tr style="border-top: 1px solid;">

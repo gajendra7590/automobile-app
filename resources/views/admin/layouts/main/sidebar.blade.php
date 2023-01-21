@@ -28,16 +28,16 @@
             </li>
             @if (auth()->user() && auth()->user()->is_admin == '1')
                 <li
-                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') ? 'active' : '' }}">
                     <a href="#">
-                        <i class="fa fa-cog"></i>
+                        <i class="fa fa-calculator"></i>
                         <span>ALL BASIC SETTINGS</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') ? 'display:"block"' : '' }}>
                         <li class="{{ Request::is('branches*') ? 'active' : '' }}">
                             <a href="{{ route('branches.index') }}"><i class="fa fa-building-o"></i>OUR BRANCHES</a>
                         </li>
@@ -65,6 +65,13 @@
                         </li>
                         <li class="{{ Request::is('gst-rto-rates*') ? 'active' : '' }}">
                             <a href="{{ route('gst-rto-rates.index') }}"><i class="fa fa-money"></i>GST RTO RATES</a>
+                        </li>
+                        <li class="{{ Request::is('tyreBrands*') ? 'active' : '' }}">
+                            <a href="{{ route('tyreBrands.index') }}"><i class="fa fa-motorcycle"></i>TYRE BRANDS</a>
+                        </li>
+                        <li class="{{ Request::is('batteryBrands*') ? 'active' : '' }}">
+                            <a href="{{ route('batteryBrands.index') }}"><i class="fa fa-battery-full"></i>BATTERY
+                                BRANDS</a>
                         </li>
                     </ul>
                 </li>
@@ -114,36 +121,54 @@
                     {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'display:"block"' : '' }}>
 
                     <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
-                        <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i>PURCHASES</a>
+                        <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i>PURCHASES
+                        </a>
                     </li>
                     <li class="{{ Request::is('purchaseInvoices*') ? 'active' : '' }}">
-                        <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>INVOICES</a>
+                        <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>PURCHASE INVOICES
+                        </a>
                     </li>
                     <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
-                        <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i> TRANSFERS</a>
+                        <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i>BROKER
+                            TRANSFERS
+                        </a>
                     </li>
                 </ul>
             </li>
 
             <li class="{{ Request::is('quotations*') ? 'active' : '' }}">
-                <a href="{{ route('quotations.index') }}"><i class="fa fa-question-circle"></i>
+                <a href="{{ route('quotations.index') }}"><i class="fa fa-briefcase"></i>
                     <span>QUOTATIONS</span></a>
             </li>
 
-            <li class="{{ Request::is('sales*') ? 'active' : '' }}">
-                <a href="{{ route('sales.index') }}"><i class="fa fa-rupee"></i> <span>SALES</span></a>
-            </li>
-
-            <li class="{{ Request::is('saleAccounts*') ? 'active' : '' }}">
-                <a href="{{ route('saleAccounts.index') }}"><i class="fa fa-university"></i>
-                    <span>ACCOUNTS</span>
+            <li class="treeview {{ Request::is('sales*') || Request::is('saleAccounts*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-motorcycle"></i>
+                    <span>SALES RECORD</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+                <ul class="treeview-menu"
+                    {{ Request::is('sales*') || Request::is('saleAccounts*') ? 'display:"block"' : '' }}>
+
+                    <li class="{{ Request::is('sales*') ? 'active' : '' }}">
+                        <a href="{{ route('sales.index') }}"><i class="fa fa-registered"></i>
+                            SALES LIST
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('saleAccounts*') ? 'active' : '' }}">
+                        <a href="{{ route('saleAccounts.index') }}"><i class="fa fa-credit-card"></i>
+                            SALES PAYMENT ACCOUNTS
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li
                 class="treeview {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'active' : '' }}">
                 <a href="#">
-                    <i class="fa fa-snowflake-o"></i>
+                    <i class="fa fa-book"></i>
                     <span>RTO</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
