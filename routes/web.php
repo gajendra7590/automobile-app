@@ -70,6 +70,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //RTO Agents
     Route::resource('rto-agents', 'RtoAgentController');
 
+    //Tyre Brands
+    Route::resource('tyreBrands', 'TyreBrandController');
+
+    //Battery Brands
+    Route::resource('batteryBrands', 'BatteryBrandController');
+
     //Purchases
     Route::resource('purchases', 'PurchaseController');
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');

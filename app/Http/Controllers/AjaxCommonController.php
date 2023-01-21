@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankFinancer;
+use App\Models\BatteryBrand;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
@@ -16,6 +17,7 @@ use App\Models\GstRtoRates;
 use App\Models\RtoAgent;
 use App\Models\Salesman;
 use App\Models\State;
+use App\Models\TyreBrand;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -131,6 +133,12 @@ class AjaxCommonController extends Controller
                         break;
                     case 'salesman':
                         $model = new Salesman;
+                        break;
+                    case 'batteryBrands':
+                        $model = new BatteryBrand;
+                        break;
+                    case 'tyreBrands':
+                        $model = new TyreBrand;
                         break;
                     default:
                         # code...
