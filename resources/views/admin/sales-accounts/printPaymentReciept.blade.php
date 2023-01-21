@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <table style="border:1px solid; border-collapse: collapse;">
+    <table style="border:1px solid; border-collapse: collapse;width:100%;">
         <tr>
             <td style=" height: 2rem; text-align: center;border: 1px solid black;font-size: 2.5rem; color: red;font-weight: 700; padding-top: 0.5rem;
             padding-bottom: 0.5rem; font-weight: 600; "
@@ -32,10 +32,6 @@
                 GSTIN : {{ isset($data->sale->branch) ? $data->sale->branch->gstin_number : ' ' }}
             </td>
         </tr>
-
-
-
-
         <tr>
             <td style="width:100%;" colspan="2">
                 <table style="width:100%;border-collapse: collapse;">
@@ -52,7 +48,7 @@
                     </tr>
                     <tr style="border-bottom: 1px solid;">
                         <td
-                            style="width: 50%; padding-left: 0.5rem; height: 2rem; text-align: center; font-size: 1.5rem; font-weight: 800; color:blue;">
+                            style="width: 50%; padding-left: 0.5rem; height: 2rem; text-align: center; font-size: 1.5rem; font-weight: 800;">
                             Payment Receipts
                         </td>
                         <td style="border-left: 1px solid;text-align: center; height: 2rem;">
@@ -171,8 +167,7 @@
                             style="border-right: 1px solid;width:20%;text-align: center; height: 2rem;font-weight:bold;font-size:14px;">
                             {{ isset($data->emi_title) && $data->emi_title ? $data->emi_title : '' }}
                         </td>
-                        <td
-                            style="text-align: center; height: 2rem; border-right: 1px solid;font-weight:bold;font-size:14px;">
+                        <td style="text-align: center; height: 2rem; border-right: 1px solid;font-size:14px;">
                             {{ isset($data->amount_paid_note) && $data->amount_paid_note ? $data->amount_paid_note : '' }}
                         </td>
                     </tr>
@@ -184,7 +179,7 @@
             <td style="text-align: left; border: 1px solid;width:100%; height: 2rem;" colspan="2">
                 <table style="width:100%;border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid;">
-                        <td style="width:40%;  text-align: center; height: 2rem; padding-left: 0.5rem;" colspan="2">
+                        <td style="width:33%;  text-align: center; height: 2rem; padding-left: 0.5rem;" colspan="2">
                             TOTAL AMOUNT
                         </td>
                         <td
@@ -193,12 +188,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width:15%;  text-align: center; height: 2rem; padding-left: 0.5rem;">
-                            Amount In Word
+                        <td style="width:33%;  text-align: center; height: 2rem; padding-left: 0.5rem;">
+                            AMOUNT IN WORD
                         </td>
                         <td style="text-align: center; height: 2rem;  padding-left: 0.5rem;"></td>
                         <td
-                            style="width:85%; border-left: 1px solid; text-align: left; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;">
+                            style="width:70%; border-left: 1px solid; text-align: center; height: 2.5rem; padding-left: 0.5rem;">
 
                             {{ isset($data->amount_paid) && $data->amount_paid ? number2WordConvert($data->amount_paid) : '' }}
                         </td>
@@ -210,47 +205,43 @@
         </tr>
 
         <tr>
-            <td style="text-align: left; width:100%;padding: 50px 15px; height: 2rem;">
+            <td style="text-align: left; width:70%;padding: 50px 15px; height: 2rem;">
                 <table style="border-collapse: collapse;">
                     <h2>
                         Terms & Conditions
                     </h2>
-                    <!-- <ol>
-                        <li>E & O.E.</li>
-                        <li>All disputes are subjected to the jurisdiction of courts of law at KHANDWA</li>
-                        <li>Prices as applicable at the time of purchase</li>
-                        <li>Delivery on cheque & Draft will be after realisation only</li>
-                    </ol> -->
                     <tr>
                         <td style="height: 2rem;" colspan="2">
                             1. E & O.E.
                         </td>
                     </tr>
                     <tr>
-                        <td style="height: 2rem;" colspan="2">2. All disputes are subjected to the jurisdiction of
-                            courts of law at KHANDWA
+                        <td style="height: 2rem;" colspan="2">
+                            2. All disputes are subjected to the jurisdiction of courts of law at KHANDWA
                         </td>
                     </tr>
                     <tr>
-                        <td style=" height: 2rem;" colspan="2">3. Prices as applicable at the time of purchase
-                            454daasdsad
+                        <td style=" height: 2rem;" colspan="2">
+                            3. Prices as applicable at the time of purchase
                         </td>
                     </tr>
                     <tr>
-                        <td style=" height: 2rem;" colspan="2">4. Delivery on cheque & Draft will be after
-                            realisation only
+                        <td style=" height: 2rem;" colspan="2">
+                            4. Delivery on cheque & Draft will be after realisation only
                         </td>
                     </tr>
 
                 </table>
             </td>
-            <td style="width: 60%; height: 2rem;">
+            <td style="width: 30%; height: 2rem;border: 1px solid;">
                 <table>
-                    <tr style=" text-align: center; ">
-                        AKASH MOTORS
+                    <tr style="text-align: center;">
+                        <td style="text-align: center; height: 2rem;padding-left: 45px;">
+                            {{ isset($data->sale->branch) ? $data->sale->branch->branch_name : 'No Branch' }}
+                        </td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; height: 2rem;">
+                        <td style="text-align: center; height: 2rem;padding-left: 45px;padding-top:100px;">
                             Signature
                         </td>
                     </tr>
