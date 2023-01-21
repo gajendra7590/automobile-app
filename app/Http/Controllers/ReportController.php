@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\Broker;
+use App\Models\Purchase;
+use App\Models\Salesman;
 use App\Traits\DownloadReportHelper;
 use Facade\Ignition\QueryRecorder\Query;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +48,7 @@ class ReportController extends Controller
                 break;
             case 'sales_register' :
                 $view = 'sales-register';
-                $dropdowns = ['brands','financers'];
+                $dropdowns = ['brands','financers','salesmans'];
                 break;
             case 'brokers_agents' :
                 $view = 'brokers-agents';
@@ -84,6 +86,9 @@ class ReportController extends Controller
         }
         if (in_array('financers', $dropdowns)) {
             $data['financers'] = BankFinancer::get();
+        }
+        if (in_array('salesmans', $dropdowns)) {
+            $data['salesmans'] = Salesman::get();
         }
         $data['action'] = route('downloadReport');
         $data['type'] = $type;

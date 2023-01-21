@@ -4,7 +4,7 @@
         <div class='col-md-12'>
             <div class="form-group col-md-3">
                 <label>BIKE BRAND</label>
-                <select name="bike_brand" data-dep_dd_name="bike_model"
+                <select name="brand_id" data-dep_dd_name="model_id"
                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
                     <option value="">---Select Brand----</option>
                     @isset($brands)
@@ -16,7 +16,7 @@
             </div>
             <div class="form-group col-md-3">
                 <label>BIKE MODEL</label>
-                <select name="bike_model" class="form-control">
+                <select name="model_id" class="form-control">
                     <option value="">---Select Model----</option>
                     @isset($models)
                         @foreach ($models as $model)

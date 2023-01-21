@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Purchase;
 use App\Models\Quotation;
+use App\Models\Sale;
 
 trait DownloadReportHelper
 {
@@ -72,50 +73,88 @@ trait DownloadReportHelper
         switch (request('type')) {
             case 'vehicle_purchase_register' :
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('bike_model')), function ($q) {
-                        $q->where('purchases.bike_model', request('bike_model'));
+                    ->when(!empty(request('model_id')), function ($q) {
+                        $q->where('purchases.bike_model', request('model_id'));
+                    })->when(!empty(request('brand_id')), function ($q) {
+                        $q->where('purchases.bike_brand', request('brand_id'));
                     })->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
                 $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
                 break;
             case 'pending_purchase_invoice' :
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('bike_model')), function ($q) {
-                        $q->where('purchases.bike_model', request('bike_model'));
-                    })
-                    ->doesntHave('invoice')
-                    ->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
+                    ->when(!empty(request('model_id')), function ($q) {
+                        $q->where('purchases.bike_model', request('model_id'));
+                    })->when(!empty(request('brand_id')), function ($q) {
+                        $q->where('purchases.bike_brand', request('brand_id'));
+                    })->doesntHave('invoice')->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
                 $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
                 break;
             case 'vehicle_stock_inventory' :
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('bike_model')), function ($q) {
-                        $q->where('purchases.bike_model', request('bike_model'));
-                    })
-                    ->when(!empty(request('status')), function ($q) {
+                    ->when(!empty(request('model_id')), function ($q) {
+                        $q->where('purchases.bike_model', request('model_id'));
+                    })->when(!empty(request('brand_id')), function ($q) {
+                        $q->where('purchases.bike_brand', request('brand_id'));
+                    })->when(!empty(request('status')), function ($q) {
                         $q->where('purchases.status', request('status'));
-                    })
-                    ->when(!empty(request('broker_id')), function ($q) {
+                    })->when(!empty(request('broker_id')), function ($q) {
                         $q->whereHas('purchase_transfer_latest',function ($q) {
                             $q->where('broker_id',request('broker_id'));
                         });
-                    })
-                    ->when(!empty(request('age')), function ($q) {
+                    })->when(!empty(request('age')), function ($q) {
                         $q->whereDate('created_at','<=',date('Y-m-d'))
                         ->whereDate('created_at','>=',date('Y-m-d' , strtotime(date('Y-m-d') . '+1 year')));
-                    })
-                    ->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
+                    })->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
 
                 $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
                 break;
             case 'quotation_list' :
-                $query = Quotation::when(!empty(request('bike_model')), function ($q) {
-                        $q->where('bike_model', request('bike_model'));
+                $query = Quotation::when(!empty(request('brand_id')), function ($q) {
+                        $q->where('bike_brand', request('brand_id'));
+                    })->when(!empty(request('model_id')), function ($q) {
+                        $q->where('bike_model', request('model_id'));
                     })->when(!empty(request('status')), function ($q) {
                         $q->where('status', request('status'));
                     })->when(!empty(request('financer_id')), function ($q) {
                         $q->where('hyp_financer', request('hyp_financer'));
                     });
                 // $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
+                break;
+            case 'sale_register' :
+                $query = Sale::whereHas('purchases',function ($q){
+                        $q->when(!empty(request('brand_id')), function ($q) {
+                            $q->where('bike_brand', request('brand_id'));
+                        })->when(!empty(request('model_id')), function ($q) {
+                            $q->where('bike_model', request('model_id'));
+                        })->when(!empty(request('financer_id')), function ($q) {
+                            $q->where('hyp_financer', request('hyp_financer'));
+                        });
+                    })->when(!empty(request('payment_type')), function ($q) {
+                        $q->where('payment_type', request('payment_type'));
+                    })->when(!empty(request('salesman_id')), function ($q) {
+                        $q->where('salesman_id', request('salesman_id'));
+                    });
+                // $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
+                break;
+            case 'brokers_agents' :
+                $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                    ->when(!empty(request('model_id')), function ($q) {
+                        $q->where('purchases.bike_model', request('model_id'));
+                    })
+                    ->when(!empty(request('brand_id')), function ($q) {
+                        $q->where('purchases.bike_brand', request('brand_id'));
+                    })
+                    ->when(!empty(request('type')), function ($q) {
+                        if(request('type') == 'sold'){
+                            $q->has('sale');
+                        }
+                        if(request('type') == 'unsold'){
+                            $q->doesntHave('sale');
+                        }
+                    })
+                    // ->has('purchase_transfer_latest')
+                    ->select('branches.branch_name as branch','bike_dealers.dealer_code as dealer_code','bike_dealers.company_name as dealer_company_name','bike_brands.name as brand','bike_models.model_name as model','bike_colors.color_name as color','battery_brands.name as battery_brand','tyre_brands.name as tyre_brand','tyre_front_number','tyre_rear_number','battery_number','bike_type','bike_fuel_type','break_type','wheel_type','dc_number','dc_date','vin_number','vin_physical_status','variant','sku','sku_description','hsn_number','engine_number','key_number','service_book_number','gst_rate','gst_rate_percent','pre_gst_amount','gst_amount','ex_showroom_price','discount_price','grand_total','bike_description','transfer_status');
+                $heading = ['Branch','Dealer Code','Dealer Company Name','Brand','Model','Color','Battery Brand','Tyre Brand','Tyre front Number','Tyre rear Number','Battery Number','Bike Type','Bike fuel Type','Break Type','Wheel Type','Dc Number','Dc Date','Vin Number','Vin Physical Status','Variant','SKU','SKU Description','HSN Number','Engine Number','key Number','Service book Number','Gst Rate','Gst Rate Percent','Pre Gst Amount','Gst Amount','Ex Showroom Price','Discount Price','Grand Total','Bike Description','Transfer Status'];
                 break;
             default:
                 //
