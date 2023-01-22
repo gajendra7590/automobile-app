@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BikeDealer;
+use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,7 @@ use Yajra\DataTables\DataTables;
 
 class BikeDealerController extends Controller
 {
+    use CommonHelper;
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +21,12 @@ class BikeDealerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = BikeDealer::select('*');
+            $data = BikeDealer::with([
+                'branch' => function ($branch) {
+                    $branch->select('id', 'branch_name');
+                }
+
+            ])->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -50,11 +57,16 @@ class BikeDealerController extends Controller
      */
     public function create()
     {
+        $data = array(
+            'action'   => route('dealers.store'),
+            'method'   => 'POST',
+            'branches' => self::_getBranches()
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.dealers.ajaxModal', ['action' => route('dealers.store'), 'method' => 'POST'])->render()
+            'data'       => view('admin.dealers.ajaxModal', $data)->render()
         ]);
     }
 
@@ -70,6 +82,7 @@ class BikeDealerController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
+                'branch_id'   => 'required|exists:branches,id',
                 'dealer_code' => 'required|string',
                 'company_name' => 'required|string',
                 'company_email' => 'required|string',
@@ -84,7 +97,6 @@ class BikeDealerController extends Controller
                 'contact_person_address' => 'nullable|string',
                 'contact_person_document_file' => 'file|max:10000',
                 'active_status'      => 'required|in:0,1'
-
             ]);
 
             //If Validation failed
@@ -98,6 +110,7 @@ class BikeDealerController extends Controller
             }
 
             $createData = $request->only([
+                'branch_id',
                 'dealer_code',
                 'company_name',
                 'company_email',
@@ -161,11 +174,17 @@ class BikeDealerController extends Controller
     public function edit($id)
     {
         $bikeDealer = BikeDealer::find($id);
+        $data = array(
+            'action' => route('dealers.update', ['dealer' => $id]),
+            'method'   => 'PUT',
+            'branches' => (intval($bikeDealer->branch_id) > 0) ? self::_getBranchById($bikeDealer->branch_id) : self::_getBranches(),
+            'data' => $bikeDealer
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.dealers.ajaxModal', ['data' => $bikeDealer, 'action' => route('dealers.update', ['dealer' => $id]), 'method' => 'PUT'])->render()
+            'data'       => view('admin.dealers.ajaxModal', $data)->render()
         ]);
     }
 
@@ -182,6 +201,7 @@ class BikeDealerController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
+                'branch_id'   => 'nullable|exists:branches,id',
                 'dealer_code' => 'required|string',
                 'company_name' => 'required|string',
                 'company_email' => 'required|string',
@@ -205,6 +225,7 @@ class BikeDealerController extends Controller
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
             $createData = $request->only([
+                'branch_id',
                 'dealer_code',
                 'company_name',
                 'company_email',

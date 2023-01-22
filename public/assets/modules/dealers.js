@@ -22,24 +22,16 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "dealer_code",
-                    name: "dealer_code",
+                    data: "branch.branch_name",
+                    name: "branch.branch_name",
                 },
                 {
                     data: "company_name",
                     name: "company_name",
                 },
                 {
-                    data: "company_email",
-                    name: "company_email",
-                },
-                {
-                    data: "company_office_phone",
-                    name: "company_office_phone",
-                },
-                {
-                    data: "company_address",
-                    name: "company_address",
+                    data: "dealer_code",
+                    name: "dealer_code",
                 },
                 {
                     data: "active_status",
@@ -64,4 +56,13 @@ $(document).ready(function () {
         });
     }
     mainDataTable();
+
+    // $(document).on("change", 'select[name="branch_id"]', function () {
+    //     let branch_id = $(this).val();
+    //     if (branch_id > 0) {
+    //         $("#dealerShowMore").show();
+    //     } else {
+    //         $("#dealerShowMore").hide();
+    //     }
+    // });
 });

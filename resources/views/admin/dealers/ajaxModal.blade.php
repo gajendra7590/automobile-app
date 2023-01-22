@@ -5,6 +5,20 @@
         @method('PUT')
     @endif
     <div class="row">
+        <div class="form-group col-md-12">
+            <label>Branch Name : </label>
+            <select class="form-control" name="branch_id">
+                @if (isset($branches))
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}"
+                            {{ isset($data) && $data->branch_id == $branch->id ? "selected='selected'" : '' }}>
+                            {{ $branch->branch_name }}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-6">
             <label>Dealer Code</label>
             <input type="text" class="form-control" placeholder="Dealer Code" name="dealer_code"

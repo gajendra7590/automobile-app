@@ -35,11 +35,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Dealer Code</th>
+                                        <th>Branch Name</th>
                                         <th>Company Name</th>
-                                        <th>Company Email</th>
-                                        <th>Company Office Phone</th>
-                                        <th>Company Address</th>
+                                        <th>Dealer Code</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

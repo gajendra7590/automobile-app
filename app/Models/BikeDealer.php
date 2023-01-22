@@ -12,6 +12,7 @@ class BikeDealer extends Model
     protected $table = 'bike_dealers';
 
     protected $fillable = [
+        'branch_id',
         'dealer_code',
         'company_name',
         'company_email',
@@ -36,5 +37,10 @@ class BikeDealer extends Model
     public function getContactPersonDocumentFileAttribute($value)
     {
         return env('APP_URL') . '/storage' . '/' . $value;
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }
