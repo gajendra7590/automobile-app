@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Purchase;
 use App\Models\PurchaseTransfer;
 use App\Traits\CommonHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -134,10 +135,11 @@ class PurchaseTransfersController extends Controller
             DB::beginTransaction();
             $postData = $request->only('purchase_id', 'broker_id', 'transfer_date', 'transfer_note');
             $validator = Validator::make($postData, [
-                'purchase_id'    => "required|exists:purchases,id",
-                'broker_id'      => "required|exists:brokers,id",
-                'transfer_date'  => "required|date:Y-m-d",
-                'transfer_note'  => "required|string"
+                'purchase_id'         => "required|exists:purchases,id",
+                'broker_id'           => "required|exists:brokers,id",
+                'total_price_on_road' => 'required|numeric|min:1',
+                'transfer_date'       => "required|date:Y-m-d",
+                'transfer_note'       => "required|string"
             ]);
 
             //If Validation failed
@@ -183,7 +185,22 @@ class PurchaseTransfersController extends Controller
      */
     public function show($id)
     {
-        //
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $brokerReturnModel = PurchaseTransfer::where('id', $id)->with(['purchase', 'broker'])->first();
+        // return $brokerReturnModel;
+        if (!$brokerReturnModel) {
+            return view('admin.accessDenied');
+        }
+
+        // return view('admin.purchases.transfers.deliveryChallan', ['data' => $brokerReturnModel]);
+        $pdf = Pdf::loadView('admin.purchases.transfers.deliveryChallan', ['data' => $brokerReturnModel]);
+        return $pdf->stream('invoice.pdf');
     }
 
     /**
@@ -292,13 +309,16 @@ class PurchaseTransfersController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
+        $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
         if ($row->status == '1') {
             $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="GENERATE NEW RETURN">CREATE RETURN</a></li>';
         }
+        $action .= '<li><a href="' . route('purchaseTransferDeliveryChallan', ['id' => base64_encode($row->transfers->id)]) . '" data-id="' . $row->transfers->id . '" class="" title="DELIVERY CHALLAN" target="_blank">DELIVERY CHALLAN</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;
     }
+
 
     public function getTransferPurchasesList(Request $request)
     {

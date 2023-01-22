@@ -39,10 +39,7 @@
                                         <th>BROKER</th>
                                         <th width="16%">BIKE INFO</th>
                                         <th>SKU</th>
-                                        <th>VARIANT CODE</th>
-                                        <th>DC NUMBER</th>
-                                        <th>DC DATE</th>
-                                        <th>GRAND TOTAL</th>
+                                        <th>TOTAL ON ROAD PRICE</th>
                                         <th>STATUS</th>
                                         <th width="5%">ACTION</th>
                                     </tr>

@@ -58,22 +58,22 @@
                     placeholder="₹0.00" value="{{ isset($data['pre_gst_amount']) ? $data['pre_gst_amount'] : '' }}" />
             </div>
             <div class="form-group col-md-5">
-                <label>Invoice GST Amount</label>
-                <input type="text" name="gst_amount" class="form-control totalAmountCalInv totalAmountCal2Inv"
-                    placeholder="₹0.00" value="{{ isset($data['gst_amount']) ? $data['gst_amount'] : '' }}" readonly />
+                <label>Invoice Discount Amount</label>
+                <input type="text" name="discount_price" class="form-control totalAmountCalInv" placeholder="₹0.00"
+                    value="{{ isset($data['discount_price']) ? $data['discount_price'] : '' }}" />
             </div>
         </div>
 
         <div class="row">
             <div class="form-group col-md-4">
+                <label>Invoice GST Amount</label>
+                <input type="text" name="gst_amount" class="form-control totalAmountCalInv totalAmountCal2Inv"
+                    placeholder="₹0.00" value="{{ isset($data['gst_amount']) ? $data['gst_amount'] : '' }}" readonly />
+            </div>
+            <div class="form-group col-md-4">
                 <label>Invoice Ex Showroom Price</label>
                 <input type="text" name="ex_showroom_price" class="form-control" placeholder="₹0.00"
                     value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}" readonly />
-            </div>
-            <div class="form-group col-md-4">
-                <label>Invoice Discount Amount</label>
-                <input type="text" name="discount_price" class="form-control totalAmountCalInv" placeholder="₹0.00"
-                    value="{{ isset($data['discount_price']) ? $data['discount_price'] : '' }}" />
             </div>
             <div class="form-group col-md-4">
                 <label>Invoice Grand Total</label>

@@ -34,4 +34,19 @@ class Broker extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public function stateDetail()
+    {
+        return $this->belongsTo(State::class, 'state');
+    }
+
+    public function districtDetail()
+    {
+        return $this->belongsTo(District::class, 'district');
+    }
+
+    public function cityDetail()
+    {
+        return $this->belongsTo(City::class, 'city');
+    }
 }

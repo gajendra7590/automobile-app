@@ -486,7 +486,12 @@ class SaleController extends Controller
         //
     }
 
-    public function deliveryChallan(Request $request, $id)
+    /**
+     * Function for generate Full Delivery Challan
+     * @param $id  Sales ID
+     * @return Generate PDF Invoice
+     */
+    public function deliveryChallanFull(Request $request, $id)
     {
         $id = base64_decode($id);
         $branch_id = self::getCurrentUserBranch();
@@ -506,10 +511,42 @@ class SaleController extends Controller
             return view('admin.accessDenied');
         }
 
-        // return view('admin.sales.delivery-challan', ['data' => $saleModel]);
-        $pdf = Pdf::loadView('admin.sales.delivery-challan', ['data' => $saleModel]);
+        // return view('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
+        $pdf = Pdf::loadView('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
         return $pdf->stream('invoice.pdf');
     }
+
+
+    /**
+     * Function for generate On Road Delivery Challan
+     * @param $id  Sales ID
+     * @return Generate PDF Invoice
+     */
+    public function deliveryChallanOnRoad(Request $request, $id)
+    {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $saleModel = Sale::where('id', $id)
+            ->where($where)
+            ->with([
+                'branch',
+                'purchase'
+            ])
+            ->first();
+        if (!$saleModel) {
+            return view('admin.accessDenied');
+        }
+
+        // return view('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
+        $pdf = Pdf::loadView('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
+        return $pdf->stream('invoice.pdf');
+    }
+
 
     public function getActions($row)
     {
@@ -520,9 +557,8 @@ class SaleController extends Controller
             $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
         }
 
-        if ($row->sp_account_id  > 0) {
-            $action .= '<li><a href="' . route('deliveryChallan', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN</a></li>';
-        }
+        $action .= '<li><a href="' . route('deliveryChallanFull', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN FULL</a></li>';
+        $action .= '<li><a href="' . route('deliveryChallanOnRoad', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN ON ROAD</a></li>';
 
         $action  .= '</ul>';
         $action  .= '</div>';

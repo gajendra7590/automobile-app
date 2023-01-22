@@ -144,7 +144,7 @@
             <li class="treeview {{ Request::is('sales*') || Request::is('saleAccounts*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-motorcycle"></i>
-                    <span>SALES RECORD</span>
+                    <span>SALES</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>

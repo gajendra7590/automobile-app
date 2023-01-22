@@ -93,6 +93,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Transfers & Returns
     Route::resource('purchaseTransfers', 'PurchaseTransfersController');
     Route::get('getTransferPurchasesList', 'PurchaseTransfersController@getTransferPurchasesList')->name('getTransferPurchasesList');
+    //purchaseTransferDeliveryChallan
+    Route::get('purchaseTransferDeliveryChallan/{id}', 'PurchaseTransfersController@show')->name('purchaseTransferDeliveryChallan');
+
 
     //Quotations
     Route::resource('quotations', 'QuotationController');
@@ -104,7 +107,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     // Sales
     Route::resource('sales', 'SaleController');
     Route::get('ajax-loade-view', 'SaleController@ajaxLoadeView')->name('ajaxLoadeView');
-    Route::get('deliveryChallan/{id}', 'SaleController@deliveryChallan')->name('deliveryChallan');
+    Route::get('deliveryChallanFull/{id}', 'SaleController@deliveryChallanFull')->name('deliveryChallanFull');
+    Route::get('deliveryChallanOnRoad/{id}', 'SaleController@deliveryChallanOnRoad')->name('deliveryChallanOnRoad');
+
 
     // SALES ACCOUNT
     Route::resource('saleAccounts', 'SalesAccountController');
