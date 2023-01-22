@@ -90,4 +90,11 @@
       text-transform: uppercase !important;
   }
 
+  label.required:after {
+      content: "*";
+      color: red;
+      font-size: 18px;
+      /* padding-left: 3px; */
+  }
+
 

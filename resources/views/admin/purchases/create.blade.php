@@ -60,7 +60,7 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>BRANCH NAME</label>
+                                <label class="required">BRANCH NAME</label>
                                 <select name="bike_branch" data-dep_dd_name="bike_dealer" data-dep_dd2_name="bike_brand"
                                     data-dep_dd3_name="bike_model" data-dep_dd4_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=dealers' }}"
@@ -78,7 +78,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>DEALER NAME</label>
+                                <label class="required">DEALER NAME</label>
                                 <select name="bike_dealer" class="form-control" {{ $isSoldOut }} {{ $isSoldOut }}>
                                     @if (isset($method) && $method == 'POST')
                                         <option value="">---Select Dealer---</option>
@@ -93,7 +93,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>BRAND NAME</label>
+                                <label class="required">BRAND NAME</label>
                                 <select name="bike_brand" data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd_name="bike_model" data-dep_dd2_name="bike_model_color"
                                     class="form-control ajaxChangeCDropDown" {{ $isSoldOut }}>
@@ -110,7 +110,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>MODEL NAME</label>
+                                <label class="required">MODEL NAME</label>
                                 <select name="bike_model" data-dep_dd_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
                                     class="form-control ajaxChangeCDropDown" {{ $isSoldOut }}>
@@ -128,7 +128,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>MODEL COLOR</label>
+                                <label class="required">MODEL COLOR</label>
                                 <select name="bike_model_color" class="form-control" {{ $isSoldOut }}
                                     {{ $isSoldOut }}>
                                     <option value="">---Select Model Color---</option>
@@ -142,7 +142,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>VEHICLE TYPE</label>
+                                <label class="required">VEHICLE TYPE</label>
                                 <select name="bike_type" class="form-control" {{ $isSoldOut }} {{ $isSoldOut }}>
                                     <option value="">---Select Vehicle Type---</option>
                                     @if (isset($bike_types))
@@ -155,7 +155,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
-                                <label>FUEL TYPE</label>
+                                <label class="required">FUEL TYPE</label>
                                 <select name="bike_fuel_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">---Select Fuel Type---</option>
                                     @if (isset($bike_fuel_types))
@@ -168,7 +168,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
-                                <label>BREAK TYPE</label>
+                                <label class="required">BREAK TYPE</label>
                                 <select name="break_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">---Select Break Type---</option>
                                     @if (isset($break_types))
@@ -181,7 +181,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
-                                <label>WHEAL TYPE</label>
+                                <label class="required">WHEAL TYPE</label>
                                 <select name="wheel_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">---Select Wheal Type---</option>
                                     @if (isset($wheel_types))
@@ -197,7 +197,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>VIN NUMBER(CHASIS NUMBER) </label>
+                                <label class="required">VIN NUMBER(CHASIS NUMBER) </label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
                                     placeholder="VIN Number(Chasis Number)" name="vin_number"
                                     value="{{ isset($data->vin_number) ? $data->vin_number : '' }}" />
@@ -216,12 +216,12 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>HSN NUMBER</label>
+                                <label class="required">HSN NUMBER</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }} placeholder="HSN Number"
                                     name="hsn_number" value="{{ isset($data->hsn_number) ? $data->hsn_number : '' }}" />
                             </div>
                             <div class="form-group col-md-3">
-                                <label>ENGINE NUMBER</label>
+                                <label class="required">ENGINE NUMBER</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
                                     placeholder="Engine Number" name="engine_number"
                                     value="{{ isset($data->engine_number) ? $data->engine_number : '' }}" />
@@ -230,7 +230,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>VARIANT CODE</label>
+                                <label class="required">VARIANT CODE</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }}
                                     placeholder="Variant(Code)" name="variant"
                                     value="{{ isset($data->variant) ? $data->variant : '' }}" />
@@ -316,19 +316,19 @@
 
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label>DC NUMBER</label>
+                                <label class="required">DC NUMBER</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }} placeholder="DC Number"
                                     name="dc_number" value="{{ isset($data->dc_number) ? $data->dc_number : '' }}" />
                             </div>
                             <div class="form-group col-md-3">
-                                <label>DC DATE</label>
+                                <label class="required">DC DATE</label>
                                 <input type="date" class="form-control" {{ $isSoldOut }} placeholder="DC Date"
                                     name="dc_date"
                                     value="{{ isset($data->dc_date) ? $data->dc_date : date('Y-m-d') }}" />
                             </div>
 
                             <div class="form-group col-md-2">
-                                <label>GST RATE</label>
+                                <label class="required">GST RATE</label>
                                 <select name="gst_rate" id="gst_rate" class="form-control" {{ $isSoldOut }}>
                                     @if (isset($gst_rates))
                                         @foreach ($gst_rates as $key => $gst_rate)
@@ -342,34 +342,34 @@
                                 <input type="hidden" name="gst_rate_percent" id="gst_rate_percent"
                                     value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}">
                             </div>
-                            <div class="form-group col-md-2">
-                                <label>ACTUAL PRICE(PRE GST)</label>
+                            <div class="form-group col-md-4">
+                                <label class="required">ACTUAL PRICE(PRE GST)</label>
                                 <input type="number" class="form-control totalAmountCal totalAmountCal2"
                                     placeholder="Pre GST Amount" name="pre_gst_amount" id="pre_gst_amount"
                                     value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0.0 }}"
                                     {{ $isSoldOut }} />
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label>DISCOUNT AMOUNT(-)</label>
                                 <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
                                     name="discount_price"
                                     value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
                                     {{ $isSoldOut }} />
                             </div>
-                            <div class="form-group col-md-2">
-                                <label>GST AMOUNT</label>
+                            <div class="form-group col-md-3">
+                                <label class="required">GST AMOUNT</label>
                                 <input type="number" class="form-control totalAmountCal totalAmountCal2"
                                     placeholder="GST Amount" name="gst_amount" readonly
                                     value="{{ isset($data->gst_amount) ? $data->gst_amount : 0.0 }}" />
                             </div>
-                            <div class="form-group col-md-2">
-                                <label>EX SHOWROOM PRICE(+GST)</label>
+                            <div class="form-group col-md-3">
+                                <label class="required">EX SHOWROOM PRICE(+GST)</label>
                                 <input type="number" class="form-control " readonly placeholder="Ex Showroom Price"
                                     name="ex_showroom_price"
                                     value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0.0 }}" />
                             </div>
-                            <div class="form-group col-md-2">
-                                <label>GRAND TOTAL</label>
+                            <div class="form-group col-md-3">
+                                <label class="required">GRAND TOTAL</label>
                                 <input type="number" class="form-control" {{ $isSoldOut }}
                                     placeholder="Grand Total" name="grand_total" readonly
                                     value="{{ isset($data->grand_total) ? $data->grand_total : 0.0 }}" />
