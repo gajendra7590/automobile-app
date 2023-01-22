@@ -473,7 +473,7 @@ trait CommonHelper
         ]);
         //Select Specific
         if ($select_all == false) {
-            $model = $model->select('id', 'dc_number', 'vin_number', 'sku', 'bike_branch', 'bike_brand', 'bike_model', 'bike_model_color');
+            $model = $model->select('id', 'dc_number', 'vin_number', 'engine_number', 'sku', 'bike_branch', 'bike_brand', 'bike_model', 'bike_model_color');
         }
 
         if ($branch_id > 0) {

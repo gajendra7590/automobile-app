@@ -397,24 +397,20 @@ if (!function_exists('createStringSales')) {
     function createStringSales($saleModel)
     {
         $string = "";
-        if (isset($saleModel->customer_name)) {
-            $string .= $saleModel->customer_name . ' | ';
-        }
-
-        if (isset($saleModel->purchases->sku)) {
-            $string .= $saleModel->purchases->sku . ' | ';
-        }
-
         if (isset($saleModel->purchases->vin_number)) {
             $string .= $saleModel->purchases->vin_number . ' | ';
+        }
+
+        if (isset($saleModel->purchases->engine_number)) {
+            $string .= $saleModel->purchases->engine_number . ' | ';
         }
 
         if (isset($saleModel->purchases->hsn_number)) {
             $string .= $saleModel->purchases->hsn_number . ' | ';
         }
 
-        if (isset($saleModel->purchases->engine_number)) {
-            $string .= $saleModel->purchases->engine_number;
+        if (isset($saleModel->purchases->sku)) {
+            $string .= $saleModel->purchases->sku;
         }
         return strtoupper($string);
     }

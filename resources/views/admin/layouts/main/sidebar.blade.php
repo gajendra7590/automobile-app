@@ -165,6 +165,23 @@
                 </ul>
             </li>
 
+            <li class="treeview {{ Request::is('customerReturns*') ? 'active' : '' }}">
+                <a href="#">
+                    <i class="fa fa-undo"></i>
+                    <span>CUSTOMER RETURNS</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" {{ Request::is('customerReturns*') ? 'display:"block"' : '' }}>
+                    <li class="{{ Request::is('customerReturns*') ? 'active' : '' }}">
+                        <a href="{{ route('customerReturns.index') }}"><i class="fa fa-motorcycle"></i>
+                            RETURNS LIST
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li
                 class="treeview {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'active' : '' }}">
                 <a href="#">
