@@ -20,12 +20,14 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a href="{{ route('loadReportSection') }}?type=vehicle_purchase_register" id="current_active" class="loadeReport">
+                                <a href="{{ route('loadReportSection') }}?type=vehicle_purchase_register"
+                                    id="current_active" class="loadeReport">
                                     VEHICLE PURCHASES REGISTER
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('loadReportSection') }}?type=pending_purchase_invoice" class="loadeReport">
+                                <a href="{{ route('loadReportSection') }}?type=pending_purchase_invoice"
+                                    class="loadeReport">
                                     PENDING PURCHASES INVOICE
                                 </a>
                             </li>

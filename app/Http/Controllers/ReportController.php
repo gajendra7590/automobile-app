@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\Broker;
-use App\Models\Purchase;
 use App\Models\Salesman;
 use App\Traits\DownloadReportHelper;
-use Facade\Ignition\QueryRecorder\Query;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -19,7 +15,7 @@ class ReportController extends Controller
 
     public function index()
     {
-        return view('admin.reports.index', ['data' => []]);
+        return view('admin.reports.index');
     }
 
     public function loadReportSection(Request $request)
@@ -30,47 +26,47 @@ class ReportController extends Controller
         $data = array();
         $dropdowns = [];
         switch ($type) {
-            case 'vehicle_purchase_register' :
+            case 'vehicle_purchase_register':
                 $view = 'vehicle-purchase-register';
                 $dropdowns = ['brands'];
                 break;
-            case 'pending_purchase_invoice' :
+            case 'pending_purchase_invoice':
                 $view = 'pending-purchase-invoice';
                 $dropdowns = ['brands'];
                 break;
-            case 'vehicle_stock_inventory' :
+            case 'vehicle_stock_inventory':
                 $view = 'vehicle-stock-inventory';
-                $dropdowns = ['brands','brokers'];
+                $dropdowns = ['brands', 'brokers'];
                 break;
-            case 'quotation_list' :
+            case 'quotation_list':
                 $view = 'quotation-list';
-                $dropdowns = ['brands','financers'];
+                $dropdowns = ['brands', 'financers'];
                 break;
-            case 'sales_register' :
+            case 'sales_register':
                 $view = 'sales-register';
-                $dropdowns = ['brands','financers','salesmans'];
+                $dropdowns = ['brands', 'financers', 'salesmans'];
                 break;
-            case 'brokers_agents' :
+            case 'brokers_agents':
                 $view = 'brokers-agents';
                 $dropdowns = ['brands'];
                 break;
-            case 'financers' :
+            case 'financers':
                 $view = 'financers';
                 $dropdowns = ['brands'];
                 break;
-            case 'accounts' :
+            case 'accounts':
                 $view = 'accounts';
                 $dropdowns = ['brands'];
                 break;
-            case 'rto' :
+            case 'rto':
                 $view = 'rto';
                 $dropdowns = ['brands'];
                 break;
-            case 'receipt_voucher' :
+            case 'receipt_voucher':
                 $view = 'receipt-voucher';
                 $dropdowns = ['brands'];
                 break;
-            case 'payment_voucher' :
+            case 'payment_voucher':
                 $view = 'payment-voucher';
                 $dropdowns = ['brands'];
                 break;
@@ -101,7 +97,8 @@ class ReportController extends Controller
         ]);
     }
 
-    public function downloadReport(Request $request) {
+    public function downloadReport(Request $request)
+    {
         $result = self::getReport();
         $filename = (request('type') ?? 'purchase') . "_report.csv";
         header('Content-Type: application/csv');
