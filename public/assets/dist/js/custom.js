@@ -113,7 +113,7 @@ $(document).ready(function () {
         var url = $(this).attr("action");
         var method = $(this).attr("method");
         var redirect = $(this).data("redirect");
-        console.log(redirect)
+        console.log(redirect);
         var ajaxModalCommon = $(this).data("modal-id");
         var data = new FormData($(this)[0]);
         CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
@@ -121,10 +121,12 @@ $(document).ready(function () {
                 if (redirect == "closeModal") {
                     $(`#${ajaxModalCommon}`).modal("hide");
                     $("#ajaxModalDialog").modal("hide");
-                    if(result.data.html && result.data.type){
-                        $(`[name='${result.data.type}']`).append( result.data.html );
+                    if (result.data.html && result.data.type) {
+                        $(`[name='${result.data.type}']`).append(
+                            result.data.html
+                        );
                     }
-                }else if (redirect == "ajaxModalCommon") {
+                } else if (redirect == "ajaxModalCommon") {
                     $("#ajaxModalCommon").modal("hide");
                     $("#ajaxModalDialog").modal("hide");
                     window.location.href = "";
@@ -184,13 +186,15 @@ $(document).ready(function () {
             var dep_dd_name = $(this).data("dep_dd_name");
             var dep_dd2_name = $(this).data("dep_dd2_name");
             var dep_dd3_name = $(this).data("dep_dd3_name");
+            var dep_dd4_name = $(this).data("dep_dd4_name");
             //Call Callback Function
             getAndFillDropDown(
                 url,
                 id,
                 dep_dd_name,
                 dep_dd2_name,
-                dep_dd3_name
+                dep_dd3_name,
+                dep_dd4_name
             );
         }
     });
@@ -200,12 +204,14 @@ $(document).ready(function () {
         id,
         dep_dd_name,
         dep_dd2_name,
-        dep_dd3_name
+        dep_dd3_name,
+        dep_dd4_name = ""
     ) {
         var formdata = new FormData();
         formdata.append("dep_dd_name", dep_dd_name);
         formdata.append("dep_dd2_name", dep_dd2_name);
         formdata.append("dep_dd3_name", dep_dd3_name);
+        formdata.append("dep_dd4_name", dep_dd4_name);
         formdata.append("id", id);
         CRUD.AJAXDATA(url, "POST", formdata).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
@@ -231,6 +237,15 @@ $(document).ready(function () {
                         payload.dep_dd3_html
                     );
                 }
+
+                if (
+                    typeof payload.dep_dd4_name != "undefined" &&
+                    payload.dep_dd4_html != ""
+                ) {
+                    $('select[name="' + payload.dep_dd4_name + '"]').html(
+                        payload.dep_dd4_html
+                    );
+                }
                 return true;
             } else {
                 return true;
@@ -249,25 +264,33 @@ $(document).ready(function () {
 
     $(document).on("click", ".plusAction", function (e) {
         e.preventDefault();
-        var ddchange = $(this).data('ddchange');
-        var modalId = $(this).data('modalid');
-        var ddchange = ddchange ? ddchange : 'customer_district';
+        var ddchange = $(this).data("ddchange");
+        var modalId = $(this).data("modalid");
+        var ddchange = ddchange ? ddchange : "customer_district";
         var district_id = $(`[name=${ddchange}]`).val();
         var type = $(this).data("type");
         var ddname = $(this).data("ddname");
-        var url = $(this).attr("href")+`?type=${type}&district_id=${district_id}&ddname=${ddname}&modalId=${modalId}`;
+        var url =
+            $(this).attr("href") +
+            `?type=${type}&district_id=${district_id}&ddname=${ddname}&modalId=${modalId}`;
         var modal_title = $(this).data("modal_title");
         var modal_size = $(this).data("modal_size");
-        if(!district_id){
+        if (!district_id) {
             toastr.error("Please select district first");
-        }else{
-            var modal_type = $(this).data('modal_type') != undefined ? $(this).data('modal_type') : "";
+        } else {
+            var modal_type =
+                $(this).data("modal_type") != undefined
+                    ? $(this).data("modal_type")
+                    : "";
             $(`#ajaxModalSize${modal_type}`).addClass(modal_size);
             $(`.ajaxModalTitle${modal_type}`).html(modal_title);
-            $(`.ajaxModalCommon${modal_type}`).attr("tabindex",1200);
+            $(`.ajaxModalCommon${modal_type}`).attr("tabindex", 1200);
             $(`#ajaxModalCommon${modal_type}`).modal("show");
             CRUD.AJAXMODAL(url, "GET").then(function (result) {
-                if (typeof result.status != "undefined" && result.status == true) {
+                if (
+                    typeof result.status != "undefined" &&
+                    result.status == true
+                ) {
                     $(`.ajaxModalBody${modal_type}`).html(result.data);
                 } else {
                     toastr.error("Something went wrong");

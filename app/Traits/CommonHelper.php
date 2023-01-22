@@ -383,6 +383,19 @@ trait CommonHelper
     }
 
     /**
+     * Get One Dealer By Dealer Id
+     */
+    public static function _getDealerById($id, $select_all = false)
+    {
+        $model = BikeDealer::where('id', $id);
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'dealer_code', 'company_name');
+        }
+        return $model->get();
+    }
+
+    /**
      * Get All Finaceirs
      */
     public static function _getFinaceirs($financer_type = 1, $select_all = false)

@@ -111,14 +111,13 @@ class PurchaseController extends Controller
         $auth = User::find(auth()->id());
         $data = [];
         $data['method'] = 'POST';
-        $data['branches'] = self::_getbranches(!$auth->is_admin);
-        config(['first_brand' => true]);
-        $data['brands'] = self::_getbrands(!$auth->is_admin);
-        $data['models'] = self::_getmodels(config('brand_id'), !$auth->is_admin);
-        $data['dealers'] = self::_getDealers(!$auth->is_admin);
-        $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
-        $data['tyre_brands'] = self::_getTyreBrands(!$auth->is_admin);
-        $data['battery_brands'] = self::_getBatteryBrands(!$auth->is_admin);
+        $data['branches'] = self::_getbranches();
+        $data['dealers'] = []; //self::_getDealers();
+        $data['brands'] = []; //self::_getbrands();
+        $data['models'] = []; //self::_getmodels();
+        $data['gst_rates'] = self::_getGstRates();
+        $data['tyre_brands'] = self::_getTyreBrands();
+        $data['battery_brands'] = self::_getBatteryBrands();
         $data['bike_types'] = bike_types();
         $data['bike_fuel_types'] = bike_fuel_types();
         $data['break_types'] = break_types();
@@ -152,34 +151,29 @@ class PurchaseController extends Controller
                 'bike_fuel_type'            => "required",
                 'break_type'                => "required",
                 'wheel_type'                => "required",
-                'dc_number'                 => "nullable",
-                'dc_date'                   => "nullable",
+                'dc_number'                 => "required",
+                'dc_date'                   => "required|date",
                 'vin_number'                => "required|min:17",
-                'vin_physical_status'       => "nullable",
+                'vin_physical_status'       => "required",
                 'hsn_number'                => "required|min:6",
                 'engine_number'             => "required|min:14",
                 'variant'                   => "required",
                 'sku'                       => "required",
-                'sku_description'           => "nullable",
-                'key_number'                => "nullable|",
-                'service_book_number'       => "nullable",
+                'sku_description'           => "nullable|string",
+                'key_number'                => "nullable|string",
+                'service_book_number'       => "nullable|string",
                 'battery_brand_id'          => "nullable|exists:battery_brands,id",
-                'battery_number'            => "nullable",
+                'battery_number'            => "nullable|string",
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
-                'tyre_front_number'         => "nullable",
-                'tyre_rear_number'          => "nullable",
-                // 'purchase_invoice_amount'   => "required|numeric",
-                // 'purchase_invoice_number'   => "required",
-                // 'purchase_invoice_date'     => "required|date",
-                'status'                    => "nullable|in:1,2",
-                //'active_status'             => "required|in:0,1",
+                'tyre_front_number'         => "nullable|string",
+                'tyre_rear_number'          => "nullable|string",
                 'gst_rate'                  => 'required|numeric',
                 'pre_gst_amount'            => 'required|numeric',
                 'gst_amount'                => 'required|numeric',
                 'ex_showroom_price'         => 'required|numeric',
                 'discount_price'            => 'nullable|numeric',
                 'grand_total'               => 'required|numeric',
-                'bike_description'          => "nullable",
+                'bike_description'          => "nullable|string",
             ]);
 
             //If Validation failed
@@ -286,10 +280,9 @@ class PurchaseController extends Controller
 
         // return $bpModel;
         $data = [];
-        config(['first_brand' => true]);
-        $data['branches'] = self::_getbranches(!$auth->is_admin);
-        $data['dealers'] = self::_getDealers(!$auth->is_admin);
-        $data['brands'] = self::_getbrands(!$auth->is_admin, $bpModel->bike_branch);
+        $data['branches'] = self::_getBranchById($bpModel->bike_branch);
+        $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);
+        $data['brands'] = self::_getbrands();
         $data['models'] = self::_getmodels($bpModel->bike_brand, !$auth->is_admin);
         $data['colors'] = self::_getColors($bpModel->bike_model, $bpModel->color_id);
         $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
@@ -328,8 +321,8 @@ class PurchaseController extends Controller
 
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'bike_dealer'               => "required|exists:bike_dealers,id",
-                'bike_branch'               => "required|exists:branches,id",
+                'bike_dealer'               => "nullable|exists:bike_dealers,id",
+                'bike_branch'               => "nullable|exists:branches,id",
                 'bike_brand'                => "required|exists:bike_brands,id",
                 'bike_model'                => "required|exists:bike_models,id",
                 'bike_model_color'          => "required|exists:bike_colors,id",
@@ -353,10 +346,6 @@ class PurchaseController extends Controller
                 'tyre_brand_id'             => "nullable|exists:tyre_brands,id",
                 'tyre_front_number'         => "nullable",
                 'tyre_rear_number'          => "nullable",
-                // 'purchase_invoice_amount'   => "required|numeric",
-                // 'purchase_invoice_number'   => "required",
-                // 'purchase_invoice_date'     => "required|date",
-                'status'                    => "nullable|in:1,2",
                 'gst_rate'                  => 'required|numeric|exists:gst_rates,id',
                 'gst_rate_percent'          => 'required|numeric',
                 'pre_gst_amount'            => 'required|numeric',

@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\BikeColor;
+use App\Models\BikeDealer;
 use App\Models\BikeModel;
 use App\Models\Branch;
 use App\Models\City;
@@ -95,6 +96,37 @@ trait DropdownHelper
             'data'       =>  $responseData
         ]);
     }
+
+    public static function getDealers($data)
+    {
+        $branch_id = isset($data['id']) ? $data['id'] : 0;
+        $dealers = BikeDealer::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'company_name')->get();
+
+        $brands = BikeBrand::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'name')->get();
+        //dd($dealers);
+
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $dealers, 'type' => 'dealers'])->render(),
+            'dep_dd2_name' => isset($data['dep_dd2_name']) ? $data['dep_dd2_name'] : '',
+            'dep_dd2_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $brands, 'type' => 'brands'])->render(),
+            'dep_dd3_name' => isset($data['dep_dd3_name']) ? $data['dep_dd3_name'] : '',
+            'dep_dd3_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'models'])->render(),
+            'dep_dd4_name' => isset($data['dep_dd4_name']) ? $data['dep_dd4_name'] : '',
+            'dep_dd4_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'colors'])->render()
+        );
+
+        // dd($responseData);
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
+    //getDealers
 
     public static function getBrands($data)
     {
@@ -191,7 +223,6 @@ trait DropdownHelper
 
     public static function getFinanciersList($data)
     {
-
         $where = array('financer_type' => '0');
         if (isset($data['id'])) {
             switch ($data['id']) {

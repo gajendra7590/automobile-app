@@ -36,6 +36,16 @@
             @endisset
         @break
 
+        @case('dealers')
+            @isset($data)
+                <option value="">---Select Dealer---</option>
+                @foreach ($data as $k => $item)
+                    <option value="{{ $item->id }}" {{ $k == 0 ? "selected='selected'" : '' }}>{{ $item->company_name }}
+                    </option>
+                @endforeach
+            @endisset
+        @break
+
         @case('models')
             @isset($data)
                 <option value="">---Select Model---</option>

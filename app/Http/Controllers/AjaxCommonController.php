@@ -49,6 +49,9 @@ class AjaxCommonController extends Controller
                     case 'branches':
                         return $this->getBranches($postData);
                         break;
+                    case 'dealers':
+                        return $this->getDealers($postData);
+                        break;
                     case 'brands':
                         return $this->getBrands($postData);
                         break;
