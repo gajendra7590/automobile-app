@@ -32,18 +32,18 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">
                                 @if (isset($method) && $method == 'PUT')
-                                    Update Sale
+                                    UPDATE SALES DETAIL
                                 @else
-                                    Create Sale
+                                    CREATE NEW SALE
                                 @endif
                             </h3>
 
                             <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                                 {{ $isDisabled }}>
                                 @if (isset($method) && $method == 'PUT')
-                                    UPDATE SALE
+                                    UPDATE
                                 @else
-                                    CREATE SALE
+                                    CREATE
                                 @endif
                             </button>
                         </div>
@@ -56,7 +56,7 @@
                         {{-- Purchase --}}
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Select Bike To Sale(Select From Avaliable Stock)</label>
+                                <label>SELECT STOCK INVENTORY</label>
                                 <select id="purchase" name="purchase_id" class="form-control"
                                     data-ajax_load="{{ route('ajaxLoadeView') }}"
                                     {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
@@ -94,7 +94,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Select Salesman</label>
+                                <label>SALESMAN NAME</label>
                                 <select name="salesman_id" class="form-control"
                                     {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
                                     <option value="">---Select Salesman---</option>
@@ -120,9 +120,9 @@
                         <a href="{{ route('sales.index') }}" class="btn btn-danger">BACK</a>
                         <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit" {{ $isDisabled }}>
                             @if (isset($method) && $method == 'PUT')
-                                UPDATE SALE
+                                UPDATE
                             @else
-                                CREATE SALE
+                                CREATE
                             @endif
                         </button>
                     </div>

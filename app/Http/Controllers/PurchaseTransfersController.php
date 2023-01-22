@@ -323,12 +323,11 @@ class PurchaseTransfersController extends Controller
     public function getTransferPurchasesList(Request $request)
     {
         $postData = $request->all();
-        $data = Purchase::select('id', DB::raw('CONCAT(sku,"-", dc_number, "-", vin_number,"-",hsn_number) AS text'))
+        $data = Purchase::select('id', DB::raw('CONCAT(vin_number," | ",engine_number," | ",hsn_number) AS text'))
             ->where(['transfer_status' => '0', 'status' => '1']);
         if (isset($postData['search']) && ($postData['search'] != "")) {
-            $data = $data->where('sku', 'LIKE', '%' . $postData['search'] . '%')
-                ->orwhere('dc_number', 'LIKE', '%' . $postData['search'] . '%')
-                ->orwhere('vin_number', 'LIKE', '%' . $postData['search'] . '%')
+            $data = $data->where('vin_number', 'LIKE', '%' . $postData['search'] . '%')
+                ->orwhere('engine_number', 'LIKE', '%' . $postData['search'] . '%')
                 ->orwhere('hsn_number', 'LIKE', '%' . $postData['search'] . '%');
         }
         $data = $data->get();

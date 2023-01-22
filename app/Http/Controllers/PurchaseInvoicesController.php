@@ -85,7 +85,17 @@ class PurchaseInvoicesController extends Controller
     {
         $models = [];
         $gst_rates = self::_getGstRates();
-        $purchases = Purchase::select('id', 'bike_branch', 'dc_number', 'vin_number', 'variant', 'sku')->where('invoice_status', '0')->get();
+        $purchases = Purchase::select('id', 'bike_branch', 'bike_brand', 'bike_model', 'bike_model_color', 'dc_number', 'vin_number', 'engine_number', 'variant', 'sku')->with([
+            'model' => function ($model) {
+                $model->select('id', 'model_name');
+            },
+            'brand' => function ($model) {
+                $model->select('id', 'name');
+            },
+            'color' => function ($model) {
+                $model->select('id', 'color_name');
+            }
+        ])->where('invoice_status', '0')->get();
         $data = array(
             'data'       => $models,
             'gst_rates'  => $gst_rates,

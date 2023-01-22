@@ -8,14 +8,15 @@
         <div class="row">
             @if ($method == 'POST')
                 <div class="form-group col-md-12">
-                    <label>Purchase Model</label>
-                    <select name="purchase_id" class="form-control">
+                    <label>PURCHASE MODEL</label>
+                    <select name="purchase_id" class="form-control select2">
                         @if (isset($purchases))
                             @foreach ($purchases as $key => $purchase)
                                 <option value="{{ $purchase->id }}">
-                                    SKU - {{ $purchase->sku }} | VAR - {{ $purchase->variant }} | DCN
-                                    -{{ $purchase->dc_number }} |
-                                    VIN - {{ $purchase->vin_number }}
+                                    {{ $purchase->vin_number }} | {{ $purchase->engine_number }} |
+                                    {{ isset($purchase->brand->name) ? $purchase->brand->name : '' }}
+                                    - {{ isset($purchase->model->model_name) ? $purchase->model->model_name : '' }}
+                                    - {{ isset($purchase->color->color_name) ? $purchase->color->color_name : '' }}
                                 </option>
                             @endforeach
                         @endif
@@ -25,20 +26,20 @@
                 <input type="hidden" name="purchase_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
             @endif
             <div class="form-group col-md-6">
-                <label>Purchase Invoice Number</label>
+                <label>PURCHASE INVOICE NUMBER</label>
                 <input type="text" name="purchase_invoice_number" class="form-control"
                     value="{{ isset($data['purchase_invoice_number']) ? $data['purchase_invoice_number'] : '' }}"
                     placeholder="XXXXXXXXXXXXXX">
             </div>
             <div class="form-group col-md-6">
-                <label>Purchase Invoice Date</label>
+                <label>PURCHASE INVOICE DATE</label>
                 <input type="date" name="purchase_invoice_date" placeholder="yyyy-mm-dd" class="form-control"
-                    value="{{ isset($data['purchase_invoice_date']) ? $data['purchase_invoice_date'] : '' }}">
+                    value="{{ isset($data['purchase_invoice_date']) ? $data['purchase_invoice_date'] : date('Y-m-d') }}">
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-md-2">
-                <label>GST Rate</label>
+            <div class="form-group col-md-3">
+                <label>GST RATE(TAX RATE)</label>
                 <select name="gst_rate_id" id="gst_rate" class="form-control">
                     @if (isset($gst_rates))
                         @foreach ($gst_rates as $key => $gst_rate)
@@ -52,13 +53,13 @@
                 <input type="hidden" name="gst_rate_percent" id="gst_rate_percent"
                     value="{{ isset($data['gst_rate_percent']) ? $data['gst_rate_percent'] : 0 }}">
             </div>
-            <div class="form-group col-md-5">
-                <label>Invoice Actual Price</label>
+            <div class="form-group col-md-4">
+                <label>INVOICE ACTUAL PRICE</label>
                 <input type="text" name="pre_gst_amount" class="form-control totalAmountCalInv totalAmountCal2Inv"
                     placeholder="₹0.00" value="{{ isset($data['pre_gst_amount']) ? $data['pre_gst_amount'] : '' }}" />
             </div>
             <div class="form-group col-md-5">
-                <label>Invoice Discount Amount</label>
+                <label>INVOICE DISCOUNT PRICE</label>
                 <input type="text" name="discount_price" class="form-control totalAmountCalInv" placeholder="₹0.00"
                     value="{{ isset($data['discount_price']) ? $data['discount_price'] : '' }}" />
             </div>
@@ -66,17 +67,17 @@
 
         <div class="row">
             <div class="form-group col-md-4">
-                <label>Invoice GST Amount</label>
+                <label>INVOICE GST AMOUNT</label>
                 <input type="text" name="gst_amount" class="form-control totalAmountCalInv totalAmountCal2Inv"
                     placeholder="₹0.00" value="{{ isset($data['gst_amount']) ? $data['gst_amount'] : '' }}" readonly />
             </div>
             <div class="form-group col-md-4">
-                <label>Invoice Ex Showroom Price</label>
+                <label>INVOICE EX-SHOWROOM PRICE</label>
                 <input type="text" name="ex_showroom_price" class="form-control" placeholder="₹0.00"
                     value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}" readonly />
             </div>
             <div class="form-group col-md-4">
-                <label>Invoice Grand Total</label>
+                <label>INVOICE GRAND TOTAL</label>
                 <input type="text" name="grand_total" class="form-control" placeholder="₹0.00"
                     value="{{ isset($data['grand_total']) ? $data['grand_total'] : '' }}" readonly />
             </div>
@@ -90,7 +91,7 @@
                     @if (isset($method) && $method == 'PUT')
                         UPDATE
                     @else
-                        SAVE
+                        CREATE
                     @endif
                 </button>
             </div>

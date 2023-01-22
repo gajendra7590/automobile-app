@@ -6,12 +6,12 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <input type="hidden" name="purchase_id" value="{{ isset($purchase_id) ? $purchase_id : '' }}" />
-                <label>Return Date</label>
+                <label>RETURN DATE</label>
                 <input name="return_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
                     placeholder="yyyy-mm-dd">
             </div>
             <div class="form-group col-md-12">
-                <label>Return Note</label>
+                <label>RETURN NOTE</label>
                 <textarea name="return_note" class="form-control"></textarea>
             </div>
         </div>

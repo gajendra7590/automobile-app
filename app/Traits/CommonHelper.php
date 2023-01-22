@@ -73,6 +73,37 @@ trait CommonHelper
     }
 
     /**
+     * Get All Dealers
+     */
+    public static function _getDealers($select_all = false)
+    {
+        $model = BikeDealer::where('active_status', '1');
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'dealer_code', 'company_name');
+        }
+
+        //Filter by branch
+        if (self::getCurrentUserBranch() != '0') {
+            $model = $model->where('branch_id', self::getCurrentUserBranch());
+        }
+        return $model->get();
+    }
+
+    /**
+     * Get One Dealer By Dealer Id
+     */
+    public static function _getDealerById($id, $select_all = false)
+    {
+        $model = BikeDealer::where('id', $id);
+        //Select Specific
+        if ($select_all == false) {
+            $model = $model->select('id', 'dealer_code', 'company_name');
+        }
+        return $model->get();
+    }
+
+    /**
      * Get All Brands
      */
     public static function _getBrands($select_all = false, $branch_id = null)
@@ -368,32 +399,6 @@ trait CommonHelper
         return $model->get();
     }
 
-
-    /**
-     * Get All Dealers
-     */
-    public static function _getDealers($select_all = false)
-    {
-        $model = BikeDealer::where('active_status', '1');
-        //Select Specific
-        if ($select_all == false) {
-            $model = $model->select('id', 'dealer_code', 'company_name');
-        }
-        return $model->get();
-    }
-
-    /**
-     * Get One Dealer By Dealer Id
-     */
-    public static function _getDealerById($id, $select_all = false)
-    {
-        $model = BikeDealer::where('id', $id);
-        //Select Specific
-        if ($select_all == false) {
-            $model = $model->select('id', 'dealer_code', 'company_name');
-        }
-        return $model->get();
-    }
 
     /**
      * Get All Finaceirs

@@ -56,7 +56,7 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Select Branch</label>
+                                <label>BRANCH NAME</label>
                                 <select name="branch_id" class="form-control ajaxChangeCDropDown QuotBrandChange"
                                     data-dep_dd_name="bike_brand" data-dep_dd2_name="bike_model"
                                     data-dep_dd3_name="bike_model_color"
@@ -73,7 +73,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Select Salesman</label>
+                                <label>SALESMAN NAME</label>
                                 <select name="salesman_id" class="form-control" {{ $isClosed }} {{ $is_disabled }}>
                                     <option value="">---Select Salesman---</option>
                                     @if (isset($salesmans))
@@ -91,7 +91,7 @@
                         <div class="row {{ isset($method) && $method == 'PUT' ? '' : 'hideElement' }}" id="quotation_more">
 
                             <div class="form-group col-md-1">
-                                <label>Prefix</label>
+                                <label>PREFIX</label>
                                 <select name="customer_gender" class="form-control" {{ $isClosed }}>
                                     <option
                                         {{ isset($data['customer_gender']) && $data['customer_gender'] == '1' ? 'selected' : '' }}
@@ -105,13 +105,13 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-5">
-                                <label>Customer Name</label>
+                                <label>CUSTOMER NAME</label>
                                 <input name="customer_name" type="text" class="form-control"
                                     value="{{ isset($data['customer_name']) ? $data['customer_name'] : '' }}"
                                     placeholder="Customer Name.." {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-1">
-                                <label>Relation</label>
+                                <label>RELATION</label>
                                 <select name="customer_relationship" class="form-control" {{ $isClosed }}>
                                     <option
                                         {{ isset($data['customer_relationship']) && $data['customer_relationship'] == '1' ? 'selected' : '' }}
@@ -125,20 +125,20 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-5">
-                                <label>Customer Guardian Name</label>
+                                <label>CUSTOMER GUARDIAN NAME</label>
                                 <input name="customer_guardian_name" type="text" class="form-control"
                                     value="{{ isset($data['customer_guardian_name']) ? $data['customer_guardian_name'] : '' }}"
                                     placeholder="Customer Guardian Name.." {{ $isClosed }}>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label>Customer Address Line</label>
+                                <label>CUSTOMER ADDRESS LINE</label>
                                 <input name="customer_address_line" type="text" class="form-control"
                                     value="{{ isset($data['customer_address_line']) ? $data['customer_address_line'] : '' }}"
                                     placeholder="Customer Address Line.." {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Customer State</label>
+                                <label>CUSTOMER STATE</label>
                                 <select name="customer_state" data-dep_dd_name="customer_district"
                                     data-url="{{ url('getAjaxDropdown') . '?req=districts' }}"
                                     data-dep_dd2_name="customer_city" class="form-control ajaxChangeCDropDown"
@@ -154,7 +154,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Customer District</label>
+                                <label>CUSTOMER DISTRICT</label>
                                 <select name="customer_district" class="form-control ajaxChangeCDropDown"
                                     data-dep_dd_name="customer_city"
                                     data-url="{{ url('getAjaxDropdown') . '?req=cities' }}" data-dep_dd2_name=""
@@ -170,7 +170,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Customer City/Village
+                                <label>CUSTOMER CITY/VILLEGE
                                     <span style="margin-left: 40px;">
                                         <a href="{{ route('plusAction') }}" class="plusAction" id="city"
                                             data-type="city" aria-hidden="true" data-modal_title="Add New City/Village/Town"
@@ -191,32 +191,32 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>ZipCode</label>
+                                <label>ZIPCODE</label>
                                 <input name="customer_zipcode" type="text" class="form-control"
                                     value="{{ isset($data['customer_zipcode']) ? $data['customer_zipcode'] : '' }}"
                                     placeholder="XXXXXX" {{ $isClosed }}>
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label>Customer Phone</label>
+                                <label>CUSTOMER PHONE NUMBER</label>
                                 <input name="customer_mobile_number" type="text" class="form-control"
                                     value="{{ isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : '' }}"
                                     placeholder="Customer Phone.." {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Customer Altenate Phone</label>
+                                <label>CUSTOMER ALTERNATE PHONE NUMBER</label>
                                 <input name="customer_mobile_number_alt" type="text" class="form-control"
                                     value="{{ isset($data['customer_mobile_number_alt']) ? $data['customer_mobile_number_alt'] : '' }}"
                                     placeholder="Customer Altenate Phone.." {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Customer Email</label>
+                                <label>CUSTOMER EMAIL</label>
                                 <input name="customer_email_address" type="text" class="form-control"
                                     value="{{ isset($data['customer_email_address']) ? $data['customer_email_address'] : '' }}"
                                     placeholder="Customer Email.." {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Is Exchange</label>
+                                <label>IS EXCHNAGE</label>
                                 <select class="form-control" name="is_exchange_avaliable" {{ $isClosed }}>
                                     <option value="No"
                                         {{ isset($data['is_exchange_avaliable']) && $data['is_exchange_avaliable'] == 'No' ? 'selected="selected"' : '' }}>
@@ -230,7 +230,7 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label>Payment Type</label>
+                                <label>PAYMENT TYPE</label>
                                 <select name="payment_type" class="form-control ajaxChangeCDropDown"
                                     data-dep_dd_name="hyp_financer"
                                     data-url="{{ url('getAjaxDropdown') . '?req=financiers_list' }}" data-dep_dd2_name=""
@@ -250,7 +250,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Hypothecation Financer</label>
+                                <label>HYPOTHECATION FINANCER</label>
                                 <select name="hyp_financer" class="form-control"
                                     {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
                                     {{ $isClosed }}>
@@ -265,7 +265,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-12">
-                                <label>Hypothecation Financer Description</label>
+                                <label>HYPOTHECATION FINANCER NOTE</label>
                                 <input name="hyp_financer_description" type="text" class="form-control"
                                     value="{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}"
                                     placeholder="Description..."
@@ -274,7 +274,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label>Bike Brand</label>
+                                <label>BRAND NAME</label>
                                 <select name="bike_brand" data-dep_dd_name="bike_model"
                                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
                                     data-dep_dd2_name="bike_color" class="form-control ajaxChangeCDropDown"
@@ -293,7 +293,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Bike Model</label>
+                                <label>MODEL NAME</label>
                                 <select name="bike_model" data-dep_dd_name="bike_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
                                     class="form-control ajaxChangeCDropDown" {{ $isClosed }}>
@@ -308,7 +308,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Bike Color</label>
+                                <label>MODEL COLOR NAME</label>
                                 <select name="bike_color" class="form-control" {{ $isClosed }}>
                                     <option value="">---Select Color----</option>
                                     @isset($colors)
@@ -322,50 +322,50 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label>Ex Showroom Price</label>
+                                <label>EX-SHOWROOM PRICE</label>
                                 <input name="ex_showroom_price" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Registration Amount</label>
+                                <label>REGISTRATION AMOUNT</label>
                                 <input name="registration_amount" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['registration_amount']) ? $data['registration_amount'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Insurance Amount</label>
+                                <label>INSURANCE AMOUNT</label>
                                 <input name="insurance_amount" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['insurance_amount']) ? $data['insurance_amount'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Hypothecation Amount</label>
+                                <label>HYPOTHECATION AMOUNT</label>
                                 <input name="hypothecation_amount" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['hypothecation_amount']) ? $data['hypothecation_amount'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Accessories Amount</label>
+                                <label>ACCESSORIES AMOUNT</label>
                                 <input name="accessories_amount" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['accessories_amount']) ? $data['accessories_amount'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Other Amount</label>
+                                <label>OTHER AMOUNT</label>
                                 <input name="other_charges" type="text" class="form-control totalAmountCal"
                                     value="{{ isset($data['other_charges']) ? $data['other_charges'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
                             <div class="form-group col-md-3">
-                                <label>Total Amount</label>
+                                <label>GRAND TOTAL AMOUNT</label>
                                 <input name="total_amount" type="text" class="form-control" readonly
                                     value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}"
                                     placeholder="₹ XXXX" {{ $isClosed }}>
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label>Purchase Visit Date</label>
+                                <label>PURCHASE VISIT DATE</label>
                                 <input name="purchase_visit_date" type="date" class="form-control"
                                     {{ isset($is_readonly) && $is_readonly ? $is_readonly : '' }}
                                     value="{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : date('Y-m-d') }}"
@@ -373,7 +373,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label>Purchase Estimated Date</label>
+                                <label>PURCHASE ESTIMATED DATE</label>
                                 <input name="purchase_est_date" type="date" class="form-control"
                                     value="{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : date('Y-m-d', strtotime('+1 month')) }}"
                                     placeholder="0000-00-00" {{ $isClosed }}>
@@ -385,13 +385,13 @@
                 {{-- submit button --}}
                 <div class="form-group">
                     <div class="box-footer">
-                        <a href="{{ route('quotations.index') }}" class="btn btn-danger pull-left">Back</a>
+                        <a href="{{ route('quotations.index') }}" class="btn btn-danger pull-left">BACK</a>
                         <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                             {{ $isClosed }}>
                             @if (isset($method) && $method == 'PUT')
-                                UPDATE QUOTATION
+                                UPDATE
                             @else
-                                CREATE NEW QUOTATION
+                                CREATE
                             @endif
                         </button>
                     </div>

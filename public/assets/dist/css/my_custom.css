@@ -86,4 +86,8 @@
       border-color: red;
   }
 
+  .ajaxFormSubmit .form-group label {
+      text-transform: uppercase !important;
+  }
+
 
