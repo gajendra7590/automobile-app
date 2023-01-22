@@ -113,6 +113,11 @@ class Purchase extends Model
         return $this->belongsTo(BikeModel::class, 'bike_model');
     }
 
+    public function sale()
+    {
+        return $this->hasOne(Sale::class);
+    }
+
     /**
      * Mapping with color
      */
