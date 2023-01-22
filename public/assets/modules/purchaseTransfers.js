@@ -80,20 +80,8 @@ $(document).ready(function () {
                     name: "sku",
                 },
                 {
-                    data: "variant",
-                    name: "variant",
-                },
-                {
-                    data: "dc_number",
-                    name: "dc_number",
-                },
-                {
-                    data: "dc_date",
-                    name: "dc_date",
-                },
-                {
-                    data: "grand_total",
-                    name: "grand_total",
+                    data: "transfers.total_price_on_road",
+                    name: "transfers.total_price_on_road",
                 },
                 {
                     data: "status",
@@ -107,7 +95,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [-1, -2, 3],
                 },
                 {
                     searchable: false,

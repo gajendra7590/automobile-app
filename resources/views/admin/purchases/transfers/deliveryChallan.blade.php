@@ -13,23 +13,23 @@
             <td style=" height: 2rem; text-align: center;border: 1px solid black;font-size: 2.5rem; color: red;font-weight: 700; padding-top: 0.5rem;
             padding-bottom: 0.5rem; font-weight: 600; "
                 colspan="2">
-                {{ isset($data->branch) ? $data->branch->branch_name : 'No Branch' }}
+                {{ isset($data->purchase->branch) ? $data->purchase->branch->branch_name : 'No Branch' }}
             </td>
         </tr>
         <tr>
             <td style="text-align: center;border: 1px solid; height: 2rem; height: 2rem;" colspan="2">
-                {{ isset($data->branch) ? $data->branch->branch_address_line : ' ' }}
-                {{ isset($data->branch) ? $data->branch->branch_pincode : ' ' }}
+                {{ isset($data->purchase->branch) ? $data->purchase->branch->branch_address_line : ' ' }}
+                {{ isset($data->purchase->branch) ? $data->purchase->branch->branch_pincode : ' ' }}
             </td>
         </tr>
         <tr>
             <td style="text-align: center;border: 1px solid; height: 2rem; height: 2rem;" colspan="2">
-                MO: {{ isset($data->branch) ? $data->branch->branch_phone : ' ' }}
+                MO: {{ isset($data->purchase->branch) ? $data->purchase->branch->branch_phone : ' ' }}
             </td>
         </tr>
         <tr>
             <td style="text-align: center;border: 1px solid; padding-left: 0.5rem; height: 2rem;" colspan="2">
-                GSTIN : {{ isset($data->branch) ? $data->branch->gstin_number : ' ' }}
+                GSTIN : {{ isset($data->purchase->branch) ? $data->purchase->branch->gstin_number : ' ' }}
             </td>
         </tr>
 
@@ -37,7 +37,7 @@
             <td style="width:100%;" colspan="2">
                 <table style="width:100%;border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid;" colspan="2">
-                        <td style="width: 20%; padding-left: 0.5rem; height: 2rem; text-align: center;">Q.NO</td>
+                        <td style="width: 20%; padding-left: 0.5rem; height: 2rem; text-align: center;">S.NO</td>
                         <td style="border-left: 1px solid; text-align: center; height: 2rem; font-size: 1.5rem; font-weight: 800;"
                             Rowspan="2">DELIVERY CHALLAN</td>
                         <td style="width: 20%; border-left: 1px solid; text-align: center; height: 2rem;">DATE</td>
@@ -56,48 +56,44 @@
                     <tr>
                         <td
                             style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;">
-                            NAME
+                            AGENT NAME
                         </td>
                         <td
                             style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem; font-weight: bold;">
-                            {{ isset($data->cust_name) ? strtoupper($data->cust_name) : ' ' }}
+                            {{ isset($data->broker->name) ? strtoupper($data->broker->name) : ' ' }}
                         </td>
                     </tr>
                     <tr>
                         <td
                             style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
-                            ADDRESS :
+                            AGENT ADDRESS :
                         </td>
-                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;">
-                            {{ isset($data->customer_address_line) ? ucwords($data->customer_address_line) . ',' : ' ' }}
-                            {{ isset($data->city->city_name) ? ucwords($data->city->city_name) . ',' : ' ' }}
-                            {{ isset($data->district->district_name) ? ucwords($data->district->district_name) . ',' : ' ' }}
-                            {{ isset($data->state->state_name) ? ucwords($data->state->state_name) . ',' : ' ' }}
-                            {{ isset($data->customer_zipcode) ? ucwords($data->customer_zipcode) : ' ' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td
-                            style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
-                            MOBILE NO :
-                        </td>
-                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;">
-                            {{ isset($data->customer_mobile_number) ? $data->customer_mobile_number : '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem;"></td>
-                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;"></td>
-                    </tr>
-                    <tr>
-                        <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
-                            HYP:
-                        </td>
-                        <td style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;">
-                            {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : '' }}
-                        </td>
-                    </tr>
 
+                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;">
+                            {{ isset($data->broker->address_line) ? ucwords($data->broker->address_line) . ',' : ' ' }}
+                            {{ isset($data->broker->cityDetail) ? ucwords($data->broker->cityDetail->cityName) . ',' : ' ' }}
+                            {{ isset($data->broker->districtDetail) ? ucwords($data->broker->districtDetail->district_name) . ',' : ' ' }}
+                            {{ isset($data->broker->stateDetail) ? ucwords($data->broker->stateDetail->state_name) . ',' : ' ' }}
+                            {{ isset($data->broker->zipcode) ? $data->broker->zipcode : ' ' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
+                            AGENT MOBILE NO :
+                        </td>
+                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;">
+                            {{ isset($data->broker->mobile_number) ? $data->broker->mobile_number : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;">
+                            AGENT PAN CARD NUMBER :
+                        </td>
+                        <td style="width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;">
+                            {{ isset($data->broker->pan_card) ? maskNumberOnlyLast4($data->broker->pan_card) : '' }}
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -161,52 +157,14 @@
         <tr>
             <td style="text-align: left; border: 1px solid;width:100%; height: 2rem;" colspan="2">
                 <table style="width:100%;border-collapse: collapse;">
-                    <tr style="border-bottom: 1px solid;">
-                        <td style=" width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">
-                            EX SHOWROOM PRICE
-                        </td>
-                        <td
-                            style=" width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
-                            {{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid;">
-                        <td style="width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">RTO</td>
-                        <td
-                            style="width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
-                            {{ isset($data->insurance_amount) ? $data->insurance_amount : '' }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid;">
-                        <td style=" width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">HYPOTHECATION
-                        </td>
-                        <td
-                            style=" width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
-                            {{ isset($data->hypothecation_amount) ? $data->hypothecation_amount : '' }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid;">
-                        <td style="width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">ACCESSORIES</td>
-                        <td
-                            style="width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
-                            {{ isset($data->accessories_amount) ? $data->accessories_amount : '' }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid;">
-                        <td style=" width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">OTHER</td>
-                        <td
-                            style=" width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
-                            {{ isset($data->other_charges) ? $data->other_charges : '' }}
-                        </td>
-                    </tr>
                     <tr>
                         <td
                             style=" width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;font-weight: bold;">
-                            TOTAL ON ROAD
+                            TOTAL ON ROAD PRICE
                         </td>
                         <td
                             style=" width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;font-weight: bold;">
-                            {{ isset($data->total_amount) ? $data->total_amount : '' }}
+                            {{ isset($data->total_price_on_road) ? $data->total_price_on_road : '' }}
                         </td>
                     </tr>
                 </table>
@@ -219,7 +177,7 @@
                 <table>
                     <tr style="text-align: center;">
                         <td style="text-align: center;height: 4rem;">
-                            {{ isset($data->branch) ? $data->branch->branch_name : '' }}
+                            {{ isset($data->purchase->branch) ? $data->purchase->branch->branch_name : '' }}
                         </td>
                     </tr>
                     <tr>

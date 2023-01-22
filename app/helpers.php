@@ -356,6 +356,20 @@ if (!function_exists('number2WordConvert')) {
     }
 }
 
+if (!function_exists('maskNumberOnlyLast4')) {
+    function maskNumberOnlyLast4($value, $len = 4, $char = "*")
+    {
+        $total_len = strlen($value);
+        if ($total_len > 4) {
+            $last4Digits = substr($value, - ($len));
+            return str_pad($last4Digits, $total_len, $char, STR_PAD_LEFT);
+        } else {
+            return $value;
+        }
+    }
+}
+
+
 if (!function_exists('sales2RtoPayload')) {
     function sales2RtoPayload($data)
     {
