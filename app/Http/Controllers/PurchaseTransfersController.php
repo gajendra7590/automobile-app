@@ -135,10 +135,11 @@ class PurchaseTransfersController extends Controller
             DB::beginTransaction();
             $postData = $request->only('purchase_id', 'broker_id', 'transfer_date', 'transfer_note');
             $validator = Validator::make($postData, [
-                'purchase_id'    => "required|exists:purchases,id",
-                'broker_id'      => "required|exists:brokers,id",
-                'transfer_date'  => "required|date:Y-m-d",
-                'transfer_note'  => "required|string"
+                'purchase_id'         => "required|exists:purchases,id",
+                'broker_id'           => "required|exists:brokers,id",
+                'total_price_on_road' => 'required|numeric|min:1',
+                'transfer_date'       => "required|date:Y-m-d",
+                'transfer_note'       => "required|string"
             ]);
 
             //If Validation failed

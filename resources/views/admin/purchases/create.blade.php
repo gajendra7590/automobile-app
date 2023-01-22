@@ -406,6 +406,13 @@
                                     {{ $isSoldOut }} />
                             </div>
                             <div class="form-group col-md-2">
+                                <label>Discount Amount(-)</label>
+                                <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
+                                    name="discount_price"
+                                    value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
+                                    {{ $isSoldOut }} />
+                            </div>
+                            <div class="form-group col-md-2">
                                 <label>GST Amount</label>
                                 <input type="number" class="form-control totalAmountCal totalAmountCal2"
                                     placeholder="GST Amount" name="gst_amount" readonly
@@ -416,13 +423,6 @@
                                 <input type="number" class="form-control " readonly placeholder="Ex Showroom Price"
                                     name="ex_showroom_price"
                                     value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0.0 }}" />
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label>Discount Amount</label>
-                                <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
-                                    name="discount_price"
-                                    value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
-                                    {{ $isSoldOut }} />
                             </div>
                             <div class="form-group col-md-2">
                                 <label>Grand Total</label>

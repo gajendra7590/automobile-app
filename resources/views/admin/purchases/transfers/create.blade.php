@@ -30,6 +30,12 @@
                 </select>
             </div>
             <div class="form-group col-md-12">
+                <label>Total On Road Price</label>
+                <input name="total_price_on_road" type="number" class="form-control"
+                    value="{{ isset($data['total_price_on_road']) ? $data['total_price_on_road'] : '' }}"
+                    placeholder="₹0.00">
+            </div>
+            <div class="form-group col-md-12">
                 <label>Transfer Date</label>
                 <input name="transfer_date" type="date" class="form-control"
                     value="{{ isset($data['transfer_date']) ? $data['transfer_date'] : date('Y-m-d') }}"

@@ -12,32 +12,21 @@ $(document).ready(function () {
     });
 
     function calculate() {
-        $val = $("#pre_gst_amount").val();
-        $rate = $("#gst_rate option:selected").data("rate");
-        $("#gst_rate_percent").val($rate);
-        $('input[name="gst_amount"]').val((($val * $rate) / 100).toFixed(2));
+        let pre_gst_amount = $('input[name="pre_gst_amount"]').val();
+        let discount_price = $('input[name="discount_price"]').val();
+        let rate = $("#gst_rate option:selected").data("rate");
+        rate = parseFloat(rate);
+        let pre_gst_retotal =
+            parseFloat(pre_gst_amount) - parseFloat(discount_price);
 
-        var total = 0.0;
-        $(".totalAmountCal2").each(function (i, ele) {
-            let input_value = parseFloat($(this).val());
-            if (isNaN(input_value)) {
-                total += 0.0;
-            } else {
-                total += input_value;
-            }
-        });
+        let gst_amount = parseFloat((pre_gst_retotal * rate) / 100);
+
+        $("#gst_rate_percent").val(rate);
+        $('input[name="gst_amount"]').val(gst_amount);
+
+        let total = parseFloat(gst_amount) + parseFloat(pre_gst_amount);
+
         $('input[name="ex_showroom_price"]').val(total);
-
-        total = 0.0;
-
-        $(".totalAmountCal").each(function (i, ele) {
-            let input_value = parseFloat($(this).val());
-            if (isNaN(input_value)) {
-                total += 0.0;
-            } else {
-                total += input_value;
-            }
-        });
         $('input[name="grand_total"]').val(total);
     }
 
