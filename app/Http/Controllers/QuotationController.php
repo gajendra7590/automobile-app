@@ -20,21 +20,20 @@ class QuotationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $auth = User::find(auth()->id());
         if (!request()->ajax()) {
-            return view('admin.quotations.index');
+            $data = array(
+                'branches' => self::getAllBranchesWithInActive(),
+                'payTypes' => duePaySourcesQuotation()
+            );
+            return view('admin.quotations.index', $data);
         } else {
+            $postData = $request->all();
             $data = Quotation::select('*')->with([
-                'state' => function ($s) {
-                    $s->select('id', 'state_name');
-                },
-                'district' => function ($s) {
-                    $s->select('id', 'district_name');
-                },
-                'city' => function ($s) {
-                    $s->select('id', 'city_name');
+                'branch' => function ($s) {
+                    $s->select('id', 'branch_name');
                 },
                 'brand' => function ($s) {
                     $s->select('id', 'name');
@@ -47,17 +46,50 @@ class QuotationController extends Controller
                 },
                 'financer' => function ($s) {
                     $s->select('id', 'bank_name');
-                },
-                // 'salesman' => function ($s) {
-                //     $s->select('id', 'name');
-                // },
+                }
             ]);
 
             if (!$auth->is_admin) {
                 $data->where('branch_id', $auth->branch_id);
             }
 
+            //Fitler By Branch
+            if (isset($postData['columns'][1]['search']['value']) && (!empty($postData['columns'][1]['search']['value']))) {
+                $data->where('branch_id', $postData['columns'][1]['search']['value']);
+            }
+
+            //Fitler By Pay Type
+            if (isset($postData['columns'][5]['search']['value']) && (!empty($postData['columns'][5]['search']['value']))) {
+                $data->where('payment_type', $postData['columns'][5]['search']['value']);
+            }
+
+            //Fitler By Status
+            if (isset($postData['columns'][8]['search']['value']) && (!empty($postData['columns'][8]['search']['value']))) {
+                $data->where('status', $postData['columns'][8]['search']['value']);
+            }
+
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
+
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $query->whereHas('branch', function ($q) use ($search_string) {
+                            $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                        })
+                            ->orWhereHas('brand', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('model', function ($q) use ($search_string) {
+                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('color', function ($q) use ($search_string) {
+                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orwhere('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('customer_mobile_number', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('total_amount', 'LIKE', '%' . $search_string . '%');
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
                     if ($row->status == 'open') {
@@ -78,6 +110,9 @@ class QuotationController extends Controller
                 })
                 ->addColumn('payment_type', function ($row) {
                     return ((intval($row->payment_type) > 0) ? duePaySources($row->payment_type) : $row->payment_type);
+                })
+                ->addColumn('branch_name', function ($row) {
+                    return isset($row->branch->branch_name) ? $row->branch->branch_name : '';
                 })
                 ->addColumn('total_amount', function ($row) {
                     return '₹' . $row->total_amount;

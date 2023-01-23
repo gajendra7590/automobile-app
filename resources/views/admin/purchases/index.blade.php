@@ -26,6 +26,44 @@
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD PURCHASE
                                 </a>
                             </div>
+
+                            <div class="pull-right custom-fitler-container">
+                                <div class="filter-options pull-left">
+                                    <div class="row">
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="branch_id" data-col_index="1">
+                                                <option value="">---BRANCH NAME---</option>
+                                                @if (isset($branches))
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->branch_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="transfer_status"
+                                                data-col_index="7">
+                                                <option value="">---TRANSFER STATUS---</option>
+                                                <option value="1">YES</option>
+                                                <option value="0">NO</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="status" data-col_index="8">
+                                                <option value="">---STOCK STATUS---</option>
+                                                <option value="2">SOLD OUT</option>
+                                                <option value="1">IN STOCK</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-primary" id="customFitterAction">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">

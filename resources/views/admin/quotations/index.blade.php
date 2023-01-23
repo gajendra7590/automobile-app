@@ -28,6 +28,46 @@
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE QUOTATION
                                 </a>
                             </div>
+                            <div class="pull-right custom-fitler-container">
+                                <div class="filter-options pull-left">
+                                    <div class="row">
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="branch_id" data-col_index="1">
+                                                <option value="">---BRANCH NAME---</option>
+                                                @if (isset($branches))
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->branch_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="transfer_status"
+                                                data-col_index="5">
+                                                <option value="">---PAY TYPE---</option>
+                                                @if (isset($payTypes))
+                                                    @foreach ($payTypes as $k => $payType)
+                                                        <option value="{{ $k }}">{{ $payType }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="status" data-col_index="8">
+                                                <option value="">---STATUS---</option>
+                                                <option value="open">OPEN</option>
+                                                <option value="close">CLOSED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-primary" id="customFitterAction">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -36,13 +76,13 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th width="12%">CUSTOMER NAME</th>
-                                        <th width="13%">CUSTOMER PHONE</th>
-                                        <th width="25%">BIKE</th>
+                                        <th width="12%">BRANCH NAME</th>
+                                        <th width="12%">NAME</th>
+                                        <th width="13%">PHONE</th>
+                                        <th width="15%">BRAND & MODEL</th>
                                         <th width="12%">PAY TYPE</th>
                                         <th width="12%">TOTAL AMOUNT</th>
                                         <th>VISIT DATE</th>
-                                        {{-- <th>PURCHASE DATE</th> --}}
                                         <th width="4%">STATUS</th>
                                         <th width="5%">ACTION</th>
                                     </tr>

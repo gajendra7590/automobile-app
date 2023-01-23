@@ -25,9 +25,13 @@ class PurchaseController extends Controller
     {
         $auth = User::find(auth()->id());
         if (!request()->ajax()) {
-            return view('admin.purchases.index');
+            $data = array(
+                'branches' => self::getAllBranchesWithInActive()
+            );
+            return view('admin.purchases.index', $data);
         } else {
             $postData = $request->all();
+            //dd($postData['columns'][1]['search']['value']);
             $data = Purchase::select('*')
                 ->with([
                     'branch' => function ($model) {
@@ -50,11 +54,25 @@ class PurchaseController extends Controller
                     $q->where('bike_branch', $auth->branch_id);
                 });
 
+            //Fitler By Branch
+            if (isset($postData['columns'][1]['search']['value']) && (!empty($postData['columns'][1]['search']['value']))) {
+                $data->where('bike_branch', $postData['columns'][1]['search']['value']);
+            }
+
+            //Fitler By Transfer Status
+            if (isset($postData['columns'][7]['search']['value']) && (!empty($postData['columns'][7]['search']['value']))) {
+                $data->where('transfer_status', $postData['columns'][7]['search']['value']);
+            }
+
+            //Fitler By Stock Status
+            if (isset($postData['columns'][8]['search']['value']) && (!empty($postData['columns'][8]['search']['value']))) {
+                $data->where('status', $postData['columns'][8]['search']['value']);
+            }
+
             $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $transfer_status = (strtolower($search_string) == "yes") ? 1 : ((strtolower($search_string) == "no") ? 0 : 22);
                         $query->whereHas('branch', function ($q) use ($search_string) {
                             $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
                         })
@@ -70,8 +88,7 @@ class PurchaseController extends Controller
                             ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
                             ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
                             ->orwhereDate('dc_date', $search_string)
-                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('transfer_status', $transfer_status);
+                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
                     }
                 })
                 ->addIndexColumn()

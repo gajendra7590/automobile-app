@@ -13,7 +13,7 @@ $(document).ready(function () {
     });
 
     function mainDataTable() {
-        const tableObj = $("#ajaxDataTable").DataTable({
+        tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
             serverSide: true,
             cache: true,
@@ -33,6 +33,10 @@ $(document).ready(function () {
                 {
                     data: "id",
                     name: "id",
+                },
+                {
+                    data: "branch_name",
+                    name: "branch_name",
                 },
                 {
                     data: "customer_name",
@@ -58,10 +62,6 @@ $(document).ready(function () {
                     data: "purchase_visit_date",
                     name: "purchase_visit_date",
                 },
-                // {
-                //     data: "purchase_est_date",
-                //     name: "purchase_est_date",
-                // },
                 {
                     data: "status",
                     name: "status",

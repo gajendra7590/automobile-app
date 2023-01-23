@@ -298,4 +298,19 @@ $(document).ready(function () {
             });
         }
     });
+
+    $(".filter-options").hide();
+
+    $(document).on("click", "#customFitterAction", function (e) {
+        e.preventDefault();
+        $(".filter-options").toggle("slow");
+    });
+});
+
+// DATATABLE FILTER
+var tableObj = null;
+$(document).on("change", ".ajaxDtFilter", function () {
+    let col_index = $(this).data("col_index");
+    let value = $(this).val();
+    tableObj.column(col_index).search(value).draw();
 });

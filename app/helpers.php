@@ -110,6 +110,21 @@ if (!function_exists('duePaySources')) {
     }
 }
 
+if (!function_exists('duePaySourcesQuotation')) {
+    function duePaySourcesQuotation($id = 0)
+    {
+        $data = [
+            '1'  => "By Cash",
+            '2'  => "Bank Finance",
+            '3'  => "Personal Finance"
+        ];
+        if ($id > 0) {
+            return $data[$id];
+        }
+        return $data;
+    }
+}
+
 if (!function_exists('emiTerms')) {
     function emiTerms($id = 0)
     {

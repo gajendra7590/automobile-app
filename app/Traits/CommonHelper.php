@@ -33,8 +33,20 @@ trait CommonHelper
         return $branch_id;
     }
 
-    public static function branchFilter($select_all = false)
+    public static function getAllBranchesWithInActive($select_all = false)
     {
+        $model = null;
+        if ($select_all == false) {
+            $model = Branch::select('id', 'branch_name');
+        } else {
+            $model = Branch::select('*');
+        }
+
+        //Filter by branch
+        if (self::getCurrentUserBranch() != '0') {
+            $model = $model->where('id', self::getCurrentUserBranch());
+        }
+        return $model->get();
     }
 
 

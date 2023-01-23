@@ -31,7 +31,7 @@ $(document).ready(function () {
     }
 
     function mainDataTable() {
-        const tableObj = $("#ajaxDataTable").DataTable({
+        tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
             serverSide: true,
             cache: true,

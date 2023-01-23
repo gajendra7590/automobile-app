@@ -115,4 +115,21 @@
      text-transform: uppercase;
  }
 
+ .custom-fitler-container {
+    padding-right: 4px;
+ }
+
+ .filter-options {
+     padding-right: 9px;
+ }
+
+ .filter-options input,.filter-options select {
+    height: 29px !important;
+ }
+
+ .filter-options .cust_col {
+    padding-left: 0px !important;
+ }
+
+
 
