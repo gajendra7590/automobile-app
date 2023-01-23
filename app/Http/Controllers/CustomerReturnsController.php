@@ -7,6 +7,7 @@ use App\Models\CustomerReturnSale;
 use App\Models\CustomerReturnSalePaymentAccounts;
 use App\Models\CustomerReturnSalePaymentInstallments;
 use App\Models\CustomerReturnSalePaymentTransactions;
+use App\Models\CustomerReturnSaleRefund;
 use App\Models\Purchase;
 use App\Models\Quotation;
 use App\Models\RtoRegistration;
@@ -260,7 +261,9 @@ class CustomerReturnsController extends Controller
         }
 
         $data = array(
-            'data' => $modals
+            'data' => $modals,
+            'total_paid' => CustomerReturnSalePaymentTransactions::where('sale_id', $id)->sum('amount_paid'),
+            'total_refund' => CustomerReturnSaleRefund::where('sale_id', $id)->sum('amount_refund')
         );
         return response()->json([
             'status'     => true,
@@ -331,6 +334,7 @@ class CustomerReturnsController extends Controller
         $action  .= '<ul class="dropdown-menu">';
         $action .= '<li><a href="' . route('customerReturns.show', ['customerReturn' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
         $action .= '<li><a href="' . route('showTransactions', ['id' => $row->id]) . '" class="ajaxModalPopup" data-title="SHOW PAID TRANSACTIONS" data-modal_title="SHOW PAID TRANSACTIONS" data-modal_size="modal-lg">SHOW PAID TRANSACTIONS</a></li>';
+        $action .= '<li><a href="' . route('customerRefunds.show', ['customerRefund' => $row->id]) . '" class="ajaxModalPopup" data-title="SHOW REFUND HISTORY" data-modal_title="SHOW REFUND HISTORY" data-modal_size="modal-lg">SHOW REFUND HISTORY</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;

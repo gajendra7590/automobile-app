@@ -122,6 +122,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('select2DropdownByType', 'AjaxCommonController@select2DropdownByType')->name('select2DropdownByType');
     Route::get('showTransactions/{id}', 'CustomerReturnsController@showTransactions')->name('showTransactions');
 
+    //Sales Refund
+    Route::resource('customerRefunds', 'CustomerReturnSaleRefundController');
+
     //RTO Registration
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');
     Route::resource('rtoRegistration', 'RtoRegistrationController');

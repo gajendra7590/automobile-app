@@ -97,4 +97,14 @@
       /* padding-left: 3px; */
   }
 
+ .myCustomTable thead {
+    background: #3c8dbc !important;
+    color: #fff !important;
+ }
+
+ .myCustomTable tfoot {
+    background: #b9b3a9 !important;
+    color: #fffffffa !important;
+ }
+
 

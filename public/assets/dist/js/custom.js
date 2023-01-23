@@ -298,6 +298,4 @@ $(document).ready(function () {
             });
         }
     });
-
-    //ajaxChangeCDropDown
 });

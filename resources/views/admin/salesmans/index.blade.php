@@ -22,10 +22,8 @@
                         <div class="box-header">
                             <h3 class="box-title"> All Salesman List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('salesmans.create') }}"
-                                class="btn btn-sm btn-success ajaxModalPopup"
-                                    data-modal_title="Add New Salesman"
-                                    data-modal_size="modal-lg">
+                                <a href="{{ route('salesmans.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="Add New Salesman" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
                                 </a>
                             </div>
@@ -33,7 +31,7 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="ajaxDataTable" data-url="{{ route('salesmans.index') }}"
-                                class="table table-bordered table-hover">
+                                class="table table-bordered table-hover myCustomTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>

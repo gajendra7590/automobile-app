@@ -79,26 +79,9 @@
         <td>{{ isset($data['other_charges']) ? priceFormate($data['other_charges']) : '--' }}</td>
     </tr>
     <tr>
-        <th>TOTAL AMOUNT</th>
-        <td>{!! isset($data['total_amount']) ? convertBadgesPrice($data['total_amount'], 'success') : '--' !!}</td>
-        <th>DESCRIPTION</th>
-        <td>{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
-    </tr>
-    <tr>
-        <th>CLOSED STATUS</th>
-        <td>{!! isset($data['status']) ? convertBadgesStr($data['status']) : '--' !!}</td>
-
-        <th>CLOSED BY</th>
-        <td>{{ (isset($data['closedByUser']['name']) ? $data['closedByUser']['name'] : isset($data['status']) && $data['status'] == 'close') ? 'AUTO CLOSED' : '--' }}
-        </td>
-
-        <th>CLOSED NOTE</th>
-        <td>{!! isset($data['close_note']) ? $data['close_note'] : '--' !!}</td>
-    </tr>
-    <tr>
-        <th colspan="2">SALES PAYMENT ACCOUNT STATUS</th>
-        <td>{!! isset($data['sp_account_id']) ? convertBadgesStr($data['sp_account_id']) : '--' !!}</td>
-        <th colspan="2">RTO REGISTRATION STATUS</th>
-        <td>{!! isset($data['rto_account_id']) ? convertBadgesStr($data['rto_account_id']) : '--' !!}</td>
+        <th colspan="2">TOTAL PAID BY CUSTOMER</th>
+        <td>{!! isset($total_paid) ? convertBadgesPrice($total_paid, 'success') : convertBadgesPrice(0.0, 'success') !!}</td>
+        <th colspan="2">TOTAL REFUND TO CUSTOMER</th>
+        <td>{!! isset($total_refund) ? convertBadgesPrice($total_refund, 'warning') : convertBadgesPrice(0.0, 'warning') !!}</td>
     </tr>
 </table>

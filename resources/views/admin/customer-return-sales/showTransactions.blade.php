@@ -1,7 +1,7 @@
-<table class="table table-bordered">
+<table class="table table-bordered myCustomTable">
     <thead>
         <tr>
-            <th width="6%">TRX ID</th>
+            <th width="10%">TRX ID</th>
             <th width="35%">TRANSACTION TITLE</th>
             <th width="12%">PAID AMOUNT</th>
             <th width="10%">SOURCE</th>
@@ -13,7 +13,7 @@
         $totalPaid = 0;
     @endphp
     <tbody>
-        @if (isset($transactions))
+        @if (isset($transactions) && count($transactions) > 0)
             @foreach ($transactions as $transaction)
                 @php $totalPaid += $transaction->amount_paid; @endphp
                 <tr>
@@ -27,13 +27,19 @@
                     </td>
                 </tr>
             @endforeach
+        @else
+            <tr>
+                <td colspan="6">No Record Found.</td>
+            </tr>
         @endif
     </tbody>
     <tfoot>
-        <tr>
-            <th colspan="2">GRAND TOTAL</th>
-            <th>{!! convertBadgesPrice($totalPaid, 'warning') !!}</th>
-        </tr>
+        @if (isset($transactions) && count($transactions) > 0)
+            <tr>
+                <th colspan="2">GRAND TOTAL</th>
+                <th colspan="4">{!! convertBadgesPrice($totalPaid, 'warning') !!}</th>
+            </tr>
+        @endif
     </tfoot>
 
 </table>

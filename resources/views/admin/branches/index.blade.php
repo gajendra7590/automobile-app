@@ -30,7 +30,7 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="ajaxDataTable" data-url="{{ route('branches.index') }}"
-                                class="table table-bordered table-hover">
+                                class="table table-bordered table-hover myCustomTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>

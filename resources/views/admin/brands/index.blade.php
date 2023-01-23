@@ -31,7 +31,7 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" class="table table-bordered table-hover"
+                            <table id="ajaxDataTable" class="table table-bordered table-hover myCustomTable"
                                 data-url="{{ route('brands.index') }}">
                                 <thead>
                                     <tr>
