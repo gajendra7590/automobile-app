@@ -107,4 +107,8 @@
     color: #fffffffa !important;
  }
 
+ h3.box-title, .content-header small, .breadcrumb li {
+     text-transform: uppercase;
+ }
+
 
