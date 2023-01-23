@@ -64,8 +64,8 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "branch.branch_name",
-                    name: "branch.branch_name",
+                    data: "branch_name",
+                    name: "branch_name",
                 },
                 {
                     data: "broker_name",
@@ -80,8 +80,8 @@ $(document).ready(function () {
                     name: "sku",
                 },
                 {
-                    data: "transfers.total_price_on_road",
-                    name: "transfers.total_price_on_road",
+                    data: "total_price_on_road",
+                    name: "total_price_on_road",
                 },
                 {
                     data: "status",

@@ -34,14 +34,6 @@ $(document).ready(function () {
                     name: "branch_phone",
                 },
                 {
-                    data: "branch_phone2",
-                    name: "branch_phone2",
-                },
-                {
-                    data: "branch_address_line",
-                    name: "branch_address_line",
-                },
-                {
                     data: "gstin_number",
                     name: "gstin_number",
                 },
@@ -57,7 +49,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [],
+                    targets: [-1, -2],
                 },
                 {
                     searchable: false,

@@ -39,10 +39,11 @@ class UserController extends Controller
                     }
                 })
                 ->addColumn('active_status', function ($row) {
+                    $disabled = (($row->id != '1' && $row->is_default == '0')) ? '' : 'disabled="disabled"';
                     if ($row->active_status == '1') {
-                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='user' class='active_status' checked><span class='slider round'></span></label>";
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='user' class='active_status' checked " . $disabled . "><span class='slider round'></span></label>";
                     } else {
-                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='user' class='active_status'><span class='slider round'></span></label>";
+                        return "<label class='switch'><input type='checkbox' value='$row->id' data-type='user' class='active_status' " . $disabled . "><span class='slider round'></span></label>";
                     }
                 })
                 ->addColumn('profile_image', function ($row) {

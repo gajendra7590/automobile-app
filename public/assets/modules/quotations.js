@@ -74,7 +74,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [-1, -2],
                 },
                 {
                     searchable: false,

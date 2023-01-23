@@ -20,7 +20,7 @@ class PurchaseTransfersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
             return view('admin.purchases.transfers.index');
@@ -56,19 +56,48 @@ class PurchaseTransfersController extends Controller
                     }
                 ]);
 
+            $postData = $request->all();
+            $search_string = isset($postData['search']['value']) ? strtolower($postData['search']['value']) : "";
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $query->where('sku', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('branch', function ($q) use ($search_string) {
+                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('brand', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('model', function ($q) use ($search_string) {
+                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('modelColor', function ($q) use ($search_string) {
+                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('transfers.broker', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('transfers', function ($q) use ($search_string) {
+                                $q->where('total_price_on_road', 'LIKE', '%' . $search_string . '%');
+                            });
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->addColumn('purchase_id', function ($row) {
-                    return $row->uuid;
+                ->addColumn('total_price_on_road', function ($row) {
+                    if (isset($row->transfers)) {
+                        return $row->transfers->total_price_on_road;
+                    } else {
+                        return 0.00;
+                    }
                 })
-                ->addColumn('branch.branch_name', function ($row) {
-                    if ($row->branch) {
+                ->addColumn('branch_name', function ($row) {
+                    if (isset($row->branch)) {
                         return $row->branch->branch_name;
                     } else {
-                        return 'N/A';
+                        return '--';
                     }
                 })
                 ->addColumn('broker_name', function ($row) {
@@ -76,13 +105,13 @@ class PurchaseTransfersController extends Controller
                 })
                 ->addColumn('bike_detail', function ($row) {
                     $str = '';
-                    if ($row->brand) {
+                    if (isset($row->brand)) {
                         $str .= $row->brand->name . ' | ';
                     }
-                    if ($row->model) {
+                    if (isset($row->model)) {
                         $str .= $row->model->model_name . ' | ';
                     }
-                    if ($row->modelColor) {
+                    if (isset($row->modelColor)) {
                         $str .= $row->modelColor->color_name;
                     }
                     return $str;
@@ -98,7 +127,7 @@ class PurchaseTransfersController extends Controller
                     }
                 })
                 ->rawColumns([
-                    'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'status'
+                    'action', 'total_price_on_road', 'branch_name', 'bike_detail', 'grand_total', 'status'
                 ])
                 ->make(true);
         }
@@ -307,16 +336,18 @@ class PurchaseTransfersController extends Controller
 
     public function getActions($row)
     {
-        $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
-        $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
-        if ($row->status == '1') {
-            $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="GENERATE NEW RETURN">CREATE RETURN</a></li>';
+        if ($row) {
+            $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
+            $action  .= '<ul class="dropdown-menu">';
+            $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
+            if (isset($row->status) && ($row->status == '1')) {
+                $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="GENERATE NEW RETURN">CREATE RETURN</a></li>';
+            }
+            $action .= '<li><a href="' . route('purchaseTransferDeliveryChallan', ['id' => base64_encode($row->transfers->id)]) . '" data-id="' . $row->transfers->id . '" class="" title="DELIVERY CHALLAN" target="_blank">DELIVERY CHALLAN</a></li>';
+            $action  .= '</ul>';
+            $action  .= '</div>';
+            return $action;
         }
-        $action .= '<li><a href="' . route('purchaseTransferDeliveryChallan', ['id' => base64_encode($row->transfers->id)]) . '" data-id="' . $row->transfers->id . '" class="" title="DELIVERY CHALLAN" target="_blank">DELIVERY CHALLAN</a></li>';
-        $action  .= '</ul>';
-        $action  .= '</div>';
-        return $action;
     }
 
 

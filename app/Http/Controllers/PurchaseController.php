@@ -21,12 +21,13 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $auth = User::find(auth()->id());
         if (!request()->ajax()) {
             return view('admin.purchases.index');
         } else {
+            $postData = $request->all();
             $data = Purchase::select('*')
                 ->with([
                     'branch' => function ($model) {
@@ -49,7 +50,30 @@ class PurchaseController extends Controller
                     $q->where('bike_branch', $auth->branch_id);
                 });
 
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $transfer_status = (strtolower($search_string) == "yes") ? 1 : ((strtolower($search_string) == "no") ? 0 : 22);
+                        $query->whereHas('branch', function ($q) use ($search_string) {
+                            $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                        })
+                            ->orWhereHas('brand', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('model', function ($q) use ($search_string) {
+                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('modelColor', function ($q) use ($search_string) {
+                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
+                            ->orwhereDate('dc_date', $search_string)
+                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('transfer_status', $transfer_status);
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);

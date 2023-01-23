@@ -16,12 +16,12 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
             return view('admin.cities.index');
         } else {
-
+            $postData = $request->all();
             $data = City::with([
                 'district' => function ($model) {
                     $model->select('id', 'district_name', 'state_id')
@@ -32,7 +32,20 @@ class CityController extends Controller
                         ]);
                 }
             ])->select('*');
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $query->where('city_name', 'LIKE', '%' . $search_string . '%')
+                            ->orwhere('city_code', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('district', function ($q) use ($search_string) {
+                                $q->where('district_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('district.state', function ($q) use ($search_string) {
+                                $q->where('state_name', 'LIKE', '%' . $search_string . '%');
+                            });
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
                     if ($row->active_status == '1') {

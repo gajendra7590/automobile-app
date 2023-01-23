@@ -107,7 +107,11 @@
     color: #fffffffa !important;
  }
 
- h3.box-title, .content-header small, .breadcrumb li {
+ h3.box-title, .content-header small, .breadcrumb li,.content-header h1 {
+     text-transform: uppercase;
+ }
+
+ table#ajaxDataTable thead tr th {
      text-transform: uppercase;
  }
 

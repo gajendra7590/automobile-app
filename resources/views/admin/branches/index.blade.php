@@ -37,8 +37,6 @@
                                         <th>Branch Name</th>
                                         <th>Branch Email</th>
                                         <th>Branch Phone</th>
-                                        <th>Branch Phone2</th>
-                                        <th>Branch Address</th>
                                         <th>GST Number</th>
                                         <th>Status</th>
                                         <th>Action</th>
