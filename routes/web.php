@@ -120,6 +120,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     // Sales Return By customer
     Route::resource('customerReturns', 'CustomerReturnsController');
     Route::get('select2DropdownByType', 'AjaxCommonController@select2DropdownByType')->name('select2DropdownByType');
+    Route::get('showTransactions/{id}', 'CustomerReturnsController@showTransactions')->name('showTransactions');
 
     //RTO Registration
     Route::get('rtoRegistration/ajaxChangeContent', 'RtoRegistrationController@ajaxChangeContent')->name('ajaxChangeContent');

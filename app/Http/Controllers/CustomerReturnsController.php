@@ -227,7 +227,7 @@ class CustomerReturnsController extends Controller
      */
     public function show($id)
     {
-        $modals = Sale::where('id', $id)->with([
+        $modals = CustomerReturnSale::where('id', $id)->with([
             'state' => function ($s) {
                 $s->select('id', 'state_name');
             },
@@ -266,7 +266,27 @@ class CustomerReturnsController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.sales.show', $data)->render()
+            'data'       => view('admin.customer-return-sales.show', $data)->render()
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showTransactions($id)
+    {
+        $modals = CustomerReturnSalePaymentTransactions::where(['sale_id' => $id, 'status' => '1'])->get();
+        $data = array(
+            'transactions' => $modals
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.customer-return-sales.showTransactions', $data)->render()
         ]);
     }
 
@@ -278,63 +298,7 @@ class CustomerReturnsController extends Controller
      */
     public function edit($id)
     {
-        $auth = User::find(auth()->id());
-        $bpModel = Sale::where(['id' => $id])->first();
-        // return $bpModel;
-        if (!$bpModel) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist', ['id' => $id])
-            ]);
-        }
-
-        $purhcaseModel = Purchase::with([
-            'branch' => function ($model) {
-                $model->select('id', 'branch_name');
-            },
-            'dealer' => function ($model) {
-                $model->select('id', 'company_name');
-            },
-            'brand' => function ($model) {
-                $model->select('id', 'name');
-            },
-            'model' => function ($model) {
-                $model->select('id', 'model_name');
-            },
-            'color' => function ($model) {
-                $model->select('id', 'color_name');
-            },
-            'tyreBrand' => function ($model) {
-                $model->select('id', 'name');
-            },
-            'batteryBrand' => function ($model) {
-                $model->select('id', 'name');
-            }
-        ])->where('id', $bpModel['purchase_id'])->first();
-        $data = array(
-            'method' => 'PUT',
-            'action' => route('sales.update', ['sale' => $bpModel->id]),
-            'states' => self::_getStates(1),
-            'districts' => [],
-            'cities' => [],
-            'gst_rto_rates' => self::_getRtoGstRates(),
-            'salesmans' => self::_getSalesmanById($bpModel->salesman_id),
-            'purchaseModel' => $purhcaseModel
-        );
-        //Quotation data for prefield
-        if ($bpModel) {
-            $data['data'] = $bpModel;
-            if ($bpModel) {
-                $data['districts'] = self::_getDistricts($bpModel->customer_state);
-                $data['cities'] = self::_getCities($bpModel->customer_district);
-                $data['bank_financers'] = self::_getFinaceirs($bpModel->payment_type - 1);
-            }
-        }
-
-        $data['htmlData'] = (view('admin.sales.ajax.ajax-view')->with($data)->render());
-        $data['purchases'] = self::_getPurchasesById($bpModel->purchase_id);
-        return view('admin.sales.create', $data);
+        //TODO
     }
 
     /**
@@ -346,107 +310,7 @@ class CustomerReturnsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $bpModel = Sale::where(['id' => $id])->first();
-            if (!$bpModel) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist', ['id' => $id])
-                ]);
-            }
-
-            $postData = $request->only(
-                'purchase_id',
-                'quotation_id',
-                'salesman_id',
-                'customer_gender',
-                'customer_name',
-                'customer_relationship',
-                'customer_guardian_name',
-                'customer_address_line',
-                'customer_state',
-                'customer_district',
-                'customer_city',
-                'customer_zipcode',
-                'customer_mobile_number',
-                'customer_mobile_number_alt',
-                'customer_email_address',
-                'witness_person_name',
-                'witness_person_phone',
-                'payment_type',
-                'is_exchange_avaliable',
-                'hyp_financer',
-                'hyp_financer_description',
-                'ex_showroom_price',
-                'registration_amount',
-                'insurance_amount',
-                'hypothecation_amount',
-                'accessories_amount',
-                'other_charges',
-                'total_amount'
-            );
-            $formValidationArr = [
-                'purchase_id' => 'nullable|exists:purchases,id',
-                'quotation_id' => 'nullable|exists:quotations,id',
-                'salesman_id' => 'nullable|exists:salesmans,id',
-                'customer_gender' => 'nullable|in:1,2,3',
-                'customer_name' => 'nullable|string',
-                'customer_relationship' => 'nullable|in:1,2,3',
-                'customer_guardian_name' => 'nullable|string',
-                'customer_address_line' => 'nullable|string',
-                'customer_state' => 'nullable|exists:u_states,id',
-                'customer_district' => 'nullable|exists:u_districts,id',
-                'customer_city' => 'nullable|exists:u_cities,id',
-                'customer_zipcode' => 'nullable|numeric',
-                'customer_mobile_number' => 'nullable|numeric',
-                'customer_mobile_number_alt' => 'nullable|numeric|min:10',
-                'customer_email_address' => 'nullable|email',
-                'witness_person_name' => 'nullable',
-                'witness_person_phone' => 'nullable|numeric|min:10',
-                'payment_type' => 'nullable|in:1,2,3',
-                'is_exchange_avaliable' => 'nullable|in:Yes,No',
-                'hyp_financer' => 'nullable|exists:bank_financers,id',
-                'hyp_financer_description' => 'nullable',
-                'ex_showroom_price' => 'nullable|numeric',
-                'registration_amount' => 'nullable|numeric',
-                'insurance_amount' => 'nullable|numeric',
-                'hypothecation_amount' => 'nullable|numeric',
-                'accessories_amount' => 'nullable|numeric',
-                'other_charges' => 'nullable|numeric',
-                'total_amount' => 'nullable|numeric'
-            ];
-            if (isset($postData['payment_type']) && (in_array($postData['payment_type'], ['2', '3']))) {
-                $formValidationArr['hyp_financer'] = 'nullable|exists:bank_financers,id';
-            }
-            $validator = Validator::make($postData, $formValidationArr);
-
-            //If Validation failed
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
-                ]);
-            }
-            $postData['updated_by'] = Auth::user()->id;
-
-            // dd($postData);
-            $bpModel->update($postData);
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.update_success')
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $e->getMessage(),
-                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-            ]);
-        }
+        //TODO
     }
 
     /**
@@ -460,146 +324,15 @@ class CustomerReturnsController extends Controller
         //
     }
 
-    /**
-     * Function for generate Full Delivery Challan
-     * @param $id  Sales ID
-     * @return Generate PDF Invoice
-     */
-    public function deliveryChallanFull(Request $request, $id)
-    {
-        $id = base64_decode($id);
-        $branch_id = self::getCurrentUserBranch();
-        $where = array();
-        if ($branch_id > 0) {
-            $where = array('branch_id' => $branch_id);
-        }
-
-        $saleModel = Sale::where('id', $id)
-            ->where($where)
-            ->with([
-                'branch',
-                'purchase'
-            ])
-            ->first();
-        if (!$saleModel) {
-            return view('admin.accessDenied');
-        }
-
-        // return view('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
-        $pdf = Pdf::loadView('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
-        return $pdf->stream('invoice.pdf');
-    }
-
-
-    /**
-     * Function for generate On Road Delivery Challan
-     * @param $id  Sales ID
-     * @return Generate PDF Invoice
-     */
-    public function deliveryChallanOnRoad(Request $request, $id)
-    {
-        $id = base64_decode($id);
-        $branch_id = self::getCurrentUserBranch();
-        $where = array();
-        if ($branch_id > 0) {
-            $where = array('branch_id' => $branch_id);
-        }
-
-        $saleModel = Sale::where('id', $id)
-            ->where($where)
-            ->with([
-                'branch',
-                'purchase'
-            ])
-            ->first();
-        if (!$saleModel) {
-            return view('admin.accessDenied');
-        }
-
-        // return view('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
-        $pdf = Pdf::loadView('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
-        return $pdf->stream('invoice.pdf');
-    }
-
 
     public function getActions($row)
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('sales.show', ['sale' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
-        if ($row->status == 'open') {
-            $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
-        }
-
-        $action .= '<li><a href="' . route('deliveryChallanFull', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN FULL</a></li>';
-        $action .= '<li><a href="' . route('deliveryChallanOnRoad', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN ON ROAD</a></li>';
-
+        $action .= '<li><a href="' . route('customerReturns.show', ['customerReturn' => $row->id]) . '" class="ajaxModalPopup" data-title="VIEW DETAIL" data-modal_title="VIEW DETAIL" data-modal_size="modal-lg">VIEW DETAIL</a></li>';
+        $action .= '<li><a href="' . route('showTransactions', ['id' => $row->id]) . '" class="ajaxModalPopup" data-title="SHOW PAID TRANSACTIONS" data-modal_title="SHOW PAID TRANSACTIONS" data-modal_size="modal-lg">SHOW PAID TRANSACTIONS</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;
-    }
-
-    public function getModelsList($id)
-    {
-        $models = BikeModel::where('active_status', '1')->where(['brand_id' => $id])->get()->toArray();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.retrieve_success'),
-            'data'       => models_list($models)
-        ]);
-    }
-
-    public function ajaxLoadeView(Request $request)
-    {
-        $postData = $request->all();
-        $purhcaseModel = Purchase::with([
-            'branch' => function ($model) {
-                $model->select('id', 'branch_name');
-            },
-            'dealer' => function ($model) {
-                $model->select('id', 'company_name');
-            },
-            'brand' => function ($model) {
-                $model->select('id', 'name');
-            },
-            'model' => function ($model) {
-                $model->select('id', 'model_name');
-            },
-            'color' => function ($model) {
-                $model->select('id', 'color_name');
-            },
-            'tyreBrand' => function ($model) {
-                $model->select('id', 'name');
-            },
-            'batteryBrand' => function ($model) {
-                $model->select('id', 'name');
-            }
-        ])->where('id', $postData['id'])->first();
-        $data = array(
-            'states' => self::_getStates(1),
-            'districts' => [],
-            'cities' => [],
-            'gst_rto_rates' => self::_getRtoGstRates(),
-            'purchaseModel' => $purhcaseModel,
-            'action' => "add"
-        );
-        //Quotation data for prefield
-        if (!empty($postData['q'])) {
-            $quot = Quotation::select('*')->find(request('q'));
-            $data['data'] = $quot;
-            if ($quot) {
-                $data['districts'] = self::_getDistricts($purhcaseModel->customer_state);
-                $data['cities'] = self::_getCities($purhcaseModel->customer_district);
-                $data['bank_financers'] = self::_getFinaceirs(($quot->payment_type - 1));
-            }
-        }
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => 'Load Form',
-            'data'       => (view('admin.sales.ajax.ajax-view')->with($data)->render())
-        ]);
     }
 }
