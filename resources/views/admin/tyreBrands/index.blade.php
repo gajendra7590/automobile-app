@@ -22,9 +22,9 @@
                         <div class="box-header">
                             <h3 class="box-title">Tyre Brands</h3>
                             <div class="pull-right">
-                                <a href="{{ route('tyreBrands.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('tyreBrands.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="Add New Brand">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

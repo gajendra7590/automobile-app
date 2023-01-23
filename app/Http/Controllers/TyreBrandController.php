@@ -185,7 +185,7 @@ class TyreBrandController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('tyreBrands.edit', ['tyreBrand' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Tyre Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('tyreBrands.edit', ['tyreBrand' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Tyre Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

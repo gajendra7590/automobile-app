@@ -125,7 +125,7 @@ class GstRtoRateController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
             ]);
         }
         return response()->json([
@@ -178,7 +178,7 @@ class GstRtoRateController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
@@ -215,7 +215,7 @@ class GstRtoRateController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('gst-rto-rates.edit', ['gst_rto_rate' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update GST RTO Rate"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('gst-rto-rates.edit', ['gst_rto_rate' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update GST RTO Rate"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('gst-rates.destroy', ['gst-rate' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete State"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

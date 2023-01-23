@@ -22,8 +22,8 @@
                         <div class="box-header">
                             <h3 class="box-title"> {{ isset($title) && $title ? $title : '' }} List Of All Purchases</h3>
                             <div class="pull-right">
-                                <a href="{{ route('purchases.create') }}" class="btn btn-sm btn-success">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Purchase
+                                <a href="{{ route('purchases.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD PURCHASE
                                 </a>
                             </div>
                         </div>

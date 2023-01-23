@@ -21,9 +21,9 @@
                         <div class="box-header">
                             <h3 class="box-title"> Branches List</h3>
                             <div class="pull-right">
-                                <a href="{{ route('branches.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('branches.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="Add New Branch" data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

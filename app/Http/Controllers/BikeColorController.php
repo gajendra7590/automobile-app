@@ -138,7 +138,7 @@ class BikeColorController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
             ]);
         }
         return response()->json([
@@ -174,7 +174,7 @@ class BikeColorController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
             $validator = Validator::make($postData, [
@@ -228,7 +228,7 @@ class BikeColorController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
@@ -254,7 +254,7 @@ class BikeColorController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Model Color" data-modal_size="modal-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Model Color" data-modal_size="modal-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('colors.destroy', ['color' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('colors.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

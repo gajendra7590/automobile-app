@@ -133,7 +133,7 @@ class DistrictController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
             ]);
         }
         return response()->json([
@@ -170,7 +170,7 @@ class DistrictController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
             $validator = Validator::make($postData, [
@@ -224,7 +224,7 @@ class DistrictController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
@@ -259,7 +259,7 @@ class DistrictController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('districts.edit', ['district' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update District"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('districts.edit', ['district' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update District"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('districts.destroy', ['district' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete District"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

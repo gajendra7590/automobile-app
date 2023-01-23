@@ -24,9 +24,9 @@
                                 <h3 class="box-title">Documents List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('documentUploads.create') }}" class="btn btn-sm btn-success"
+                                <a href="{{ route('documentUploads.create') }}" class="btn btn-sm btn-primary"
                                     data-modal_title="Upload New Document" data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> UPLOAD
                                 </a>
                             </div>
                         </div>

@@ -108,7 +108,7 @@ class BankFinancerController extends Controller
                 ]);
             }
 
-            BankFinancer::create($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'financer_type','active_status']));
+            BankFinancer::create($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'financer_type', 'active_status']));
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -204,7 +204,7 @@ class BankFinancerController extends Controller
             if (!$bankFinancer) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.bank_financer_not_found')]);
             }
-            $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status','financer_type']));
+            $bankFinancer->update($request->only(['bank_name', 'bank_branch_code', 'bank_contact_number', 'bank_email_address', 'bank_full_address', 'bank_manager_name', 'bank_manager_contact', 'bank_manager_email', 'bank_financer_name', 'bank_financer_contact', 'bank_financer_email', 'bank_financer_address', 'bank_financer_aadhar_card', 'bank_financer_pan_card', 'more_details', 'active_status', 'financer_type']));
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
         } catch (\Exception $e) {
@@ -249,7 +249,7 @@ class BankFinancerController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('bankFinancers.edit', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('bankFinancers.edit', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('bankFinancers.destroy', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('bankFinancers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

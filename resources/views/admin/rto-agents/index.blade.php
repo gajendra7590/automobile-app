@@ -24,9 +24,9 @@
                                 <h3 class="box-title">RTO Agents List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('rto-agents.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('rto-agents.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="Add New RTO Agent">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

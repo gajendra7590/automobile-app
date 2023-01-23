@@ -23,8 +23,8 @@
                             <h3 class="box-title">All Customer Returns</h3>
                             <div class="pull-right">
                                 <a href="{{ route('customerReturns.create') }}" data-modal_title="Create New Return"
-                                    data-modal_size="modal-lg" class="btn btn-sm btn-success ajaxModalPopup">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Return
+                                    data-modal_size="modal-lg" class="btn btn-sm btn-primary ajaxModalPopup">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

@@ -23,9 +23,9 @@
                             <h3 class="box-title"> All Registrations</h3>
                             <div class="pull-right">
                                 <a href="{{ route('rtoRegistration.create') }}"
-                                    class="btn btn-sm btn-success ajaxModalPopup" data-modal_title="Create New Registration"
+                                    class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Create New Registration"
                                     data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Registration
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

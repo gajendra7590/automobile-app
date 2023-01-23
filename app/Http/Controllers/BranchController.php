@@ -264,7 +264,7 @@ class BranchController extends Controller
     {
         //data-modal_size="modal-lg"
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('branches.edit', ['branch' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Branch" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('branches.edit', ['branch' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Branch" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$ .= '<a href="' . route('branches.destroy', ['branch' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('branches.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

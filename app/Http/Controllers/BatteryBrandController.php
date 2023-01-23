@@ -184,7 +184,7 @@ class BatteryBrandController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('batteryBrands.edit', ['batteryBrand' => $id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Battery Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('batteryBrands.edit', ['batteryBrand' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Battery Brand"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

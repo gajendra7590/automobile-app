@@ -24,9 +24,9 @@
                                 <h3 class="box-title">GST RTO Rates List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('gst-rto-rates.create') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                <a href="{{ route('gst-rto-rates.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="Add New GST RTO Rates">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>

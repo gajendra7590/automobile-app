@@ -24,8 +24,8 @@
                                 <h3 class="box-title">Quotations List</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('quotations.create') }}" class="btn btn-sm btn-success">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Quotation
+                                <a href="{{ route('quotations.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE QUOTATION
                                 </a>
                             </div>
                         </div>

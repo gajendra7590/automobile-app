@@ -187,7 +187,7 @@ class RoleController extends Controller
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist',['id' => $id])
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
                 ]);
             }
 
@@ -224,7 +224,7 @@ class RoleController extends Controller
     {
         $action = '<div class="action-btn-container">';
         if ($row->id != 1 || $row->name != 'admin') {
-            $action .= '<a href="' . route('roles.edit', ['role' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update Role"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('roles.edit', ['role' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Role"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         }
 
         if ($row->is_default == '0') {

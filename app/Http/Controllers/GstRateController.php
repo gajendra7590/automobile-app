@@ -61,44 +61,44 @@ class GstRateController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             DB::beginTransaction();
-        $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
-        $validator = Validator::make($postData, [
-            'gst_rate'           => "required|numeric",
-            'cgst_rate'          => "required|numeric",
-            'sgst_rate'          => "required|numeric",
-            'igst_rate'          => "nullable|numeric",
-            'active_status'      => 'required|in:0,1'
-        ]);
+            $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
+            $validator = Validator::make($postData, [
+                'gst_rate'           => "required|numeric",
+                'cgst_rate'          => "required|numeric",
+                'sgst_rate'          => "required|numeric",
+                'igst_rate'          => "nullable|numeric",
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //Create New Role
+            GstRates::create($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.create_success')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        //Create New Role
-        GstRates::create($postData);
-        DB::commit();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.create_success')
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'status'     => false,
-            'statusCode' => 419,
-            'message'    => $e->getMessage(),
-            'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-        ]);
-    }
     }
 
     /**
@@ -125,7 +125,7 @@ class GstRateController extends Controller
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
+                'message'    => trans('messages.id_not_exist', ['id' => $id])
             ]);
         }
         return response()->json([
@@ -152,53 +152,53 @@ class GstRateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
+        try {
             DB::beginTransaction();
-        $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
-        $validator = Validator::make($postData, [
-            'gst_rate'           => "required|numeric",
-            'cgst_rate'          => "required|numeric",
-            'sgst_rate'          => "required|numeric",
-            'igst_rate'          => "nullable|numeric",
-            'active_status'      => 'required|in:0,1'
-        ]);
+            $postData = $request->only('gst_rate', 'cgst_rate', 'sgst_rate', 'igst_rate', 'active_status');
+            $validator = Validator::make($postData, [
+                'gst_rate'           => "required|numeric",
+                'cgst_rate'          => "required|numeric",
+                'sgst_rate'          => "required|numeric",
+                'igst_rate'          => "nullable|numeric",
+                'active_status'      => 'required|in:0,1'
+            ]);
 
-        //If Validation failed
-        if ($validator->fails()) {
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $gstRatesModel = GstRates::find($id);
+            if (!$gstRatesModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
+                ]);
+            }
+
+            //Create New Role
+            $gstRatesModel->update($postData);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.update_success')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
-                'message'    => $validator->errors()->first(),
-                'errors'     => $validator->errors()
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
             ]);
         }
-
-        $gstRatesModel = GstRates::find($id);
-        if (!$gstRatesModel) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist',['id' => $id])
-            ]);
-        }
-
-        //Create New Role
-        $gstRatesModel->update($postData);
-        DB::commit();
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.update_success')
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'status'     => false,
-            'statusCode' => 419,
-            'message'    => $e->getMessage(),
-            'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-        ]);
-    }
     }
 
     /**
@@ -215,7 +215,7 @@ class GstRateController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('gst-rates.edit', ['gst_rate' => $row->id]) . '" class="btn btn-sm btn-warning ajaxModalPopup" data-modal_title="Update GST Rate"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('gst-rates.edit', ['gst_rate' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update GST Rate"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('gst-rates.destroy', ['gst-rate' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete State"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

@@ -21,10 +21,10 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title"> {{ isset($title) && $title ? $title : '' }} List Of All Sales</h3>
+                            <h3 class="box-title"> List Of All Sales</h3>
                             <div class="pull-right">
-                                <a href="{{ route('sales.create') }}" class="btn btn-sm btn-success">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Sale
+                                <a href="{{ route('sales.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
                         </div>
