@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-xs-4 cust_col">
                                             <select class="form-control ajaxDtFilter" name="status" data-col_index="8">
-                                                <option value="">---STATUS---</option>
+                                                <option value="">---SELECT STATUS---</option>
                                                 <option value="open">OPEN</option>
                                                 <option value="close">CLOSED</option>
                                             </select>

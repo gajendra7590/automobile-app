@@ -30,7 +30,7 @@ $(document).ready(function () {
     });
 
     function mainDataTable() {
-        const tableObj = $("#ajaxDataTable").DataTable({
+        tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
             serverSide: true,
             cache: true,
@@ -56,10 +56,6 @@ $(document).ready(function () {
                     name: "branch_name",
                 },
                 {
-                    data: "dealer_name",
-                    name: "dealer_name",
-                },
-                {
                     data: "customer_name",
                     name: "customer_name",
                 },
@@ -80,6 +76,10 @@ $(document).ready(function () {
                     name: "status",
                 },
                 {
+                    data: "broker_status",
+                    name: "broker_status",
+                },
+                {
                     data: "action",
                     name: "action",
                 },
@@ -87,7 +87,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1, 4],
+                    targets: [-1, -2, -3],
                 },
                 {
                     searchable: false,

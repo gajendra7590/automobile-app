@@ -1,6 +1,6 @@
 $(document).ready(function () {
     function mainDataTable() {
-        const tableObj = $("#ajaxDataTable").DataTable({
+        tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
             serverSide: true,
             cache: true,
@@ -22,6 +22,10 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "branch_name",
+                    name: "branch_name",
+                },
+                {
                     data: "title",
                     name: "title",
                 },
@@ -30,20 +34,12 @@ $(document).ready(function () {
                     name: "sales_total_amount",
                 },
                 {
-                    data: "deposite_amount",
-                    name: "deposite_amount",
-                },
-                {
-                    data: "due_amount",
-                    name: "due_amount",
+                    data: "created_at",
+                    name: "created_at",
                 },
                 {
                     data: "status",
                     name: "status",
-                },
-                {
-                    data: "created_at",
-                    name: "created_at",
                 },
                 {
                     data: "action",
@@ -53,7 +49,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1],
+                    targets: [-1, -2],
                 },
                 {
                     searchable: false,

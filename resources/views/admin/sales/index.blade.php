@@ -27,6 +27,43 @@
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
+                            <div class="pull-right custom-fitler-container">
+                                <div class="filter-options pull-left">
+                                    <div class="row">
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="branch_id" data-col_index="1">
+                                                <option value="">---BRANCH NAME---</option>
+                                                @if (isset($branches))
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->branch_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="transfer_status"
+                                                data-col_index="6">
+                                                <option value="">---DUE STATUS---</option>
+                                                <option value="open">OPEN</option>
+                                                <option value="close">CLOSE</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="status" data-col_index="7">
+                                                <option value="">---BROKER---</option>
+                                                <option value="1">YES</option>
+                                                <option value="0">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-primary" id="customFitterAction">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -36,12 +73,12 @@
                                     <tr>
                                         <th width="5%">#</th>
                                         <th width="12%">BRANCH NAME</th>
-                                        <th width="12%">DEALER NAME</th>
                                         <th width="12%">CUSTOMER NAME</th>
                                         <th width="25%">BIKE DETAIL</th>
                                         <th width="12%">TOTAL AMOUNT</th>
                                         <th width="10%">SALE DATE</th>
                                         <th width="5%">STATUS</th>
+                                        <th width="5%">BROKER</th>
                                         <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>

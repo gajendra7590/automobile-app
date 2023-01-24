@@ -73,9 +73,10 @@ class QuotationController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->whereHas('branch', function ($q) use ($search_string) {
-                            $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                        })
+                        $query->where('id', $search_string)
+                            ->orWhereHas('branch', function ($q) use ($search_string) {
+                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                            })
                             ->orWhereHas('brand', function ($q) use ($search_string) {
                                 $q->where('name', 'LIKE', '%' . $search_string . '%');
                             })

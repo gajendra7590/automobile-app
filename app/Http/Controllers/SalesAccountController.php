@@ -28,11 +28,15 @@ class SalesAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
-            return view('admin.sales-accounts.index');
+            $data = array(
+                'branches' => self::getAllBranchesWithInActive()
+            );
+            return view('admin.sales-accounts.index', $data);
         } else {
+            $postData = $request->all();
             $data = SalePaymentAccounts::branchWise()
                 ->with([
                     'sale' => function ($model) {
@@ -47,8 +51,57 @@ class SalesAccountController extends Controller
                             ]);
                     }
                 ])->select('id', 'account_uuid', 'sale_id', 'sales_total_amount', 'deposite_amount', 'due_amount', 'due_payment_source', 'status', 'created_at');
+
+
+            //Filter By Branch
+            if (isset($postData['columns'][1]['search']['value']) && ($postData['columns'][1]['search']['value'] != '')) {
+                $data->whereHas('sale', function ($query) use ($postData) {
+                    $query->where('branch_id', $postData['columns'][1]['search']['value']);
+                });
+            }
+
+            //Filter By Status
+            if (isset($postData['columns'][5]['search']['value']) && ($postData['columns'][5]['search']['value'] != '')) {
+                $data->where('status', $postData['columns'][5]['search']['value']);
+            }
+
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $query->where('id', $search_string)
+                            ->orWhere('created_at', $search_string)
+                            ->orWhereHas('sale.branch', function ($q) use ($search_string) {
+                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale', function ($q) use ($search_string) {
+                                $q->where('customer_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase.brand', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase.model', function ($q) use ($search_string) {
+                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase.color', function ($q) use ($search_string) {
+                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase', function ($q) use ($search_string) {
+                                $q->where('sku', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase', function ($q) use ($search_string) {
+                                $q->where('vin_number', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('sale.purchase', function ($q) use ($search_string) {
+                                $q->where('hsn_number', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orwhere('sales_total_amount', $search_string);
+                    }
+                })
                 ->addIndexColumn()
+                ->addColumn('branch_name', function ($row) {
+                    return isset($row->sale->branch) ? $row->sale->branch->branch_name : '';
+                })
                 ->addColumn('title', function ($row) {
 
                     $title = '';

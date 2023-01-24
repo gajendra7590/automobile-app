@@ -29,6 +29,36 @@
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
+                            <div class="pull-right custom-fitler-container">
+                                <div class="filter-options pull-left">
+                                    <div class="row">
+                                        <div class="col-xs-6 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="branch_id" data-col_index="1">
+                                                <option value="">---BRANCH NAME---</option>
+                                                @if (isset($branches))
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->branch_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-6 cust_col">
+                                            <select class="form-control ajaxDtFilter" name="transfer_status"
+                                                data-col_index="5">
+                                                <option value="">---ACCOUNT STATUS---</option>
+                                                <option value="0">DUE/OPEN</option>
+                                                <option value="1">CLOSED</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-primary" id="customFitterAction">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -37,12 +67,11 @@
                                 <thead>
                                     <tr>
                                         <th>#ID</th>
+                                        <th>BRANCH NAME</th>
                                         <th>ACCOUNT NAME</th>
                                         <th>SALES PRICE</th>
-                                        <th>DOWN PAYMENT</th>
-                                        <th>TOTAL DUE</th>
-                                        <th>STATUS</th>
                                         <th>CREATED DATE</th>
+                                        <th width="6%">STATUS</th>
                                         <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>

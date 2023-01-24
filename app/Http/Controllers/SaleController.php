@@ -24,12 +24,16 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!request()->ajax()) {
-            return view('admin.sales.index');
+            $data = array(
+                'branches' => self::getAllBranchesWithInActive()
+            );
+            return view('admin.sales.index', $data);
         } else {
 
+            $postData = $request->all();
             $data = Sale::select('*')
                 ->branchWise()
                 ->select('id', 'branch_id', 'purchase_id', 'customer_name', 'total_amount', 'created_at', 'status', 'sp_account_id')
@@ -40,8 +44,46 @@ class SaleController extends Controller
                     },
                 ]);
 
+            //Fitler By Branch
+            if (isset($postData['columns'][1]['search']['value']) && (!empty($postData['columns'][1]['search']['value']))) {
+                $data->where('branch_id', $postData['columns'][1]['search']['value']);
+            }
+
+            //Fitler By Due Status
+            if (isset($postData['columns'][6]['search']['value']) && (!empty($postData['columns'][6]['search']['value']))) {
+                $data->where('status', $postData['columns'][6]['search']['value']);
+            }
+
+            //Fitler By Broker
+            if (isset($postData['columns'][7]['search']['value']) && ($postData['columns'][7]['search']['value'] != '')) {
+                $data->whereHas('purchase', function ($query) use ($postData) {
+                    $query->where('transfer_status', $postData['columns'][7]['search']['value']);
+                });
+            }
+
             // dd($data->limit(10)->get()->toArray());
+            $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
             return DataTables::of($data)
+                ->filter(function ($query) use ($search_string) {
+                    if ($search_string != "") {
+                        $query->where('id', $search_string)
+                            ->orWhere('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('purchase.branch', function ($q) use ($search_string) {
+                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('purchase.brand', function ($q) use ($search_string) {
+                                $q->where('name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('purchase.model', function ($q) use ($search_string) {
+                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orWhereHas('purchase.color', function ($q) use ($search_string) {
+                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                            })
+                            ->orwhereDate('created_at', $search_string)
+                            ->orwhere('total_amount', 'LIKE', '%' . $search_string . '%');
+                    }
+                })
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
@@ -53,11 +95,11 @@ class SaleController extends Controller
                         return 'N/A';
                     }
                 })
-                ->addColumn('dealer_name', function ($row) {
-                    if (isset($row->purchase->dealer)) {
-                        return $row->purchase->dealer->company_name;
+                ->addColumn('broker_status', function ($row) {
+                    if (isset($row->purchase->transfer_status) && ($row->purchase->transfer_status == '1')) {
+                        return convertBadgesStr(1);
                     } else {
-                        return 'N/A';
+                        return convertBadgesStr(0);
                     }
                 })
                 ->addColumn('customer_name', function ($row) {
@@ -92,7 +134,7 @@ class SaleController extends Controller
                     }
                 })
                 ->rawColumns([
-                    'action', 'branch_name', 'dealer_name', 'customer_name',
+                    'action', 'branch_name', 'broker_status', 'customer_name',
                     'bike_detail', 'total_amount', 'created_at', 'status'
                 ])
                 ->make(true);
