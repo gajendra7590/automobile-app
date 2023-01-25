@@ -15,6 +15,7 @@ class BikeModel extends Model
         'brand_id',
         'model_name',
         'model_code',
+        'variant_code',
         'active_status'
     ];
 

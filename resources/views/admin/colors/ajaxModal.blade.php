@@ -35,14 +35,19 @@
                 <input name="colors[{{ $rand }}][color_code]" type="text" class="form-control" value=""
                     placeholder="Color Code..">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+                <label>SKU Code</label>
+                <input name="colors[{{ $rand }}][sku_code]" type="text" class="form-control" value=""
+                    placeholder="SKU Code..">
+            </div>
+            <div class="form-group col-md-2">
                 <label>Status : </label>
                 <select class="form-control" name="colors[{{ $rand }}][active_status]">
                     <option value="1" selected="selected">Active</option>
                     <option value="0">In Active </option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <a href="#" class="btn btn-md btn-success addMoreInFormGroup addAjaxElement"
                     data-container_el="#color_container"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
             </div>

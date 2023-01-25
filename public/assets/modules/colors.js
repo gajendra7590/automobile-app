@@ -26,6 +26,10 @@ $(document).ready(function () {
                     name: "color_name",
                 },
                 {
+                    data: "sku_code",
+                    name: "sku_code",
+                },
+                {
                     data: "color_code",
                     name: "color_code",
                 },
@@ -75,7 +79,13 @@ $(document).ready(function () {
             randCode +
             `][color_code]" type="text" class="form-control" value="" placeholder="Color Code..">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+                <label>SKU Code</label>
+                <input name="colors[` +
+            randCode +
+            `][sku_code]" type="text" class="form-control" value="" placeholder="SKU Code..">
+            </div>
+            <div class="form-group col-md-2">
                 <label>Status : </label>
                 <select class="form-control" name="colors[` +
             randCode +
@@ -84,7 +94,7 @@ $(document).ready(function () {
                     <option value="0">In Active</option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <a href="#" class="btn btn-md btn-danger removeMoreInFormGroup removeAjaxElement">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </a>

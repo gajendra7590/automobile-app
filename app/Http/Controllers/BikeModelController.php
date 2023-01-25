@@ -76,11 +76,13 @@ class BikeModelController extends Controller
             $validator = Validator::make($postData, [
                 'brand_id'              => 'required',
                 'models.*.model_name'     => "required",
+                'models.*.variant_code'     => "required",
                 'models.*.model_code'     => 'nullable',
                 'models.*.active_status'  => 'required|in:0,1'
             ], [
-                'models.*.model_name.required' => 'The Color Name field is required.',
-                'models.*.active_status.required' => 'The Color status field is required.',
+                'models.*.model_name.required' => 'The Model Name field is required.',
+                'models.*.variant_code.required' => 'The Model Name field is required.',
+                'models.*.active_status.required' => 'The Model status field is required.',
                 'brand_id' => 'The brand is not selected.'
             ]);
 
@@ -98,6 +100,7 @@ class BikeModelController extends Controller
             if (count($postData['models']) > 0) {
                 foreach ($postData['models'] as $k => $modelObj) {
                     $modelObj['brand_id'] = $postData['brand_id'];
+                    $modelObj['variant_code'] = strtoupper($modelObj['variant_code']);
                     BikeModel::create($modelObj);
                 }
             }
@@ -187,6 +190,7 @@ class BikeModelController extends Controller
             $validator = Validator::make($postData, [
                 'brand_id'      => "required|exists:bike_brands,id",
                 'model_name'    => "required",
+                'variant_code'    => "required",
                 'model_code'    => "nullable",
                 'active_status' => 'required|in:0,1'
             ]);
@@ -205,6 +209,7 @@ class BikeModelController extends Controller
             BikeModel::where(['id' => $id])->update([
                 'brand_id'      => $postData['brand_id'],
                 'model_name'    => $postData['model_name'],
+                'variant_code'  => strtoupper($postData['variant_code']),
                 'model_code'    => $postData['model_code'],
                 'active_status' => $postData['active_status']
             ]);
@@ -266,7 +271,7 @@ class BikeModelController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('models.edit', ['model' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Model"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('models.edit', ['model' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Update Model"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('models.destroy', ['model' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete Model"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

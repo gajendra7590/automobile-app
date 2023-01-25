@@ -15,6 +15,7 @@ class BikeColor extends Model
         'bike_model',
         'color_name',
         'color_code',
+        'sku_code',
         'active_status'
     ];
 

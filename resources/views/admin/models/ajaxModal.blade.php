@@ -30,10 +30,15 @@
                 <input name="models[{{ $rand }}][model_name]" type="text" class="form-control" value=""
                     placeholder="Model Name..">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label>Model Code</label>
                 <input name="models[{{ $rand }}][model_code]" type="text" class="form-control" value=""
                     placeholder="Model Code..">
+            </div>
+            <div class="form-group col-md-2">
+                <label>Variant Code</label>
+                <input name="models[{{ $rand }}][variant_code]" type="text" class="form-control"
+                    value="" placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-2">
                 <label>Status : </label>
@@ -42,7 +47,7 @@
                     <option value="0"> In Active </option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <a href="#" class="btn btn-md btn-success addMoreInFormGroup addAjaxElement"
                     data-container_el="#model_container"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
             </div>

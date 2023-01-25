@@ -31,6 +31,11 @@
                 placeholder="Please enter model code..">
         </div>
         <div class="form-group">
+            <label>SKU Code</label>
+            <input name="sku_code" type="text" class="form-control"
+                value="{{ isset($data['sku_code']) ? $data['sku_code'] : '' }}" placeholder="Please enter sku code..">
+        </div>
+        <div class="form-group">
             <label>Status : </label>
             <select class="form-control" name="active_status">
                 <option value="1"

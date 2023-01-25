@@ -66,14 +66,16 @@ class BikeColorController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model', 'colors');
+            $postData = $request->only('color_name', 'bike_model', 'colors');
             $validator = Validator::make($postData, [
                 'bike_model' => 'required',
                 'colors.*.color_name' => "required",
+                'colors.*.sku_code' => 'required',
                 'colors.*.color_code' => 'nullable',
                 'colors.*.active_status'      => 'required|in:0,1'
             ], [
                 'colors.*.color_name.required' => 'The Color Name field is required.',
+                'colors.*.sku_code.required' => 'The Color Name field is required.',
                 'colors.*.active_status.required' => 'The Color status field is required.'
             ]);
 
@@ -91,6 +93,7 @@ class BikeColorController extends Controller
             if (count($postData['colors']) > 0) {
                 foreach ($postData['colors'] as $k => $colorObj) {
                     $colorObj['bike_model'] = $postData['bike_model'];
+                    $colorObj['sku_code'] = strtoupper($colorObj['sku_code']);
                     BikeColor::create($colorObj);
                 }
             }
@@ -168,7 +171,7 @@ class BikeColorController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('color_name', 'color_code', 'active_status', 'bike_model');
+            $postData = $request->only('color_name', 'color_code', 'sku_code', 'active_status', 'bike_model');
             $colorModel = BikeColor::find($id);
             if (!$colorModel) {
                 return response()->json([
@@ -179,9 +182,10 @@ class BikeColorController extends Controller
             }
             $validator = Validator::make($postData, [
                 'bike_model'      => 'required',
-                'color_name' => "required|unique:bike_colors,color_name," . $id,
-                'color_code' => "nullable",
-                'active_status'      => 'required|in:0,1'
+                'color_name'      => "required|unique:bike_colors,color_name," . $id,
+                'sku_code'        => "required|unique:bike_colors,sku_code," . $id,
+                'color_code'      => "nullable",
+                'active_status'   => 'required|in:0,1'
             ]);
 
             //If Validation failed
@@ -195,6 +199,7 @@ class BikeColorController extends Controller
             }
 
             //Create New Role
+            $postData['sku_code'] = strtoupper($postData['sku_code']);
             BikeColor::where(['id' => $id])->update($postData);
             DB::commit();
             return response()->json([
@@ -254,7 +259,7 @@ class BikeColorController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Model Color" data-modal_size="modal-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('colors.edit', ['color' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Model Color" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('colors.destroy', ['color' => $row->id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $row->id . '" data-redirect="' . route('colors.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

@@ -38,6 +38,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Color Name</th>
+                                        <th>SKU Code</th>
                                         <th>Color Code</th>
                                         <th>Model Name</th>
                                         <th>Status</th>

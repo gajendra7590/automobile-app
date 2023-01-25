@@ -26,6 +26,10 @@ $(document).ready(function () {
                     name: "model_name",
                 },
                 {
+                    data: "variant_code",
+                    name: "variant_code",
+                },
+                {
                     data: "model_code",
                     name: "model_code",
                 },
@@ -70,12 +74,19 @@ $(document).ready(function () {
             `][model_name]" type="text" class="form-control" value=""
                     placeholder="Model Name..">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label>Model Code</label>
                 <input name="models[` +
             randCode +
             `][model_code]" type="text" class="form-control" value=""
                     placeholder="Model Code..">
+            </div>
+            <div class="form-group col-md-2">
+                <label>Variant Code</label>
+                <input name="models[` +
+            randCode +
+            `][variant_code]" type="text" class="form-control" value=""
+                    placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-2">
                 <label>Status : </label>
@@ -86,7 +97,7 @@ $(document).ready(function () {
                     <option value="0"> In Active </option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <a href="#" class="btn btn-md btn-danger removeMoreInFormGroup removeAjaxElement">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </a>
