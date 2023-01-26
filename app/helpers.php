@@ -136,7 +136,7 @@ if (!function_exists('emiTerms')) {
         ];
 
         if ($id > 0) {
-            return $data[$id];
+            return isset($data[$id]) ? $data[$id] : '';
         }
         return $data;
     }

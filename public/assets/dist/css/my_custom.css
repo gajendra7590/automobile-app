@@ -131,5 +131,12 @@
     padding-left: 0px !important;
  }
 
+ .dumyContent {
+     min-height: 200px;
+     text-align: center;
+     margin-top: 59px;
+     color: #3c8dbc;
+     font-size: 18px;
+ }
 
 

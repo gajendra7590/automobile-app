@@ -117,6 +117,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
     Route::get('printPayemntReciept/{id}', 'SalesAccountController@printPayemntReciept')->name('printPayemntReciept');
 
+    //Payment Tabs
+    Route::get('getPaymentTabs/{id}', 'SalesAccountController@getPaymentTabs')->name('getPaymentTabs');
+
     // Sales Return By customer
     Route::resource('customerReturns', 'CustomerReturnsController');
     Route::get('select2DropdownByType', 'AjaxCommonController@select2DropdownByType')->name('select2DropdownByType');

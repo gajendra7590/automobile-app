@@ -6,6 +6,7 @@ use App\Models\BikeModel;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Quotation;
+use App\Models\SalePaymentAccounts;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -228,8 +229,8 @@ class SaleController extends Controller
                 'customer_district' => 'required|exists:u_districts,id',
                 'customer_city' => 'required|exists:u_cities,id',
                 'customer_zipcode' => 'required|numeric',
-                'customer_mobile_number' => 'required|numeric',
-                'customer_mobile_number_alt' => 'nullable|required|numeric',
+                'customer_mobile_number' => 'required|numeric|min:10',
+                'customer_mobile_number_alt' => 'nullable|numeric|min:10',
                 'customer_email_address' => 'nullable|email',
                 'witness_person_name' => 'required',
                 'witness_person_phone' => 'required|numeric|min:10',
@@ -271,6 +272,10 @@ class SaleController extends Controller
             }
             //Change status of purchase - Mark as sold
             Purchase::where(['id' => $postData['purchase_id']])->update(['status' => '2']);
+
+            //Create Sales Account
+            SalePaymentAccounts::create(['sale_id' => $createModel->id, 'sales_total_amount' => $postData['total_amount']]);
+
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
@@ -467,7 +472,7 @@ class SaleController extends Controller
                 'customer_district' => 'nullable|exists:u_districts,id',
                 'customer_city' => 'nullable|exists:u_cities,id',
                 'customer_zipcode' => 'nullable|numeric',
-                'customer_mobile_number' => 'nullable|numeric',
+                'customer_mobile_number' => 'nullable|numeric|min:10',
                 'customer_mobile_number_alt' => 'nullable|numeric|min:10',
                 'customer_email_address' => 'nullable|email',
                 'witness_person_name' => 'nullable',

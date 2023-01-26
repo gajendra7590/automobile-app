@@ -12,33 +12,23 @@ class SalePaymentTransactions extends Model
     protected $table = 'sale_payment_transactions';
 
     protected $fillable = [
-        'transaction_uuid',
         'sale_id',
         'sale_payment_account_id',
-        'transaction_title',
-        'amount_paid',
-        'amount_paid_source',
-        'amount_paid_source_note',
-        'amount_paid_date',
-        'payment_collected_by',
-        'sale_payment_installment_id',
-        'pay_due',
-        'status'
+        'transaction_for',
+        'transaction_name',
+        'transaction_amount',
+        'transaction_paid_source',
+        'transaction_paid_source_note',
+        'transaction_paid_date',
+        'trans_type',
+        'status',
+        'reference_id'
     ];
 
 
     protected  $hidden = [];
 
     protected $casts = [];
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->transaction_uuid = random_uuid('tran');
-        });
-    }
 
     /**
      * MApping With Account
