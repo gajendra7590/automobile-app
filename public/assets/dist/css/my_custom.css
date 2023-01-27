@@ -139,4 +139,11 @@
      font-size: 18px;
  }
 
+ p.account_status_note {
+     margin-top: 12px;
+     font-size: 16px;
+     color: #2c5fc6;
+     margin-left: 2px;
+ }
+
 

@@ -2,8 +2,28 @@
      <div class="box-header with-border">
          <h3 class="box-title pull-left">CASH PAYMENT HISTORY</h3>
          <div class="pull-right">
-             <a href="" class="btn btn-sm btn-primary">CREATE BANK FINANCE</a>
-             <a href="" class="btn btn-sm btn-primary">CREATE PERSONAL FINANCE</a>
+             @if (isset($salesAccountData) &&
+                     !in_array($salesAccountData->due_payment_source, [2, 3]) &&
+                     $salesAccountData->status == '0')
+                 <a href="{{ route('salesBankFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
+                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="SETUP BANK FINANCE">
+                     CREATE BANK FINANCE
+                 </a>
+                 <a href="{{ route('salesPersonalFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
+                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="SETUP PERSONAL FINANCE">
+                     CREATE PERSONAL FINANCE
+                 </a>
+             @endif
+
+             @if (isset($salesAccountData) && $salesAccountData->cash_status == '0')
+                 <a href="{{ route('salesCash.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
+                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="CREATE NEW PAYMENT">
+                     CREATE NEW PAYMENT
+                 </a>
+             @endif
          </div>
      </div>
      <!-- /.box-header -->
@@ -19,7 +39,7 @@
                      <th>DUE DATE</th>
                      <th>PAID SOURCE</th>
                      <th width="10%">PAID DATE</th>
-                     <th>TYPE</th>
+                     {{-- <th>TYPE</th> --}}
                      <th>STATUS</th>
                  </tr>
              </thead>
@@ -38,7 +58,7 @@
                                  <td>{{ isset($cashPayment['paid_source']) ? $cashPayment['paid_source'] : '--' }}</td>
                                  <td>{{ isset($cashPayment['paid_date']) && !empty($cashPayment['paid_date']) ? date('d/m/Y', strtotime($cashPayment['paid_date'])) : '--' }}
                                  </td>
-                                 <td>
+                                 {{-- <td>
                                      @if ($cashPayment['trans_type'] == '1')
                                          <span title="Payment Not Done" class="label label-success"
                                              style="padding: 5px 8px;">
@@ -49,7 +69,7 @@
                                              DEBIT
                                          </span>
                                      @endif
-                                 </td>
+                                 </td> --}}
                                  <td>
                                      @if ($cashPayment['status'] == '0')
                                          <span title="Payment Not Done" class="label label-danger"
@@ -64,19 +84,29 @@
                                  </td>
                              </tr>
                          @endforeach
-                         <tr>
-                             <td colspan="10">
-                                 <b>Important Note : </b> Your next installment payment option will
-                                 visible if latest one will be mark as paid.
-                             </td>
-                         </tr>
                      @endisset
-                 @else
-                     <tr style="font-size: 17px; color: red;text-align: center;">
-                         <td colspan="10">No data available in table.</td>
-                     </tr>
-                 @endif
+             <tfoot>
+                 <tr>
+                     <td>TOTAL CREDIT</td>
+                     <td>{!! convertBadgesPrice(isset($credit_amount) ? $credit_amount : 0.0, 'primary') !!}</td>
+                     <td>TOTAL DEBIT</td>
+                     <td>{!! convertBadgesPrice(isset($debit_amount) ? $debit_amount : 0.0, 'success') !!}</td>
+                     <td>TOTAL PAID BY CUSTOMER</td>
+                     <td>{!! convertBadgesPrice(isset($paid_by_amount) ? $paid_by_amount : 0.0, 'warning') !!}</td>
+                     <td>TOTAL DUE</td>
+                     <td colspan="2">{!! convertBadgesPrice(isset($due_amount) ? $due_amount : 0.0, 'danger') !!}</td>
+                 </tr>
+             </tfoot>
+         @else
+             <tr style="font-size: 17px; color: red;text-align: center;">
+                 <td colspan="10">No data available in table.</td>
+             </tr>
+             @endif
              </tbody>
          </table>
+
+         @if (isset($salesAccountData) && $salesAccountData->cash_status == '1')
+             <p class="account_status_note"><b>Note :</b> All dues paid by customer so cash account has been closed.</p>
+         @endif
      </div>
  </div>

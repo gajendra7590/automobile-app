@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BankFinancer;
 use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
+use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
 use App\Models\SalePaymentInstallments;
 use App\Models\SalePaymentTransactions;
@@ -950,8 +951,8 @@ class SalesAccountController extends Controller
     {
 
         if ($request->ajax()) {
-            $checkAccount = SalePaymentAccounts::select('id')->where('id', $id)->first();
-            if (!$checkAccount) {
+            $salePaymentAccount = SalePaymentAccounts::find($id);
+            if (!$salePaymentAccount) {
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
@@ -959,7 +960,8 @@ class SalesAccountController extends Controller
                 ]);
             }
             $postData = $request->all();
-            $data['data'] = array();
+            $data['data'] = [];
+            $data['salesAccountId'] = $id;
             $type = isset($postData['tab']) ? $postData['tab'] : '';
             $viewName = 'account-detail';
             switch ($type) {
@@ -972,21 +974,34 @@ class SalesAccountController extends Controller
                             $sale->select('id', 'bank_name');
                         }
                     ])->first();
-                    $data['data'] = $paymentAccount->toArray();
+                    $paymentAccount = $paymentAccount->toArray();
+                    $data['data'] = $paymentAccount;
+                    $data['data']['total_paid'] = floatval($paymentAccount['cash_paid_balance'] + $paymentAccount['bank_finance_paid_balance'] + $paymentAccount['personal_finance_outstaning_balance']);
+                    $data['data']['total_due'] = floatval($paymentAccount['cash_outstaning_balance'] + $paymentAccount['bank_finance_outstaning_balance'] + $paymentAccount['personal_finance_outstaning_balance']);
+                    $data['data']['grand_total'] = floatval($data['data']['total_paid'] + $data['data']['total_due']);
                     $viewName = 'account-detail';
                     break;
                 case 'cashPaymentHistory':
-                    $data['data'] = SalePaymentCash::where('sale_payment_account_id', $id)->get()->toArray();
+                    $data['data'] = SalePaymentCash::where('sale_payment_account_id', $id)->orderBy('id', 'DESC')->get()->toArray();
+                    $data['credit_amount'] = SalePaymentCash::where('sale_payment_account_id', $id)->sum('credit_amount');
+                    $data['debit_amount'] = SalePaymentCash::where('sale_payment_account_id', $id)->sum('debit_amount');
+                    $data['paid_by_amount'] = SalePaymentCash::where('sale_payment_account_id', $id)->whereNotIn('paid_source', ['Auto', 'auto'])->sum('debit_amount');
+                    $data['due_amount'] = ($data['credit_amount'] - $data['debit_amount']);
                     $viewName = 'cash-payment';
                     break;
                 case 'bankFinanceHistory':
+                    $data['data'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->orderBy('id', 'DESC')->get()->toArray();
+                    $data['credit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('credit_amount');
+                    $data['debit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('debit_amount');
+                    $data['paid_by_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->whereNotIn('paid_source', ['Auto', 'auto'])->sum('debit_amount');
+                    $data['due_amount'] = ($data['credit_amount'] - $data['debit_amount']);
                     $viewName = 'bank-finance';
                     break;
                 case 'personalFinanceHistory':
                     $viewName = 'personal-finance';
                     break;
                 case 'transactions':
-                    $data['data'] = SalePaymentTransactions::where('sale_payment_account_id', $id)->get()->toArray();
+                    $data['data'] = SalePaymentTransactions::where('sale_payment_account_id', $id)->orderBy('id', 'DESC')->get()->toArray();
                     $viewName = 'transactions';
                     break;
                 case 'customerDetail':
@@ -1047,7 +1062,7 @@ class SalesAccountController extends Controller
             }
 
             // dd($data['data']);
-
+            $data['salesAccountData'] = $salePaymentAccount->fresh();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,

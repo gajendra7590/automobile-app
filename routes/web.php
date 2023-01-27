@@ -117,6 +117,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::post('installmentPay', 'SalesAccountController@installmentPay')->name('installmentPay');
     Route::get('printPayemntReciept/{id}', 'SalesAccountController@printPayemntReciept')->name('printPayemntReciept');
 
+    //Cash Payment
+    Route::resource('salesCash', 'SalePaymentCashController');
+    //Bank Finance Payment
+    Route::resource('salesBankFinanace', 'SalePaymentBankFinanaceController');
+    //Personal Finance Payment
+    Route::resource('salesPersonalFinanace', 'SalePaymentPersonalFinanaceController');
+
     //Payment Tabs
     Route::get('getPaymentTabs/{id}', 'SalesAccountController@getPaymentTabs')->name('getPaymentTabs');
 

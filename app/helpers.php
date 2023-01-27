@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\SalesAccountController;
+use App\Models\SalePaymentAccounts;
+use App\Models\SalePaymentBankFinanace;
+use App\Models\SalePaymentCash;
 use Illuminate\Support\Str;
 use NumberToWords\NumberToWords;
 
@@ -428,6 +432,64 @@ if (!function_exists('createStringSales')) {
             $string .= $saleModel->purchases->sku;
         }
         return strtoupper($string);
+    }
+}
+
+if (!function_exists('getCashDueTotal')) {
+    function getCashDueTotal($salesAccountId)
+    {
+        $totalCredit = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('credit_amount');
+        $totalDebit = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('debit_amount');
+        return (floatval($totalCredit - $totalDebit));
+    }
+}
+
+if (!function_exists('getBankFinanaceDueTotal')) {
+    function getBankFinanaceDueTotal($salesAccountId)
+    {
+        $totalCredit = SalePaymentBankFinanace::where('sale_payment_account_id', $salesAccountId)->sum('credit_amount');
+        $totalDebit = SalePaymentBankFinanace::where('sale_payment_account_id', $salesAccountId)->sum('debit_amount');
+        return (floatval($totalCredit - $totalDebit));
+    }
+}
+
+if (!function_exists('updateDuesOrPaidBalance')) {
+    function updateDuesOrPaidBalance($salesAccountId)
+    {
+        //Cash
+        $totalCreditCash = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('credit_amount');
+        $totalDebitCash = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('debit_amount');
+        $totalOutStadningCash = floatval($totalCreditCash - $totalDebitCash);
+        $totalPaidCash = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->whereNotIn('paid_source', ['Auto', 'auto'])->sum('debit_amount');
+        $cashStatus = ($totalOutStadningCash == 0) ? 1 : 0;
+
+        //Bank Finance
+        $totalCreditBankFin = SalePaymentBankFinanace::where('sale_payment_account_id', $salesAccountId)->sum('credit_amount');
+        $totalDebitBankFin = SalePaymentBankFinanace::where('sale_payment_account_id', $salesAccountId)->sum('debit_amount');
+        $totalOutStadningBankFin = floatval($totalCreditBankFin - $totalDebitBankFin);
+        $totalPaidBankFin = SalePaymentBankFinanace::where('sale_payment_account_id', $salesAccountId)->whereNotIn('paid_source', ['Auto', 'auto'])->sum('debit_amount');
+        $bankFinStatus = ($totalOutStadningBankFin <= 0) ? 1 : 0;
+
+        //Personal Finance
+        $totalCreditPerFin = 0;
+        $totalDebitPerFin = 0;
+        $totalOutStadningPerFin = floatval($totalCreditPerFin - $totalDebitPerFin);
+        $totalPaidPerFin = 0;
+        $PerFinStatus = ($totalOutStadningPerFin == 0) ? 1 : 0;
+
+        //UPDATE IN DATABASE
+        SalePaymentAccounts::where('id', $salesAccountId)->update([
+            'cash_outstaning_balance'               => $totalOutStadningCash,
+            'cash_paid_balance'                     => $totalPaidCash,
+            'cash_status'                           => $cashStatus,
+            'bank_finance_outstaning_balance'       => $totalOutStadningBankFin,
+            'bank_finance_paid_balance'             => $totalPaidBankFin,
+            'bank_finance_status'                   => $bankFinStatus,
+            'personal_finance_outstaning_balance'   => $totalOutStadningPerFin,
+            'personal_finance_paid_balance'         => $totalPaidPerFin,
+            'personal_finance_status'               => $PerFinStatus
+        ]);
+        return true;
     }
 }
 

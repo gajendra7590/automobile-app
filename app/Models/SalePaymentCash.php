@@ -31,4 +31,21 @@ class SalePaymentCash extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($model) {
+            updateDuesOrPaidBalance($model->sale_payment_account_id);
+        });
+
+        self::updated(function ($model) {
+            updateDuesOrPaidBalance($model->sale_payment_account_id);
+        });
+
+        self::deleted(function ($model) {
+            updateDuesOrPaidBalance($model->sale_payment_account_id);
+        });
+    }
 }

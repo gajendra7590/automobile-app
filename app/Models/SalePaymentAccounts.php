@@ -28,8 +28,14 @@ class SalePaymentAccounts extends Model
         'status',
         'status_closed_note',
         'status_closed_by',
+        'cash_outstaning_balance',
+        'cash_paid_balance',
         'cash_status',
+        'bank_finance_outstaning_balance',
+        'bank_finance_paid_balance',
         'bank_finance_status',
+        'personal_finance_paid_balance',
+        'cash_paid_balance',
         'personal_finance_status',
         'payment_setup'
     ];
@@ -38,6 +44,26 @@ class SalePaymentAccounts extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    //TRANSACTION TYPES
+    const TRANS_TYPE_CREDIT = 1;
+    const TRANS_TYPE_DEBIT  = 2;
+
+    //TRANSACTION STATUS
+    const PAY_STATUS_PENDING = 0;
+    const PAY_STATUS_PAID = 1;
+    const PAY_STATUS_HOLD = 2;
+    const PAY_STATUS_FAILED = 3;
+
+    //NORMAL STATUS
+    const STATUS_DUE   = 0;
+    const STATUS_PAID  = 1;
+
+    //ACCOUNT STATUS
+    const ACC_STATUS_OPEN = 0;
+    const ACC_STATUS_CLOSE = 1;
+
+
 
     public static function boot()
     {

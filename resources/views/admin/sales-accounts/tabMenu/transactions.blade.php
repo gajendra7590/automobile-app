@@ -22,7 +22,7 @@
                     @if (count($data))
                         @foreach ($data as $k => $transaction)
                             <tr>
-                                <td>{{ $k + 1 }}</td>
+                                <td>{{ isset($transaction['id']) ? $transaction['id'] : '--' }}</td>
                                 <td>{{ isset($transaction['transaction_name']) ? $transaction['transaction_name'] : '--' }}
                                 </td>
                                 <td>

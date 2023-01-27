@@ -17,7 +17,7 @@
             <div class="info-box-content">
                 <span class="info-box-text">TOTAL PAID</span>
                 <span class="info-box-number">
-                    {{ isset($data['deposite_amount']) ? priceFormate($data['deposite_amount']) : '--' }}
+                    {{ isset($data['total_paid']) ? priceFormate($data['total_paid']) : '--' }}
                 </span>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="info-box-content">
                 <span class="info-box-text">TOTAL DUE</span>
                 <span class="info-box-number">
-                    {{ isset($data['deposite_amount']) ? priceFormate($data['deposite_amount']) : '--' }}
+                    {{ isset($data['total_due']) ? priceFormate($data['total_due']) : '--' }}
                 </span>
             </div>
         </div>
@@ -39,7 +39,7 @@
             <div class="info-box-content">
                 <span class="info-box-text">GRAND TOTAL</span>
                 <span class="info-box-number">
-                    {{ isset($data['deposite_amount']) ? priceFormate($data['deposite_amount']) : '--' }}
+                    {{ isset($data['grand_total']) ? priceFormate($data['grand_total']) : '--' }}
                 </span>
             </div>
         </div>
