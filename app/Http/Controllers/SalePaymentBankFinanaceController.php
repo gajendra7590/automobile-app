@@ -100,6 +100,7 @@ class SalePaymentBankFinanaceController extends Controller
                         'due_payment_source'      => 2,
                         'financier_id'            => $postData['financier_id'],
                         'financier_note'          => $postData['financier_note'],
+                        'bank_finance_amount'     => $postData['total_finance_amount'],
                         'cash_status'             => SalePaymentAccounts::STATUS_PAID,
                         'bank_finance_status'     => SalePaymentAccounts::STATUS_DUE,
                         'personal_finance_status' => SalePaymentAccounts::STATUS_PAID,
@@ -108,6 +109,7 @@ class SalePaymentBankFinanaceController extends Controller
                 } else {
                     $salesAccountModel->update([
                         'due_payment_source'      => 2,
+                        'bank_finance_amount'     => $postData['total_finance_amount'],
                         'financier_id'            => $postData['financier_id'],
                         'financier_note'          => $postData['financier_note'],
                         'cash_status'             => SalePaymentAccounts::STATUS_DUE,
@@ -326,7 +328,8 @@ class SalePaymentBankFinanaceController extends Controller
                     $differenceAmount = ($salesAccountModel->bank_finance_outstaning_balance - $postData['total_finance_amount']);
                     $salesAccountModel->update([
                         'financier_id' => $postData['financier_id'],
-                        'financier_note' => $postData['financier_note']
+                        'financier_note' => $postData['financier_note'],
+                        'bank_finance_amount' => $postData['total_finance_amount'],
                     ]);
                     $bankFinanceModel->update([
                         'due_date' => $postData['finance_due_date']
@@ -339,7 +342,8 @@ class SalePaymentBankFinanaceController extends Controller
                     $differenceAmount = ($salesAccountModel->bank_finance_outstaning_balance - $postData['total_finance_amount']);
                     $salesAccountModel->update([
                         'financier_id' => $postData['financier_id'],
-                        'financier_note' => $postData['financier_note']
+                        'financier_note' => $postData['financier_note'],
+                        'bank_finance_amount' => $postData['total_finance_amount'],
                     ]);
                     $bankFinanceModel->update([
                         'due_date' => $postData['finance_due_date'],
@@ -388,7 +392,8 @@ class SalePaymentBankFinanaceController extends Controller
                     $differenceAmount = ($postData['total_finance_amount'] - $salesAccountModel->bank_finance_outstaning_balance);
                     $salesAccountModel->update([
                         'financier_id' => $postData['financier_id'],
-                        'financier_note' => $postData['financier_note']
+                        'financier_note' => $postData['financier_note'],
+                        'bank_finance_amount' => $postData['total_finance_amount'],
                     ]);
                     $bankFinanceModel->update([
                         'due_date' => $postData['finance_due_date'],
@@ -530,6 +535,7 @@ class SalePaymentBankFinanaceController extends Controller
                     'bank_finance_outstaning_balance' => 0,
                     'bank_finance_paid_balance' => 0,
                     'bank_finance_status' => 1,
+                    'bank_finance_amount' => 0.00,
                     'cash_status' => 0,
                     'status'     => 0,
                     'due_payment_source' => 1,

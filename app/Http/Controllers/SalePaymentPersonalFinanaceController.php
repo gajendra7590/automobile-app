@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\SalePaymentAccounts;
-use App\Models\SalePaymentInstallments;
+use App\Models\SalePaymentCash;
+use App\Models\SalePaymentPersonalFinanace;
+use App\Models\SalePaymentTransactions;
 use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,10 +98,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                     ]);
                 }
 
-                $salesAccountModel = SalePaymentAccounts::find($postData['sales_account_id']);
-
-                print_r($postData);
-
+                $salePaymentAccount = SalePaymentAccounts::find($postData['sales_account_id']);
 
                 //CODE START FROM HERE
                 $P = floatval($postData['grand_finance_amount']);
@@ -123,6 +122,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         $term_value = 12;
                         break;
                 }
+
                 $R = $postData['rate_of_interest'];
 
                 $total_interest = round((($P * $R * ($T / 12)) / 100), 2);
@@ -132,25 +132,21 @@ class SalePaymentPersonalFinanaceController extends Controller
                 $install_intrest     = round(($total_interest / $postData['no_of_emis']), 2);
                 $install_principal     = ($install_amount - $install_intrest);
 
-
-                dd($install_principal);
                 $final_due_date = null;
-                //Convert Emis
+                //CREATE EMI HISTORY
                 for ($i = 1; $i <= $postData['no_of_emis']; $i++) {
-                    // for ($i = $postData['no_of_emis']; $i >= 1; $i--) {
                     $next_month  = ($term_value * $i);
                     $emi_due_date = date('Y-m-d', strtotime("+ $next_month months"));
                     $emi_due_date = date('Y-m', strtotime($emi_due_date)) . '-' . date('d');
                     $final_due_date = $emi_due_date;
-                    SalePaymentInstallments::create([
-                        'sale_id'                 => $salesAccountModel->sale_id,
-                        'sale_payment_account_id' => $salesAccountModel->id,
+                    SalePaymentPersonalFinanace::create([
+                        'sale_id'                 => $salePaymentAccount->sale_id,
+                        'sale_payment_account_id' => $salePaymentAccount->id,
                         'payment_name'            => 'Installment - ' . $i,
-                        'emi_total_amount'        => $postData['sales_total_amount'],
-                        'emi_due_amount'          => $install_amount,
+                        'emi_total_amount'        => $install_amount,
                         'emi_principal_amount'    => $install_principal,
                         'emi_intrest_amount'      => $install_intrest,
-                        'emi_due_date'            => $emi_due_date,
+                        'emi_due_date'            => $final_due_date,
                         'adjust_amount'           => null,
                         'adjust_date'             => null,
                         'adjust_note'             => null,
@@ -165,7 +161,54 @@ class SalePaymentPersonalFinanaceController extends Controller
                     ]);
                 }
 
-                die('Remvoe It');
+                //DEBIT SALES CASH PAYMENT
+                $currentCashOutStandingBalance = $salePaymentAccount->cash_outstaning_balance;
+                $lastCash = SalePaymentCash::where('sale_payment_account_id', $salePaymentAccount->id)->orderBy('id', 'DESC')->first();
+                $payment_name = "Cash Balance Conveterd To Personal Finance.";
+                $createdCashPayment = SalePaymentCash::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'payment_name' => $payment_name,
+                    'credit_amount' => 0,
+                    'debit_amount' => $postData['total_finance_amount'],
+                    'change_balance' => floatval($currentCashOutStandingBalance - $postData['total_finance_amount']),
+                    'due_date'    => $lastCash->due_date,
+                    'paid_source' => 'Auto',
+                    'paid_date' => date('Y-m-d'),
+                    'paid_note' => $payment_name,
+                    'collected_by' => 0,
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'status' => 1
+                ]);
+                //CREATE NEW TRANSACTION
+                SalePaymentTransactions::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'transaction_for' => 1,
+                    'transaction_name' => $payment_name,
+                    'transaction_amount' => $postData['total_finance_amount'],
+                    'transaction_paid_source' => 'Auto',
+                    'transaction_paid_source_note' => $payment_name,
+                    'transaction_paid_date' => date('Y-m-d'),
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'status' => 1,
+                    'reference_id' => $createdCashPayment->id
+                ]);
+
+                //UPDATE ACCOUNT DETAIL
+                $salePaymentAccount->update([
+                    'personal_finance_outstaning_balance' => $postData['grand_finance_amount'],
+                    'personal_finance_paid_balance' => 0,
+                    'personal_finance_status' => 0,
+                    'personal_finance_amount'  => $postData['total_finance_amount'],
+                    'due_payment_source' => 3,
+                    'financier_id' => $postData['financier_id'],
+                    'finance_terms' => $postData['finance_terms'],
+                    'no_of_emis' => $postData['no_of_emis'],
+                    'rate_of_interest' => $postData['rate_of_interest'],
+                    'processing_fees' => $postData['processing_fees']
+                ]);
+
                 DB::commit();
                 return response()->json([
                     'status'     => true,

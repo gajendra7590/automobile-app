@@ -34,9 +34,11 @@ class SalePaymentAccounts extends Model
         'bank_finance_outstaning_balance',
         'bank_finance_paid_balance',
         'bank_finance_status',
+        'bank_finance_amount',
         'personal_finance_paid_balance',
         'cash_paid_balance',
         'personal_finance_status',
+        'personal_finance_amount',
         'payment_setup'
     ];
 
