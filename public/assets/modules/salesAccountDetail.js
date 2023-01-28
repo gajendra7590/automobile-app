@@ -55,4 +55,60 @@ $(document).ready(function () {
         }
         $('input[name="due_amount"').val(due_amount);
     }
+
+    $(document).on(
+        "keyup keypress",
+        "input[name='total_finance_amount'],input[name='processing_fees']",
+        function () {
+            let total_outstading = parseFloat(
+                $("input[name='total_outstanding']").val()
+            );
+            let finance_amount = parseFloat(
+                $("input[name='total_finance_amount']").val()
+            );
+            let processing_fees = parseFloat(
+                $("input[name='processing_fees']").val()
+            );
+            finance_amount = !isNaN(finance_amount) ? finance_amount : 0;
+            processing_fees = !isNaN(processing_fees) ? processing_fees : 0;
+
+            if (finance_amount > total_outstading) {
+                $("input[name='total_finance_amount']").val(0);
+                $("input[name='processing_fees']").val(0);
+                $("input[name='grand_finance_amount']").val(0);
+                toastr.error(
+                    "ERROR! Finance amount can not be exceed the outstanding amount."
+                );
+                return false;
+            } else {
+                let grandTotal = parseFloat(finance_amount + processing_fees);
+                $("input[name='grand_finance_amount']").val(grandTotal);
+            }
+        }
+    );
+
+    $(document).on("keyup", "input[name='no_of_emis']", function () {
+        let val = $(this).val();
+        val = parseInt(val);
+        if (val <= 0) {
+            toastr.error("ERROR! Please enter valid EMI Number.");
+            $(this).val("");
+            return false;
+        }
+        $(this).val(val);
+    });
+
+    $(document).on(
+        "keyup",
+        "input[name='rate_of_interest'],input[name='total_finance_amount'],input[name='processing_fees']",
+        function () {
+            let val = $(this).val();
+            val = parseInt(val);
+            if (val <= 0) {
+                toastr.error("ERROR! Please enter valid value.");
+                $(this).val("");
+                return false;
+            }
+        }
+    );
 });

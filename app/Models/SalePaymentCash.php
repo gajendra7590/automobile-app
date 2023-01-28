@@ -36,6 +36,11 @@ class SalePaymentCash extends Model
     public static function boot()
     {
         parent::boot();
+
+        self::saved(function ($model) {
+            updateDuesOrPaidBalance($model->sale_payment_account_id);
+        });
+
         self::created(function ($model) {
             updateDuesOrPaidBalance($model->sale_payment_account_id);
         });

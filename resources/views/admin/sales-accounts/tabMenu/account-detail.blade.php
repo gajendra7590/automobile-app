@@ -155,8 +155,8 @@
                 @if (isset($data['payment_setup']) && $data['payment_setup'] == '0')
                     <a href="{{ route('saleAccounts.create') . '?id=' . (isset($data['id']) ? $data['id'] : 0) }}"
                         class="btn btn-xs btn-primary pull-right ajaxModalPopup" data-modal_size="modal-lg"
-                        data-modal_title="SETUP PAYMENT OPTION">
-                        <i class="fa fa-plus" aria-hidden="true"></i> PAYMENT SETUP
+                        data-modal_title="DEPOSITE DOWNPAYMENT">
+                        <i class="fa fa-plus" aria-hidden="true"></i> DEPOSITE DOWNPAYMENT
                     </a>
                 @endif
             </div>
@@ -217,6 +217,11 @@
                         @endif
                     </tbody>
                 </table>
+                @if (isset($salesAccountData) && $salesAccountData->status == '1')
+                    <p class="account_status_note"><b>Note :</b>
+                        All the dues cleared so account mark as closed.
+                    </p>
+                @endif
             </div>
 
         </div>

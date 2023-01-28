@@ -12,27 +12,24 @@ class SalePaymentInstallments extends Model
     protected $table = 'sale_payment_installments';
 
     protected $fillable = [
-        'installment_uuid',
         'sale_id',
         'sale_payment_account_id',
-        'emi_title',
-        'loan_total_amount',
-        'emi_due_amount',
-        'emi_due_principal',
-        'emi_due_intrest',
+        'payment_name',
+        'emi_total_amount',
+        'emi_principal_amount',
+        'emi_intrest_amount',
         'emi_due_date',
-        'emi_other_adjustment',
-        'emi_other_adjustment_date',
-        'emi_other_adjustment_note',
+        'adjust_amount',
+        'adjust_date',
+        'adjust_note',
         'emi_due_revised_amount',
         'emi_due_revised_note',
         'amount_paid',
         'amount_paid_date',
         'amount_paid_source',
         'amount_paid_note',
-        'pay_due',
-        'status',
-        'collected_by_salesman_id'
+        'collected_by',
+        'status'
     ];
 
 
@@ -44,9 +41,9 @@ class SalePaymentInstallments extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->installment_uuid = random_uuid('inst');
-        });
+        // static::creating(function ($model) {
+        //     $model->installment_uuid = random_uuid('inst');
+        // });
     }
 
     /**

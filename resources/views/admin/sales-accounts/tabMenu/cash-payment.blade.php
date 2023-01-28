@@ -4,7 +4,7 @@
          <div class="pull-right">
              @if (isset($salesAccountData) &&
                      !in_array($salesAccountData->due_payment_source, [2, 3]) &&
-                     $salesAccountData->status == '0')
+                     $salesAccountData->status == 0)
                  <a href="{{ route('salesBankFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
                      class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
                      data-modal_title="SETUP BANK FINANCE">
@@ -17,13 +17,23 @@
                  </a>
              @endif
 
-             @if (isset($salesAccountData) && $salesAccountData->cash_status == '0')
+             @if (isset($salesAccountData) && $salesAccountData->cash_status == 0)
                  <a href="{{ route('salesCash.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
                      class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
                      data-modal_title="CREATE NEW PAYMENT">
                      CREATE NEW PAYMENT
                  </a>
              @endif
+
+             @if (isset($salesAccountData) && $salesAccountData->status == 0)
+                 <a href="{{ route('salesCash.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
+                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="CREATE NEW PAYMENT">
+                     ADD CHARGES
+                 </a>
+             @endif
+
+
          </div>
      </div>
      <!-- /.box-header -->

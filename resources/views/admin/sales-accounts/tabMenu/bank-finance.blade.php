@@ -2,22 +2,26 @@
      <div class="box-header with-border">
          <h3 class="box-title pull-left">BANK FINANCE HISTORY</h3>
          <div class="pull-right">
-             <a href="{{ route('salesBankFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
-                 class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                 data-modal_title="SETUP BANK FINANCE">
-                 CREATE BANK FINANCE
-             </a>
-             <a href="{{ route('salesPersonalFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
-                 class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                 data-modal_title="SETUP PERSONAL FINANCE">
-                 CREATE PERSONAL FINANCE
-             </a>
 
-             @if (isset($salesAccountData) && $salesAccountData->bank_finance_status == '0')
-                 <a href="{{ route('salesBankFinanace.edit', ['salesBankFinanace' => $salesAccountId]) }}"
+             @if (isset($salesAccountData) && $salesAccountData->bank_finance_paid_balance == 0)
+                 <a href="{{ route('salesBankFinanace.edit', ['salesBankFinanace' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                     class="btn btn-sm btn-warning ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="UPDATE ACCOUNT DETAIL">
+                     UPDATE ACCOUNT DETAIL
+                 </a>
+
+                 <a href="{{ route('bankFinanaceCancel', ['id' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                     class="btn btn-sm btn-danger ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="FILE CANCELLED THEN CLOSE YOUR BANK FINANCE ACCOUNT">
+                     FINANACE CANCEL
+                 </a>
+             @endif
+
+             @if (isset($salesAccountData) && $salesAccountData->bank_finance_status == 0)
+                 <a href="{{ route('bankFinanacePayIndex', ['id' => $salesAccountId]) }}"
                      class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                     data-modal_title="CREATE NEW PAYMENT">
-                     CREATE NEW PAYMENT
+                     data-modal_title="RECIEVE NEW PAYMENT FROM FINANCER">
+                     RECEIVE NEW PAYMENT
                  </a>
              @endif
          </div>
@@ -87,7 +91,7 @@
                      <td>{!! convertBadgesPrice(isset($credit_amount) ? $credit_amount : 0.0, 'primary') !!}</td>
                      <td>TOTAL DEBIT</td>
                      <td>{!! convertBadgesPrice(isset($debit_amount) ? $debit_amount : 0.0, 'success') !!}</td>
-                     <td>TOTAL PAID BY CUSTOMER</td>
+                     <td>TOTAL PAID BY FINANCER</td>
                      <td>{!! convertBadgesPrice(isset($paid_by_amount) ? $paid_by_amount : 0.0, 'warning') !!}</td>
                      <td>TOTAL DUE</td>
                      <td colspan="2">{!! convertBadgesPrice(isset($due_amount) ? $due_amount : 0.0, 'danger') !!}</td>
@@ -100,5 +104,9 @@
              @endif
              </tbody>
          </table>
+         @if (isset($salesAccountData) && $salesAccountData->bank_finance_status == '1')
+             <p class="account_status_note"><b>Note :</b> All dues paid by financer so bank finance account has been
+                 closed.</p>
+         @endif
      </div>
  </div>

@@ -119,8 +119,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Cash Payment
     Route::resource('salesCash', 'SalePaymentCashController');
+
     //Bank Finance Payment
     Route::resource('salesBankFinanace', 'SalePaymentBankFinanaceController');
+    Route::get('bankFinanacePay/{id}', 'SalePaymentBankFinanaceController@payIndex')->name('bankFinanacePayIndex');
+    Route::post('bankFinanacePay/{id}', 'SalePaymentBankFinanaceController@payStore')->name('bankFinanacePayStore');
+    Route::get('bankFinanaceCancel/{id}', 'SalePaymentBankFinanaceController@bankFinanaceCancel')->name('bankFinanaceCancel');
+
     //Personal Finance Payment
     Route::resource('salesPersonalFinanace', 'SalePaymentPersonalFinanaceController');
 

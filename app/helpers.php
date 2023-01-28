@@ -456,7 +456,7 @@ if (!function_exists('getBankFinanaceDueTotal')) {
 if (!function_exists('updateDuesOrPaidBalance')) {
     function updateDuesOrPaidBalance($salesAccountId)
     {
-        //Cash
+        //Cash Account
         $totalCreditCash = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('credit_amount');
         $totalDebitCash = SalePaymentCash::where('sale_payment_account_id', $salesAccountId)->sum('debit_amount');
         $totalOutStadningCash = floatval($totalCreditCash - $totalDebitCash);
@@ -477,6 +477,8 @@ if (!function_exists('updateDuesOrPaidBalance')) {
         $totalPaidPerFin = 0;
         $PerFinStatus = ($totalOutStadningPerFin == 0) ? 1 : 0;
 
+        $accountStatus = (($cashStatus == 1 && $bankFinStatus == 1 && $PerFinStatus == 1)) ? 1 : 0;
+
         //UPDATE IN DATABASE
         SalePaymentAccounts::where('id', $salesAccountId)->update([
             'cash_outstaning_balance'               => $totalOutStadningCash,
@@ -487,7 +489,10 @@ if (!function_exists('updateDuesOrPaidBalance')) {
             'bank_finance_status'                   => $bankFinStatus,
             'personal_finance_outstaning_balance'   => $totalOutStadningPerFin,
             'personal_finance_paid_balance'         => $totalPaidPerFin,
-            'personal_finance_status'               => $PerFinStatus
+            'personal_finance_status'               => $PerFinStatus,
+            'status'                                => $accountStatus,
+            'status_closed_note'                    => ($accountStatus == 1) ? "All dues done closed autometically by script." : null,
+            'status_closed_by'                      => ($accountStatus == 1) ? 0 : null
         ]);
         return true;
     }

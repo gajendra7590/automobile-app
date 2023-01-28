@@ -68,7 +68,7 @@
                     readonly>
             </div>
             <div class="form-group col-md-6">
-                <label>Due Date</label>
+                <label>Next Payment Due Date</label>
                 <input name="due_date_today" type="hidden" class="form-control" value="{{ date('Y-m-d') }}">
                 <input name="due_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
                     placeholder="0000-00-00">

@@ -188,7 +188,7 @@ class SalesAccountController extends Controller
                 'deposite_source'       => 'required|string',
                 'deposite_source_note'  => 'nullable|string',
                 'due_amount'            => 'required|numeric|gte:0',
-                'due_date'              => 'required|date|before_or_equal:' . now()->format('Y-m-d'),
+                'due_date'              => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
                 'status'                => 'required|in:0,1,2'
             ]);
             //If Validation failed
@@ -221,6 +221,8 @@ class SalesAccountController extends Controller
                     'sale_id' => $salesAccountModel->sale_id,
                     'sale_payment_account_id'  => $salesAccountModel->id,
                     'payment_name'   => "Account Initiated.",
+                    'paid_source'    => 'Auto',
+                    'paid_date'    => date('Y-m-d'),
                     'credit_amount'  => $postData['sales_total_amount'],
                     'debit_amount'   => 0,
                     'change_balance' => $postData['sales_total_amount'],
@@ -230,7 +232,7 @@ class SalesAccountController extends Controller
                 [
                     'sale_id' => $salesAccountModel->sale_id,
                     'sale_payment_account_id'  => $salesAccountModel->id,
-                    'payment_name'   => "Down Payment.",
+                    'payment_name'   => "Down Payment Paid By Customer.",
                     'credit_amount'  => 0,
                     'debit_amount'   => $postData['deposite_amount'],
                     'change_balance' => $postData['due_amount'],

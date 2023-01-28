@@ -94,7 +94,7 @@ class SalePaymentCashController extends Controller
 
             $newOutStanding = floatval($postData['total_outstanding'] - $postData['paid_amount']);
             //DEBIT SALES CASH PAYMENT
-            $payment_name = 'Due Payment By Customer';
+            $payment_name = 'Down Payment Paid By Customer.';
             $createdCashPayment = SalePaymentCash::create([
                 'sale_id' => $salePaymentAccount->sale_id,
                 'sale_payment_account_id' => $salePaymentAccount->id,
