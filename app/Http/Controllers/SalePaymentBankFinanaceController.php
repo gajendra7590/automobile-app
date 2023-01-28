@@ -207,9 +207,30 @@ class SalePaymentBankFinanaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $data['data'] = SalePaymentBankFinanace::where('id', $id)->with([
+                'account' => function ($account) {
+                    $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
+                },
+                'sale' => function ($account) {
+                    $account->select('id', 'customer_name', 'status');
+                },
+                'salesman' => function ($salesman) {
+                    $salesman->select('id', 'name');
+                }
+            ])->first();
+
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Tab ajax data loaded",
+                'data'       => view('admin.sales-accounts.bank-finanace.preview', $data)->render()
+            ]);
+        }
     }
 
     /**

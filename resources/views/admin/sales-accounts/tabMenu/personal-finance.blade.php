@@ -98,15 +98,16 @@
                                              </li>
                                          @endif
                                          <li>
-                                             <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment['id'] }}"
-                                                 class="ajaxModalPopup" data-modal_title="Due Payment Detail"
+                                             <a href="{{ route('salesPersonalFinanace.show', ['salesPersonalFinanace' => $installment['id']]) }}"
+                                                 class="ajaxModalPopup"
+                                                 data-modal_title="PERSONAL FINANCE VIEW PAYMENT DETAIL"
                                                  data-modal_size="modal-lg">
                                                  VIEW DETAIL
                                              </a>
                                          </li>
                                          @if ($installment['status'] == '1')
                                              <li>
-                                                 <a href="{{ route('printPayemntReciept', ['id' => base64_encode($installment['id'])]) }}"
+                                                 <a href="{{ route('printReceiptPF', ['id' => base64_encode($installment['id'])]) }}"
                                                      target="_blank">
                                                      PRINT RECIEPT
                                                  </a>

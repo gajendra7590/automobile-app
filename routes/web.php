@@ -119,6 +119,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Cash Payment
     Route::resource('salesCash', 'SalePaymentCashController');
+    Route::get('salesCashReceipt/{id}', 'SalePaymentCashController@salesCashReceipt')->name('salesCashReceipt');
 
     //Bank Finance Payment
     Route::resource('salesBankFinanace', 'SalePaymentBankFinanaceController');
@@ -130,6 +131,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('salesPersonalFinanace', 'SalePaymentPersonalFinanaceController');
     Route::get('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payIndex')->name('personalFinanacePayIndex');
     Route::post('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payStore')->name('personalFinanacePayStore');
+    Route::get('printReceipt/{id}', 'SalePaymentPersonalFinanaceController@printReceipt')->name('printReceiptPF');
+
+    //Transactions
+    Route::get('transactions/{id}', 'SalePaymentTransactionController@show')->name('transactions.show');
 
     //Payment Tabs
     Route::get('getPaymentTabs/{id}', 'SalesAccountController@getPaymentTabs')->name('getPaymentTabs');

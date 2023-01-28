@@ -7,6 +7,7 @@ use App\Models\SalePaymentCash;
 use App\Models\SalePaymentPersonalFinanace;
 use App\Models\SalePaymentTransactions;
 use App\Traits\CommonHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -232,9 +233,30 @@ class SalePaymentPersonalFinanaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $data['data'] = SalePaymentPersonalFinanace::where('id', $id)->with([
+                'account' => function ($account) {
+                    $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
+                },
+                'sale' => function ($account) {
+                    $account->select('id', 'customer_name', 'status');
+                },
+                'salesman' => function ($salesman) {
+                    $salesman->select('id', 'name');
+                }
+            ])->first();
+
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Tab ajax data loaded",
+                'data'       => view('admin.sales-accounts.personal-finanace.preview', $data)->render()
+            ]);
+        }
     }
 
     /**
@@ -555,5 +577,46 @@ class SalePaymentPersonalFinanaceController extends Controller
                 ]);
             }
         }
+    }
+
+    /**
+     * Function for pay saved
+     */
+    public function printReceipt(Request $request, $id)
+    {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $paymentInstallmentModel = SalePaymentPersonalFinanace::where('id', $id)
+            ->whereHas('sale', function ($sale) use ($where) {
+                $sale->where($where);
+            })
+            ->with([
+                'sale' => function ($sale) {
+                    $sale->with(['branch', 'purchase']);
+                },
+                'account' => function ($account) {
+                    $account->select('id', 'financier_id')->with([
+                        'financier' => function ($financier) {
+                            $financier->select('id', 'bank_name');
+                        }
+                    ]);
+                }
+            ])
+            ->first();
+
+        // return $paymentInstallmentModel;
+
+
+        if (!$paymentInstallmentModel) {
+            return view('admin.accessDenied');
+        }
+
+        $pdf = Pdf::loadView('admin.sales-accounts.personal-finanace.print', ['data' => $paymentInstallmentModel]);
+        return $pdf->stream('invoice.pdf');
     }
 }

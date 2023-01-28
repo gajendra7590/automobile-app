@@ -59,10 +59,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('salesDetailModal') }}?type=transaction-detail&id={{ $transaction['id'] }}"
-                                        class="btn btn-primary btn-xs ajaxModalPopup" data-modal_title="Transaction Detail"
-                                        data-modal_size="modal-lg">
-                                        VIEW DETAIL
+                                    <a href="{{ route('transactions.show', ['id' => $transaction['id']]) }}"
+                                        class="btn btn-primary btn-sm ajaxModalPopup"
+                                        data-modal_title="VIEW TRANSCTION DETAIL" data-modal_size="modal-lg">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             </tr>

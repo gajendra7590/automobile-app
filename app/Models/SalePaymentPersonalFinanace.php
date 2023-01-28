@@ -73,4 +73,12 @@ class SalePaymentPersonalFinanace extends Model
     {
         return $this->belongsTo(Sale::class, 'sale_id');
     }
+
+    /**
+     * MApping With salesman
+     */
+    public function salesman()
+    {
+        return $this->belongsTo(Salesman::class, 'collected_by');
+    }
 }

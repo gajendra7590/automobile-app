@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BankFinancer;
-use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
-use App\Models\SalePaymentInstallments;
 use App\Models\SalePaymentPersonalFinanace;
 use App\Models\SalePaymentTransactions;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -20,7 +16,6 @@ use Yajra\DataTables\Facades\DataTables;
 //Trait
 use App\Traits\CronHelper;
 use App\Traits\CommonHelper;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class SalesAccountController extends Controller
 {
@@ -278,261 +273,6 @@ class SalesAccountController extends Controller
         }
     }
 
-    public function storeBack(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $postData = $request->only(
-                'sale_id',
-                'sales_total_amount',
-                'deposite_amount',
-                'deposite_date',
-                'deposite_source',
-                'deposite_source_note',
-                'due_amount',
-                'due_date',
-                'due_payment_source',
-                'due_note',
-                'financier_id',
-                'financier_note',
-                'finance_terms',
-                'no_of_emis',
-                'rate_of_interest',
-                'processing_fees',
-                'pay_later_amount',
-                'pay_later_date'
-            );
-            $validationArray = [
-                'sale_id'               => "required|exists:sales,id|unique:sale_payment_accounts,sale_id",
-                'sales_total_amount'    => "required|numeric|min:1",
-                'deposite_amount'       => "required|numeric|min:0",
-                'deposite_date'         => 'required|date',
-                'deposite_source'       => 'required|string',
-                'deposite_source_note'  => 'nullable|string',
-                'due_amount'            => 'required|numeric|min:0',
-                'due_payment_source'    => 'required|in:1,2,3',
-                'due_note'              => 'nullable|string'
-            ];
-
-            dd($postData);
-
-            //Conditional Valdiation
-            if (isset($postData['due_payment_source']) && in_array($postData['due_payment_source'], [2, 3])) {
-                $validationArray['financier_id'] = 'required|exists:bank_financers,id';
-                $validationArray['financier_note'] = 'nullable|string';
-            }
-            //Conditional Valdiation
-            if (isset($postData['due_payment_source']) && in_array($postData['due_payment_source'], [3])) {
-                $validationArray['finance_terms']    = 'required|in:1,2,3,4';
-                $validationArray['no_of_emis']       = 'required|integer|min:1|max:24';
-                $validationArray['rate_of_interest'] = 'required|numeric|min:1|max:24';
-                $validationArray['processing_fees']  = 'nullable|numeric|min:1';
-            }
-
-            //Conditional Value Reset
-            if (isset($postData['due_payment_source']) && in_array($postData['due_payment_source'], [1, 2])) {
-                $postData['finance_terms'] = null;
-            }
-
-
-            $validator = Validator::make($postData, $validationArray, [
-                'sale_id.unique' => "Sorry! sales account already created for same."
-            ]);
-
-            //If Validation failed
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
-                ]);
-            }
-
-            //Default Value Set
-            $postData['deposite_collected_by'] = isset($postData['deposite_collected_by']) ? $postData['deposite_collected_by'] : Auth::user()->id;
-            $postData['status'] = 0;
-
-            //Create Account
-            $accountModel = SalePaymentAccounts::create($postData);
-            if ($accountModel) {
-
-                //Update In Sale
-                Sale::where('id', $postData['sale_id'])->update(['sp_account_id' => $accountModel->id]);
-
-                //Create New Transactions
-                SalePaymentTransactions::create([
-                    'sale_id' => $postData['sale_id'],
-                    'sale_payment_account_id' => $accountModel->id,
-                    'transaction_title' => 'First Down Payment.',
-                    'amount_paid' => $postData['deposite_amount'],
-                    'amount_paid_source' => $postData['deposite_source'],
-                    'amount_paid_source_note' => $postData['deposite_source_note'],
-                    'amount_paid_date' => $postData['deposite_date'],
-                    'status' => '1',
-                    'payment_collected_by' => Auth::user()->id,
-                    'sale_payment_installment_id' => 0
-                ]);
-
-
-                if ((floatval($postData['due_amount']) > 0)) {
-                    $total_pay_with_intrest = 0.00;
-
-                    //IF PAY_LATER SET
-                    if (isset($postData['pay_later_amount']) && (floatval($postData['pay_later_amount']) > 0)) {
-                        $total_pay_with_intrest += floatval($postData['pay_later_amount']);
-                        SalePaymentInstallments::create([
-                            'sale_id'                 => $postData['sale_id'],
-                            'sale_payment_account_id' => $accountModel->id,
-                            'emi_title'               => "Customer has given pay later.",
-                            'loan_total_amount'       => $postData['pay_later_amount'],
-                            'emi_due_amount'          => $postData['pay_later_amount'],
-                            'emi_due_date'            => $postData['pay_later_date'],
-                            'emi_other_charges'       => null,
-                            'emi_other_charges_date'  => null,
-                            'emi_other_charges_note'  => null,
-                            'emi_due_revised_amount'  => $postData['pay_later_amount'],
-                            'emi_due_revised_note'    => null,
-                            'amount_paid'             => null,
-                            'amount_paid_date'        => null,
-                            'amount_paid_source'      => null,
-                            'amount_paid_note'        => null,
-                            'pay_due'                 => null,
-                            'status'                  => 0
-                        ]);
-                    }
-
-                    //EMI Table IF Pay Source Self Pay / Bank Finance
-                    if ((in_array($postData['due_payment_source'], [1, 2]))) {
-                        $emi_title = "Customer Self Pay.";
-                        if ($postData['due_payment_source'] == '2') {
-                            $emi_title = BankFinancer::where('id', $postData['financier_id'])->value('bank_name');
-                            $emi_title = 'Customer Bank Finance - ' . ucwords(strtolower($emi_title));
-                        }
-                        //Finance Company
-                        SalePaymentInstallments::create([
-                            'sale_id'                 => $postData['sale_id'],
-                            'sale_payment_account_id' => $accountModel->id,
-                            'emi_title'               => $emi_title,
-                            'loan_total_amount'       => $postData['sales_total_amount'],
-                            'emi_due_amount'          => $postData['due_amount'],
-                            'emi_due_date'            => $postData['due_date'],
-                            'emi_other_charges'       => null,
-                            'emi_other_charges_date'  => null,
-                            'emi_other_charges_note'  => null,
-                            'emi_due_revised_amount'  => $postData['due_amount'],
-                            'emi_due_revised_note'    => null,
-                            'amount_paid'             => null,
-                            'amount_paid_date'        => null,
-                            'amount_paid_source'      => null,
-                            'amount_paid_note'        => null,
-                            'pay_due'                 => null,
-                            'status'                  => 0
-                        ]);
-
-                        $total_pay_with_intrest = $postData['due_amount'];
-                    }
-                    //Case Of Personal Finance
-                    else if ((in_array($postData['due_payment_source'], [3]))) {
-
-                        $P = floatval($postData['due_amount']) + floatval($postData['processing_fees']);
-                        $T = ($postData['no_of_emis']);
-                        $term_value = 0;
-                        switch ($postData['finance_terms']) {
-                            case 1:
-                                $T *= 1;
-                                $term_value = 1;
-                                break;
-                            case 2:
-                                $T *= 3;
-                                $term_value = 3;
-                                break;
-                            case 3:
-                                $T *= 6;
-                                $term_value = 6;
-                                break;
-                            case 4:
-                                $T *= 12;
-                                $term_value = 12;
-                                break;
-                        }
-                        $R = $postData['rate_of_interest'];
-                        $total_interest = (($P * $R * ($T / 12)) / 100);
-
-                        $grand_total = round($P + $total_interest);
-                        $total_pay_with_intrest = $grand_total;
-
-                        $installment_amount    = round($grand_total / $postData['no_of_emis']);
-                        $installment_intr     = round($total_interest / $postData['no_of_emis']);
-                        $installment_prin     = ($installment_amount - $installment_intr);
-
-                        $final_due_date = null;
-
-                        //Convert Emis
-                        for ($i = 1; $i <= $postData['no_of_emis']; $i++) {
-                            // for ($i = $postData['no_of_emis']; $i >= 1; $i--) {
-                            $next_month  = ($term_value * $i);
-                            $emi_due_date = date('Y-m-d', strtotime("+ $next_month months"));
-                            $emi_due_date = date('Y-m', strtotime($emi_due_date)) . '-' . date('d');
-                            $final_due_date = $emi_due_date;
-                            SalePaymentInstallments::create([
-                                'sale_id'                 => $postData['sale_id'],
-                                'sale_payment_account_id' => $accountModel->id,
-                                'emi_title'               => 'Customer Pay With EMI Installment - ' . $i,
-                                'loan_total_amount'       => $postData['sales_total_amount'],
-                                'emi_due_amount'          => $installment_amount,
-                                'emi_due_principal'       => $installment_prin,
-                                'emi_due_intrest'         => $installment_intr,
-                                'emi_due_date'            => $emi_due_date,
-                                'emi_other_charges'       => null,
-                                'emi_other_charges_date'  => null,
-                                'emi_other_charges_note'  => null,
-                                'emi_due_revised_amount'  => $installment_amount,
-                                'emi_due_revised_note'    => null,
-                                'amount_paid'             => null,
-                                'amount_paid_date'        => null,
-                                'amount_paid_source'      => null,
-                                'amount_paid_note'        => null,
-                                'pay_due'                 => null,
-                                'status'                  => 0
-                            ]);
-                        }
-
-                        //Due Date As Per Final Amount
-                        SalePaymentAccounts::where('id', $accountModel->id)->update(['due_date' => $final_due_date]);
-                    }
-
-                    //$total_pay_with_intrest
-                    SalePaymentAccounts::where('id', $accountModel->id)->update([
-                        'total_pay_with_intrest' => $total_pay_with_intrest
-                    ]);
-                }
-                //Case If Pay Full Down Payment
-                else {
-                    SalePaymentAccounts::where('id', $accountModel->id)->update(['status' => 1, 'status_closed_note' => 'Auto Closed On Full Payment', 'status_closed_by' => Auth::user()->id]);
-                    Sale::where('id', $postData['sale_id'])->update(['status' => 'close']);
-                }
-            }
-
-            //Account status check all dues & mark closed
-            self::verifyAccountPendings();
-
-            DB::commit();
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.create_success')
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 409,
-                'message'    => $e->getMessage()
-            ]);
-        }
-    }
-
     /**
      * Display the specified resource.
      *
@@ -592,94 +332,6 @@ class SalesAccountController extends Controller
         return $action;
     }
 
-
-    /**
-     * Fucntion for load detail modal popup - transaction detail / due-emil detail
-     */
-    public function salesDetailModal(Request $request)
-    {
-        $data = null;
-        $postData = $request->all();
-        $view = '';
-        if (isset($postData['type'])) {
-            $view = $postData['type'];
-            switch ($postData['type']) {
-                case 'due-detail':
-                    $data['data'] = SalePaymentInstallments::where('id', $postData['id'])->with([
-                        'account' => function ($account) {
-                            $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
-                        },
-                        'sale' => function ($account) {
-                            $account->select('id', 'customer_name', 'status');
-                        }
-                    ])->first();
-                    break;
-                case 'transaction-detail':
-                    $data['data'] = SalePaymentTransactions::where('id', $postData['id'])->with([
-                        'account' => function ($account) {
-                            $account->select('id', 'account_uuid', 'sales_total_amount', 'financier_id', 'due_payment_source', 'status');
-                        },
-                        'sale' => function ($sale) {
-                            $sale->select('id', 'customer_name', 'status');
-                        },
-                        'user' => function ($user) {
-                            $user->select('id', 'name', 'email');
-                        },
-                        'installment' => function ($installment) {
-                            $installment->select('id', 'installment_uuid', 'emi_title');
-                        }
-                    ])->first();
-                    break;
-                default:
-                    # code...
-                    break;
-            }
-        }
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.sales-accounts.modals.' . $view, $data)->render()
-        ]);
-    }
-
-    public function printPayemntReciept(Request $request, $id)
-    {
-        $id = base64_decode($id);
-        $branch_id = self::getCurrentUserBranch();
-        $where = array();
-        if ($branch_id > 0) {
-            $where = array('branch_id' => $branch_id);
-        }
-
-        $paymentInstallmentModel = SalePaymentInstallments::where('id', $id)
-            ->whereHas('sale', function ($sale) use ($where) {
-                $sale->where($where);
-            })
-            ->with([
-                'sale' => function ($sale) {
-                    $sale->with(['branch', 'purchase']);
-                },
-                'account' => function ($account) {
-                    $account->select('id', 'financier_id')->with([
-                        'financier' => function ($financier) {
-                            $financier->select('id', 'bank_name');
-                        }
-                    ]);
-                }
-            ])
-            ->first();
-
-
-        if (!$paymentInstallmentModel) {
-            return view('admin.accessDenied');
-        }
-
-        // return view('admin.sales-accounts.printPaymentReciept', ['data' => $paymentInstallmentModel]);
-        $pdf = Pdf::loadView('admin.sales-accounts.printPaymentReciept', ['data' => $paymentInstallmentModel]);
-        return $pdf->stream('invoice.pdf');
-    }
-
     /**
      * Function for get all tabs
      */
@@ -734,7 +386,7 @@ class SalesAccountController extends Controller
                     $viewName = 'bank-finance';
                     break;
                 case 'personalFinanceHistory':
-                    updateDuesOrPaidBalance($id);
+                    // updateDuesOrPaidBalance($id);
                     $data['data'] = SalePaymentPersonalFinanace::where('sale_payment_account_id', $id)->orderBy('id', 'ASC')->get()->toArray();
                     //$data['credit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('credit_amount');
                     //$data['debit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('debit_amount');

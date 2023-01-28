@@ -3,17 +3,17 @@
           <th>ACCOUNT ID</th>
           <td> {{ isset($data['account']['account_uuid']) ? $data['account']['account_uuid'] : '--' }}</td>
           <th>DUE PAYMENT ID</th>
-          <td>{{ $data['installment_uuid'] }}</td>
+          <td>{{ leadingZero($data['id'], 6) }}</td>
       </tr>
       <tr>
           <th>TITLE</th>
-          <td colspan="3">{{ isset($data['emi_title']) ? $data['emi_title'] : '--' }}</td>
+          <td colspan="3">{{ isset($data['payment_name']) ? $data['payment_name'] : '--' }}</td>
       </tr>
       <tr>
           <th>INSTALLMENT AMOUNT</th>
           <td>
               <span class="badge bg-blue" style="padding:6px !important;">
-                  {{ isset($data['emi_due_amount']) ? priceFormate($data['emi_due_amount']) : '0.00' }}
+                  {{ isset($data['emi_total_amount']) ? priceFormate($data['emi_total_amount']) : '0.00' }}
               </span>
           </td>
           <th>INSTALLMENT DUE DATE</th>
@@ -24,33 +24,33 @@
       @if (isset($data['account']['due_payment_source']) && $data['account']['due_payment_source'] == '3')
           <tr>
               <th>INSTALLMENT PRINCIPAL AMOUNT</th>
-              <td> {{ priceFormate($data['emi_due_principal']) }} </td>
+              <td> {{ priceFormate($data['emi_principal_amount']) }} </td>
               <th>INTREST AMOUNT</th>
-              <td> {{ priceFormate($data['emi_due_intrest']) }} </td>
+              <td> {{ priceFormate($data['emi_intrest_amount']) }} </td>
           </tr>
       @endif
       <tr>
-          <th>OTHER ADJUSTMENTS</th>
+          <th>ADJUSTMENT AMOUNT</th>
           <td>
-              @if (isset($data['emi_other_adjustment']) && $data['emi_other_adjustment'] > 0)
+              @if (isset($data['adjust_amount']) && $data['adjust_amount'] > 0)
                   <span class="badge bg-red" style="padding:6px !important;">
-                      {{ isset($data['emi_other_adjustment']) ? priceFormate(-$data['emi_other_adjustment']) : '0.00' }}
+                      {{ isset($data['adjust_amount']) ? priceFormate(-$data['adjust_amount']) : '0.00' }}
                   </span>
               @else
                   <span class="badge bg-green" style="padding:6px !important;">
-                      {{ isset($data['emi_other_adjustment']) ? '+' . priceFormate(-$data['emi_other_adjustment']) : '0.00' }}
+                      {{ isset($data['adjust_amount']) ? '+' . priceFormate(-$data['adjust_amount']) : '0.00' }}
                   </span>
               @endif
           </td>
           <th>ADJUSTMENT DATE</th>
           <td>
-              {{ isset($data['emi_other_adjustment_date']) ? myDateFormate($data['emi_other_adjustment_date']) : '--' }}
+              {{ isset($data['adjust_date']) ? myDateFormate($data['adjust_date']) : '--' }}
           </td>
       </tr>
       <tr>
           <th>ADJUSTMENT NOTES</th>
           <td>
-              {{ isset($data['emi_other_adjustment_note']) ? $data['emi_other_adjustment_note'] : '--' }}
+              {{ isset($data['adjust_note']) ? $data['adjust_note'] : '--' }}
           </td>
           <th>FINAL PAYABLE AMOUNT</th>
           <td>
@@ -87,8 +87,8 @@
                   @endif
               @endisset
           </td>
-          <th>PAID DUE AMOUNT(+/-)</th>
-          <td>{{ isset($data['pay_due']) ? priceFormate($data['pay_due']) : '0.00' }}</td>
+          <th>PAYMENT COLLECTED BY</th>
+          <td>{{ isset($data['salesman']['name']) ? $data['salesman']['name'] : '--' }}</td>
       </tr>
       <tr>
           <td colspan="4">Note : If you will pay more then installment amount it will adjust in next

@@ -49,8 +49,8 @@
                      <th>DUE DATE</th>
                      <th>PAID SOURCE</th>
                      <th width="10%">PAID DATE</th>
-                     {{-- <th>TYPE</th> --}}
                      <th>STATUS</th>
+                     <th>ACTION</th>
                  </tr>
              </thead>
              <tbody>
@@ -68,18 +68,6 @@
                                  <td>{{ isset($cashPayment['paid_source']) ? $cashPayment['paid_source'] : '--' }}</td>
                                  <td>{{ isset($cashPayment['paid_date']) && !empty($cashPayment['paid_date']) ? date('d/m/Y', strtotime($cashPayment['paid_date'])) : '--' }}
                                  </td>
-                                 {{-- <td>
-                                     @if ($cashPayment['trans_type'] == '1')
-                                         <span title="Payment Not Done" class="label label-success"
-                                             style="padding: 5px 8px;">
-                                             CREDIT
-                                         </span>
-                                     @else
-                                         <span title="Payment Done" class="label label-danger" style="padding: 5px 8px;">
-                                             DEBIT
-                                         </span>
-                                     @endif
-                                 </td> --}}
                                  <td>
                                      @if ($cashPayment['status'] == '0')
                                          <span title="Payment Not Done" class="label label-danger"
@@ -90,6 +78,23 @@
                                          <span title="Payment Done" class="label label-success" style="padding: 5px 8px;">
                                              <i class="fa fa-check" aria-hidden="true"></i>
                                          </span>
+                                     @endif
+                                 </td>
+                                 <td>
+                                     @if ($cashPayment['paid_source'] != '' && $cashPayment['paid_source'] != 'Auto')
+                                         <a href="{{ route('salesCash.show', ['salesCash' => isset($cashPayment['id']) ? $cashPayment['id'] : 0]) }}"
+                                             class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                                             data-modal_title="VIEW CASH PAYMENT DETAIL">
+                                             <i class="fa fa-eye" aria-hidden="true"></i>
+                                         </a>
+                                         @if ($cashPayment['status'] == '1')
+                                             <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
+                                                 class="btn btn-sm btn-primary" target="_blank">
+                                                 <i class="fa fa-print" aria-hidden="true"></i>
+                                             </a>
+                                         @endif
+                                     @else
+                                         --
                                      @endif
                                  </td>
                              </tr>
@@ -104,12 +109,12 @@
                      <td>TOTAL PAID BY CUSTOMER</td>
                      <td>{!! convertBadgesPrice(isset($paid_by_amount) ? $paid_by_amount : 0.0, 'warning') !!}</td>
                      <td>TOTAL DUE</td>
-                     <td colspan="2">{!! convertBadgesPrice(isset($due_amount) ? $due_amount : 0.0, 'danger') !!}</td>
+                     <td colspan="3">{!! convertBadgesPrice(isset($due_amount) ? $due_amount : 0.0, 'danger') !!}</td>
                  </tr>
              </tfoot>
          @else
              <tr style="font-size: 17px; color: red;text-align: center;">
-                 <td colspan="10">No data available in table.</td>
+                 <td colspan="11">No data available in table.</td>
              </tr>
              @endif
              </tbody>
