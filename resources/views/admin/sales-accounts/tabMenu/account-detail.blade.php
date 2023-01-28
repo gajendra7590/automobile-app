@@ -90,10 +90,18 @@
                         +
                         {{ isset($data['bank_finance_paid_balance']) ? priceFormate($data['bank_finance_paid_balance']) : '--' }}
                     </span>
-                    <span class="info-box-number text-red">
-                        -
-                        {{ isset($data['bank_finance_outstaning_balance']) ? priceFormate($data['bank_finance_outstaning_balance']) : '--' }}
-                    </span>
+
+                    @if ($data['bank_finance_outstaning_balance'] >= 0)
+                        <span class="info-box-number text-red">
+                            -
+                            {{ isset($data['bank_finance_outstaning_balance']) ? priceFormate($data['bank_finance_outstaning_balance']) : '--' }}
+                        </span>
+                    @else
+                        <span class="info-box-number text-yellow">
+                            +
+                            {{ isset($data['bank_finance_outstaning_balance']) ? priceFormate(-$data['bank_finance_outstaning_balance']) : '--' }}(Buffer)
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>

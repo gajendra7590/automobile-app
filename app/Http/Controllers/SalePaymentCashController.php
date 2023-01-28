@@ -166,9 +166,30 @@ class SalePaymentCashController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $salePaymentAccount = SalePaymentAccounts::find($id);
+            if (!$salePaymentAccount) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Account does not exis"
+                ]);
+            }
+
+            $data = array(
+                'data' => $salePaymentAccount
+            );
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Add Charges Modal Loaded",
+                'data'       => view('admin.sales-accounts.cash-payment.addCharges', $data)->render()
+            ]);
+        }
     }
 
     /**
@@ -180,7 +201,81 @@ class SalePaymentCashController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            try {
+                DB::beginTransaction();
+                $postData = $request->only('sales_account_id', 'charge_amount', 'charge_reason', 'charge_note');
+                $validator = Validator::make($postData, [
+                    'sales_account_id'   => "required|exists:sale_payment_accounts,id",
+                    'charge_amount'      => "required|numeric|min:1",
+                    'charge_reason'      => "required",
+                    'charge_note'        => 'nullable|string'
+                ]);
+                //If Validation failed
+                if ($validator->fails()) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                $salePaymentAccount = SalePaymentAccounts::find($postData['sales_account_id']);
+                $currentCashOutStandingBalance = $salePaymentAccount->cash_outstaning_balance;
+
+                $lastCash = SalePaymentCash::where('sale_payment_account_id', $id)->orderBy('id', 'DESC')->first();
+                //DEBIT SALES CASH PAYMENT
+                $payment_name = $postData['charge_reason'] . ' Added.';
+                $createdCashPayment = SalePaymentCash::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'payment_name' => $payment_name,
+                    'credit_amount' => $postData['charge_amount'],
+                    'debit_amount' => 0,
+                    'change_balance' => floatval($currentCashOutStandingBalance + $postData['charge_amount']),
+                    'due_date'    => $lastCash->due_date,
+                    'paid_source' => 'Auto',
+                    'paid_date' => date('Y-m-d'),
+                    'paid_note' => $postData['charge_note'],
+                    'collected_by' => 0,
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status' => 1
+                ]);
+                //CREATE NEW TRANSACTION
+                SalePaymentTransactions::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'transaction_for' => 1,
+                    'transaction_name' => $payment_name,
+                    'transaction_amount' => $postData['charge_amount'],
+                    'transaction_paid_source' => 'Auto',
+                    'transaction_paid_source_note' => $postData['charge_note'],
+                    'transaction_paid_date' => date('Y-m-d'),
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status' => 1,
+                    'reference_id' => $createdCashPayment->id
+                ]);
+
+                DB::commit();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.create_success')
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $e->getMessage(),
+                    'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+                ]);
+            }
+        }
     }
 
     /**

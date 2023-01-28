@@ -6,29 +6,29 @@
                      !in_array($salesAccountData->due_payment_source, [2, 3]) &&
                      $salesAccountData->status == 0)
                  <a href="{{ route('salesBankFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
-                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                     data-modal_title="SETUP BANK FINANCE">
-                     CREATE BANK FINANCE
+                     class="btn btn-sm btn-info ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="SETUP BANK FINANCE ACCOUNT">
+                     CREATE BANK FINANCE ACCOUNT
                  </a>
                  <a href="{{ route('salesPersonalFinanace.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
-                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                     data-modal_title="SETUP PERSONAL FINANCE">
-                     CREATE PERSONAL FINANCE
+                     class="btn btn-sm btn-warning ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="SETUP PERSONAL FINANCE ACCOUNT">
+                     CREATE PERSONAL FINANCE ACCOUNT
                  </a>
              @endif
 
              @if (isset($salesAccountData) && $salesAccountData->cash_status == 0)
                  <a href="{{ route('salesCash.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
                      class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                     data-modal_title="CREATE NEW PAYMENT">
-                     CREATE NEW PAYMENT
+                     data-modal_title="RECEIVE NEW PAYMENT">
+                     RECEIVE NEW PAYMENT
                  </a>
              @endif
 
              @if (isset($salesAccountData) && $salesAccountData->status == 0)
-                 <a href="{{ route('salesCash.create') }}?id={{ isset($salesAccountId) ? $salesAccountId : 0 }}"
-                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                     data-modal_title="CREATE NEW PAYMENT">
+                 <a href="{{ route('salesCash.edit', ['salesCash' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                     class="btn btn-sm btn-success ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="ADD CHARGES">
                      ADD CHARGES
                  </a>
              @endif

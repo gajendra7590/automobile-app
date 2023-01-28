@@ -979,7 +979,7 @@ class SalesAccountController extends Controller
                     $paymentAccount = $paymentAccount->toArray();
                     $data['data'] = $paymentAccount;
                     $data['data']['total_paid'] = floatval($paymentAccount['cash_paid_balance'] + $paymentAccount['bank_finance_paid_balance'] + $paymentAccount['personal_finance_outstaning_balance']);
-                    $data['data']['total_due'] = floatval($paymentAccount['cash_outstaning_balance'] + $paymentAccount['bank_finance_outstaning_balance'] + $paymentAccount['personal_finance_outstaning_balance']);
+                    $data['data']['total_due'] = floatval($paymentAccount['cash_outstaning_balance'] + ($paymentAccount['bank_finance_outstaning_balance'] >= 0 ? $paymentAccount['bank_finance_outstaning_balance'] : 0) + $paymentAccount['personal_finance_outstaning_balance']);
                     $data['data']['grand_total'] = floatval($data['data']['total_paid'] + $data['data']['total_due']);
                     $viewName = 'account-detail';
                     break;
