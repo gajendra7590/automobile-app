@@ -52,7 +52,7 @@ class SalesAccountController extends Controller
                                 }
                             ]);
                     }
-                ])->select('id', 'account_uuid', 'sale_id', 'sales_total_amount', 'deposite_amount', 'due_amount', 'due_payment_source', 'status', 'created_at');
+                ])->select('id', 'account_uuid', 'sale_id', 'sales_total_amount', 'due_payment_source', 'status', 'created_at');
 
 
             //Filter By Branch

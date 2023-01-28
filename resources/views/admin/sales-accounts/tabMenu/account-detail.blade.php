@@ -45,6 +45,108 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box" style="background: #f3f3f3a1;">
+            <span class="info-box-icon bg-blue"><i class="fa fa-user" aria-hidden="true"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">SELF PAY / CASH PAY</span>
+                <span class="info-box-number text-green">
+                    +
+                    {{ isset($salesAccountData['cash_paid_balance']) ? priceFormate($data['cash_paid_balance']) : '--' }}
+                </span>
+                <span class="info-box-number text-red">
+                    -
+                    {{ isset($salesAccountData['cash_outstaning_balance']) ? priceFormate($data['cash_outstaning_balance']) : '--' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix visible-sm-block"></div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box" style="background: #f3f3f3a1;">
+            <span class="info-box-icon bg-blue"><i class="fa fa-user" aria-hidden="true"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">SELF PAY / CASH PAY STATUS</span>
+                @if (isset($data['cash_status']) && $data['cash_status'] == '1')
+                    <span class="info-box-number text-green">CLOSE</span>
+                @else
+                    <span class="info-box-number text-red">DUE PENDING</span>
+                @endif
+            </div>
+        </div>
+    </div>
+    <!-- CASE OF BANK FINANACE -->
+    @if (isset($data['due_payment_source']) && $data['due_payment_source'] == '2')
+        <div class="clearfix visible-sm-block"></div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box" style="background: #f3f3f3a1;">
+                <span class="info-box-icon bg-green"><i class="fa fa-bank" aria-hidden="true"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BANK FINANACE PAY</span>
+                    <span class="info-box-number text-green">
+                        +
+                        {{ isset($data['bank_finance_paid_balance']) ? priceFormate($data['bank_finance_paid_balance']) : '--' }}
+                    </span>
+                    <span class="info-box-number text-red">
+                        -
+                        {{ isset($data['bank_finance_outstaning_balance']) ? priceFormate($data['bank_finance_outstaning_balance']) : '--' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box" style="background: #f3f3f3a1;">
+                <span class="info-box-icon bg-green"><i class="fa fa-bank" aria-hidden="true"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">BANK FINANACE PAY STATUS</span>
+                    @if (isset($data['bank_finance_status']) && $data['bank_finance_status'] == '1')
+                        <span class="info-box-number text-green">CLOSE</span>
+                    @else
+                        <span class="info-box-number text-red">DUE PENDING</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+    <!-- CASE OF PERSONAL FINANACE -->
+    @if (isset($data['due_payment_source']) && $data['due_payment_source'] == '3')
+        <div class="clearfix visible-sm-block"></div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box" style="background: #f3f3f3a1;">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-leanpub" aria-hidden="true"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">PERSONAL FINANACE</span>
+                    <span class="info-box-number text-green">
+                        +
+                        {{ isset($data['personal_finance_paid_balance']) ? priceFormate($data['personal_finance_paid_balance']) : '--' }}
+                    </span>
+                    <span class="info-box-number text-red">
+                        -
+                        {{ isset($data['personal_finance_outstaning_balance']) ? priceFormate($data['personal_finance_outstaning_balance']) : '--' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box" style="background: #f3f3f3a1;">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-leanpub" aria-hidden="true"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">PERSONAL FINANACE PAY STATUS</span>
+                    @if (isset($data['personal_finance_status']) && $data['personal_finance_status'] == '1')
+                        <span class="info-box-number text-green">CLOSE</span>
+                    @else
+                        <span class="info-box-number text-red">DUE PENDING</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
@@ -66,7 +168,7 @@
                             <td colspan="2">
                                 {{ isset($data['sale']['customer_name']) ? strtoupper(strtolower($data['sale']['customer_name'])) : '' }}
                             </td>
-                            <th>STATUS</th>
+                            <th>ACCOUNT PAY STATUS</th>
                             <td>
                                 @isset($data['status'])
                                     @if ($data['status'] == '0')
@@ -81,15 +183,19 @@
                                 {{ isset($data['due_payment_source']) ? strtoupper(duePaySources($data['due_payment_source'])) : '--' }}
                             </td>
                         </tr>
-                        @if (isset($data['due_payment_source']) && in_array($data['due_payment_source'], [2]))
+                        @if (isset($data['due_payment_source']) && in_array($data['due_payment_source'], [2, 3]))
                             <tr>
                                 <th>FINANCER NAME</th>
-                                <td colspan="7">
-                                    {{ isset($data['financer']['bank_name']) ? strtoupper($data['financer']['bank_name']) : '--' }}
+                                <td colspan="2">
+                                    {{ isset($data['financier']['bank_name']) ? strtoupper($data['financier']['bank_name']) : '--' }}
+                                </td>
+                                <th>FINANCER NOTE</th>
+                                <td colspan="3">
+                                    {{ isset($data['financier_note']) ? strtoupper($data['financier_note']) : '--' }}
                                 </td>
                             </tr>
                         @endif
-                        @if (isset($data['due_payment_source']) && in_array($data['due_payment_source'], [2, 3]))
+                        @if (isset($data['due_payment_source']) && in_array($data['due_payment_source'], [3]))
                             <tr>
                                 <th>PAYMENT TERM</th>
                                 <td>
