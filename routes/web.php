@@ -128,6 +128,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Personal Finance Payment
     Route::resource('salesPersonalFinanace', 'SalePaymentPersonalFinanaceController');
+    Route::get('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payIndex')->name('personalFinanacePayIndex');
+    Route::post('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payStore')->name('personalFinanacePayStore');
 
     //Payment Tabs
     Route::get('getPaymentTabs/{id}', 'SalesAccountController@getPaymentTabs')->name('getPaymentTabs');

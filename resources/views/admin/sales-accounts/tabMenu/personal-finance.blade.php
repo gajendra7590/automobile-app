@@ -1,6 +1,6 @@
  <div class="box box-danger">
      <div class="box-header with-border">
-         <h3 class="box-title pull-left">DUE/EMI HISTORY</h3>
+         <h3 class="box-title pull-left">PERSONAL FINANACE HISTORY</h3>
          <div class="pull-right">
              <span class="label label-default">
                  Payment Option :-
@@ -13,7 +13,7 @@
          <table class="table">
              <tr>
                  <th>#</th>
-                 <th width="20%">TITLE</th>
+                 <th width="20%">PAYMENT NAME</th>
                  <th>INSTALLMENT AMOUNT</th>
                  <th>INSTALLMENT DATE</th>
                  <th>PAYABLE AMOUNT</th>
@@ -24,47 +24,54 @@
                  <th width="5%">ACTION</th>
              </tr>
 
-             @if (isset($data['installments']) && count($data['installments']) > 0)
-                 @isset($data['installments'])
+             @if (isset($data) && count($data) > 0)
+                 @isset($data)
                      @php
                          $pending_emi = 0;
                      @endphp
-                     @foreach ($data['installments'] as $k => $installment)
-                         @if ($installment->status == '0')
+                     @foreach ($data as $k => $installment)
+                         @if ($installment['status'] == '0')
                              @php
                                  $pending_emi++;
                              @endphp
                          @endif
                          <tr>
-                             <td>{{ $installment->id }}</td>
-                             <td>{{ $installment->emi_title }}</td>
+                             <td>{{ $installment['id'] }}</td>
+                             <td>{{ $installment['payment_name'] }}</td>
                              <td>
                                  <span class="label label-primary" style="padding: 5px;">
-                                     {{ priceFormate($installment->emi_due_amount) }}
+                                     {{ priceFormate($installment['emi_total_amount']) }}
                                  </span>
                              </td>
-                             <td>{{ date('d/m/Y', strtotime($installment->emi_due_date)) }}</td>
+                             <td>{{ date('d/m/Y', strtotime($installment['emi_due_date'])) }}</td>
                              <td>
                                  <span class="label label-danger" style="padding: 5px;">
-                                     {{ priceFormate($installment->emi_due_revised_amount) }}
+                                     {{ priceFormate($installment['emi_due_revised_amount']) }}
                                  </span>
                              </td>
                              <td>
-                                 @if (!empty($installment->amount_paid))
+                                 @if (!empty($installment['amount_paid']))
                                      <span class="label label-success" style="padding: 5px;">
-                                         {{ priceFormate($installment->amount_paid) }}
+                                         {{ priceFormate($installment['amount_paid']) }}
                                      </span>
                                  @else
                                      --
                                  @endif
                              </td>
                              </td>
-                             <td>{{ !empty($installment->amount_paid) && $installment->amount_paid > 0 ? date('d/m/Y', strtotime($installment->amount_paid_date)) : '--' }}
-                             </td>
-                             <td>{{ !empty($installment->pay_due) ? priceFormate($installment->pay_due) : '--' }}
+                             <td>{{ !empty($installment['amount_paid']) && $installment['amount_paid'] > 0 ? date('d/m/Y', strtotime($installment['amount_paid_date'])) : '--' }}
                              </td>
                              <td>
-                                 @if ($installment->status == '0')
+                                 @if ($installment['adjust_amount'] == 0)
+                                     {{ priceFormate(0) }}
+                                 @elseif ($installment['adjust_amount'] > 0)
+                                     +{{ priceFormate($installment['adjust_amount']) }}
+                                 @else
+                                     -{{ priceFormate(-$installment['adjust_amount']) }}
+                                 @endif
+                             </td>
+                             <td>
+                                 @if ($installment['status'] == '0')
                                      <span title="Payment Not Done" class="label label-danger" style="padding: 5px 8px;">
                                          <i class="fa fa-times" aria-hidden="true"></i>
                                      </span>
@@ -81,25 +88,25 @@
                                          <span class="caret"></span>
                                      </button>
                                      <ul class="dropdown-menu">
-                                         @if ($installment->status == '0' && $pending_emi == 1)
+                                         @if ($installment['status'] == '0' && $pending_emi == 1)
                                              <li>
-                                                 <a href="{{ route('salesDetailModal') }}?type=due-pay-form&id={{ $installment->id }}"
-                                                     class="ajaxModalPopup" data-modal_title="Make Due Payment"
+                                                 <a href="{{ route('personalFinanacePayIndex', ['id' => $installment['id']]) }}"
+                                                     class="ajaxModalPopup" data-modal_title="PAY INSTALLMENT"
                                                      data-modal_size="modal-lg">
                                                      PAY NOW
                                                  </a>
                                              </li>
                                          @endif
                                          <li>
-                                             <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment->id }}"
+                                             <a href="{{ route('salesDetailModal') }}?type=due-detail&id={{ $installment['id'] }}"
                                                  class="ajaxModalPopup" data-modal_title="Due Payment Detail"
                                                  data-modal_size="modal-lg">
                                                  VIEW DETAIL
                                              </a>
                                          </li>
-                                         @if ($installment->status == '1')
+                                         @if ($installment['status'] == '1')
                                              <li>
-                                                 <a href="{{ route('printPayemntReciept', ['id' => base64_encode($installment->id)]) }}"
+                                                 <a href="{{ route('printPayemntReciept', ['id' => base64_encode($installment['id'])]) }}"
                                                      target="_blank">
                                                      PRINT RECIEPT
                                                  </a>

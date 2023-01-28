@@ -4,6 +4,7 @@ use App\Http\Controllers\SalesAccountController;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
+use App\Models\SalePaymentPersonalFinanace;
 use Illuminate\Support\Str;
 use NumberToWords\NumberToWords;
 
@@ -471,10 +472,12 @@ if (!function_exists('updateDuesOrPaidBalance')) {
         $bankFinStatus = ($totalOutStadningBankFin <= 0) ? 1 : 0;
 
         //Personal Finance
-        $totalCreditPerFin = 0;
-        $totalDebitPerFin = 0;
-        $totalOutStadningPerFin = floatval($totalCreditPerFin - $totalDebitPerFin);
-        $totalPaidPerFin = 0;
+        $perFinanaceTotalUnpaid = SalePaymentPersonalFinanace::where('sale_payment_account_id', $salesAccountId)->where('status', 0)->sum('emi_total_amount');
+        $perFinanaceTotalPaid  = SalePaymentPersonalFinanace::where('sale_payment_account_id', $salesAccountId)->sum('amount_paid');
+
+        // dd(($totalCreditPerFin . '  ' . $totalDebitPerFin));
+        $totalOutStadningPerFin = floatval($perFinanaceTotalUnpaid);
+        $totalPaidPerFin =  $perFinanaceTotalPaid;
         $PerFinStatus = ($totalOutStadningPerFin == 0) ? 1 : 0;
 
         $accountStatus = (($cashStatus == 1 && $bankFinStatus == 1 && $PerFinStatus == 1)) ? 1 : 0;

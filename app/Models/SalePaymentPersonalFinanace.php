@@ -57,4 +57,20 @@ class SalePaymentPersonalFinanace extends Model
             updateDuesOrPaidBalance($model->sale_payment_account_id);
         });
     }
+
+    /**
+     * MApping With Account
+     */
+    public function account()
+    {
+        return $this->belongsTo(SalePaymentAccounts::class, 'sale_payment_account_id');
+    }
+
+    /**
+     * MApping With Sales
+     */
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
+    }
 }

@@ -65,6 +65,11 @@ class SalePaymentAccounts extends Model
     const ACC_STATUS_OPEN = 0;
     const ACC_STATUS_CLOSE = 1;
 
+    //TRANSACTION FOR
+    const TRANSACTION_TYPE_CB = 1;
+    const TRANSACTION_TYPE_BF = 2;
+    const TRANSACTION_TYPE_PF = 3;
+
 
 
     public static function boot()
