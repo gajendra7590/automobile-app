@@ -320,7 +320,7 @@ class PurchaseController extends Controller
             return redirect()->back();
         }
 
-        // return $bpModel;
+        return $bpModel;
         $data = [];
         $data['branches'] = self::_getBranchById($bpModel->bike_branch);
         $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);

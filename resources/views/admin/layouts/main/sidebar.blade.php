@@ -28,7 +28,7 @@
             </li>
             @if (auth()->user() && auth()->user()->is_admin == '1')
                 <li
-                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-calculator"></i>
                         <span>ALL BASIC SETTINGS</span>
@@ -37,7 +37,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'display:"block"' : '' }}>
                         <li class="{{ Request::is('branches*') ? 'active' : '' }}">
                             <a href="{{ route('branches.index') }}"><i class="fa fa-building-o"></i>OUR BRANCHES</a>
                         </li>
@@ -72,6 +72,10 @@
                         <li class="{{ Request::is('batteryBrands*') ? 'active' : '' }}">
                             <a href="{{ route('batteryBrands.index') }}"><i class="fa fa-battery-full"></i>BATTERY
                                 BRANDS</a>
+                        </li>
+                        <li class="{{ Request::is('skuSalesPrice*') ? 'active' : '' }}">
+                            <a href="{{ route('skuSalesPrice.index') }}"><i class="fa fa-money"></i>SKU SALES
+                                PRICES</a>
                         </li>
                     </ul>
                 </li>

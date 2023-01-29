@@ -148,8 +148,9 @@ class Purchase extends Model
         return $this->hasOne(PurchaseInvoice::class, 'purchase_id');
     }
 
-    public function brokers() {
-        return $this->belongsToMany(Broker::class,'purchase_transfer')->latest();
+    public function brokers()
+    {
+        return $this->belongsToMany(Broker::class, 'purchase_transfer')->latest();
     }
 
     public function purchase_transfer_latest()
@@ -160,5 +161,10 @@ class Purchase extends Model
     public function transfers()
     {
         return $this->hasOne(PurchaseTransfer::class, 'purchase_id')->where('active_status', '1')->orderBy('id', 'DESC');
+    }
+
+    public function skuSalesPrice()
+    {
+        return $this->hasOne(SkuSalePrice::class, 'sku_code', 'sku')->where('active_status', '1')->orderBy('id', 'DESC');
     }
 }

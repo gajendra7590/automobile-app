@@ -182,8 +182,8 @@ class BikeColorController extends Controller
             }
             $validator = Validator::make($postData, [
                 'bike_model'      => 'required',
-                'color_name'      => "required|unique:bike_colors,color_name," . $id,
-                'sku_code'        => "required|unique:bike_colors,sku_code," . $id,
+                'color_name'      => "required",
+                'sku_code'        => "required",
                 'color_code'      => "nullable",
                 'active_status'   => 'required|in:0,1'
             ]);

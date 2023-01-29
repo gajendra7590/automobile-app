@@ -16,6 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 //Helpr
 use App\Traits\CommonHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
@@ -186,6 +187,7 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $postData = $request->only(
                 'purchase_id',
                 'quotation_id',
@@ -252,6 +254,7 @@ class SaleController extends Controller
             $validator = Validator::make($postData, $formValidationArr);
             //If Validation failed
             if ($validator->fails()) {
+                DB::rollBack();
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
@@ -274,8 +277,11 @@ class SaleController extends Controller
             Purchase::where(['id' => $postData['purchase_id']])->update(['status' => '2']);
 
             //Create Sales Account
-            SalePaymentAccounts::create(['sale_id' => $createModel->id, 'sales_total_amount' => $postData['total_amount']]);
+            $accountModel = SalePaymentAccounts::create(['sale_id' => $createModel->id, 'sales_total_amount' => $postData['total_amount']]);
 
+            //Update
+            $createModel->update(['sp_account_id' => $accountModel->id]);
+            DB::commit();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
@@ -283,6 +289,7 @@ class SaleController extends Controller
                 'data'       => $createModel
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
@@ -420,8 +427,10 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
             $bpModel = Sale::where(['id' => $id])->first();
             if (!$bpModel) {
+                DB::rollBack();
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
@@ -496,6 +505,7 @@ class SaleController extends Controller
 
             //If Validation failed
             if ($validator->fails()) {
+                DB::rollBack();
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
@@ -504,15 +514,15 @@ class SaleController extends Controller
                 ]);
             }
             $postData['updated_by'] = Auth::user()->id;
-
-            // dd($postData);
             $bpModel->update($postData);
+            DB::commit();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
                 'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
@@ -647,8 +657,10 @@ class SaleController extends Controller
             },
             'batteryBrand' => function ($model) {
                 $model->select('id', 'name');
-            }
+            },
+            'skuSalesPrice'
         ])->where('id', $postData['id'])->first();
+        // dd($purhcaseModel->toArray());
         $data = array(
             'states' => self::_getStates(1),
             'districts' => [],
@@ -666,6 +678,18 @@ class SaleController extends Controller
                 $data['cities'] = self::_getCities($purhcaseModel->customer_district);
                 $data['bank_financers'] = self::_getFinaceirs(($quot->payment_type - 1));
             }
+        }
+
+        //IF PURCHASE MAP WITH SKU SALES PRICE
+        if (isset($purhcaseModel->skuSalesPrice) && ($purhcaseModel->skuSalesPrice)) {
+            $data['data']['ex_showroom_price'] = $purhcaseModel->skuSalesPrice->ex_showroom_price;
+            $data['data']['registration_amount'] = $purhcaseModel->skuSalesPrice->registration_amount;
+            $data['data']['insurance_amount'] = $purhcaseModel->skuSalesPrice->insurance_amount;
+            $data['data']['hypothecation_amount'] = $purhcaseModel->skuSalesPrice->hypothecation_amount;
+            $data['data']['accessories_amount'] = $purhcaseModel->skuSalesPrice->accessories_amount;
+            $data['data']['other_charges'] = $purhcaseModel->skuSalesPrice->other_charges;
+            $data['data']['total_amount'] = $purhcaseModel->skuSalesPrice->total_amount;
+            $data['data']['ex_showroom_price'] = $purhcaseModel->skuSalesPrice->ex_showroom_price;
         }
 
         return response()->json([

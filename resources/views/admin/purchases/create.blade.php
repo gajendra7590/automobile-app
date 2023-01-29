@@ -119,7 +119,9 @@
                                         @foreach ($models as $key => $model)
                                             <option
                                                 {{ isset($data->bike_model) && $data->bike_model == $model->id ? 'selected="selected"' : '' }}
-                                                value="{{ $model->id }}">{{ $model->model_name }}</option>
+                                                value="{{ $model->id }}"
+                                                data-variantCode="{{ isset($model->variant_code) ? $model->variant_code : '' }}">
+                                                {{ $model->model_name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -136,7 +138,9 @@
                                         @foreach ($colors as $key => $color)
                                             <option
                                                 {{ isset($data->bike_model_color) && $data->bike_model_color == $color->id ? 'selected="selected"' : '' }}
-                                                value="{{ $color->id }}">{{ $color->color_name }}</option>
+                                                value="{{ $color->id }}"
+                                                data-skuCode="{{ isset($model->sku_code) ? $model->sku_code : '' }}">
+                                                {{ $color->color_name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -403,4 +407,19 @@
 
 @push('after-script')
     <script src="{{ asset('assets/modules/purchase.js') }}"></script>
+    <script>
+        $('select[name="bike_model"]').change(function() {
+            let var_code = $(this).find('option:selected').attr('data-variantCode');
+            if (var_code != "") {
+                $('input[name="variant"]').val(var_code);
+            }
+        });
+
+        $('select[name="bike_model_color"]').change(function() {
+            let sku_code = $(this).find('option:selected').attr('data-skuCode');
+            if (sku_code != "") {
+                $('input[name="sku"]').val(sku_code);
+            }
+        });
+    </script>
 @endpush

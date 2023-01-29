@@ -19,6 +19,7 @@ use App\Models\Quotation;
 use App\Models\RtoAgent;
 use App\Models\Sale;
 use App\Models\Salesman;
+use App\Models\SkuSalePrice;
 use App\Models\State;
 use App\Models\TyreBrand;
 use App\Models\User;
@@ -146,6 +147,9 @@ class AjaxCommonController extends Controller
                         break;
                     case 'tyreBrands':
                         $model = new TyreBrand;
+                        break;
+                    case 'skuSalesPrice':
+                        $model = new SkuSalePrice;
                         break;
                     default:
                         # code...

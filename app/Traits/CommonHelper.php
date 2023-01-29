@@ -154,7 +154,7 @@ trait CommonHelper
         $model = BikeModel::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
-            $model = $model->select('id', 'model_name');
+            $model = $model->select('id', 'model_name', 'variant_code');
         }
 
         //Filter by brand
@@ -178,7 +178,7 @@ trait CommonHelper
     {
         $model = null;
         if ($select_all == false) {
-            $model = BikeModel::select('id', 'model_name');
+            $model = BikeModel::select('id', 'model_name', 'variant_code');
         } else {
             $model =  BikeModel::select('*');
         }
@@ -193,7 +193,7 @@ trait CommonHelper
         $model = BikeColor::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
-            $model = $model->select('id', 'color_name');
+            $model = $model->select('id', 'color_name', 'sku_code');
         }
 
         //Filter by model
@@ -217,7 +217,7 @@ trait CommonHelper
     {
         $model = null;
         if ($select_all == false) {
-            $model = BikeColor::select('id', 'color_name');
+            $model = BikeColor::select('id', 'color_name', 'sku_code');
         } else {
             $model =  BikeColor::select('*');
         }

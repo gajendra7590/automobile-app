@@ -76,6 +76,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Battery Brands
     Route::resource('batteryBrands', 'BatteryBrandController');
 
+    //SKU SALE PRICE
+    Route::resource('skuSalesPrice', 'SkuSalePriceController');
+
     //Purchases
     Route::resource('purchases', 'PurchaseController');
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');

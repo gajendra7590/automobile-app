@@ -13,7 +13,8 @@
             @isset($data)
                 <option value="">---Select District---</option>
                 @foreach ($data as $item)
-                    <option value="{{ $item->id }}">{{ $item->district_name }}</option>
+                    <option value="{{ $item->id }}">{{ $item->district_name }}
+                    </option>
                 @endforeach
             @endisset
         @break
@@ -50,7 +51,8 @@
             @isset($data)
                 <option value="">---Select Model---</option>
                 @foreach ($data as $item)
-                    <option value="{{ $item->id }}">{{ $item->model_name }}</option>
+                    <option value="{{ $item->id }}" data-variantCode="{{ $item->variant_code }}">{{ $item->model_name }}
+                    </option>
                 @endforeach
             @endisset
         @break
@@ -59,7 +61,8 @@
             @isset($data)
                 <option value="">---Select Color---</option>
                 @foreach ($data as $item)
-                    <option value="{{ $item->id }}">{{ $item->color_name }}</option>
+                    <option value="{{ $item->id }}" data-skuCode="{{ $item->sku_code }}">{{ $item->color_name }}
+                    </option>
                 @endforeach
             @endisset
         @break
