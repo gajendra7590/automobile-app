@@ -53,12 +53,4 @@ class SalePaymentTransactions extends Model
     {
         return $this->belongsTo(User::class, 'payment_collected_by');
     }
-
-    /**
-     * MApping With Installment
-     */
-    public function installment()
-    {
-        return $this->belongsTo(SalePaymentInstallments::class, 'sale_payment_installment_id');
-    }
 }

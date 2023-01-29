@@ -7,14 +7,14 @@
         <table class="table table-bordered myCustomTable">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th width="20%">TRANSACTION NAME</th>
-                    <th>TRANSACTION AMOUNT</th>
-                    <th>PAID SOURCE</th>
-                    <th>PAID DATE</th>
-                    <th>TRANSACTION TYPE</th>
-                    <th>STATUS</th>
-                    <th>ACTION</th>
+                    <th width="5%">#</th>
+                    <th>TRANSACTION NAME</th>
+                    <th width="15%">TRANSACTION AMOUNT</th>
+                    <th width="10%">PAID SOURCE</th>
+                    <th width="8%">PAID DATE</th>
+                    <th width="12%">TRANSACTION TYPE</th>
+                    <th width="5%">STATUS</th>
+                    <th width="5%">ACTION</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,11 +59,13 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('transactions.show', ['id' => $transaction['id']]) }}"
-                                        class="btn btn-primary btn-sm ajaxModalPopup"
-                                        data-modal_title="VIEW TRANSCTION DETAIL" data-modal_size="modal-lg">
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
+                                    @if (isset($transaction['transaction_paid_source']) && $transaction['transaction_paid_source'] != 'Auto')
+                                        <a href="{{ route('transactions.show', ['id' => $transaction['id']]) }}"
+                                            class="btn btn-primary btn-sm ajaxModalPopup"
+                                            data-modal_title="VIEW TRANSCTION DETAIL" data-modal_size="modal-lg">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

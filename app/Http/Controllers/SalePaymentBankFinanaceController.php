@@ -78,7 +78,7 @@ class SalePaymentBankFinanaceController extends Controller
                     'sales_account_id'      => "required|exists:sale_payment_accounts,id",
                     'total_outstanding'     => "required|numeric",
                     'total_finance_amount'  => "required|numeric|min:1|lte:total_outstanding",
-                    'finance_due_date'      => 'required|date|after:' . now()->format('Y-m-d'),
+                    'finance_due_date'      => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
                     'financier_id'          => 'required|exists:bank_financers,id',
                     'financier_note'        => 'nullable|string'
                 ]);

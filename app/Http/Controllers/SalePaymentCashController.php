@@ -76,7 +76,7 @@ class SalePaymentCashController extends Controller
                 'paid_date'             => 'required|date',
                 'paid_source'           => 'required|string',
                 'status'                => 'required|in:0,1,2,3',
-                'next_due_date'         => 'required|date|after:' . now()->format('Y-m-d'),
+                'next_due_date'         => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
                 'payment_note'          => 'nullable|string',
                 'collected_by'          => 'nullable|exists:salesmans,id'
             ]);

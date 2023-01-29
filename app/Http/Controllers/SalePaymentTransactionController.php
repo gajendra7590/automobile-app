@@ -22,9 +22,6 @@ class SalePaymentTransactionController extends Controller
                 },
                 'user' => function ($user) {
                     $user->select('id', 'name', 'email');
-                },
-                'installment' => function ($installment) {
-                    $installment->select('id', 'installment_uuid', 'emi_title');
                 }
             ])->first();
             return response()->json([
