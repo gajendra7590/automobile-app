@@ -50,7 +50,7 @@
                      <th>PAID SOURCE</th>
                      <th width="10%">PAID DATE</th>
                      <th>STATUS</th>
-                     <th>ACTION</th>
+                     <th width="5%">ACTION</th>
                  </tr>
              </thead>
              <tbody>
@@ -82,19 +82,30 @@
                                  </td>
                                  <td>
                                      @if ($cashPayment['paid_source'] != '' && $cashPayment['paid_source'] != 'Auto')
-                                         <a href="{{ route('salesCash.show', ['salesCash' => isset($cashPayment['id']) ? $cashPayment['id'] : 0]) }}"
-                                             class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
-                                             data-modal_title="VIEW CASH PAYMENT DETAIL">
-                                             <i class="fa fa-eye" aria-hidden="true"></i>
-                                         </a>
-                                         @if ($cashPayment['status'] == '1')
-                                             <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
-                                                 class="btn btn-sm btn-primary" target="_blank">
-                                                 <i class="fa fa-print" aria-hidden="true"></i>
-                                             </a>
-                                         @endif
-                                     @else
-                                         --
+                                         <div class="dropdown pull-right customDropDownOption">
+                                             <button class="btn btn-xs btn-primary dropdown-toggle" type="button"
+                                                 data-toggle="dropdown" style="padding: 3px 10px !important;">
+                                                 <span class="caret"></span>
+                                             </button>
+
+                                             <ul class="dropdown-menu">
+                                                 <li>
+                                                     <a href="{{ route('salesCash.show', ['salesCash' => isset($cashPayment['id']) ? $cashPayment['id'] : 0]) }}"
+                                                         class="ajaxModalPopup" data-modal_size="modal-lg"
+                                                         data-modal_title="VIEW CASH PAYMENT DETAIL">
+                                                         VIEW DETAIL
+                                                     </a>
+                                                 </li>
+                                                 @if ($cashPayment['status'] == '1')
+                                                     <li>
+                                                         <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
+                                                             class="" target="_blank">
+                                                             PRINT RECIEPT
+                                                         </a>
+                                                     </li>
+                                                 @endif
+                                             </ul>
+                                         </div>
                                      @endif
                                  </td>
                              </tr>

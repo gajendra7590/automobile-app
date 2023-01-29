@@ -75,15 +75,13 @@
         <!-- /.box-body -->
         <div class="box-footer">
             <button type="submit" class="btn btn-success pull-right" id="ajaxFormSubmit">
-                MAKE PAYMENT
+                SAVE
             </button>
         </div>
 </form>
 
 <script>
     $(document).ready(function() {
-
-        console.log('Document Ready')
 
         $('select[name="pay_option"]').change(function() {
             let pay_option = $(this).val();

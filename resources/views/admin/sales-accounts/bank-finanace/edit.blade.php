@@ -48,7 +48,7 @@
     <div class="box-footer">
         <input name="sales_account_id" type="hidden" value="{{ isset($data['id']) ? $data['id'] : 0 }}">
         <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit">
-            CREATE BANK FINANACE
+            SAVE
         </button>
     </div>
 </form>
