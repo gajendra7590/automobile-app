@@ -109,10 +109,9 @@ class CustomerReturnSaleRefundController extends Controller
             ]);
         }
         $modals = CustomerReturnSaleRefund::where(['sale_id' => $id])->get();
-
-        $total_paid   = CustomerReturnSalePaymentTransactions::where('sale_id', $id)->sum('amount_paid');
+        $accountModel = CustomerReturnSalePaymentAccounts::where('sale_id', $id)->first();
+        $total_paid   = ($accountModel->cash_paid_balance + $accountModel->bank_finance_paid_balance + $accountModel->personal_finance_paid_balance);
         $total_refund = CustomerReturnSaleRefund::where('sale_id', $id)->sum('amount_refund');
-
         $data = array(
             'transactions'        => $modals,
             'salesAccount'        => $customerReturnSaleAccount,

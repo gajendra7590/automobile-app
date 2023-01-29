@@ -23,12 +23,12 @@
                             <div class="pull-left">
                                 <h3 class="box-title">Sales Accounts List</h3>
                             </div>
-                            <div class="pull-right">
+                            {{-- <div class="pull-right">
                                 <a href="{{ route('saleAccounts.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="Create New Sales Account" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
-                            </div>
+                            </div> --}}
                             <div class="pull-right custom-fitler-container">
                                 <div class="filter-options pull-left">
                                     <div class="row">

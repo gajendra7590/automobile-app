@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SalesAccountController;
+use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
@@ -483,7 +484,8 @@ if (!function_exists('updateDuesOrPaidBalance')) {
         $accountStatus = (($cashStatus == 1 && $bankFinStatus == 1 && $PerFinStatus == 1)) ? 1 : 0;
 
         //UPDATE IN DATABASE
-        SalePaymentAccounts::where('id', $salesAccountId)->update([
+        $saleAccountModel = SalePaymentAccounts::find($salesAccountId);
+        $saleAccountModel->where('id', $salesAccountId)->update([
             'cash_outstaning_balance'               => $totalOutStadningCash,
             'cash_paid_balance'                     => $totalPaidCash,
             'cash_status'                           => $cashStatus,
@@ -497,6 +499,12 @@ if (!function_exists('updateDuesOrPaidBalance')) {
             'status_closed_note'                    => ($accountStatus == 1) ? "All dues done closed autometically by script." : null,
             'status_closed_by'                      => ($accountStatus == 1) ? 0 : null
         ]);
+
+        //Update Sale Account Status
+        Sale::where(['id' => $saleAccountModel->sale_id])->update([
+            'status' => ($accountStatus == 1) ? 'close' : 'open',
+        ]);
+
         return true;
     }
 }

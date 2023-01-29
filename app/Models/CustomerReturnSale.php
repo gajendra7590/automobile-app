@@ -18,9 +18,12 @@ class CustomerReturnSale extends Model
 
     protected $appends = ['cust_name'];
 
+    public $incrementing = false;
+
+
     protected $fillable = [
+        'id',
         'sale_uuid',
-        'old_id',
         'branch_id',
         'purchase_id',
         'quotation_id',
@@ -51,10 +54,10 @@ class CustomerReturnSale extends Model
         'other_charges',
         'total_amount',
         'status',
-        'created_by',
-        'updated_by',
         'sp_account_id',
-        'rto_account_id'
+        'rto_account_id',
+        'created_by',
+        'updated_by'
     ];
 
     protected $hidden = [];

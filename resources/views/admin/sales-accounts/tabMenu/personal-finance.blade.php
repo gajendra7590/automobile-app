@@ -2,10 +2,18 @@
      <div class="box-header with-border">
          <h3 class="box-title pull-left">PERSONAL FINANACE HISTORY</h3>
          <div class="pull-right">
-             <span class="label label-default">
-                 Payment Option :-
-                 {{ isset($data['due_payment_source']) ? duePaySources($data['due_payment_source']) : '' }}
-             </span>
+             @if (isset($paidCount) && $paidCount == 0)
+                 <a href="{{ route('cancelPf', ['id' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                     class="btn btn-sm btn-danger ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="CUSTOMER REQUEST TO CANCEL">
+                     CUSTOMER REQUEST TO CANCEL
+                 </a>
+                 <a href="{{ route('salesPersonalFinanace.edit', ['salesPersonalFinanace' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                     class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg"
+                     data-modal_title="UPDATE PERSONAL FINANACE DETAIL">
+                     EDIT PERSONAL FINANACE
+                 </a>
+             @endif
          </div>
      </div>
      <!-- /.box-header -->
@@ -132,5 +140,9 @@
              @endif
 
          </table>
+         @if (isset($salesAccountData) && $salesAccountData->personal_finance_status == '1')
+             <p class="account_status_note"><b>Note :</b> All dues paid by customer so personal finanace account has
+                 been closed.</p>
+         @endif
      </div>
  </div>

@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use Carbon\Carbon;
+
 class SalePaymentPersonalFinanaceController extends Controller
 {
     use CommonHelper;
@@ -137,9 +139,23 @@ class SalePaymentPersonalFinanaceController extends Controller
                 //CREATE EMI HISTORY
                 for ($i = 1; $i <= $postData['no_of_emis']; $i++) {
                     $next_month  = ($term_value * $i);
-                    $emi_due_date = date('Y-m-d', strtotime("+ $next_month months"));
-                    $emi_due_date = date('Y-m', strtotime($emi_due_date)) . '-' . date('d');
-                    $final_due_date = $emi_due_date;
+
+                    $d = date('d', strtotime($postData['finance_due_date']));
+                    $currentDate = date('Y-m', strtotime($postData['finance_due_date']));
+                    $currentDate = $currentDate . '-01';
+                    $time = strtotime($currentDate);
+
+
+                    $emi_due_date = date("Y-m", strtotime("+$next_month month", $time));
+                    $explode = explode('-', $emi_due_date);
+                    $no_of_days_in_month = cal_days_in_month(CAL_GREGORIAN, $explode[1], $explode[0]);
+                    if ($no_of_days_in_month >= $d) {
+                        $final_due_date = $emi_due_date . '-' . $d;
+                    } else {
+                        $final_due_date = $emi_due_date . '-' . $no_of_days_in_month;
+                    }
+
+
                     SalePaymentPersonalFinanace::create([
                         'sale_id'                 => $salePaymentAccount->sale_id,
                         'sale_payment_account_id' => $salePaymentAccount->id,
@@ -265,9 +281,32 @@ class SalePaymentPersonalFinanaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $postData = $request->all();
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $checkAccount = SalePaymentAccounts::select('*')->where('id', $id)->first();
+            if (!$checkAccount) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Account does not exis"
+                ]);
+            }
+            $data = array(
+                'data' =>  $checkAccount,
+                'financers' => self::_getFinaceirs(2),
+                'emiTerms'  => emiTerms()
+            );
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Ajax View Loaded",
+                'data'       => view('admin.sales-accounts.personal-finanace.edit', $data)->render()
+            ]);
+        }
     }
 
     /**
@@ -279,7 +318,229 @@ class SalePaymentPersonalFinanaceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $postData = $request->all();
+            if (!$request->ajax()) {
+                return redirect()->route('saleAccounts.index');
+            } else {
+                //Request
+                DB::beginTransaction();
+                $postData = $request->all();
+                $validator = Validator::make($postData, [
+                    'sales_account_id'      => "required|exists:sale_payment_accounts,id",
+                    'total_outstanding'     => "required|numeric|min:1",
+                    'total_finance_amount'  => "required|numeric|min:1|lte:total_outstanding",
+                    'grand_finance_amount'  => "required|numeric|min:1",
+                    'processing_fees'       => "nullable|numeric|min:0",
+                    'financier_id'          => 'required|exists:bank_financers,id',
+                    'finance_due_date'      => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
+                    'finance_terms'         => 'required|numeric|in:1,2,3,4',
+                    'no_of_emis'            => 'required|numeric|integer',
+                    'rate_of_interest'      => 'required|numeric'
+                ]);
+                //If Validation failed
+                if ($validator->fails()) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                $salePaymentAccount = SalePaymentAccounts::find($postData['sales_account_id']);
+
+                //ROLLBACK /DELETE PREVIOUS ONE DATA ============== START
+                //DEBIT SALES CASH PAYMENT
+                $currentCashOutStandingBalance = $salePaymentAccount->cash_outstaning_balance;
+                $lastCash = SalePaymentCash::where('sale_payment_account_id', $salePaymentAccount->id)->orderBy('id', 'DESC')->first();
+                $payment_name = "Cancel Personal Finanace AND Revert Balance To Cash Balance.";
+                $revertCashBalance = SalePaymentCash::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'payment_name' => $payment_name,
+                    'credit_amount' => $salePaymentAccount->personal_finance_amount,
+                    'debit_amount' => 0,
+                    'change_balance' => floatval($currentCashOutStandingBalance + $salePaymentAccount->personal_finance_amount),
+                    'due_date'    => $lastCash->due_date,
+                    'paid_source' => 'Auto',
+                    'paid_date' => date('Y-m-d'),
+                    'paid_note' => $payment_name,
+                    'collected_by' => 0,
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status' => SalePaymentAccounts::PAY_STATUS_PAID
+                ]);
+                //CREATE NEW TRANSACTION
+                SalePaymentTransactions::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'transaction_for' => 1,
+                    'transaction_name' => $payment_name,
+                    'transaction_amount' => $salePaymentAccount->personal_finance_amount,
+                    'transaction_paid_source' => 'Auto',
+                    'transaction_paid_source_note' => $payment_name,
+                    'transaction_paid_date' => date('Y-m-d'),
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status' => SalePaymentAccounts::PAY_STATUS_PAID,
+                    'reference_id' => $revertCashBalance->id
+                ]);
+                //UPDATE ACCOUNT DATA
+                $salePaymentAccount->update([
+                    'personal_finance_outstaning_balance' => 0,
+                    'personal_finance_paid_balance' => 0,
+                    'personal_finance_status' => 0,
+                    'personal_finance_amount'  => 0,
+                    'due_payment_source' => 1,
+                    'financier_id' => null,
+                    'finance_terms' => null,
+                    'no_of_emis' => null,
+                    'rate_of_interest' => null,
+                    'processing_fees' => null
+                ]);
+                //DELETE PREVIOUS EMI DATA
+                SalePaymentPersonalFinanace::where('sale_payment_account_id', $salePaymentAccount->id)->delete();
+                //ROLLBACK /DELETE PREVIOUS ONE DATA ============== END HERE
+
+
+                //CREATE NEW CODE START HERE ==================
+                $P = floatval($postData['grand_finance_amount']);
+                $T = ($postData['no_of_emis']);
+                $term_value = 0;
+                switch ($postData['finance_terms']) {
+                    case 1:
+                        $T *= 1;
+                        $term_value = 1;
+                        break;
+                    case 2:
+                        $T *= 3;
+                        $term_value = 3;
+                        break;
+                    case 3:
+                        $T *= 6;
+                        $term_value = 6;
+                        break;
+                    case 4:
+                        $T *= 12;
+                        $term_value = 12;
+                        break;
+                }
+
+                $R = $postData['rate_of_interest'];
+
+                $total_interest = round((($P * $R * ($T / 12)) / 100), 2);
+                $grand_total = round(($P + $total_interest), 2);
+
+                $install_amount    = round(($grand_total / $postData['no_of_emis']), 2);
+                $install_intrest     = round(($total_interest / $postData['no_of_emis']), 2);
+                $install_principal     = ($install_amount - $install_intrest);
+
+                $final_due_date = null;
+                //CREATE EMI HISTORY
+                for ($i = 1; $i <= $postData['no_of_emis']; $i++) {
+                    $next_month  = ($term_value * $i);
+
+                    $d = date('d', strtotime($postData['finance_due_date']));
+                    $currentDate = date('Y-m', strtotime($postData['finance_due_date']));
+                    $currentDate = $currentDate . '-01';
+                    $time = strtotime($currentDate);
+
+
+                    $emi_due_date = date("Y-m", strtotime("+$next_month month", $time));
+                    $explode = explode('-', $emi_due_date);
+                    $no_of_days_in_month = cal_days_in_month(CAL_GREGORIAN, $explode[1], $explode[0]);
+                    if ($no_of_days_in_month >= $d) {
+                        $final_due_date = $emi_due_date . '-' . $d;
+                    } else {
+                        $final_due_date = $emi_due_date . '-' . $no_of_days_in_month;
+                    }
+
+
+                    SalePaymentPersonalFinanace::create([
+                        'sale_id'                 => $salePaymentAccount->sale_id,
+                        'sale_payment_account_id' => $salePaymentAccount->id,
+                        'payment_name'            => 'Installment - ' . $i,
+                        'emi_total_amount'        => $install_amount,
+                        'emi_principal_amount'    => $install_principal,
+                        'emi_intrest_amount'      => $install_intrest,
+                        'emi_due_date'            => $final_due_date,
+                        'adjust_amount'           => null,
+                        'adjust_date'             => null,
+                        'adjust_note'             => null,
+                        'emi_due_revised_amount'  => $install_amount,
+                        'emi_due_revised_note'    => null,
+                        'amount_paid'             => null,
+                        'amount_paid_date'        => null,
+                        'amount_paid_source'      => null,
+                        'amount_paid_note'        => null,
+                        'collected_by'            => null,
+                        'status'                  => 0
+                    ]);
+                }
+
+                //DEBIT SALES CASH PAYMENT
+                $currentCashOutStandingBalance = getCashDueTotal($salePaymentAccount->id);
+                $lastCash = SalePaymentCash::where('sale_payment_account_id', $salePaymentAccount->id)->orderBy('id', 'DESC')->first();
+                $payment_name = "Cash Balance Conveterd To Personal Finance.";
+                $createdCashPayment = SalePaymentCash::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'payment_name' => $payment_name,
+                    'credit_amount' => 0,
+                    'debit_amount' => $postData['total_finance_amount'],
+                    'change_balance' => floatval($currentCashOutStandingBalance - $postData['total_finance_amount']),
+                    'due_date'    => $lastCash->due_date,
+                    'paid_source' => 'Auto',
+                    'paid_date' => date('Y-m-d'),
+                    'paid_note' => $payment_name,
+                    'collected_by' => 0,
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'status' => 1
+                ]);
+                //CREATE NEW TRANSACTION
+                SalePaymentTransactions::create([
+                    'sale_id' => $salePaymentAccount->sale_id,
+                    'sale_payment_account_id' => $salePaymentAccount->id,
+                    'transaction_for' => 1,
+                    'transaction_name' => $payment_name,
+                    'transaction_amount' => $postData['total_finance_amount'],
+                    'transaction_paid_source' => 'Auto',
+                    'transaction_paid_source_note' => $payment_name,
+                    'transaction_paid_date' => date('Y-m-d'),
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'status' => 1,
+                    'reference_id' => $createdCashPayment->id
+                ]);
+
+                //UPDATE ACCOUNT DETAIL
+                $salePaymentAccount->update([
+                    'personal_finance_outstaning_balance' => $postData['grand_finance_amount'],
+                    'personal_finance_paid_balance' => 0,
+                    'personal_finance_status' => 0,
+                    'personal_finance_amount'  => $postData['total_finance_amount'],
+                    'due_payment_source' => 3,
+                    'financier_id' => $postData['financier_id'],
+                    'finance_terms' => $postData['finance_terms'],
+                    'no_of_emis' => $postData['no_of_emis'],
+                    'rate_of_interest' => $postData['rate_of_interest'],
+                    'processing_fees' => $postData['processing_fees']
+                ]);
+
+                DB::commit();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.create_success')
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 409,
+                'message'    => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -288,9 +549,102 @@ class SalePaymentPersonalFinanaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            try {
+                DB::beginTransaction();
+                $salesAccountModel = SalePaymentAccounts::find($id);
+                if (!$salesAccountModel) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => "Sorry! This account can not be cancelled."
+                    ]);
+                }
+
+                //Check If Any Paid Balance
+                $salesPersonalFin = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $id, 'status' => '1'])->count();
+                if ($salesPersonalFin > 0) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => "Sorry! This request coudnt be completed."
+                    ]);
+                }
+
+                //Create Entry In Sales Cash Balance - Credit Amount
+                $payment_name = "Personal Finance Balance Conveterd To Cash Balance.";
+                $paid_note = "Personal finanace account has cancelled so balance transfer into cash balance.";
+                $lastCashBalModel = SalePaymentCash::where('sale_id', $salesAccountModel->sale_id)->orderBy('id', 'DESC')->first();
+                $CashModel = SalePaymentCash::create([
+                    'sale_id' => $salesAccountModel->sale_id,
+                    'sale_payment_account_id' => $salesAccountModel->id,
+                    'payment_name'   => $payment_name,
+                    'credit_amount'  => $salesAccountModel->personal_finance_amount,
+                    'debit_amount'   => 0,
+                    'change_balance' => floatval($salesAccountModel->cash_outstaning_balance + $salesAccountModel->personal_finance_amount),
+                    'due_date'       => $lastCashBalModel->due_date,
+                    'paid_source'    => "Auto",
+                    'paid_date'      => date('Y-m-d'),
+                    'paid_note'      => $paid_note,
+                    'collected_by'   => 0,
+                    'trans_type'     => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status'         => SalePaymentAccounts::PAY_STATUS_PAID
+                ]);
+
+                //Create Entry Into Transaction
+                SalePaymentTransactions::create([
+                    'sale_id'                      => $CashModel->sale_id,
+                    'sale_payment_account_id'      => $CashModel->sale_payment_account_id,
+                    'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_CB,
+                    'transaction_name'             => $payment_name,
+                    'transaction_amount'           => $CashModel->credit_amount,
+                    'transaction_paid_source'      => "Auto",
+                    'transaction_paid_source_note' => $paid_note,
+                    'transaction_paid_date'        => date('Y-m-d'),
+                    'trans_type'                   => SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status'                       => SalePaymentAccounts::PAY_STATUS_PAID,
+                    'reference_id'                 => $CashModel->id
+                ]);
+
+                //REMOVE DATA FROM BANK FINANCE
+                SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $salesAccountModel->id])->delete();
+
+                //UPDATE DATA INTO
+                $salesAccountModel->update([
+                    'personal_finance_outstaning_balance' => 0,
+                    'personal_finance_paid_balance' => 0,
+                    'personal_finance_status' => 1,
+                    'personal_finance_amount' => 0.00,
+                    'cash_status' => 0,
+                    'status'     => 0,
+                    'due_payment_source' => 1,
+                    'financier_id' => null,
+                    'financier_note' => null,
+                    'no_of_emis' => null,
+                    'rate_of_interest' => null,
+                    'processing_fees' => null,
+                ]);
+                DB::commit();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.update_success')
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 409,
+                    'message'    => $e->getMessage()
+                ]);
+            }
+        }
     }
 
     /**
@@ -618,5 +972,25 @@ class SalePaymentPersonalFinanaceController extends Controller
 
         $pdf = Pdf::loadView('admin.sales-accounts.personal-finanace.print', ['data' => $paymentInstallmentModel]);
         return $pdf->stream('invoice.pdf');
+    }
+
+    /**
+     * Function for load cancel modal
+     */
+    public function cancel(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $data = array(
+                'data' => SalePaymentPersonalFinanace::find($id)
+            );
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.sales-accounts.personal-finanace.cancel', $data)->render()
+            ]);
+        }
     }
 }

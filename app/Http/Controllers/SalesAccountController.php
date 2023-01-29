@@ -388,6 +388,7 @@ class SalesAccountController extends Controller
                 case 'personalFinanceHistory':
                     // updateDuesOrPaidBalance($id);
                     $data['data'] = SalePaymentPersonalFinanace::where('sale_payment_account_id', $id)->orderBy('id', 'ASC')->get()->toArray();
+                    $data['paidCount'] = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $id, 'status' => '1'])->count();
                     //$data['credit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('credit_amount');
                     //$data['debit_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->sum('debit_amount');
                     //$data['paid_by_amount'] = SalePaymentBankFinanace::where('sale_payment_account_id', $id)->whereNotIn('paid_source', ['Auto', 'auto'])->sum('debit_amount');

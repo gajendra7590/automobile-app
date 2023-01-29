@@ -1,5 +1,5 @@
 <form role="form" method="POST" class="ajaxFormSubmit"
-    action="{{ route('salesBankFinanace.destroy', ['salesBankFinanace' => isset($data['id']) ? $data['id'] : 0]) }}"
+    action="{{ route('salesPersonalFinanace.destroy', ['salesPersonalFinanace' => isset($data['id']) ? $data['id'] : 0]) }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
     @method('DELETE')
@@ -7,9 +7,11 @@
         <!-- DEPOSITE SECTION-->
         <div class="row">
             <div class="form-group col-md-12">
-                <h4>Are you Sure want to close bank finanace account?</h4>
-                <p><b>Note:</b> As you close the account your finance account outstanding balance will conveted into
-                    cash balance.</p>
+                <h4>Are you Sure want to cancel the personal finanace account?</h4>
+                <p>
+                    <b>Note:</b> As you close the account your personal finance account outstanding balance will
+                    conveted into cash balance.
+                </p>
             </div>
         </div>
     </div>

@@ -132,6 +132,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payIndex')->name('personalFinanacePayIndex');
     Route::post('personalFinanacePay/{id}', 'SalePaymentPersonalFinanaceController@payStore')->name('personalFinanacePayStore');
     Route::get('printReceipt/{id}', 'SalePaymentPersonalFinanaceController@printReceipt')->name('printReceiptPF');
+    Route::get('cancelPf/{id}', 'SalePaymentPersonalFinanaceController@cancel')->name('cancelPf');
+    //cancel
 
     //Transactions
     Route::get('transactions/{id}', 'SalePaymentTransactionController@show')->name('transactions.show');

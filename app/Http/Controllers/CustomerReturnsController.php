@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BikeModel;
+use App\Models\CustomerReturnRtoRegistration;
 use App\Models\CustomerReturnSale;
 use App\Models\CustomerReturnSalePaymentAccounts;
 use App\Models\CustomerReturnSalePaymentInstallments;
@@ -152,55 +153,32 @@ class CustomerReturnsController extends Controller
             //Get All Old Models
             $salesModel = Sale::where('id', $postData['sales_id'])->first();
             $saleAccountModel = SalePaymentAccounts::where('sale_id', $postData['sales_id'])->first();
-            $saleInstallmentModel = SalePaymentInstallments::where('sale_id', $postData['sales_id'])->get();
-            $saleTransactionModel = SalePaymentTransactions::where('sale_id', $postData['sales_id'])->get();
-
+            $rtoRegistrationModel = RtoRegistration::where('sale_id', $postData['sales_id'])->first();
             ///CREATE DUPLICATE CLONE
 
             //SALE MODEL
             $salesModelClone = $salesModel->toArray();
-            $salesModelClone['old_id'] = $salesModel->id;
-            $newSaleModel = CustomerReturnSale::create($salesModelClone);
+            CustomerReturnSale::create($salesModelClone);
 
             //SALE ACCOUNT MODEL
             $saleAccountModelClone = $saleAccountModel->toArray();
-            $saleAccountModelClone['sale_id'] = $newSaleModel->id;
-            $saleAccountModelClone['old_id'] = $saleAccountModel->id;
-            $saleAccountModelClone['old_sale_id'] = $salesModel->id;
-            $newAccountModel = CustomerReturnSalePaymentAccounts::create($saleAccountModelClone);
+            CustomerReturnSalePaymentAccounts::create($saleAccountModelClone);
 
-            //SALE ACCOUNT INSTALLMENT MODEL
-            $saleInstallmentModelClone = $saleInstallmentModel->toArray();
-            foreach ($saleInstallmentModelClone as $installment) {
-                $installment['sale_id'] = $newSaleModel->id;
-                $installment['old_sale_id'] = $salesModel->id;
-                $installment['old_id'] = $installment['id'];
-                $installment['sale_payment_account_id'] = $newAccountModel->id;
-                CustomerReturnSalePaymentInstallments::create($installment);
-            }
-
-            //SALE ACCOUNT TRANSACTIONS MODEL
-            $saleTransactionModelClone = $saleTransactionModel->toArray();
-            foreach ($saleTransactionModelClone as $transaction) {
-                $transaction['sale_id'] = $newSaleModel->id;
-                $transaction['old_sale_id'] = $salesModel->id;
-                $transaction['old_id'] = $transaction['id'];
-                $transaction['sale_payment_account_id'] = $newAccountModel->id;
-                if (isset($transaction['sale_payment_installment_id']) && (intval($transaction['sale_payment_installment_id']) > 0)) {
-                    $transaction['sale_payment_installment_id'] = CustomerReturnSalePaymentInstallments::where('old_id', $transaction['sale_payment_installment_id'])->value('id');
-                }
-                CustomerReturnSalePaymentTransactions::create($transaction);
+            //SALE RTO REGISTRATION MODEL
+            if ($rtoRegistrationModel) {
+                $rtoRegistrationModelClone = $rtoRegistrationModel->toArray();
+                CustomerReturnRtoRegistration::create($rtoRegistrationModelClone);
             }
 
             //RETSTORE PURCHASE INVENTORY
             Purchase::where('id', $salesModel->purchase_id)->update(['status' => '1']);
 
             //DELETE
-            RtoRegistration::where('sale_id', $postData['sales_id'])->delete();
-            SalePaymentTransactions::where('sale_id', $postData['sales_id'])->delete();
-            SalePaymentInstallments::where('sale_id', $postData['sales_id'])->delete();
             SalePaymentAccounts::where('sale_id', $postData['sales_id'])->delete();
             Sale::where('id', $postData['sales_id'])->delete();
+            if ($rtoRegistrationModel) {
+                RtoRegistration::where('sale_id', $postData['sales_id'])->delete();
+            }
 
             //Commit All the things
             DB::commit();
@@ -260,9 +238,11 @@ class CustomerReturnsController extends Controller
             ]);
         }
 
+        $accountModel = CustomerReturnSalePaymentAccounts::where('sale_id', $id)->first();
+
         $data = array(
             'data' => $modals,
-            'total_paid' => CustomerReturnSalePaymentTransactions::where('sale_id', $id)->sum('amount_paid'),
+            'total_paid' => ($accountModel->cash_paid_balance + $accountModel->bank_finance_paid_balance + $accountModel->personal_finance_paid_balance),
             'total_refund' => CustomerReturnSaleRefund::where('sale_id', $id)->sum('amount_refund')
         );
         return response()->json([
@@ -281,7 +261,7 @@ class CustomerReturnsController extends Controller
      */
     public function showTransactions($id)
     {
-        $modals = CustomerReturnSalePaymentTransactions::where(['sale_id' => $id, 'status' => '1'])->get();
+        $modals = SalePaymentTransactions::where(['sale_id' => $id, 'status' => '1'])->where('transaction_paid_source', '!=', 'Auto')->where('transaction_paid_source', '!=', '')->whereNotNull('transaction_paid_source')->get();
         $data = array(
             'transactions' => $modals
         );
