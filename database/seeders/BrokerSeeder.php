@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class AgentSeeder extends Seeder
+class BrokerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,7 +16,7 @@ class AgentSeeder extends Seeder
     {
         DB::beginTransaction();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('bike_agents')->truncate();
+        DB::table('brokers')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $today = date('Y-m-d H:i:s');
         $create = [
@@ -29,7 +29,7 @@ class AgentSeeder extends Seeder
                 'updated_at' => $today,
             ],
         ];
-        DB::table('bike_agents')->insert($create);
+        DB::table('brokers')->insert($create);
         DB::commit();
     }
 }
