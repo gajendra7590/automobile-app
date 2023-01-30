@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             RtoAgentSeeder::class,
             FinancerSeeder::class,
             DealerSeeder::class,
-            AgentSeeder::class,
+            BrokerSeeder::class,
 
             TyreBrandSeeder::class,
             BatteryBrandSeeder::class
