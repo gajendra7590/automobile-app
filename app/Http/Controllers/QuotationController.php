@@ -73,22 +73,24 @@ class QuotationController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('id', $search_string)
-                            ->orWhereHas('branch', function ($q) use ($search_string) {
-                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('brand', function ($q) use ($search_string) {
-                                $q->where('name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('model', function ($q) use ($search_string) {
-                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('color', function ($q) use ($search_string) {
-                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orwhere('customer_name', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('customer_mobile_number', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('total_amount', 'LIKE', '%' . $search_string . '%');
+                        $query->where(function ($qq) use ($search_string) {
+                            $qq->where('id', $search_string)
+                                ->orWhereHas('branch', function ($q) use ($search_string) {
+                                    $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('brand', function ($q) use ($search_string) {
+                                    $q->where('name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('model', function ($q) use ($search_string) {
+                                    $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('color', function ($q) use ($search_string) {
+                                    $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orwhere('customer_name', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('customer_mobile_number', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('total_amount', 'LIKE', '%' . $search_string . '%');
+                        });
                     }
                 })
                 ->addIndexColumn()
@@ -152,79 +154,83 @@ class QuotationController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $postData = $request->all();
-            // dd($postData);
-            $validator = Validator::make($postData, [
-                'branch_id'                 => "required|exists:branches,id",
-                'salesman_id'               => "nullable|exists:salesmans,id",
-                'customer_gender'           => "required|in:1,2,3",
-                'customer_name'             => "required|string",
-                'customer_relationship'     => "required|in:1,2,3",
-                'customer_guardian_name'    => "required|string",
-                'customer_address_line'     => "required|string",
-                'customer_state'            => "required|exists:u_states,id",
-                'customer_district'         => "required|exists:u_districts,id",
-                'customer_city'             => "required|exists:u_cities,id",
-                'customer_zipcode'          => "required|numeric",
-                'customer_mobile_number'    => "required|numeric|min:10",
-                'customer_mobile_number_alt' => "nullable|numeric|min:10",
-                'customer_email_address'    => "nullable|email",
-                'payment_type'              => "required|in:1,2,3",
-                'is_exchange_avaliable'     => "required|in:Yes,No",
-                'hyp_financer'              => "nullable|exists:bank_financers,id",
-                'hyp_financer_description'  => "nullable|string",
-                'bike_brand'                => "required|exists:bike_brands,id",
-                'bike_model'                => "required|exists:bike_models,id",
-                'bike_color'                => "required|exists:bike_colors,id",
-                'ex_showroom_price'         => "required|numeric",
-                'registration_amount'       => "required|numeric",
-                'insurance_amount'          => "required|numeric",
-                'hypothecation_amount'      => "required|numeric",
-                'accessories_amount'        => "required|numeric",
-                'other_charges'             => "nullable|numeric",
-                'total_amount'              => "required|numeric",
-                'purchase_visit_date'       => "required|date",
-                'purchase_est_date'         => "required|date",
-            ]);
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            try {
+                $postData = $request->all();
+                // dd($postData);
+                $validator = Validator::make($postData, [
+                    'branch_id'                 => "required|exists:branches,id",
+                    'salesman_id'               => "nullable|exists:salesmans,id",
+                    'customer_gender'           => "required|in:1,2,3",
+                    'customer_name'             => "required|string",
+                    'customer_relationship'     => "required|in:1,2,3",
+                    'customer_guardian_name'    => "required|string",
+                    'customer_address_line'     => "required|string",
+                    'customer_state'            => "required|exists:u_states,id",
+                    'customer_district'         => "required|exists:u_districts,id",
+                    'customer_city'             => "required|exists:u_cities,id",
+                    'customer_zipcode'          => "required|numeric",
+                    'customer_mobile_number'    => "required|numeric|min:10",
+                    'customer_mobile_number_alt' => "nullable|numeric|min:10",
+                    'customer_email_address'    => "nullable|email",
+                    'payment_type'              => "required|in:1,2,3",
+                    'is_exchange_avaliable'     => "required|in:Yes,No",
+                    'hyp_financer'              => "nullable|exists:bank_financers,id",
+                    'hyp_financer_description'  => "nullable|string",
+                    'bike_brand'                => "required|exists:bike_brands,id",
+                    'bike_model'                => "required|exists:bike_models,id",
+                    'bike_color'                => "required|exists:bike_colors,id",
+                    'ex_showroom_price'         => "required|numeric",
+                    'registration_amount'       => "required|numeric",
+                    'insurance_amount'          => "required|numeric",
+                    'hypothecation_amount'      => "required|numeric",
+                    'accessories_amount'        => "required|numeric",
+                    'other_charges'             => "nullable|numeric",
+                    'total_amount'              => "required|numeric",
+                    'purchase_visit_date'       => "required|date",
+                    'purchase_est_date'         => "required|date",
+                ]);
 
-            //If Validation failed
-            if ($validator->fails()) {
+                //If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                //Add Check For Add
+                if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $postData['branch_id'])) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    =>  trans('messages.not_authorized_user'),
+                    ]);
+                }
+
+                unset($postData['_token']);
+                $postData['created_by'] = Auth::user()->id;
+
+                //Create
+                $createModel = Quotation::create($postData);
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.create_success'),
+                    'data'       => $createModel
+                ]);
+            } catch (\Exception $e) {
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
+                    'message'    => $e->getMessage(),
+                    'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
                 ]);
             }
-
-            //Add Check For Add
-            if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $postData['branch_id'])) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    =>  trans('messages.not_authorized_user'),
-                ]);
-            }
-
-            unset($postData['_token']);
-            $postData['created_by'] = Auth::user()->id;
-
-            //Create
-            $createModel = Quotation::create($postData);
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.create_success'),
-                'data'       => $createModel
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $e->getMessage(),
-                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-            ]);
         }
     }
 
@@ -234,57 +240,61 @@ class QuotationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $modals = Quotation::where('id', $id)->with([
-            'state' => function ($s) {
-                $s->select('id', 'state_name');
-            },
-            'district' => function ($s) {
-                $s->select('id', 'district_name');
-            },
-            'city' => function ($s) {
-                $s->select('id', 'city_name');
-            },
-            'brand' => function ($s) {
-                $s->select('id', 'name');
-            },
-            'model' => function ($s) {
-                $s->select('id', 'model_name');
-            },
-            'color' => function ($s) {
-                $s->select('id', 'color_name');
-            },
-            'financer' => function ($s) {
-                $s->select('id', 'bank_name');
-            },
-            'branch' => function ($s) {
-                $s->select('id', 'branch_name');
-            },
-            'salesman' => function ($s) {
-                $s->select('id', 'name');
-            },
-            'closedByUser' => function ($s) {
-                $s->select('id', 'name');
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            $modals = Quotation::where('id', $id)->with([
+                'state' => function ($s) {
+                    $s->select('id', 'state_name');
+                },
+                'district' => function ($s) {
+                    $s->select('id', 'district_name');
+                },
+                'city' => function ($s) {
+                    $s->select('id', 'city_name');
+                },
+                'brand' => function ($s) {
+                    $s->select('id', 'name');
+                },
+                'model' => function ($s) {
+                    $s->select('id', 'model_name');
+                },
+                'color' => function ($s) {
+                    $s->select('id', 'color_name');
+                },
+                'financer' => function ($s) {
+                    $s->select('id', 'bank_name');
+                },
+                'branch' => function ($s) {
+                    $s->select('id', 'branch_name');
+                },
+                'salesman' => function ($s) {
+                    $s->select('id', 'name');
+                },
+                'closedByUser' => function ($s) {
+                    $s->select('id', 'name');
+                }
+            ])->first();
+            if (!$modals) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => trans('messages.id_not_exist', ['id' => $id])
+                ]);
             }
-        ])->first();
-        if (!$modals) {
+
+            $data = array(
+                'data' => $modals
+            );
             return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => trans('messages.id_not_exist', ['id' => $id])
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.quotations.show', $data)->render()
             ]);
         }
-
-        $data = array(
-            'data' => $modals
-        );
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.quotations.show', $data)->render()
-        ]);
     }
 
     /**
@@ -332,87 +342,91 @@ class QuotationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $quotModel = Quotation::find($id);
-            if (!$quotModel) {
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            try {
+                $quotModel = Quotation::find($id);
+                if (!$quotModel) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => trans('messages.id_not_exist', ['id' => $id])
+                    ]);
+                }
+
+                $postData = $request->all();
+                $validator = Validator::make($postData, [
+                    'branch_id'                 => "nullable|exists:branches,id",
+                    'salesman_id'               => "nullable|exists:salesmans,id",
+                    'customer_gender'           => "nullable|in:1,2,3",
+                    'customer_name'             => "nullable|string",
+                    'customer_relationship'     => "nullable|in:1,2,3",
+                    'customer_guardian_name'    => "nullable|string",
+                    'customer_address_line'     => "nullable|string",
+                    'customer_state'            => "required|exists:u_states,id",
+                    'customer_district'         => "required|exists:u_districts,id",
+                    'customer_city'             => "required|exists:u_cities,id",
+                    'customer_zipcode'          => "required|numeric",
+                    'customer_mobile_number'    => "required|numeric|min:10",
+                    'customer_mobile_number_alt' => "nullable|numeric|min:10",
+                    'customer_email_address'    => "nullable|email",
+                    'payment_type'              => "required|in:1,2,3",
+                    'is_exchange_avaliable'     => "required|in:Yes,No",
+                    'hyp_financer'              => "nullable|exists:bank_financers,id",
+                    'hyp_financer_description'  => "nullable|string",
+                    'bike_brand'                => "nullable|exists:bike_brands,id",
+                    'bike_model'                => "required|exists:bike_models,id",
+                    'bike_color'                => "required|exists:bike_colors,id",
+                    'ex_showroom_price'         => "required|numeric",
+                    'registration_amount'       => "required|numeric",
+                    'insurance_amount'          => "required|numeric",
+                    'hypothecation_amount'      => "required|numeric",
+                    'accessories_amount'        => "required|numeric",
+                    'other_charges'             => "nullable|numeric",
+                    'total_amount'              => "required|numeric",
+                    'purchase_visit_date'       => "required|date",
+                    'purchase_est_date'         => "required|date",
+                ]);
+
+                //If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                //Add Check For Add
+                if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $quotModel->branch_id)) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    =>  trans('messages.not_authorized_user'),
+                    ]);
+                }
+
+                unset($postData['_token']);
+                unset($postData['_method']);
+                $postData['updated_by'] = Auth::user()->id;
+
+                //Update Quotation
+                $quotModel->update($postData);
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.update_success')
+                ]);
+            } catch (\Exception $e) {
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => trans('messages.id_not_exist', ['id' => $id])
+                    'message'    => $e->getMessage(),
+                    'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
                 ]);
             }
-
-            $postData = $request->all();
-            $validator = Validator::make($postData, [
-                'branch_id'                 => "nullable|exists:branches,id",
-                'salesman_id'               => "nullable|exists:salesmans,id",
-                'customer_gender'           => "nullable|in:1,2,3",
-                'customer_name'             => "nullable|string",
-                'customer_relationship'     => "nullable|in:1,2,3",
-                'customer_guardian_name'    => "nullable|string",
-                'customer_address_line'     => "nullable|string",
-                'customer_state'            => "required|exists:u_states,id",
-                'customer_district'         => "required|exists:u_districts,id",
-                'customer_city'             => "required|exists:u_cities,id",
-                'customer_zipcode'          => "required|numeric",
-                'customer_mobile_number'    => "required|numeric|min:10",
-                'customer_mobile_number_alt' => "nullable|numeric|min:10",
-                'customer_email_address'    => "nullable|email",
-                'payment_type'              => "required|in:1,2,3",
-                'is_exchange_avaliable'     => "required|in:Yes,No",
-                'hyp_financer'              => "nullable|exists:bank_financers,id",
-                'hyp_financer_description'  => "nullable|string",
-                'bike_brand'                => "nullable|exists:bike_brands,id",
-                'bike_model'                => "required|exists:bike_models,id",
-                'bike_color'                => "required|exists:bike_colors,id",
-                'ex_showroom_price'         => "required|numeric",
-                'registration_amount'       => "required|numeric",
-                'insurance_amount'          => "required|numeric",
-                'hypothecation_amount'      => "required|numeric",
-                'accessories_amount'        => "required|numeric",
-                'other_charges'             => "nullable|numeric",
-                'total_amount'              => "required|numeric",
-                'purchase_visit_date'       => "required|date",
-                'purchase_est_date'         => "required|date",
-            ]);
-
-            //If Validation failed
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
-                ]);
-            }
-
-            //Add Check For Add
-            if (Auth::user()->is_admin == '0' && (Auth::user()->branch_id != $quotModel->branch_id)) {
-                return response()->json([
-                    'status'     => false,
-                    'statusCode' => 419,
-                    'message'    =>  trans('messages.not_authorized_user'),
-                ]);
-            }
-
-            unset($postData['_token']);
-            unset($postData['_method']);
-            $postData['updated_by'] = Auth::user()->id;
-
-            //Update Quotation
-            $quotModel->update($postData);
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.update_success')
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $e->getMessage(),
-                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-            ]);
         }
     }
 
@@ -466,63 +480,75 @@ class QuotationController extends Controller
 
     public function closeQuotation(Request $request, $id)
     {
-        $data  = [
-            'action' => route('quotationclosepost', ['id' => $id]),
-            'method' => 'POST',
-        ];
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.quotations.closeQuotation', $data)->render()
-        ]);
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            $data  = [
+                'action' => route('quotationclosepost', ['id' => $id]),
+                'method' => 'POST',
+            ];
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.quotations.closeQuotation', $data)->render()
+            ]);
+        }
     }
 
     public function closeQuotationPost(Request $request, $id)
     {
-        try {
-            $postData = $request->all();
-            $validator = Validator::make($postData, [
-                'close_note' => "required|string"
-            ]);
-            // If Validation failed
-            if ($validator->fails()) {
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            try {
+                $postData = $request->all();
+                $validator = Validator::make($postData, [
+                    'close_note' => "required|string"
+                ]);
+                // If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+                $quotation = Quotation::find($id);
+                $quotation->close_note = request('close_note');
+                $quotation->status = 'close';
+                $quotation->closed_by = auth()->id();
+                $quotation->save();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => "Closed Successfully",
+                    'data'       => $quotation
+                ]);
+            } catch (\Exception $e) {
                 return response()->json([
                     'status'     => false,
                     'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
+                    'message'    => $e->getMessage(),
+                    'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
                 ]);
             }
-            $quotation = Quotation::find($id);
-            $quotation->close_note = request('close_note');
-            $quotation->status = 'close';
-            $quotation->closed_by = auth()->id();
-            $quotation->save();
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => "Closed Successfully",
-                'data'       => $quotation
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 419,
-                'message'    => $e->getMessage(),
-                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
-            ]);
         }
     }
 
     public function getQuotationDetails($id)
     {
-        $models = Quotation::find($id);
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.retrieve_success'),
-            'data'       => $models
-        ]);
+        if (!request()->ajax()) {
+            return redirect()->route('quotations.index');
+        } else {
+            $models = Quotation::find($id);
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.retrieve_success'),
+                'data'       => $models
+            ]);
+        }
     }
 }

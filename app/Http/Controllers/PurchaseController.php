@@ -73,23 +73,25 @@ class PurchaseController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('id', $search_string)
-                            ->orWhereHas('branch', function ($q) use ($search_string) {
-                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('brand', function ($q) use ($search_string) {
-                                $q->where('name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('model', function ($q) use ($search_string) {
-                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('modelColor', function ($q) use ($search_string) {
-                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
-                            ->orwhereDate('dc_date', $search_string)
-                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
+                        $query->where(function ($qq) use ($search_string) {
+                            $qq->where('id', $search_string)
+                                ->orWhereHas('branch', function ($q) use ($search_string) {
+                                    $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('brand', function ($q) use ($search_string) {
+                                    $q->where('name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('model', function ($q) use ($search_string) {
+                                    $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('modelColor', function ($q) use ($search_string) {
+                                    $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
+                                ->orwhereDate('dc_date', $search_string)
+                                ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
+                        });
                     }
                 })
                 ->addIndexColumn()
