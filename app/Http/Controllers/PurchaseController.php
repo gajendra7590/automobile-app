@@ -60,7 +60,7 @@ class PurchaseController extends Controller
             }
 
             //Fitler By Transfer Status
-            if (isset($postData['columns'][7]['search']['value']) && (!empty($postData['columns'][7]['search']['value']))) {
+            if (isset($postData['columns'][7]['search']['value']) && ($postData['columns'][7]['search']['value'] != "")) {
                 $data->where('transfer_status', $postData['columns'][7]['search']['value']);
             }
 
