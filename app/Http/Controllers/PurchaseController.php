@@ -315,12 +315,11 @@ class PurchaseController extends Controller
                 'transfers' => function ($transfers) {
                     $transfers->with(['broker'])->select('id', 'broker_id', 'purchase_id');
                 }
-            ])->first();
+            ])
+            ->first();
         if (!$bpModel) {
             return redirect()->back();
         }
-
-        return $bpModel;
         $data = [];
         $data['branches'] = self::_getBranchById($bpModel->bike_branch);
         $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);

@@ -67,9 +67,7 @@ class Purchase extends Model
     {
         $branch_id = self::getCurrentUserBranch();
         if ($branch_id != '0' || $branch_id != 'null') {
-            return $query->whereHas('purchase', function ($purchase) use ($branch_id) {
-                $purchase->where('bike_branch', $branch_id);
-            });
+            return $query->where('bike_branch', $branch_id);
         }
     }
 
