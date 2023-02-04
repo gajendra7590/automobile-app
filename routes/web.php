@@ -42,8 +42,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //Models
     Route::resource('models', 'BikeModelController');
 
-    //Colors
+    //Model Variants
+    Route::resource('modelVariants', 'BikeModelVariantController');
+
+    //Variants Colors
     Route::resource('colors', 'BikeColorController');
+
     Route::get('getColorsList/{id}', 'BikeColorController@getColorsList')->name('getColorsList');
 
     //Bike financers

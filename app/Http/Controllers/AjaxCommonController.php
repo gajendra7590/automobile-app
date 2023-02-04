@@ -8,6 +8,7 @@ use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
+use App\Models\BikeModelVariant;
 use App\Models\Branch;
 use App\Models\Broker;
 use App\Models\City;
@@ -114,6 +115,8 @@ class AjaxCommonController extends Controller
                         break;
                     case 'model':
                         $model = new BikeModel;
+                    case 'model_variant':
+                        $model = new BikeModelVariant;
                         break;
                     case 'color':
                         $model = new BikeColor;
