@@ -25,9 +25,39 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('colors.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New Colors" data-modal_size="modal-lg">
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
+                                    data-modal_title="ADD NEW COLORS" data-modal_size="modal-lg">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD
                                 </a>
+                            </div>
+                            <div class="pull-right custom-fitler-container">
+                                <div class="filter-options pull-left">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <select class="form-control ajaxDtFilter" name="variant_id" data-col_index="3">
+                                                <option value="">---MODEL VARIANT NAME---</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <select class="form-control ajaxDtFilter ajaxChangeCDropDown" name="bike_model"
+                                                data-dep_dd_name="variant_id"
+                                                data-url="{{ url('getAjaxDropdown') . '?req=variants' }}" name="model_id"
+                                                data-col_index="4">
+                                                <option value="">---BRAND MODEL NAME---</option>
+                                                @if (isset($models))
+                                                    @foreach ($models as $model)
+                                                        <option value="{{ $model->id }}">{{ $model->model_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-sm btn-primary" id="customFitterAction">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -39,8 +69,7 @@
                                         <th>#</th>
                                         <th>Color Name</th>
                                         <th>SKU Code</th>
-                                        <th>Color Code</th>
-                                        <th>Model Name</th>
+                                        <th>Model Name(Variant Code)</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

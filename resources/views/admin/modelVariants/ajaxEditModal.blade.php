@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
             <label>Variant Code</label>
-            <input name="variant_name" type="text" class="form-control"
+            <input name="variant_name" type="text" class="form-control autoCapitalized"
                 value="{{ isset($data['variant_name']) ? $data['variant_name'] : '' }}"
                 placeholder="Please enter variant code..">
         </div>

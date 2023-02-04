@@ -305,6 +305,12 @@ $(document).ready(function () {
         e.preventDefault();
         $(".filter-options").toggle("slow");
     });
+
+    $(document).on("keyup keypress", ".autoCapitalized", function (e) {
+        let current_Value = $(this).val();
+        current_Value = current_Value.toUpperCase();
+        $(this).val(current_Value);
+    });
 });
 
 // DATATABLE FILTER

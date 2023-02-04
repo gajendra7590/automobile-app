@@ -1,6 +1,6 @@
 $(document).ready(function () {
     function mainDataTable() {
-        const tableObj = $("#ajaxDataTable").DataTable({
+        tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
             serverSide: true,
             cache: true,
@@ -30,12 +30,8 @@ $(document).ready(function () {
                     name: "sku_code",
                 },
                 {
-                    data: "color_code",
-                    name: "color_code",
-                },
-                {
-                    data: "model.model_name",
-                    name: "model.model_name",
+                    data: "model_name",
+                    name: "model_name",
                 },
                 {
                     data: "active_status",
@@ -56,7 +52,7 @@ $(document).ready(function () {
                     targets: [],
                 },
             ],
-            order: [[0, "asc"]],
+            order: [[0, "desc"]],
         });
     }
     mainDataTable();
@@ -67,23 +63,23 @@ $(document).ready(function () {
         let randCode = Math.floor(Math.random() * 100000) + 5;
         let html =
             `<div class="row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label>Color Name</label>
                 <input name="colors[` +
             randCode +
-            `][color_name]" type="text" class="form-control" value="" placeholder="Color name..">
+            `][color_name]" type="text" class="form-control autoCapitalized" value="" placeholder="Color name..">
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Color Code</label>
                 <input name="colors[` +
             randCode +
-            `][color_code]" type="text" class="form-control" value="" placeholder="Color Code..">
+            `][color_code]" type="text" class="form-control autoCapitalized" value="" placeholder="Color Code..">
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>SKU Code</label>
                 <input name="colors[` +
             randCode +
-            `][sku_code]" type="text" class="form-control" value="" placeholder="SKU Code..">
+            `][sku_code]" type="text" class="form-control autoCapitalized" value="" placeholder="SKU Code..">
             </div>
             <div class="form-group col-md-2">
                 <label>Status : </label>
@@ -94,7 +90,7 @@ $(document).ready(function () {
                     <option value="0">In Active</option>
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-1">
                 <a href="#" class="btn btn-md btn-danger removeMoreInFormGroup removeAjaxElement">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </a>

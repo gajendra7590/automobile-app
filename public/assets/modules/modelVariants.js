@@ -60,11 +60,11 @@ $(document).ready(function () {
         let html =
             `<div class="row">
                <div class="form-group col-md-6">
-                <label>Variant Name</label>
+                <label>Variant Code</label>
                 <input name="variants[` +
             randCode +
-            `][variant_name]" type="text" class="form-control" value=""
-                    placeholder="Variant Name..">
+            `][variant_name]" type="text" class="form-control autoCapitalized" value=""
+                    placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-4">
                 <label>Variant Status : </label>

@@ -7,6 +7,7 @@ use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
+use App\Models\BikeModelVariant;
 use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
@@ -178,6 +179,37 @@ trait DropdownHelper
         $responseData = array(
             'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
             'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $distModel, 'type' => 'models'])->render()
+        );
+
+        if (isset($data['dep_dd2_name']) && ($data['dep_dd2_name'] != '')) {
+            $responseData['dep_dd2_name'] = $data['dep_dd2_name'];
+            $responseData['dep_dd2_html'] = view('admin.ajaxDropDowns.selectDefaultOptions', ['type' => 'colors'])->render();
+        } else {
+            $responseData['dep_dd2_name'] = '';
+            $responseData['dep_dd2_html'] = '';
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
+    public static function getVariants($data)
+    {
+        $where = array();
+        if (isset($data['id']) && (intval($data['id']) > 0)) {
+            $where['model_id'] = $data['id'];
+        }
+
+
+        $modelVariants = BikeModelVariant::where('active_status', '1')->where($where)->get();
+
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $modelVariants, 'type' => 'variants'])->render()
         );
 
         if (isset($data['dep_dd2_name']) && ($data['dep_dd2_name'] != '')) {

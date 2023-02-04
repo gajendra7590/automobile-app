@@ -26,13 +26,13 @@
 
         <div class="row">
             <div class="form-group col-md-6">
-                <label>Variant Name</label>
-                <input name="variants[{{ $rand }}][variant_name]" type="text" class="form-control"
-                    value="" placeholder="Variant Name..">
+                <label>Variant Code</label>
+                <input name="variants[{{ $rand }}][variant_name]" type="text"
+                    class="form-control autoCapitalized" value="" placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-4">
                 <label>Variant Status : </label>
-                <select class="form-control" name="variants[{{ $rand }}][active_status]">
+                <select class="form-control " name="variants[{{ $rand }}][active_status]">
                     <option value="1" selected>Active</option>
                     <option value="0"> In Active </option>
                 </select>

@@ -64,6 +64,9 @@ class AjaxCommonController extends Controller
                     case 'models':
                         return $this->getModels($postData);
                         break;
+                    case 'variants':
+                        return $this->getVariants($postData);
+                        break;
                     case 'colors':
                         return $this->getColors($postData);
                         break;

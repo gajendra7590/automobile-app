@@ -13,6 +13,7 @@ class BikeColor extends Model
 
     protected $fillable = [
         'bike_model',
+        'model_variant_id',
         'color_name',
         'color_code',
         'sku_code',
@@ -26,5 +27,10 @@ class BikeColor extends Model
     public function model()
     {
         return $this->belongsTo(BikeModel::class, 'bike_model');
+    }
+
+    public function variant()
+    {
+        return $this->belongsTo(BikeModelVariant::class, 'model_variant_id');
     }
 }

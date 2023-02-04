@@ -57,6 +57,16 @@
             @endisset
         @break
 
+        @case('variants')
+            @isset($data)
+                <option value="">---Select Variant---</option>
+                @foreach ($data as $item)
+                    <option value="{{ $item->id }}">{{ $item->variant_name }}
+                    </option>
+                @endforeach
+            @endisset
+        @break
+
         @case('colors')
             @isset($data)
                 <option value="">---Select Color---</option>
