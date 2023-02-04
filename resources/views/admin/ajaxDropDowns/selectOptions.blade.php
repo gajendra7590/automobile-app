@@ -51,7 +51,7 @@
             @isset($data)
                 <option value="">---Select Model---</option>
                 @foreach ($data as $item)
-                    <option value="{{ $item->id }}" data-variantCode="{{ $item->variant_code }}">{{ $item->model_name }}
+                    <option value="{{ $item->id }}">{{ $item->model_name }}
                     </option>
                 @endforeach
             @endisset
@@ -61,7 +61,7 @@
             @isset($data)
                 <option value="">---Select Variant---</option>
                 @foreach ($data as $item)
-                    <option value="{{ $item->id }}">{{ $item->variant_name }}
+                    <option value="{{ $item->id }}" data-variantCode="{{ $item->variant_name }}">{{ $item->variant_name }}
                     </option>
                 @endforeach
             @endisset

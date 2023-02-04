@@ -174,6 +174,14 @@
                         <td style="width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">RTO</td>
                         <td
                             style="width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
+                            {{ isset($data->registration_amount) ? $data->registration_amount : '' }}
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid;">
+                        <td style="width:60%;  text-align: left; height: 2rem; padding-left: 0.5rem;">INSURANCE AMOUNT
+                        </td>
+                        <td
+                            style="width:40%; border-left: 1px solid; text-align: right; height: 2.5rem; padding-left: 0.5rem; font-size: 1.2rem;padding-right:6px;">
                             {{ isset($data->insurance_amount) ? $data->insurance_amount : '' }}
                         </td>
                     </tr>

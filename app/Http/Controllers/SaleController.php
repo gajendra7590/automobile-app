@@ -668,8 +668,11 @@ class SaleController extends Controller
                 'model' => function ($model) {
                     $model->select('id', 'model_name');
                 },
+                'variants' => function ($model) {
+                    $model->select('id', 'variant_name');
+                },
                 'color' => function ($model) {
-                    $model->select('id', 'color_name');
+                    $model->select('id', 'color_name', 'sku_code');
                 },
                 'tyreBrand' => function ($model) {
                     $model->select('id', 'name');

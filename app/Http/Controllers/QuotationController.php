@@ -136,8 +136,8 @@ class QuotationController extends Controller
         $formData = [];
         $formData['method'] = 'POST';
         $formData['branches'] = self::_getbranches();
-        $formData['brands'] = self::_getbrands(!$auth->is_admin);
-        $formData['models'] = self::_getmodels(config('brand_id'), !$auth->is_admin);
+        $formData['brands'] = [];
+        $formData['models'] = [];
         $formData['states'] = self::_getStates();
         $formData['salesmans'] = self::_getSalesman();
         $formData['action'] = route('quotations.store');
@@ -181,6 +181,7 @@ class QuotationController extends Controller
                     'hyp_financer_description'  => "nullable|string",
                     'bike_brand'                => "required|exists:bike_brands,id",
                     'bike_model'                => "required|exists:bike_models,id",
+                    'bike_model_variant'        => "required|exists:bike_model_variants,id",
                     'bike_color'                => "required|exists:bike_colors,id",
                     'ex_showroom_price'         => "required|numeric",
                     'registration_amount'       => "required|numeric",
@@ -261,8 +262,11 @@ class QuotationController extends Controller
                 'model' => function ($s) {
                     $s->select('id', 'model_name');
                 },
+                'variant' => function ($s) {
+                    $s->select('id', 'variant_name');
+                },
                 'color' => function ($s) {
-                    $s->select('id', 'color_name');
+                    $s->select('id', 'color_name', 'sku_code');
                 },
                 'financer' => function ($s) {
                     $s->select('id', 'bank_name');
@@ -320,7 +324,8 @@ class QuotationController extends Controller
         $formData['branches'] = self::_getBranchById($quotModel->branch_id);
         $formData['brands'] = self::_getBrandByBranch($quotModel->branch_id);
         $formData['models'] = self::_getModelByBrand($quotModel->bike_brand);
-        $formData['colors'] = self::_getColorByModel($quotModel->bike_model);
+        $formData['variants'] = self::_getVaraints($quotModel->bike_model);
+        $formData['colors'] = self::_getColors($quotModel->bike_model_variant);
 
         $formData['salesmans'] = self::_getSalesmanById($quotModel->salesman_id);
 
@@ -377,6 +382,7 @@ class QuotationController extends Controller
                     'hyp_financer_description'  => "nullable|string",
                     'bike_brand'                => "nullable|exists:bike_brands,id",
                     'bike_model'                => "required|exists:bike_models,id",
+                    'bike_model_variant'        => "required|exists:bike_model_variants,id",
                     'bike_color'                => "required|exists:bike_colors,id",
                     'ex_showroom_price'         => "required|numeric",
                     'registration_amount'       => "required|numeric",

@@ -202,12 +202,14 @@
  <div class="form-group col-md-4">
      <label>VARIANT CODE</label>
      <input type="text" class="form-control"
-         value="{{ isset($purchaseModel['variant']) ? $purchaseModel['variant'] : '' }}" disabled />
+         value="{{ isset($purchaseModel['variants']['variant_name']) ? $purchaseModel['variants']['variant_name'] : '' }}"
+         disabled />
  </div>
  <div class="form-group col-md-4">
      <label>SKU CODE</label>
      <input type="text" class="form-control"
-         value="{{ isset($purchaseModel['sku']) ? $purchaseModel['sku'] : '' }}" disabled />
+         value="{{ isset($purchaseModel['color']['sku_code']) ? $purchaseModel['color']['sku_code'] : '' }}"
+         disabled />
  </div>
 
  <div class="form-group col-md-8">
@@ -294,16 +296,16 @@
              {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
              By Cash
          </option>
-         @if (isset($data['id']))
-             <option value="2"
-                 {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
-                 Bank Finance
-             </option>
-             <option value="3"
-                 {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
-                 Personal Finance
-             </option>
-         @endif
+         {{-- @if (isset($data['id'])) --}}
+         <option value="2"
+             {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
+             Bank Finance
+         </option>
+         <option value="3"
+             {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
+             Personal Finance
+         </option>
+         {{-- @endif --}}
      </select>
  </div>
  <div class="form-group col-md-6">

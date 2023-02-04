@@ -47,16 +47,18 @@
     </tr>
     <tr>
         <th>SHOWROOM VISIT DATE</th>
-        <td colspan="2">{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : '--' }}</td>
+        <td>{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : '--' }}</td>
         <th>PURCHASE EST DATE</th>
-        <td colspan="2">{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : '--' }}</td>
-    </tr>
-    <tr>
+        <td>{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : '--' }}</td>
         <th>BRAND NAME</th>
         <td>{{ isset($data['brand']['name']) ? $data['brand']['name'] : '--' }}</td>
+    </tr>
+    <tr>
         <th>MODEL NAME</th>
         <td>{{ isset($data['model']['model_name']) ? $data['model']['model_name'] : '--' }}</td>
-        <th>COLOR NAME</th>
+        <th>MODEL VARIANT</th>
+        <td>{{ isset($data['variant']['variant_name']) ? $data['variant']['variant_name'] : '--' }}</td>
+        <th>VARIANT COLOR NAME</th>
         <td>{{ isset($data['color']['color_name']) ? $data['color']['color_name'] : '--' }}</td>
     </tr>
     <tr>
@@ -79,7 +81,7 @@
         <th>TOTAL AMOUNT</th>
         <td>{!! isset($data['total_amount']) ? convertBadgesPrice($data['total_amount'], 'success') : '--' !!}</td>
         <th>DESCRIPTION</th>
-        <td>{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
+        <td colspan="3">{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
     </tr>
     <tr>
         <th>CLOSED STATUS</th>
