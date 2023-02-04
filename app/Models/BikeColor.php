@@ -17,12 +17,23 @@ class BikeColor extends Model
         'color_name',
         'color_code',
         'sku_code',
-        'active_status'
+        'active_status',
+        'sku_sale_price_id',
+        'is_editable'
     ];
 
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->sku_code = strtoupper($model->sku_code);
+        });
+    }
 
     public function model()
     {
@@ -32,5 +43,10 @@ class BikeColor extends Model
     public function variant()
     {
         return $this->belongsTo(BikeModelVariant::class, 'model_variant_id');
+    }
+
+    public function price()
+    {
+        return $this->hasOne(SkuSalePrice::class, 'model_color_id', 'id');
     }
 }

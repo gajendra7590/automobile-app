@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BikeColor;
 use App\Models\SkuSalePrice;
 use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
@@ -48,9 +49,17 @@ class SkuSalePriceController extends Controller
      */
     public function create()
     {
+        $skuCodes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')
+            ->where('sku_sale_price_id', '0')
+            ->where(function ($model) {
+                $model->where('sku_code', '!=', "")
+                    ->orWhereNotNull('sku_code');
+            })
+            ->get();
         $data = array(
-            'action' => route('skuSalesPrice.store'),
-            'method' => 'POST'
+            'action'    => route('skuSalesPrice.store'),
+            'method'    => 'POST',
+            'sku_codes' => $skuCodes
         );
         return response()->json([
             'status'     => true,
@@ -70,9 +79,9 @@ class SkuSalePriceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sku_code', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'active_status');
+            $postData = $request->only('model_color_id', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'active_status');
             $validator = Validator::make($postData, [
-                'sku_code'             => "required|string",
+                'model_color_id'       => "required|unique:sku_sale_prices,model_color_id",
                 'ex_showroom_price'    => "required|numeric|min:1",
                 'registration_amount'  => "required|numeric|min:1",
                 'insurance_amount'     => "required|numeric|min:1",
@@ -93,6 +102,7 @@ class SkuSalePriceController extends Controller
                 ]);
             }
 
+            $postData['sku_code'] = BikeColor::where('id', $postData['model_color_id'])->value('sku_code');
             SkuSalePrice::create($postData);
             DB::commit();
             return response()->json([
@@ -131,7 +141,23 @@ class SkuSalePriceController extends Controller
     public function edit($id)
     {
         $model = SkuSalePrice::find($id);
-        $data = array('data' => $model, 'action' => route('skuSalesPrice.update', ['skuSalesPrice' => $id]), 'method' => 'PUT');
+        $sku_codes = (object) [];
+        if (!empty($model->model_color_id)) {
+            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')->where('id', $model->model_color_id)->get();
+        } else {
+            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')
+                ->where('sku_sale_price_id', '0')
+                ->where(function ($model) {
+                    $model->where('sku_code', '!=', "")
+                        ->orWhereNotNull('sku_code');
+                })->get();
+        }
+        $data = array(
+            'data' => $model,
+            'action' => route('skuSalesPrice.update', ['skuSalesPrice' => $id]),
+            'method' => 'PUT',
+            'sku_codes' => $sku_codes
+        );
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -151,9 +177,9 @@ class SkuSalePriceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sku_code', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'active_status');
+            $postData = $request->only('model_color_id', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'active_status');
             $validator = Validator::make($postData, [
-                'sku_code'             => "required|string",
+                'model_color_id'       => "required|unique:sku_sale_prices,model_color_id," . $id,
                 'ex_showroom_price'    => "required|numeric|min:1",
                 'registration_amount'  => "required|numeric|min:1",
                 'insurance_amount'     => "required|numeric|min:1",
@@ -180,7 +206,7 @@ class SkuSalePriceController extends Controller
                     'message' => trans('messages.brand_not_found')
                 ]);
             }
-
+            $postData['sku_code'] = BikeColor::where('id', $postData['model_color_id'])->value('sku_code');
             $model->update($postData);
             DB::commit();
             return response()->json([
