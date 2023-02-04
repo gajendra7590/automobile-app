@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentCash;
 use App\Models\SalePaymentPersonalFinanace;
@@ -225,6 +226,13 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'rate_of_interest' => $postData['rate_of_interest'],
                     'processing_fees' => $postData['processing_fees']
                 ]);
+
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $salePaymentAccount->sale_id)
+                    ->update([
+                        'hyp_financer' => $postData['financier_id'],
+                        'payment_type' => '3'
+                    ]);
 
                 DB::commit();
                 return response()->json([
@@ -526,6 +534,12 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'processing_fees' => $postData['processing_fees']
                 ]);
 
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $salePaymentAccount->sale_id)->update([
+                    'hyp_financer' => $postData['financier_id'],
+                    'payment_type' => '3'
+                ]);
+
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -630,6 +644,10 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'rate_of_interest' => null,
                     'processing_fees' => null,
                 ]);
+
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $CashModel->sale_id)->update(['hyp_financer' => null, 'payment_type' => '1']);
+
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -983,7 +1001,7 @@ class SalePaymentPersonalFinanaceController extends Controller
             return redirect()->route('saleAccounts.index');
         } else {
             $data = array(
-                'data' => SalePaymentPersonalFinanace::find($id)
+                'data' => SalePaymentAccounts::find($id)
             );
             return response()->json([
                 'status'     => true,
