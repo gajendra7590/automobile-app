@@ -60,8 +60,8 @@ trait DownloadReportHelper
                     $start_date = null;
                     break;
             }
-            if ($end_date && $start_date) {
-                $query = $query->whereDate('purchases.created_at', '>=', config('start_date'))->whereDate('purchases.created_at', '<=', config('end_date'));
+            if ($end_date && $start_date && config('date_fliter')) {
+                $query = $query->whereDate(config('date_fliter'), '>=', config('start_date'))->whereDate(config('date_fliter'), '<=', config('end_date'));
             }
         }
         config(['query' => $query]);
@@ -87,6 +87,7 @@ trait DownloadReportHelper
                         $q->where('purchases.bike_brand', request('brand_id'));
                     })->select('branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
                 $heading = ['Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
+                config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'pending_purchase_invoice':
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
@@ -96,6 +97,7 @@ trait DownloadReportHelper
                         $q->where('purchases.bike_brand', request('brand_id'));
                     })->doesntHave('invoice')->select('branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
                 $heading = ['Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
+                config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'vehicle_stock_inventory':
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
@@ -115,6 +117,7 @@ trait DownloadReportHelper
                     })->select('branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
 
                 $heading = ['Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
+                config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'quotation_list':
                 $query = Quotation::join('branches', 'branches.id', '=', 'quotations.branch_id')
@@ -202,6 +205,7 @@ trait DownloadReportHelper
                     'Status',
                     'Close Note'
                 ];
+                config(['date_filter' => 'quotations.created_at']);
                 break;
             case 'sales_register':
                 $query = Sale::leftJoin('branches', 'branches.id', '=', 'sales.branch_id')
@@ -281,6 +285,7 @@ trait DownloadReportHelper
                     'status',
                     'customer name'
                 ];
+                config(['date_filter' => 'sales.created_at']);
                 break;
             case 'brokers_agents':
                 $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
@@ -301,6 +306,7 @@ trait DownloadReportHelper
                     // ->has('purchase_transfer_latest')
                     ->select('branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
                 $heading = ['Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
+                config(['date_filter' => 'sales.created_at']);
                 break;
             default:
                 //
