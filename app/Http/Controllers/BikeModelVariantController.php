@@ -97,12 +97,11 @@ class BikeModelVariantController extends Controller
             //Check Validation
             $validator = Validator::make($postData, [
                 'model_id'                 => "required|exists:bike_models,id",
-                'variants.*.variant_name'  => 'required|unique:bike_model_variants,variant_name',
+                'variants.*.variant_name'  => 'required',
                 'variants.*.active_status'  => 'required|in:0,1'
             ], [
                 'model_id' => 'The model field is required.',
-                'variants.*.variant_name.required' => "The Variant Name field is required.",
-                'variants.*.variant_name.unique'   => "The Variant Name(:input) is already exist."
+                'variants.*.variant_name.required' => "The Variant Name field is required."
             ]);
 
             //If Validation failed
@@ -193,7 +192,7 @@ class BikeModelVariantController extends Controller
 
             $validator = Validator::make($postData, [
                 'model_id'       => "required|exists:bike_models,id",
-                'variant_name'   => "required|unique:bike_model_variants,variant_name," . $id,
+                'variant_name'   => "required",
                 'active_status'  => 'required|in:0,1'
             ]);
             if ($validator->fails()) {
