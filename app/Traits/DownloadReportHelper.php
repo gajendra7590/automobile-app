@@ -60,8 +60,8 @@ trait DownloadReportHelper
                     $start_date = null;
                     break;
             }
-            if ($end_date && $start_date && config('date_fliter')) {
-                $query = $query->whereDate(config('date_fliter'), '>=', config('start_date'))->whereDate(config('date_fliter'), '<=', config('end_date'));
+            if ($end_date && $start_date && config('date_filter')) {
+                $query = $query->whereDate(config('date_filter'), '>=', $start_date)->whereDate(config('date_filter'), '<=', $end_date);
             }
         }
         config(['query' => $query]);
