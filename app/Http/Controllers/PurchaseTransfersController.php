@@ -25,7 +25,7 @@ class PurchaseTransfersController extends Controller
         if (!request()->ajax()) {
             return view('admin.purchases.transfers.index');
         } else {
-            $data = Purchase::branchWise()
+            $data =   Purchase::branchWise()
                 ->whereHas('transfers', function ($transfer) {
                     $transfer->where('status', '0')->where('active_status', '1');
                 })
@@ -61,25 +61,27 @@ class PurchaseTransfersController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('sku', 'LIKE', '%' . $search_string . '%')
-                            ->orWhereHas('branch', function ($q) use ($search_string) {
-                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('brand', function ($q) use ($search_string) {
-                                $q->where('name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('model', function ($q) use ($search_string) {
-                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('modelColor', function ($q) use ($search_string) {
-                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('transfers.broker', function ($q) use ($search_string) {
-                                $q->where('name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('transfers', function ($q) use ($search_string) {
-                                $q->where('total_price_on_road', 'LIKE', '%' . $search_string . '%');
-                            });
+                        $query->where(function ($q) use ($search_string) {
+                            $q->where('sku', 'LIKE', '%' . $search_string . '%')
+                                ->orWhereHas('branch', function ($q) use ($search_string) {
+                                    $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('brand', function ($q) use ($search_string) {
+                                    $q->where('name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('model', function ($q) use ($search_string) {
+                                    $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('modelColor', function ($q) use ($search_string) {
+                                    $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('transfers.broker', function ($q) use ($search_string) {
+                                    $q->where('name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('transfers', function ($q) use ($search_string) {
+                                    $q->where('total_price_on_road', 'LIKE', '%' . $search_string . '%');
+                                });
+                        });
                     }
                 })
                 ->addIndexColumn()
@@ -138,18 +140,22 @@ class PurchaseTransfersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $data['action']  = route('purchaseTransfers.store');
-        $data['method']  = "POST";
-        $data['brokers'] = self::_getBrokers();
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            $data['action']  = route('purchaseTransfers.store');
+            $data['method']  = "POST";
+            $data['brokers'] = self::_getBrokers();
 
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.retrieve_success'),
-            'data'       => (view('admin.purchases.transfers.create', $data)->render())
-        ]);
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.retrieve_success'),
+                'data'       => (view('admin.purchases.transfers.create', $data)->render())
+            ]);
+        }
     }
 
     /**
@@ -160,49 +166,53 @@ class PurchaseTransfersController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            DB::beginTransaction();
-            $postData = $request->only('purchase_id', 'broker_id', 'transfer_date', 'transfer_note');
-            $validator = Validator::make($postData, [
-                'purchase_id'         => "required|exists:purchases,id",
-                'broker_id'           => "required|exists:brokers,id",
-                'total_price_on_road' => 'required|numeric|min:1',
-                'transfer_date'       => "required|date:Y-m-d",
-                'transfer_note'       => "required|string"
-            ]);
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            try {
+                DB::beginTransaction();
+                $postData = $request->only('purchase_id', 'broker_id', 'transfer_date', 'transfer_note', 'total_price_on_road');
+                $validator = Validator::make($postData, [
+                    'purchase_id'         => "required|exists:purchases,id",
+                    'broker_id'           => "required|exists:brokers,id",
+                    'total_price_on_road' => 'required|numeric|min:1',
+                    'transfer_date'       => "required|date:Y-m-d",
+                    'transfer_note'       => "required|string"
+                ]);
 
-            //If Validation failed
-            if ($validator->fails()) {
+                //If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                $postData['created_by'] = Auth::user()->id;
+                $created = PurchaseTransfer::create($postData); // Save Transfer
+                if ($created) {
+                    Purchase::where('id', $postData['purchase_id'])->update(['transfer_status' => '1']); //Log In Purchase
+                    //In Active Old Transfer & Return For Same Pruchase If Any
+                    PurchaseTransfer::where('purchase_id', $postData['purchase_id'])->whereNotIn('id', [$created->id])->update([
+                        'active_status' => '0'
+                    ]);
+                }
+                DB::commit();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.create_success')
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
                 return response()->json([
                     'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
+                    'statusCode' => 409,
+                    'message'    => $e->getMessage()
                 ]);
             }
-
-            $postData['created_by'] = Auth::user()->id;
-            $created = PurchaseTransfer::create($postData); // Save Transfer
-            if ($created) {
-                Purchase::where('id', $postData['purchase_id'])->update(['transfer_status' => '1']); //Log In Purchase
-                //In Active Old Transfer & Return For Same Pruchase If Any
-                PurchaseTransfer::where('purchase_id', $postData['purchase_id'])->whereNotIn('id', [$created->id])->update([
-                    'active_status' => '0'
-                ]);
-            }
-            DB::commit();
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.create_success')
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 409,
-                'message'    => $e->getMessage()
-            ]);
         }
     }
 
@@ -238,27 +248,31 @@ class PurchaseTransfersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
-        if (!$model) {
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
+            if (!$model) {
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                ]);
+            }
+            $data['action']      = route('purchaseTransfers.update', ['purchaseTransfer' => $id]);
+            $data['method']      = "PUT";
+            $data['brokers']     = self::_getBrokers();
+            $data['purchase_id'] = $model->purchase_id;
+
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
-                'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                'message'    => trans('messages.retrieve_success'),
+                'data'       => (view('admin.purchases.transfers.create_return', $data)->render())
             ]);
         }
-        $data['action']      = route('purchaseTransfers.update', ['purchaseTransfer' => $id]);
-        $data['method']      = "PUT";
-        $data['brokers']     = self::_getBrokers();
-        $data['purchase_id'] = $model->purchase_id;
-
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.retrieve_success'),
-            'data'       => (view('admin.purchases.transfers.create_return', $data)->render())
-        ]);
     }
 
     /**
@@ -270,56 +284,60 @@ class PurchaseTransfersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
-            if (!$model) {
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            try {
+                $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
+                if (!$model) {
+                    return response()->json([
+                        'status'     => true,
+                        'statusCode' => 200,
+                        'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                    ]);
+                }
+
+
+                DB::beginTransaction();
+                $postData = $request->only('purchase_id', 'return_date', 'return_note');
+                // dd($postData);
+                $validator = Validator::make($postData, [
+                    'purchase_id'    => "required|exists:purchases,id",
+                    'return_date'  => "required|date:Y-m-d",
+                    'return_note'  => "required|string"
+                ]);
+
+                //If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+
+                $postData['updated_by']     = Auth::user()->id;
+                $postData['status']         = 1;
+                $postData['active_status']  = 0;
+                $updated = $model->update($postData); // Save Transfer
+                if ($updated) {
+                    Purchase::where('id', $postData['purchase_id'])->update(['transfer_status' => '0']);
+                }
+                DB::commit();
                 return response()->json([
                     'status'     => true,
                     'statusCode' => 200,
-                    'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                    'message'    => trans('messages.create_success')
                 ]);
-            }
-
-
-            DB::beginTransaction();
-            $postData = $request->only('purchase_id', 'return_date', 'return_note');
-            // dd($postData);
-            $validator = Validator::make($postData, [
-                'purchase_id'    => "required|exists:purchases,id",
-                'return_date'  => "required|date:Y-m-d",
-                'return_note'  => "required|string"
-            ]);
-
-            //If Validation failed
-            if ($validator->fails()) {
+            } catch (\Exception $e) {
+                DB::rollBack();
                 return response()->json([
                     'status'     => false,
-                    'statusCode' => 419,
-                    'message'    => $validator->errors()->first(),
-                    'errors'     => $validator->errors()
+                    'statusCode' => 409,
+                    'message'    => $e->getMessage()
                 ]);
             }
-
-            $postData['updated_by']     = Auth::user()->id;
-            $postData['status']         = 1;
-            $postData['active_status']  = 0;
-            $updated = $model->update($postData); // Save Transfer
-            if ($updated) {
-                Purchase::where('id', $postData['purchase_id'])->update(['transfer_status' => '0']);
-            }
-            DB::commit();
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.create_success')
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status'     => false,
-                'statusCode' => 409,
-                'message'    => $e->getMessage()
-            ]);
         }
     }
 
@@ -350,22 +368,28 @@ class PurchaseTransfersController extends Controller
         }
     }
 
-
+    /**
+     * Function for load purchases list for select2 ajax dropdrown
+     */
     public function getTransferPurchasesList(Request $request)
     {
-        $postData = $request->all();
-        $data = Purchase::select('id', DB::raw('CONCAT(vin_number," | ",engine_number," | ",hsn_number) AS text'))
-            ->where(['transfer_status' => '0', 'status' => '1']);
-        if (isset($postData['search']) && ($postData['search'] != "")) {
-            $data = $data->where('vin_number', 'LIKE', '%' . $postData['search'] . '%')
-                ->orwhere('engine_number', 'LIKE', '%' . $postData['search'] . '%')
-                ->orwhere('hsn_number', 'LIKE', '%' . $postData['search'] . '%');
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            $postData = $request->all();
+            $data = Purchase::branchWise()->select('id', DB::raw('CONCAT(vin_number," | ",engine_number," | ",hsn_number) AS text'))
+                ->where(['transfer_status' => '0', 'status' => '1']);
+            if (isset($postData['search']) && ($postData['search'] != "")) {
+                $data = $data->where('vin_number', 'LIKE', '%' . $postData['search'] . '%')
+                    ->orwhere('engine_number', 'LIKE', '%' . $postData['search'] . '%')
+                    ->orwhere('hsn_number', 'LIKE', '%' . $postData['search'] . '%');
+            }
+            $data = $data->get();
+            return response()->json([
+                'status'  => true,
+                'results' => $data,
+                'message' => "List retrieved successfully"
+            ]);
         }
-        $data = $data->get();
-        return response()->json([
-            'status'  => true,
-            'results' => $data,
-            'message' => "List retrieved successfully"
-        ]);
     }
 }

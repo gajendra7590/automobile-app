@@ -5,12 +5,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Colors
-                <small>Model colors list</small>
+                Model Variants
+                <small>List</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('dashboardIndex') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Colors</li>
+                <li class="active">Model Variant List</li>
             </ol>
         </section>
 
@@ -21,27 +21,19 @@
                     <div class="box">
                         <div class="box-header">
                             <div class="pull-left">
-                                <h3 class="box-title">Model colors list</h3>
+                                <h3 class="box-title">Model Variant list</h3>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ route('colors.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="ADD NEW COLORS" data-modal_size="modal-lg">
+                                <a href="{{ route('modelVariants.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
+                                    data-modal_title="ADD NEW VARIANTS" data-modal_size="modal-md">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD
                                 </a>
                             </div>
                             <div class="pull-right custom-fitler-container">
                                 <div class="filter-options pull-left">
                                     <div class="row">
-                                        <div class="col-xs-6">
-                                            <select class="form-control ajaxDtFilter" name="variant_id" data-col_index="3">
-                                                <option value="">---MODEL VARIANT NAME---</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <select class="form-control ajaxDtFilter ajaxChangeCDropDown" name="bike_model"
-                                                data-dep_dd_name="variant_id"
-                                                data-url="{{ url('getAjaxDropdown') . '?req=variants' }}" name="model_id"
-                                                data-col_index="4">
+                                        <div class="col-xs-12">
+                                            <select class="form-control ajaxDtFilter" name="model_id" data-col_index="2">
                                                 <option value="">---BRAND MODEL NAME---</option>
                                                 @if (isset($models))
                                                     @foreach ($models as $model)
@@ -62,14 +54,13 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="ajaxDataTable" data-url="{{ route('colors.index') }}"
+                            <table id="ajaxDataTable" data-url="{{ route('modelVariants.index') }}"
                                 class="table table-bordered table-hover myCustomTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Color Name</th>
-                                        <th>SKU Code</th>
-                                        <th>Model Name(Variant Code)</th>
+                                        <th>Variant Code</th>
+                                        <th>Model Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -89,5 +80,5 @@
 @endsection
 
 @push('after-script')
-    <script src="{{ asset('assets/modules/colors.js') }}"></script>
+    <script src="{{ asset('assets/modules/modelVariants.js') }}"></script>
 @endpush

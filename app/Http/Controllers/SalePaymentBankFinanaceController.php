@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
@@ -184,6 +185,9 @@ class SalePaymentBankFinanaceController extends Controller
                     'status'                       => SalePaymentAccounts::PAY_STATUS_PAID,
                     'reference_id'                 => $financeModel->id
                 ]);
+
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $salesAccountModel->sale_id)->update(['hyp_financer' => $postData['financier_id'], 'payment_type' => '2']);
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -458,6 +462,9 @@ class SalePaymentBankFinanaceController extends Controller
                     ]);
                 }
 
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $bankFinanceModel->sale_id)->update(['hyp_financer' => $postData['financier_id'], 'payment_type' => '2']);
+
 
                 DB::commit();
                 return response()->json([
@@ -563,6 +570,9 @@ class SalePaymentBankFinanaceController extends Controller
                     'financier_id' => null,
                     'financier_note' => null
                 ]);
+
+                //Sale Update Self Pay In Sales Model
+                Sale::where('id', $CashModel->sale_id)->update(['hyp_financer' => null, 'payment_type' => '1']);
 
                 DB::commit();
                 return response()->json([

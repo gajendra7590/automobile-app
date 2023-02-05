@@ -42,20 +42,22 @@ class PurchaseInvoicesController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('purchase_invoice_number', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('purchase_invoice_date', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%')
-                            ->orWhereHas('purchase', function ($q) use ($search_string) {
-                                $q->where('variant', 'LIKE', '%' . $search_string . '%')
-                                    ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
-                                    ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
-                                    ->orwhere('vin_number', 'LIKE', '%' . $search_string . '%')
-                                    ->orwhere('hsn_number', 'LIKE', '%' . $search_string . '%')
-                                    ->orwhere('engine_number', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('purchase.branch', function ($q) use ($search_string) {
-                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                            });
+                        $query->where(function ($qq) use ($search_string) {
+                            $qq->where('purchase_invoice_number', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('purchase_invoice_date', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%')
+                                ->orWhereHas('purchase', function ($q) use ($search_string) {
+                                    $q->where('variant', 'LIKE', '%' . $search_string . '%')
+                                        ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
+                                        ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
+                                        ->orwhere('vin_number', 'LIKE', '%' . $search_string . '%')
+                                        ->orwhere('hsn_number', 'LIKE', '%' . $search_string . '%')
+                                        ->orwhere('engine_number', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('purchase.branch', function ($q) use ($search_string) {
+                                    $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                                });
+                        });
                     }
                 })
                 ->addIndexColumn()

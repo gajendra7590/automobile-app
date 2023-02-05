@@ -36,6 +36,7 @@ class Quotation extends Model
         'purchase_est_date',
         'bike_brand',
         'bike_model',
+        'bike_model_variant',
         'bike_color',
         'ex_showroom_price',
         'registration_amount',
@@ -163,6 +164,12 @@ class Quotation extends Model
     {
         return $this->belongsTo(BikeModel::class, 'bike_model');
     }
+
+    public function variant()
+    {
+        return $this->belongsTo(BikeModelVariant::class, 'bike_model_variant');
+    }
+
 
     public function color()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
 use App\Models\SalePaymentCash;
@@ -131,7 +132,7 @@ class SalesAccountController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Function to load deposite down payment form
      *
      * @return \Illuminate\Http\Response
      */
@@ -166,10 +167,7 @@ class SalesAccountController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Function is created for deposite down payment
      */
     public function store(Request $request)
     {
@@ -257,6 +255,9 @@ class SalesAccountController extends Controller
                     'reference_id' => $cashPaymentModel->id
                 ]);
             }
+
+            //Sale Update Self Pay In Sales Model
+            Sale::where('id', $salesAccountModel['sale_id'])->update(['hyp_financer' => null, 'payment_type' => '1']);
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -435,8 +436,11 @@ class SalesAccountController extends Controller
                                         'model' => function ($model) {
                                             $model->select('id', 'model_name');
                                         },
+                                        'variants' => function ($model) {
+                                            $model->select('id', 'variant_name');
+                                        },
                                         'modelColor' => function ($model) {
-                                            $model->select('id', 'color_name');
+                                            $model->select('id', 'color_name', 'sku_code');
                                         },
                                         'tyreBrand' => function ($model) {
                                             $model->select('id', 'name');

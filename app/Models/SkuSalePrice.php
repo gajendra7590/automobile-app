@@ -12,6 +12,7 @@ class SkuSalePrice extends Model
     protected $table = 'sku_sale_prices';
 
     protected $fillable = [
+        'model_color_id',
         'sku_code',
         'ex_showroom_price',
         'registration_amount',
@@ -39,8 +40,14 @@ class SkuSalePrice extends Model
             $model->sku_code = strtoupper($model->sku_code);
         });
 
-        self::updating(function ($model) {
+        self::updated(function ($model) {
             $model->sku_code = strtoupper($model->sku_code);
+            BikeColor::where('id', $model->model_color_id)->update(['sku_sale_price_id' => $model->id]);
+        });
+
+        //After Create / Update
+        self::created(function ($model) {
+            BikeColor::where('id', $model->model_color_id)->update(['sku_sale_price_id' => $model->id]);
         });
     }
 }

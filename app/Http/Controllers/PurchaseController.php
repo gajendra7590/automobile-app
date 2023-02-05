@@ -60,7 +60,7 @@ class PurchaseController extends Controller
             }
 
             //Fitler By Transfer Status
-            if (isset($postData['columns'][7]['search']['value']) && (!empty($postData['columns'][7]['search']['value']))) {
+            if (isset($postData['columns'][7]['search']['value']) && ($postData['columns'][7]['search']['value'] != "")) {
                 $data->where('transfer_status', $postData['columns'][7]['search']['value']);
             }
 
@@ -73,23 +73,25 @@ class PurchaseController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('id', $search_string)
-                            ->orWhereHas('branch', function ($q) use ($search_string) {
-                                $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('brand', function ($q) use ($search_string) {
-                                $q->where('name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('model', function ($q) use ($search_string) {
-                                $q->where('model_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orWhereHas('modelColor', function ($q) use ($search_string) {
-                                $q->where('color_name', 'LIKE', '%' . $search_string . '%');
-                            })
-                            ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
-                            ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
-                            ->orwhereDate('dc_date', $search_string)
-                            ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
+                        $query->where(function ($qq) use ($search_string) {
+                            $qq->where('id', $search_string)
+                                ->orWhereHas('branch', function ($q) use ($search_string) {
+                                    $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('brand', function ($q) use ($search_string) {
+                                    $q->where('name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('model', function ($q) use ($search_string) {
+                                    $q->where('model_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orWhereHas('modelColor', function ($q) use ($search_string) {
+                                    $q->where('color_name', 'LIKE', '%' . $search_string . '%');
+                                })
+                                ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
+                                ->orwhereDate('dc_date', $search_string)
+                                ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
+                        });
                     }
                 })
                 ->addIndexColumn()
@@ -188,6 +190,7 @@ class PurchaseController extends Controller
                 'bike_branch'               => "required|exists:branches,id",
                 'bike_brand'                => "required|exists:bike_brands,id",
                 'bike_model'                => "required|exists:bike_models,id",
+                'bike_model_variant'        => "required|exists:bike_model_variants,id",
                 'bike_model_color'          => "required|exists:bike_colors,id",
                 'bike_type'                 => "required",
                 'bike_fuel_type'            => "required",
@@ -315,21 +318,21 @@ class PurchaseController extends Controller
                 'transfers' => function ($transfers) {
                     $transfers->with(['broker'])->select('id', 'broker_id', 'purchase_id');
                 }
-            ])->first();
+            ])
+            ->first();
         if (!$bpModel) {
             return redirect()->back();
         }
-
-        return $bpModel;
         $data = [];
         $data['branches'] = self::_getBranchById($bpModel->bike_branch);
         $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);
         $data['brands'] = self::_getbrands();
-        $data['models'] = self::_getmodels($bpModel->bike_brand, !$auth->is_admin);
-        $data['colors'] = self::_getColors($bpModel->bike_model, $bpModel->color_id);
-        $data['gst_rates'] = self::_getGstRates(!$auth->is_admin);
-        $data['tyre_brands'] = self::_getTyreBrands(!$auth->is_admin);
-        $data['battery_brands'] = self::_getBatteryBrands(!$auth->is_admin);
+        $data['models'] = self::_getmodels($bpModel->bike_brand);
+        $data['variants'] = self::_getVaraints($bpModel->bike_model);
+        $data['colors'] = self::_getColors($bpModel->bike_model_variant);
+        $data['gst_rates'] = self::_getGstRates();
+        $data['tyre_brands'] = self::_getTyreBrands();
+        $data['battery_brands'] = self::_getBatteryBrands();
         $data['bike_types'] = bike_types();
         $data['bike_fuel_types'] = bike_fuel_types();
         $data['break_types'] = break_types();
@@ -367,6 +370,7 @@ class PurchaseController extends Controller
                 'bike_branch'               => "nullable|exists:branches,id",
                 'bike_brand'                => "required|exists:bike_brands,id",
                 'bike_model'                => "required|exists:bike_models,id",
+                'bike_model_variant'        => "required|exists:bike_model_variants,id",
                 'bike_model_color'          => "required|exists:bike_colors,id",
                 'bike_type'                 => "required",
                 'bike_fuel_type'            => "required",

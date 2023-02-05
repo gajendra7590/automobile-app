@@ -20,6 +20,7 @@ class Purchase extends Model
         'bike_dealer',
         'bike_brand',
         'bike_model',
+        'bike_model_variant',
         'bike_model_color',
         'bike_type',
         'bike_fuel_type',
@@ -67,9 +68,7 @@ class Purchase extends Model
     {
         $branch_id = self::getCurrentUserBranch();
         if ($branch_id != '0' || $branch_id != 'null') {
-            return $query->whereHas('purchase', function ($purchase) use ($branch_id) {
-                $purchase->where('bike_branch', $branch_id);
-            });
+            return $query->where('bike_branch', $branch_id);
         }
     }
 
@@ -113,9 +112,20 @@ class Purchase extends Model
         return $this->belongsTo(BikeModel::class, 'bike_model');
     }
 
-    public function sale()
+    /**
+     * Mapping with variant
+     */
+    public function variant()
     {
-        return $this->hasOne(Sale::class);
+        return $this->belongsTo(BikeModelVariant::class, 'bike_model_variant');
+    }
+
+    /**
+     * Mapping with variant
+     */
+    public function variants()
+    {
+        return $this->belongsTo(BikeModelVariant::class, 'bike_model_variant');
     }
 
     /**
@@ -125,6 +135,8 @@ class Purchase extends Model
     {
         return $this->belongsTo(BikeColor::class, 'bike_model_color');
     }
+
+
     /**
      * Mapping with color
      */
@@ -141,6 +153,11 @@ class Purchase extends Model
     public function batteryBrand()
     {
         return $this->belongsTo(BatteryBrand::class, 'battery_brand_id');
+    }
+
+    public function sale()
+    {
+        return $this->hasOne(Sale::class);
     }
 
     public function invoice()
@@ -165,6 +182,6 @@ class Purchase extends Model
 
     public function skuSalesPrice()
     {
-        return $this->hasOne(SkuSalePrice::class, 'sku_code', 'sku')->where('active_status', '1')->orderBy('id', 'DESC');
+        return $this->hasOne(SkuSalePrice::class, 'model_color_id', 'bike_model_color')->where('active_status', '1')->orderBy('id', 'DESC');
     }
 }

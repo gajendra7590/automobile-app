@@ -9,8 +9,16 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <label>SKU Code</label>
-                <input type="text" class="form-control" name="sku_code" placeholder="SKU Code.."
-                    value='{{ isset($data->sku_code) ? $data->sku_code : '' }}' />
+                <select class="form-control" name="model_color_id">
+                    @if (!isset($data->id))
+                        <option value="0">---SELECT SKU CODE---</option>
+                    @endif
+                    @isset($sku_codes)
+                        @foreach ($sku_codes as $sku_code)
+                            <option value="{{ $sku_code->id }}">{{ $sku_code->sku_code }}</option>
+                        @endforeach
+                    @endisset
+                </select>
             </div>
             <div class="form-group col-md-4">
                 <label>EX SHOWROOM PRICE</label>

@@ -7,6 +7,7 @@ use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
+use App\Models\BikeModelVariant;
 use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
@@ -101,10 +102,7 @@ trait DropdownHelper
     {
         $branch_id = isset($data['id']) ? $data['id'] : 0;
         $dealers = BikeDealer::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'company_name')->get();
-
         $brands = BikeBrand::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'name')->get();
-        //dd($dealers);
-
         $responseData = array(
             'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
             'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $dealers, 'type' => 'dealers'])->render(),
@@ -113,11 +111,10 @@ trait DropdownHelper
             'dep_dd3_name' => isset($data['dep_dd3_name']) ? $data['dep_dd3_name'] : '',
             'dep_dd3_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'models'])->render(),
             'dep_dd4_name' => isset($data['dep_dd4_name']) ? $data['dep_dd4_name'] : '',
-            'dep_dd4_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'colors'])->render()
+            'dep_dd4_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'variants'])->render(),
+            'dep_dd5_name' => isset($data['dep_dd5_name']) ? $data['dep_dd5_name'] : '',
+            'dep_dd5_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => [], 'type' => 'colors'])->render()
         );
-
-        // dd($responseData);
-
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -173,11 +170,47 @@ trait DropdownHelper
             $where['brand_id'] = $data['id'];
         }
 
-        $distModel = BikeModel::where('active_status', '1')->where($where)->get();
-
+        $bikeModel = BikeModel::where('active_status', '1')->where($where)->get();
         $responseData = array(
             'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
-            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $distModel, 'type' => 'models'])->render()
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $bikeModel, 'type' => 'models'])->render()
+        );
+
+        if (isset($data['dep_dd2_name']) && ($data['dep_dd2_name'] != '')) {
+            $responseData['dep_dd2_name'] = $data['dep_dd2_name'];
+            $responseData['dep_dd2_html'] = view('admin.ajaxDropDowns.selectDefaultOptions', ['type' => 'variants'])->render();
+        } else {
+            $responseData['dep_dd2_name'] = '';
+            $responseData['dep_dd2_html'] = '';
+        }
+
+        if (isset($data['dep_dd3_name']) && ($data['dep_dd3_name'] != '')) {
+            $responseData['dep_dd3_name'] = $data['dep_dd3_name'];
+            $responseData['dep_dd3_html'] = view('admin.ajaxDropDowns.selectDefaultOptions', ['type' => 'colors'])->render();
+        } else {
+            $responseData['dep_dd3_name'] = '';
+            $responseData['dep_dd3_html'] = '';
+        }
+
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => "Dropdwon Request",
+            'data'       =>  $responseData
+        ]);
+    }
+
+    public static function getVariants($data)
+    {
+        $where = array();
+        if (isset($data['id']) && (intval($data['id']) > 0)) {
+            $where['model_id'] = $data['id'];
+        }
+
+        $modelVariants = BikeModelVariant::where('active_status', '1')->where($where)->get();
+        $responseData = array(
+            'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
+            'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $modelVariants, 'type' => 'variants'])->render()
         );
 
         if (isset($data['dep_dd2_name']) && ($data['dep_dd2_name'] != '')) {
@@ -200,7 +233,7 @@ trait DropdownHelper
     {
         $where = array();
         if (isset($data['id']) && (intval($data['id']) > 0)) {
-            $where['bike_model'] = $data['id'];
+            $where['model_variant_id'] = $data['id'];
         }
 
         $distModel = BikeColor::where('active_status', '1')->where($where)->get();

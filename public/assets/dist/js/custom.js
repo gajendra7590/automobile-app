@@ -187,6 +187,7 @@ $(document).ready(function () {
             var dep_dd2_name = $(this).data("dep_dd2_name");
             var dep_dd3_name = $(this).data("dep_dd3_name");
             var dep_dd4_name = $(this).data("dep_dd4_name");
+            var dep_dd5_name = $(this).data("dep_dd5_name");
             //Call Callback Function
             getAndFillDropDown(
                 url,
@@ -194,7 +195,8 @@ $(document).ready(function () {
                 dep_dd_name,
                 dep_dd2_name,
                 dep_dd3_name,
-                dep_dd4_name
+                dep_dd4_name,
+                dep_dd5_name
             );
         }
     });
@@ -203,15 +205,17 @@ $(document).ready(function () {
         url,
         id,
         dep_dd_name,
-        dep_dd2_name,
-        dep_dd3_name,
-        dep_dd4_name = ""
+        dep_dd2_name = "",
+        dep_dd3_name = "",
+        dep_dd4_name = "",
+        dep_dd5_name = ""
     ) {
         var formdata = new FormData();
         formdata.append("dep_dd_name", dep_dd_name);
         formdata.append("dep_dd2_name", dep_dd2_name);
         formdata.append("dep_dd3_name", dep_dd3_name);
         formdata.append("dep_dd4_name", dep_dd4_name);
+        formdata.append("dep_dd5_name", dep_dd5_name);
         formdata.append("id", id);
         CRUD.AJAXDATA(url, "POST", formdata).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
@@ -244,6 +248,15 @@ $(document).ready(function () {
                 ) {
                     $('select[name="' + payload.dep_dd4_name + '"]').html(
                         payload.dep_dd4_html
+                    );
+                }
+
+                if (
+                    typeof payload.dep_dd5_name != "undefined" &&
+                    payload.dep_dd5_html != ""
+                ) {
+                    $('select[name="' + payload.dep_dd5_name + '"]').html(
+                        payload.dep_dd5_html
                     );
                 }
                 return true;
@@ -304,6 +317,12 @@ $(document).ready(function () {
     $(document).on("click", "#customFitterAction", function (e) {
         e.preventDefault();
         $(".filter-options").toggle("slow");
+    });
+
+    $(document).on("keyup keypress", ".autoCapitalized", function (e) {
+        let current_Value = $(this).val();
+        current_Value = current_Value.toUpperCase();
+        $(this).val(current_Value);
     });
 });
 

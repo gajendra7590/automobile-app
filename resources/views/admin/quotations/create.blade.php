@@ -273,12 +273,12 @@
                                     {{ $isClosed }}>
                             </div>
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label>BRAND NAME</label>
                                 <select name="bike_brand" data-dep_dd_name="bike_model"
                                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}"
-                                    data-dep_dd2_name="bike_color" class="form-control ajaxChangeCDropDown"
-                                    {{ $is_disabled }} {{ $isClosed }}>
+                                    data-dep_dd2_name="bike_model_variant" data-dep_dd3_name="bike_color"
+                                    class="form-control ajaxChangeCDropDown" {{ $is_disabled }} {{ $isClosed }}>
                                     <option value="">---Select Brand----</option>
                                     @isset($brands)
                                         @foreach ($brands as $key => $brand)
@@ -292,11 +292,12 @@
                                     @endisset
                                 </select>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label>MODEL NAME</label>
-                                <select name="bike_model" data-dep_dd_name="bike_color"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
-                                    class="form-control ajaxChangeCDropDown" {{ $isClosed }}>
+                                <select name="bike_model" data-dep_dd_name="bike_model_variant"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
+                                    data-dep_dd2_name="bike_color" class="form-control ajaxChangeCDropDown"
+                                    {{ $isClosed }}>
                                     <option value="">---Select Model----</option>
                                     @isset($models)
                                         @foreach ($models as $model)
@@ -307,8 +308,23 @@
                                     @endisset
                                 </select>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label>MODEL COLOR NAME</label>
+                            <div class="form-group col-md-3">
+                                <label>MODEL VARIANT NAME</label>
+                                <select name="bike_model_variant" data-dep_dd_name="bike_color"
+                                    data-url="{{ url('getAjaxDropdown') . '?req=colors' }}" data-dep_dd2_name=""
+                                    class="form-control ajaxChangeCDropDown" {{ $isClosed }}>
+                                    <option value="">---Select Variant----</option>
+                                    @isset($variants)
+                                        @foreach ($variants as $variant)
+                                            <option
+                                                {{ isset($data['bike_model_variant']) && $data['bike_model_variant'] == $variant->id ? 'selected="selected"' : '' }}
+                                                value="{{ $variant->id }}">{{ $variant->variant_name }}</option>
+                                        @endforeach
+                                    @endisset
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label>VARIANT COLOR NAME</label>
                                 <select name="bike_color" class="form-control" {{ $isClosed }}>
                                     <option value="">---Select Color----</option>
                                     @isset($colors)

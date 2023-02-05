@@ -26,7 +26,11 @@
                 </td>
             </tr>
             <tr>
-                <th width="20%">MODEL COLOR NAME</th>
+                <th width="20%">MODEL VARIANT NAME</th>
+                <td>
+                    {{ isset($data['sale']['purchase']['variants']['variant_name']) ? $data['sale']['purchase']['variants']['variant_name'] : '--' }}
+                </td>
+                <th width="20%">VARIANT COLOR NAME</th>
                 <td>
                     {{ isset($data['sale']['purchase']['modelColor']['color_name']) ? $data['sale']['purchase']['modelColor']['color_name'] : '--' }}
                 </td>
@@ -67,7 +71,8 @@
 
             <tr>
                 <th width="20%">SKU</th>
-                <td>{{ isset($data['sale']['purchases']['sku']) ? $data['sale']['purchases']['sku'] : '--' }}
+                <td>
+                    {{ isset($data['sale']['purchase']['modelColor']['sku_code']) ? $data['sale']['purchase']['modelColor']['sku_code'] : '--' }}
                 </td>
 
                 <th width="20%">SKU DESCRIPTION</th>

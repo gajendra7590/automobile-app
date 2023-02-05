@@ -9,6 +9,7 @@ use App\Models\BikeBrand;
 use App\Models\BikeColor;
 use App\Models\BikeDealer;
 use App\Models\BikeModel;
+use App\Models\BikeModelVariant;
 use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
@@ -186,34 +187,48 @@ trait CommonHelper
     }
 
     /**
-     * Get All Colors
+     * Get All Variants
      */
-    public static function _getColors($model_id = 0, $select_all = false)
+    public static function _getVaraints($model_id, $select_all = false)
     {
-        $model = BikeColor::where('active_status', '1');
+        $model = BikeModelVariant::where('active_status', '1')->where('model_id', $model_id);
         //Select Specific
         if ($select_all == false) {
-            $model = $model->select('id', 'color_name', 'sku_code');
-        }
-
-        //Filter by model
-        if (intval($model_id) > 0) {
-            $model = $model->where('bike_model', $model_id);
-        }
-
-        //Filter by branch
-        if (self::getCurrentUserBranch() != '0') {
-            $model = $model->whereHas('model.bike_brand', function ($bb) {
-                $bb->where('branch_id', self::getCurrentUserBranch());
-            });
+            $model = $model->select('id', 'model_id', 'variant_name');
         }
         return $model->get();
     }
 
     /**
-     * Get One Model
+     * Get One Variant
      */
-    public static function _getColorByModel($model_id, $select_all = false)
+    public static function _getVaraintById($varId, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeModel::select('id', 'model_id', 'variant_name');
+        } else {
+            $model =  BikeModel::select('*');
+        }
+        return $model->where('id', $varId)->get();
+    }
+
+    /**
+     * Get All Colors
+     */
+    public static function _getColors($var_id, $select_all = false)
+    {
+        $model = BikeColor::where('active_status', '1');
+        if ($select_all == false) {
+            $model = $model->select('id', 'color_name', 'sku_code');
+        }
+        return $model->where('model_variant_id', $var_id)->get();
+    }
+
+    /**
+     * Get One Colors
+     */
+    public static function _getColorById($color_id, $select_all = false)
     {
         $model = null;
         if ($select_all == false) {
@@ -221,7 +236,7 @@ trait CommonHelper
         } else {
             $model =  BikeColor::select('*');
         }
-        return $model->where('bike_model', $model_id)->get();
+        return $model->where('id', $color_id)->get();
     }
 
 
