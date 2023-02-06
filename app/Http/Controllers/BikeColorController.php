@@ -109,7 +109,7 @@ class BikeColorController extends Controller
                 'bike_model'                => 'required|exists:bike_models,id',
                 'model_variant_id'          => 'required|exists:bike_model_variants,id',
                 'colors.*.color_name'       => "required",
-                'colors.*.sku_code'         => 'required|unique:bike_colors,sku_code',
+                'colors.*.sku_code'         => 'required',
                 'colors.*.color_code'       => 'nullable',
                 'colors.*.active_status'    => 'required|in:0,1'
             ], [
@@ -231,7 +231,7 @@ class BikeColorController extends Controller
                 'model_variant_id'  => 'nullable|exists:bike_model_variants,id',
                 'color_name'        => 'required',
                 'color_code'        => "nullable",
-                'sku_code'          => 'required|unique:bike_colors,sku_code,' . $id,
+                'sku_code'          => 'required',
                 'active_status'     => 'required|in:0,1'
             ], [
                 'bike_model.exists'       => 'The bike model id(:input) does not exist.',
