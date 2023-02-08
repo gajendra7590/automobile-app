@@ -30,17 +30,12 @@
                 <input name="models[{{ $rand }}][model_name]" type="text" class="form-control" value=""
                     placeholder="Model Name..">
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Model Code</label>
                 <input name="models[{{ $rand }}][model_code]" type="text" class="form-control" value=""
                     placeholder="Model Code..">
             </div>
-            <div class="form-group col-md-2">
-                <label>Variant Code</label>
-                <input name="models[{{ $rand }}][variant_code]" type="text" class="form-control"
-                    value="" placeholder="Variant Code..">
-            </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Status : </label>
                 <select class="form-control" name="models[{{ $rand }}][active_status]">
                     <option value="1" selected>Active</option>

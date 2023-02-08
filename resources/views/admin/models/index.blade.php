@@ -38,7 +38,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Model Name</th>
-                                        <th>Variant Code</th>
+                                        {{-- <th>Variant Code</th> --}}
                                         <th>Model Code</th>
                                         <th>Brand Name</th>
                                         <th>Status</th>

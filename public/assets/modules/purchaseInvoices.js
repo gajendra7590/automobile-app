@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    $(document).on("keyup keypress", ".totalAmountCalInv", function () {
+    $(document).on("keyup", ".totalAmountCalInv", function () {
         calculateInv();
     });
 
-    $(document).on("keyup keypress", ".totalAmountCal2Inv", function () {
+    $(document).on("keyup", ".totalAmountCal2Inv", function () {
         calculateInv();
     });
 
@@ -12,21 +12,31 @@ $(document).ready(function () {
     });
 
     function calculateInv() {
-        let pre_gst_amount = $('input[name="pre_gst_amount"]').val();
-        let discount_price = $('input[name="discount_price"]').val();
-        let rate = $("#gst_rate option:selected").data("rate");
-        rate = parseFloat(rate);
-        let pre_gst_retotal =
+        let pre_gst_amount = parseFloat(
+            $('input[name="pre_gst_amount"]').val()
+        );
+        let discount_price = parseFloat(
+            $('input[name="discount_price"]').val()
+        );
+        let rate = parseFloat($("#gst_rate option:selected").data("rate"));
+
+        discount_price = !isNaN(discount_price) ? discount_price : 0.0;
+        pre_gst_amount = !isNaN(pre_gst_amount) ? pre_gst_amount : 0.0;
+
+        let pre_gst_re_total =
             parseFloat(pre_gst_amount) - parseFloat(discount_price);
 
-        let gst_amount = parseFloat((pre_gst_retotal * rate) / 100);
+        let gst_amount = parseFloat((pre_gst_re_total * rate) / 100);
 
         $("#gst_rate_percent").val(rate);
         $('input[name="gst_amount"]').val(gst_amount);
 
-        let total = parseFloat(gst_amount) + parseFloat(pre_gst_amount);
+        let ex_showroom_total =
+            parseFloat(gst_amount) + parseFloat(pre_gst_amount);
 
-        $('input[name="ex_showroom_price"]').val(total);
+        let total = parseFloat(gst_amount) + parseFloat(pre_gst_re_total);
+
+        $('input[name="ex_showroom_price"]').val(ex_showroom_total);
         $('input[name="grand_total"]').val(total);
     }
 

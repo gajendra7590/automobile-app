@@ -26,10 +26,6 @@ $(document).ready(function () {
                     name: "model_name",
                 },
                 {
-                    data: "variant_code",
-                    name: "variant_code",
-                },
-                {
                     data: "model_code",
                     name: "model_code",
                 },
@@ -74,21 +70,14 @@ $(document).ready(function () {
             `][model_name]" type="text" class="form-control" value=""
                     placeholder="Model Name..">
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Model Code</label>
                 <input name="models[` +
             randCode +
             `][model_code]" type="text" class="form-control" value=""
                     placeholder="Model Code..">
             </div>
-            <div class="form-group col-md-2">
-                <label>Variant Code</label>
-                <input name="models[` +
-            randCode +
-            `][variant_code]" type="text" class="form-control" value=""
-                    placeholder="Variant Code..">
-            </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Status : </label>
                 <select class="form-control" name="models[` +
             randCode +

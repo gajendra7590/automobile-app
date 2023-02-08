@@ -31,12 +31,6 @@
                 placeholder="Please enter model code..">
         </div>
         <div class="form-group">
-            <label>Variant Code</label>
-            <input name="variant_code" type="text" class="form-control"
-                value="{{ isset($data['variant_code']) ? $data['variant_code'] : '' }}"
-                placeholder="Please enter variant code..">
-        </div>
-        <div class="form-group">
             <label>Status : </label>
             <select class="form-control" name="active_status">
                 <option value="1"
