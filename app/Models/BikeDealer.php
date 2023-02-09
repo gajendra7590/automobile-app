@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\CommonHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BikeDealer extends Model
 {
+    use CommonHelper;
     use HasFactory;
 
     protected $table = 'bike_dealers';
@@ -33,6 +35,25 @@ class BikeDealer extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    //Fitler by branch - local scope
+    public function scopeBranchWise($query)
+    {
+        $branch_id = self::getCurrentUserBranch();
+        if ($branch_id != '0' || $branch_id != 'null') {
+            return $query->where('branch_id', $branch_id);
+        }
+    }
+
+    public function purchase()
+    {
+        return $this->hasMany(Purchase::class, 'bike_dealer', 'id');
+    }
+
+    public function dealer_payment()
+    {
+        return $this->hasMany(PurchaseDealerPaymentHistory::class, 'dealer_id', 'id');
+    }
 
     public function getContactPersonDocumentFileAttribute($value)
     {

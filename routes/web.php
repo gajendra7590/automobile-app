@@ -103,6 +103,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     //purchaseTransferDeliveryChallan
     Route::get('purchaseTransferDeliveryChallan/{id}', 'PurchaseTransfersController@show')->name('purchaseTransferDeliveryChallan');
 
+    //Purchase Dealer Payments
+    Route::resource('purchaseDealerPayments', 'PurchaseDealerPaymentHistoryController');
 
     //Quotations
     Route::resource('quotations', 'QuotationController');

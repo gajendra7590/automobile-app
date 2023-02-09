@@ -164,6 +164,11 @@
                             TRANSFERS
                         </a>
                     </li>
+                    <li class="{{ Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
+                        <a href="{{ route('purchaseDealerPayments.index') }}"><i class="fa fa-exchange"></i>
+                            PURCHASE DEALER PAYMENTS
+                        </a>
+                    </li>
                 </ul>
             </li>
 
