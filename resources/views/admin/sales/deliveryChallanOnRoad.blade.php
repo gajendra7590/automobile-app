@@ -152,7 +152,7 @@
                         </td>
                         <td
                             style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
-                            {{ isset($data->purchase->hsn_number) && $data->purchase->hsn_number ? $data->purchase->hsn_number : '' }}
+                            {{ isset($data->purchase->vin_number) && $data->purchase->vin_number ? $data->purchase->vin_number : '' }}
                         </td>
                         <td
                             style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
