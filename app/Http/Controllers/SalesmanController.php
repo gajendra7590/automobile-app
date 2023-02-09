@@ -87,7 +87,7 @@ class SalesmanController extends Controller
             $validator = Validator::make($postData, [
                 'name' => "required|string",
                 'email' => "required|email",
-                'mobile_number' => 'required|string|min:10|max:13',
+                'mobile_number' => 'required|string|digits:10',
                 'active_status'      => 'required|in:0,1'
             ]);
 
@@ -171,7 +171,7 @@ class SalesmanController extends Controller
             $validator = Validator::make($postData, [
                 'name' => "nullable|string",
                 'email' => "nullable|email",
-                'mobile_number' => 'nullable|string|min:10|max:13',
+                'mobile_number' => 'nullable|string|digits:10',
                 'active_status'      => 'required|in:0,1'
             ]);
             if ($validator->fails()) {

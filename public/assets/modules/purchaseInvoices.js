@@ -28,13 +28,15 @@ $(document).ready(function () {
 
         let gst_amount = parseFloat((pre_gst_re_total * rate) / 100);
 
-        let gst_actual_amount = parseFloat((pre_gst_amount * rate) / 100);
+        let gst_amount2 = parseFloat((pre_gst_amount * rate) / 100);
+
+        // console.log(gst_amount + "___" + gst_amount2);
 
         $("#gst_rate_percent").val(rate);
         $('input[name="gst_amount"]').val(gst_amount);
 
         let ex_showroom_total =
-            parseFloat(gst_amount) + parseFloat(gst_actual_amount);
+            parseFloat(gst_amount2) + parseFloat(pre_gst_amount);
 
         let total = parseFloat(gst_amount) + parseFloat(pre_gst_re_total);
 

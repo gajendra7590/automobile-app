@@ -66,7 +66,7 @@ class RtoAgentController extends Controller
             $postData = $request->only('agent_name', 'agent_phone', 'agent_email', 'active_status');
             $validator = Validator::make($postData, [
                 'agent_name'     => "required",
-                'agent_phone'    => "required|numeric|min:10",
+                'agent_phone'    => "required|numeric|digits:10",
                 'agent_email'    => "nullable|email",
                 'active_status'  => 'required|in:0,1'
             ]);
@@ -156,7 +156,7 @@ class RtoAgentController extends Controller
             $postData = $request->only('agent_name', 'agent_phone', 'agent_email', 'active_status');
             $validator = Validator::make($postData, [
                 'agent_name'     => "required",
-                'agent_phone'    => "required|numeric|min:10",
+                'agent_phone'    => "required|numeric|digits:10",
                 'agent_email'    => "nullable|email",
                 'active_status'  => 'required|in:0,1'
             ]);
