@@ -572,6 +572,9 @@ class SaleController extends Controller
         $saleModel = Sale::where('id', $id)
             ->where($where)
             ->with([
+                'financer' => function ($financer) {
+                    $financer->select('id', 'bank_name');
+                },
                 'branch',
                 'purchase'
             ])
@@ -579,7 +582,6 @@ class SaleController extends Controller
         if (!$saleModel) {
             return view('admin.accessDenied');
         }
-
         $broker_name = brokerNameByPurchase($saleModel->purchase_id);
         // return view('admin.sales.deliveryChallanFull', ['data' => $saleModel,'broker_name' => $broker_name]);
         $pdf = Pdf::loadView('admin.sales.deliveryChallanFull', ['data' => $saleModel, 'broker_name' => $broker_name]);
@@ -604,6 +606,9 @@ class SaleController extends Controller
         $saleModel = Sale::where('id', $id)
             ->where($where)
             ->with([
+                'financer' => function ($financer) {
+                    $financer->select('id', 'bank_name');
+                },
                 'branch',
                 'purchase',
             ])
