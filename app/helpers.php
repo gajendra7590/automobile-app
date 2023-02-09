@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SalesAccountController;
+use App\Models\PurchaseTransfer;
 use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
@@ -506,6 +507,18 @@ if (!function_exists('updateDuesOrPaidBalance')) {
         ]);
 
         return true;
+    }
+}
+
+if (!function_exists('brokerNameByPurchase')) {
+    function brokerNameByPurchase($purchaseId)
+    {
+        $purchsaeTransfer = PurchaseTransfer::with(['broker'])->where('purchase_id', $purchaseId)->where('active_status', '1')->orderBy('id', 'DESC')->first();
+        if ($purchsaeTransfer && $purchsaeTransfer->status == '0') {
+            return isset($purchsaeTransfer->broker->name) ? $purchsaeTransfer->broker->name : '';
+        } else {
+            return '';
+        }
     }
 }
 

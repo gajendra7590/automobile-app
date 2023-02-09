@@ -580,8 +580,9 @@ class SaleController extends Controller
             return view('admin.accessDenied');
         }
 
-        // return view('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
-        $pdf = Pdf::loadView('admin.sales.deliveryChallanFull', ['data' => $saleModel]);
+        $broker_name = brokerNameByPurchase($saleModel->purchase_id);
+        // return view('admin.sales.deliveryChallanFull', ['data' => $saleModel,'broker_name' => $broker_name]);
+        $pdf = Pdf::loadView('admin.sales.deliveryChallanFull', ['data' => $saleModel, 'broker_name' => $broker_name]);
         return $pdf->stream('invoice.pdf');
     }
 
@@ -604,15 +605,16 @@ class SaleController extends Controller
             ->where($where)
             ->with([
                 'branch',
-                'purchase'
+                'purchase',
             ])
             ->first();
         if (!$saleModel) {
             return view('admin.accessDenied');
         }
 
-        // return view('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
-        $pdf = Pdf::loadView('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel]);
+        $broker_name = brokerNameByPurchase($saleModel->purchase_id);
+        // return view('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel, 'broker_name' => $broker_name]);
+        $pdf = Pdf::loadView('admin.sales.deliveryChallanOnRoad', ['data' => $saleModel, 'broker_name' => $broker_name]);
         return $pdf->stream('invoice.pdf');
     }
 

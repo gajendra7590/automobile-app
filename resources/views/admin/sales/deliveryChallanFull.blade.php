@@ -90,11 +90,21 @@
                         <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;"></td>
                     </tr>
                     <tr>
-                        <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
+                        <td
+                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
                             HYP:
                         </td>
-                        <td style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;">
+                        <td
+                            style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
                             {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
+                            BROKER:
+                        </td>
+                        <td style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;">
+                            {{ isset($broker_name) ? $broker_name : '' }}
                         </td>
                     </tr>
 
