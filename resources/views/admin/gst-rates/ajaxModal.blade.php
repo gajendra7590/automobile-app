@@ -16,6 +16,8 @@
                 <input name="cgst_rate" type="text" class="form-control"
                     value="{{ isset($data['cgst_rate']) ? $data['cgst_rate'] : '' }}" placeholder="CGST Rates %">
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-6">
                 <label>SGST Rates</label>
                 <input name="sgst_rate" type="text" class="form-control"
@@ -26,6 +28,8 @@
                 <input name="igst_rate" type="text" class="form-control"
                     value="{{ isset($data['igst_rate']) ? $data['igst_rate'] : '' }}" placeholder="IGST Rates %">
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-12">
                 <label>Status : </label>
                 <select class="form-control" name="active_status">
@@ -58,3 +62,42 @@
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            gst_rate: {
+                required: true,
+                number: true
+            },
+            cgst_rate: {
+                required: true,
+                number: true
+            },
+            sgst_rate: {
+                required: true,
+                number: true
+            },
+            igst_rate: {
+                required: false,
+                number: true
+            }
+        },
+        messages: {
+            gst_rate: {
+                required: "The GST Rate field is required",
+                number: "The GST Rate field should valid number"
+            },
+            cgst_rate: {
+                required: "The CGST Rate field is required",
+                number: "The CGST Rate field should valid number"
+            },
+            sgst_rate: {
+                required: "The SGST Rate field is required",
+                number: "The SGST Rate field should valid number"
+            },
+            igst_rate: {
+                number: "The IGST Rate field should valid number"
+            },
+        }
+    });
+</script>
