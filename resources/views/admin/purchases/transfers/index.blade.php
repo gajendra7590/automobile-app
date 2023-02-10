@@ -22,7 +22,7 @@
                             <h3 class="box-title">List Of All Transfers</h3>
                             <div class="pull-right">
                                 <a href="{{ route('purchaseTransfers.create') }}"
-                                    class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Create New Transfer"
+                                    class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="CREATE NEW TRANSFER"
                                     data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>

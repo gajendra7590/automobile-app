@@ -25,6 +25,8 @@
             @else
                 <input type="hidden" name="purchase_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
             @endif
+        </div>
+        <div class="row">
             <div class="form-group col-md-6">
                 <label>PURCHASE INVOICE NUMBER</label>
                 <input type="text" name="purchase_invoice_number" class="form-control"
@@ -99,7 +101,46 @@
     </div>
 </form>
 <script>
-    $(document).ready(function() {
-
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            purchase_id: {
+                required: true
+            },
+            purchase_invoice_number: {
+                required: true
+            },
+            purchase_invoice_date: {
+                required: true,
+                date: true
+            },
+            pre_gst_amount: {
+                required: true,
+                number: true
+            },
+            discount_price: {
+                required: false,
+                number: true
+            }
+        },
+        messages: {
+            purchase_id: {
+                required: "The purchase field is required."
+            },
+            purchase_invoice_number: {
+                required: "The purchase invoice number field is required."
+            },
+            purchase_invoice_date: {
+                required: "The purchase invoice date field is required.",
+                date: "The purchase invoice date should valid date."
+            },
+            pre_gst_amount: {
+                required: "The invoice actual price field is required.",
+                number: "The invoice actual price should valid number."
+            },
+            discount_price: {
+                required: "The discount price field is required.",
+                number: "The discount price should valid number."
+            }
+        }
     });
 </script>

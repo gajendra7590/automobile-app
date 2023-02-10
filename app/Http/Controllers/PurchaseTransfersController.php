@@ -357,9 +357,9 @@ class PurchaseTransfersController extends Controller
         if ($row) {
             $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
             $action  .= '<ul class="dropdown-menu">';
-            $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
+            $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="VIEW PURCHASE DETAIL" data-modal_title="VIEW PURCHASE DETAIL">VIEW PURCHASE DETAIL</a></li>';
             if (isset($row->status) && ($row->status == '1')) {
-                $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="GENERATE NEW RETURN">CREATE RETURN</a></li>';
+                $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="CREATE RETURN">CREATE RETURN</a></li>';
             }
             $action .= '<li><a href="' . route('purchaseTransferDeliveryChallan', ['id' => base64_encode($row->transfers->id)]) . '" data-id="' . $row->transfers->id . '" class="" title="DELIVERY CHALLAN" target="_blank">DELIVERY CHALLAN</a></li>';
             $action  .= '</ul>';

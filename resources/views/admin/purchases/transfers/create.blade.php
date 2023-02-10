@@ -50,7 +50,6 @@
     <div class="box-footer">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-danger" href="{{ route('documentUploads.index') }}">BACK</a>
                 <button class="btn btn-primary pull-right" type="submit">CREATE TRANSFER</button>
             </div>
         </div>
@@ -58,6 +57,47 @@
 </form>
 
 <script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            purchase_id: {
+                required: false
+            },
+            broker_id: {
+                required: true
+            },
+            total_price_on_road: {
+                required: true,
+                number: true
+            },
+            transfer_date: {
+                required: true,
+                date: true
+            },
+            transfer_note: {
+                required: true
+            }
+        },
+        messages: {
+            purchase_id: {
+                required: "The purchase field is required."
+            },
+            broker_id: {
+                required: "The broker name field is required."
+            },
+            total_price_on_road: {
+                required: "The total_price_on_road field is required.",
+                number: "The total_price_on_road should valid number."
+            },
+            transfer_date: {
+                required: "The transfer date date field is required.",
+                date: "The transfer date date should valid date."
+            },
+            transfer_note: {
+                required: "The transfer note field is required."
+            },
+        }
+    });
+
     $(".select2").select2({
         ajax: {
             delay: 1000,

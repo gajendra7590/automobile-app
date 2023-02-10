@@ -23,8 +23,8 @@
                             @if (isset($pending_invoices) && $pending_invoices > 0)
                                 <div class="pull-right">
                                     <a href="{{ route('purchaseInvoices.create') }}"
-                                        class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Create New Invoice"
-                                        data-modal_size="modal-lg">
+                                        class="btn btn-sm btn-primary ajaxModalPopup"
+                                        data-modal_title="CREATE NEW PURCHASE INVOICE" data-modal_size="modal-lg">
                                         <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                     </a>
                                 </div>

@@ -422,6 +422,50 @@
             </form>
         </section>
     </div>
+    <script>
+        $(".ajaxFormSubmit").validate({
+            rules: {
+                bike_branch: {
+                    required: true
+                },
+                purchase_invoice_number: {
+                    required: true
+                },
+                purchase_invoice_date: {
+                    required: true,
+                    date: true
+                },
+                pre_gst_amount: {
+                    required: true,
+                    number: true
+                },
+                discount_price: {
+                    required: false,
+                    number: true
+                }
+            },
+            messages: {
+                bike_branch: {
+                    required: "The branch field is required."
+                },
+                purchase_invoice_number: {
+                    required: "The purchase invoice number field is required."
+                },
+                purchase_invoice_date: {
+                    required: "The purchase invoice date field is required.",
+                    date: "The purchase invoice date should valid date."
+                },
+                pre_gst_amount: {
+                    required: "The invoice actual price field is required.",
+                    number: "The invoice actual price should valid number."
+                },
+                discount_price: {
+                    required: "The discount price field is required.",
+                    number: "The discount price should valid number."
+                }
+            }
+        });
+    </script>
 @endsection
 
 @push('after-script')

@@ -19,7 +19,6 @@
     <div class="box-footer">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-danger" href="{{ route('documentUploads.index') }}">BACK</a>
                 <button class="btn btn-primary pull-right" type="submit">CREATE RETURN</button>
             </div>
         </div>
@@ -27,6 +26,27 @@
 </form>
 
 <script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            return_date: {
+                required: true,
+                date: true
+            },
+            return_note: {
+                required: true
+            }
+        },
+        messages: {
+            return_date: {
+                required: "The return date field is required.",
+                date: "The return date field should valid date."
+            },
+            return_note: {
+                required: "The return note field is required."
+            },
+        }
+    });
+
     $(".select2").select2({
         ajax: {
             delay: 1000,

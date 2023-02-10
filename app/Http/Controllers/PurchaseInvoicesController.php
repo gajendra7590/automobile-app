@@ -317,7 +317,7 @@ class PurchaseInvoicesController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('purchaseInvoices.edit', ['purchaseInvoice' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_title="Edit Purchase Invoice Detail" data-modal_size="modal-lg">UPDATE</a></li>';
+        $action .= '<li><a href="' . route('purchaseInvoices.edit', ['purchaseInvoice' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_title="UPDATE PURCHASE INVOICE DETAIL" data-modal_size="modal-lg">UPDATE</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;
