@@ -86,11 +86,11 @@
       border-color: red;
   }
 
-  .ajaxFormSubmit .form-group label {
+  .ajaxFormSubmit .form-group label,.ajaxFormSubmit2 .form-group label {
       text-transform: uppercase !important;
   }
 
-  .ajaxFormSubmit .form-group label.error {
+  .ajaxFormSubmit .form-group label.error,.ajaxFormSubmit2 .form-group label.error {
       text-transform : none !important;
       color: red;
   }

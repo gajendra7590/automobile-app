@@ -12,7 +12,7 @@
             </h1>
         </section>
         <section class="content">
-            <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
+            <form class="ajaxFormSubmit2" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
                 enctype="multipart/form-data" data-redirect="{{ isset($method) && $method == 'PUT' ? 'edit' : '{id}/edit' }}">
                 @csrf
                 @if (isset($method) && $method == 'PUT')
@@ -28,7 +28,7 @@
                     <div>
                         <div class="box-header with-border">
                             @if (!isset($data['status']))
-                                <h3 class="box-title">Purchase Detail</h3>
+                                <h3 class="box-title">Manage Purchase</h3>
                             @endif
                             <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit"
                                 {{ $isSoldOut }}>
@@ -422,55 +422,136 @@
             </form>
         </section>
     </div>
+@endsection
+
+@push('after-script')
+    <script src="{{ asset('assets/modules/purchase.js') }}"></script>
     <script>
-        $(".ajaxFormSubmit").validate({
+        $(".ajaxFormSubmit2").validate({
             rules: {
                 bike_branch: {
                     required: true
                 },
-                purchase_invoice_number: {
+                bike_dealer: {
                     required: true
                 },
-                purchase_invoice_date: {
+                bike_brand: {
+                    required: true
+                },
+                bike_model: {
+                    required: true
+                },
+                bike_model_variant: {
+                    required: true
+                },
+                bike_type: {
+                    required: true
+                },
+                bike_fuel_type: {
+                    required: true
+                },
+                break_type: {
+                    required: true
+                },
+                wheel_type: {
+                    required: true
+                },
+                bike_model_color: {
+                    required: true
+                },
+                vin_number: {
                     required: true,
-                    date: true
+                    minlength: 17
+                },
+                vin_physical_status: {
+                    required: true
+                },
+                hsn_number: {
+                    required: true
+                },
+                engine_number: {
+                    required: true
+                },
+                gst_rate: {
+                    required: true
                 },
                 pre_gst_amount: {
                     required: true,
-                    number: true
+                    number: true,
+                    min: 1
                 },
-                discount_price: {
-                    required: false,
-                    number: true
+                dc_number: {
+                    required: true
+                },
+                dc_date: {
+                    required: true,
+                    date: true
                 }
             },
             messages: {
                 bike_branch: {
                     required: "The branch field is required."
                 },
-                purchase_invoice_number: {
-                    required: "The purchase invoice number field is required."
+                bike_dealer: {
+                    required: "The dealer field is required."
                 },
-                purchase_invoice_date: {
-                    required: "The purchase invoice date field is required.",
-                    date: "The purchase invoice date should valid date."
+                bike_brand: {
+                    required: "The brand field is required."
+                },
+                bike_model: {
+                    required: "The model field is required."
+                },
+                bike_model_variant: {
+                    required: "The model variant field is required."
+                },
+                bike_model_color: {
+                    required: "The model color field is required."
+                },
+                bike_type: {
+                    required: "The bike type field is required."
+                },
+                bike_fuel_type: {
+                    required: "The fuel type field is required."
+                },
+                break_type: {
+                    required: "The break type field is required."
+                },
+                wheel_type: {
+                    required: "The wheel type field is required."
+                },
+                vin_number: {
+                    required: "The VIN number field is required.",
+                    minlength: "The VIN number should valid 17 digit."
+                },
+                vin_physical_status: {
+                    required: "The vin physical status field is required."
+                },
+                hsn_number: {
+                    required: "The HSN number field is required."
+                },
+                engine_number: {
+                    required: "The engine number field is required."
+                },
+                gst_rate: {
+                    required: "The GST Rate field is required."
                 },
                 pre_gst_amount: {
-                    required: "The invoice actual price field is required.",
-                    number: "The invoice actual price should valid number."
+                    required: "The actual price field is required.",
+                    number: "Please enter valid price.",
+                    min: "Please enter valid price."
                 },
-                discount_price: {
-                    required: "The discount price field is required.",
-                    number: "The discount price should valid number."
+                dc_number: {
+                    required: "The dc number field is required."
+                },
+                dc_date: {
+                    required: "The dc date field is required.",
+                    date: "The dc date field should valid date."
                 }
+            },
+            submitHandler: function(form) {
+                alert('testtttttt')
             }
         });
-    </script>
-@endsection
-
-@push('after-script')
-    <script src="{{ asset('assets/modules/purchase.js') }}"></script>
-    <script>
         $('select[name="bike_model_variant"]').change(function() {
             let var_code = $(this).find('option:selected').attr('data-variantCode');
             if (var_code != "") {
