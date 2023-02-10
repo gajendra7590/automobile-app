@@ -6,22 +6,22 @@
     @endif
     <div class="box-body">
         <div class="row">
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Agent Name</label>
-                <input name="agent_name" type="text" class="form-control"
+                <input name="agent_name" type="text" class="form-control autoCapitalized"
                     value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" placeholder="Agent Name">
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Agent Phone</label>
                 <input name="agent_phone" type="text" class="form-control"
                     value="{{ isset($data['agent_phone']) ? $data['agent_phone'] : '' }}" placeholder="Agent Phone">
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Agent Email</label>
                 <input name="agent_email" type="text" class="form-control"
                     value="{{ isset($data['agent_email']) ? $data['agent_email'] : '' }}" placeholder="Agent Email">
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Status : </label>
                 <select class="form-control" name="active_status">
                     <option value="1"

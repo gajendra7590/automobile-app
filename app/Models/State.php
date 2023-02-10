@@ -23,6 +23,18 @@ class State extends Model
 
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->state_name = !empty($model->state_name) ? strtoupper($model->state_name) : "";
+            $model->state_code = !empty($model->state_code) ? strtoupper($model->state_code) : "";
+        });
+    }
+
+
+
     /**
      * Relation with Country
      */

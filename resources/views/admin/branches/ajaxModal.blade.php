@@ -8,8 +8,8 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label>Branch Name</label>
-            <input type='text' class="form-control" placeholder="Branch Name" required name="branch_name"
-                value="{{ isset($data) && $data->branch_name ? $data->branch_name : '' }}" />
+            <input type='text' class="form-control autoCapitalized" placeholder="Branch Name" required
+                name="branch_name" value="{{ isset($data) && $data->branch_name ? $data->branch_name : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Branch Email</label>

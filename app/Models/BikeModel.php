@@ -19,12 +19,27 @@ class BikeModel extends Model
         'active_status'
     ];
 
+    protected  $hidden = [];
+
+    protected $casts = [];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->model_name = !empty($model->model_name) ? strtoupper($model->model_name) : "";
+            $model->model_code = !empty($model->model_code) ? strtoupper($model->model_code) : "";
+        });
+
+        self::updating(function ($model) {
+            $model->model_name = !empty($model->model_name) ? strtoupper($model->model_name) : "";
+            $model->model_code = !empty($model->model_code) ? strtoupper($model->model_code) : "";
+        });
+    }
+
     public function bike_brand()
     {
         return $this->belongsTo(BikeBrand::class, 'brand_id');
     }
-
-    protected  $hidden = [];
-
-    protected $casts = [];
 }

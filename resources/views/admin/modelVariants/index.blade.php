@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('modelVariants.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="ADD NEW VARIANTS" data-modal_size="modal-md">
+                                    data-modal_title="ADD NEW VARIANTS" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD
                                 </a>
                             </div>

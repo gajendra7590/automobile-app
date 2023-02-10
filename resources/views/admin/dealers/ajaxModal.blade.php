@@ -21,12 +21,12 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label>Dealer Code</label>
-            <input type="text" class="form-control" placeholder="Dealer Code" name="dealer_code"
+            <input type="text" class="form-control autoCapitalized" placeholder="Dealer Code" name="dealer_code"
                 value='{{ isset($data) && $data->dealer_code ? $data->dealer_code : '' }}' />
         </div>
         <div class="form-group col-md-6">
             <label>Company Name</label>
-            <input type="text" class="form-control" placeholder="Company Name" name="company_name"
+            <input type="text" class="form-control autoCapitalized" placeholder="Company Name" name="company_name"
                 value='{{ isset($data) && $data->company_name ? $data->company_name : '' }}' />
         </div>
         <div class="form-group col-md-6">
@@ -52,7 +52,8 @@
 
         <div class="form-group col-md-4">
             <label>Contact Person Name</label>
-            <input type='text' class="form-control" placeholder="Contact Person Name" name="contact_person"
+            <input type='text' class="form-control autoCapitalized" placeholder="Contact Person Name"
+                name="contact_person"
                 value="{{ isset($data) && $data->contact_person ? $data->contact_person : '' }}" />
         </div>
         <div class="form-group col-md-4">

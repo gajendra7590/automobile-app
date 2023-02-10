@@ -34,4 +34,17 @@ class Branch extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->branch_name = !empty($model->branch_name) ? strtoupper($model->branch_name) : "";
+        });
+
+        self::updating(function ($model) {
+            $model->branch_name = !empty($model->branch_name) ? strtoupper($model->branch_name) : "";
+        });
+    }
 }

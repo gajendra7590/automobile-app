@@ -22,6 +22,16 @@ class District extends Model
 
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->district_name = !empty($model->district_name) ? strtoupper($model->district_name) : "";
+            $model->district_code = !empty($model->district_code) ? strtoupper($model->district_code) : "";
+        });
+    }
+
 
     /**
      * Relation with states

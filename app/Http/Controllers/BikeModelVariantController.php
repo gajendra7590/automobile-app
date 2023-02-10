@@ -252,7 +252,7 @@ class BikeModelVariantController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('modelVariants.edit', ['modelVariant' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="UPDATE MODEL VARIANT"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('modelVariants.edit', ['modelVariant' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="UPDATE MODEL VARIANT"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

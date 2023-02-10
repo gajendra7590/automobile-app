@@ -7,7 +7,7 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label>Name</label>
-            <input type="text" class="form-control" placeholder="Enter name.." name="name"
+            <input type="text" class="form-control autoCapitalized" placeholder="Enter name.." name="name"
                 value='{{ isset($data) && $data ? $data->name : '' }}' />
         </div>
         <div class="form-group col-md-6">

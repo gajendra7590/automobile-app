@@ -31,7 +31,13 @@ class BikeColor extends Model
         parent::boot();
 
         self::creating(function ($model) {
-            $model->sku_code = strtoupper($model->sku_code);
+            $model->sku_code = !empty($model->sku_code) ? strtoupper($model->sku_code) : "";
+            $model->color_name = !empty($model->color_name) ? strtoupper($model->color_name) : "";
+        });
+
+        self::updating(function ($model) {
+            $model->sku_code = !empty($model->sku_code) ? strtoupper($model->sku_code) : "";
+            $model->color_name = !empty($model->color_name) ? strtoupper($model->color_name) : "";
         });
     }
 

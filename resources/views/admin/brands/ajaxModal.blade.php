@@ -5,7 +5,7 @@
         @method('PUT')
     @endif
     <div class="box-body">
-        <div class="form-group">
+        <div class="form-group col-md-6">
             <label>Select Branch : </label>
             <select class="form-control" name="baranch_id">
                 @isset($branches)
@@ -17,21 +17,17 @@
                 @endisset
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-6">
             <label>Brand Name</label>
-            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Name"
-                name="name" value='{{ isset($data) && $data ? $data->name : '' }}' />
+            <input type="text" class="form-control autoCapitalized" placeholder="Name" name="Brand Name"
+                value='{{ isset($data) && $data ? $data->name : '' }}' />
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-6">
             <label>Brand Code</label>
-            <input type="text" class="form-control my-colorpicker1 colorpicker-element" placeholder="Code"
-                name="code" value='{{ isset($data) && $data ? $data->code : '' }}' />
+            <input type="text" class="form-control autoCapitalized" placeholder="Code" name="BRAND CODE"
+                value='{{ isset($data) && $data ? $data->code : '' }}' />
         </div>
-        <div class="form-group">
-            <label>Description</label>
-            <textarea class="form-control my-colorpicker1 colorpicker-element" placeholder="Description" name="description"> {{ isset($data) && $data ? $data->description : '' }} </textarea>
-        </div>
-        <div class="form-group">
+        <div class="form-group col-md-6">
             <label>Status : </label>
             <select class="form-control" name="active_status">
                 <option value="1"
@@ -44,6 +40,10 @@
                     Active
                 </option>
             </select>
+        </div>
+        <div class="form-group col-md-12">
+            <label>Description</label>
+            <textarea class="form-control" placeholder="Description" name="description"> {{ isset($data) && $data ? $data->description : '' }} </textarea>
         </div>
         <div class="form-group">
             <div class="box-footer">

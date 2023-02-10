@@ -22,6 +22,16 @@ class City extends Model
 
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->city_name = !empty($model->city_name) ? strtoupper($model->city_name) : "";
+            $model->city_code = !empty($model->city_code) ? strtoupper($model->city_code) : "";
+        });
+    }
+
 
     public function district()
     {

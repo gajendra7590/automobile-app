@@ -22,6 +22,19 @@ class BatteryBrand extends Model
 
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->name = !empty($model->name) ? strtoupper($model->name) : "";
+        });
+
+        self::updating(function ($model) {
+            $model->name = !empty($model->name) ? strtoupper($model->name) : "";
+        });
+    }
+
 
     public function district()
     {

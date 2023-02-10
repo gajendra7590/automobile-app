@@ -19,12 +19,26 @@ class BikeBrand extends Model
         'active_status'
     ];
 
-    public function bike_modals()
-    {
-        return $this->hasMany(BikeModel::class, 'brand_id');
-    }
 
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->name = !empty($model->name) ? strtoupper($model->name) : "";
+        });
+
+        self::updating(function ($model) {
+            $model->name = !empty($model->name) ? strtoupper($model->name) : "";
+        });
+    }
+
+    public function bike_modals()
+    {
+        return $this->hasMany(BikeModel::class, 'brand_id');
+    }
 }

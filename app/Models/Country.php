@@ -17,6 +17,16 @@ class Country extends Model
         'active_status'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->country_name = !empty($model->country_name) ? strtoupper($model->country_name) : "";
+            $model->country_code = !empty($model->country_code) ? strtoupper($model->country_code) : "";
+        });
+    }
+
     protected  $hidden = [];
 
     protected $casts = [];
