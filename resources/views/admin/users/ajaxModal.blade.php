@@ -16,13 +16,17 @@
                 <input name="email" type="text" class="form-control"
                     value="{{ isset($data['email']) ? $data['email'] : '' }}" placeholder="rock@test.com">
             </div>
-            @if (isset($method) && $method != 'PUT')
-                <div class="form-group col-md-6">
+        </div>
+        @if (isset($method) && $method != 'PUT')
+            <div class="row">
+                <div class="form-group col-md-12">
                     <label>Password</label>
                     <input name="password" type="password" class="form-control" value=""
                         placeholder="Please enter password..">
                 </div>
-            @endif
+            </div>
+        @endif
+        <div class="row">
             <div class="form-group col-md-6">
                 <label>Associated Branch</label>
                 <select class="form-control" name="branch_id">
@@ -66,3 +70,33 @@
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            name: {
+                required: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true,
+                minlength: 6
+            },
+        },
+        messages: {
+            name: {
+                required: "The full name field is required"
+            },
+            email: {
+                required: "The user email name field is required",
+                email: "The user email field should valid email address"
+            },
+            password: {
+                required: "The password field is required",
+                minlength: "The password should be valid 6 digits"
+            }
+        }
+    });
+</script>

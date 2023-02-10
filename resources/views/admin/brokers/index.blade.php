@@ -23,7 +23,7 @@
                             <h3 class="box-title"> All Brokers List</h3>
                             <div class="pull-right">
                                 <a href="{{ route('brokers.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New Broker" data-modal_size="modal-lg">
+                                    data-modal_title="CREATE NEW BROKER" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>

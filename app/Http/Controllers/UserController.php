@@ -272,9 +272,9 @@ class UserController extends Controller
     {
         $action = '<div class="action-btn-container">';
         if ($row->id != '1' && $row->is_default == '0') {
-            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+            $action .= '<a href="' . route('users.edit', ['user' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="UPDATE USER" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         }
-        $action .= '<a href="' . route('user.changePassword', ['user' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Generate Password" data-modal_size="model-sm"><i class="fa fa-key" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('user.changePassword', ['user' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="GENERATE NEW PASSWORD" data-modal_size="modal-lg"><i class="fa fa-key" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;
     }

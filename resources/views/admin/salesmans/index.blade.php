@@ -23,7 +23,7 @@
                             <h3 class="box-title"> All Salesman List</h3>
                             <div class="pull-right">
                                 <a href="{{ route('salesmans.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New Salesman" data-modal_size="modal-lg">
+                                    data-modal_title="CREATE NEW SALESMAN" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>

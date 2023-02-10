@@ -77,20 +77,20 @@ class BankFinancerController extends Controller
         try {
             DB::beginTransaction();
             $validateArray = [
-                'bank_name' => 'required|string|unique:bank_financers,bank_name',
-                'bank_branch_code' => 'nullable|string',
-                'bank_contact_number' => 'nullable|string|digits:10',
+                'bank_name' => 'required|unique:bank_financers,bank_name',
+                'bank_branch_code' => 'nullable',
+                'bank_contact_number' => 'nullable|digits:10',
                 'bank_email_address' => 'nullable|email',
-                'bank_full_address' => 'nullable|string',
-                'bank_manager_name' => 'nullable|string',
-                'bank_manager_contact' => 'nullable|string|digits:10',
-                'bank_manager_email' => 'nullable|string|email',
-                'bank_financer_name' => 'nullable|string',
-                'bank_financer_contact' => 'nullable|string|digits:10',
-                'bank_financer_email' => 'nullable|string|email',
-                'bank_financer_address' => 'nullable|string',
-                'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
-                'bank_financer_pan_card' => 'nullable|string',
+                'bank_full_address' => 'nullable',
+                'bank_manager_name' => 'nullable',
+                'bank_manager_contact' => 'nullable|digits:10',
+                'bank_manager_email' => 'nullable|email',
+                'bank_financer_name' => 'nullable',
+                'bank_financer_contact' => 'nullable|digits:10',
+                'bank_financer_email' => 'nullable|email',
+                'bank_financer_address' => 'nullable',
+                'bank_financer_aadhar_card' => 'nullable|min:12|max:12',
+                'bank_financer_pan_card' => 'nullable',
                 'financer_type' => 'required|in:0,1',
                 'more_details' => 'string',
                 'active_status' => 'required|in:0,1'
@@ -178,21 +178,21 @@ class BankFinancerController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validateArray = [
-                'bank_name' => 'required|string|unique:bank_financers,bank_name,' . $id . ',id',
-                'bank_branch_code' => 'nullable|string',
-                'bank_contact_number' => 'nullable|string|digits:10',
+                'bank_name' => 'required|unique:bank_financers,bank_name,' . $id . ',id',
+                'bank_branch_code' => 'nullable',
+                'bank_contact_number' => 'nullable|digits:10',
                 'bank_email_address' => 'nullable|email',
-                'bank_full_address' => 'nullable|string',
-                'bank_manager_name' => 'nullable|string',
-                'bank_manager_contact' => 'nullable|string|digits:10',
-                'bank_manager_email' => 'nullable|string|email',
-                'bank_financer_name' => 'required|string',
-                'bank_financer_contact' => 'required|string|digits:10',
-                'bank_financer_email' => 'nullable|string|email',
-                'bank_financer_address' => 'nullable|string',
-                'bank_financer_aadhar_card' => 'nullable|string|min:12|max:12',
-                'bank_financer_pan_card' => 'nullable|string',
-                'more_details' => 'nullable|string',
+                'bank_full_address' => 'nullable',
+                'bank_manager_name' => 'nullable',
+                'bank_manager_contact' => 'nullable|digits:10',
+                'bank_manager_email' => 'nullable|email',
+                'bank_financer_name' => 'nullable',
+                'bank_financer_contact' => 'required|digits:10',
+                'bank_financer_email' => 'nullable|email',
+                'bank_financer_address' => 'nullable',
+                'bank_financer_aadhar_card' => 'nullable|min:12|max:12',
+                'bank_financer_pan_card' => 'nullable',
+                'more_details' => 'nullable',
                 'active_status' => 'required|in:0,1',
                 'financer_type' => 'required|in:0,1',
             ];
@@ -249,7 +249,7 @@ class BankFinancerController extends Controller
     public function getActions($id)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('bankFinancers.edit', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update Agent" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('bankFinancers.edit', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="UPDATE BANK FINANCER" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('bankFinancers.destroy', ['bankFinancer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('bankFinancers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

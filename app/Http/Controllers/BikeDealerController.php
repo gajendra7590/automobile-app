@@ -85,8 +85,8 @@ class BikeDealerController extends Controller
                 'branch_id'   => 'required|exists:branches,id',
                 'dealer_code' => 'required|string',
                 'company_name' => 'required|string',
-                'company_email' => 'required|string',
-                'company_office_phone' => 'required|numeric|digits:10',
+                'company_email' => 'required|email',
+                'company_office_phone' => 'nullable|numeric|digits:10',
                 'company_address' => 'nullable|string',
                 'company_gst_no' => 'nullable|string',
                 'company_more_detail' => 'nullable|string',
@@ -202,10 +202,10 @@ class BikeDealerController extends Controller
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'branch_id'   => 'nullable|exists:branches,id',
-                'dealer_code' => 'required|string',
-                'company_name' => 'required|string',
-                'company_email' => 'required|string',
-                'company_office_phone' => 'required|numeric|digits:10',
+                'dealer_code' => 'required',
+                'company_name' => 'required',
+                'company_email' => 'required|email',
+                'company_office_phone' => 'nullable|numeric|digits:10',
                 'company_address' => 'nullable|string',
                 'company_gst_no' => 'nullable|string',
                 'company_more_detail' => 'nullable|string',
@@ -285,7 +285,7 @@ class BikeDealerController extends Controller
     public function getActions($id)
     {
         $action  = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('dealers.edit', ['dealer' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Update Dealer Detail"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('dealers.edit', ['dealer' => $id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="UPDATE DEALER DETAIL"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('dealers.destroy', ['dealer' => $id]) . '" class="btn btn-sm btn-danger ajaxModalDelete"  data-id="' . $id . '" data-redirect="' . route('dealers.index') . '"><i class="fa fa-trash-o" aria-hidden="true"> </i></a>';
         $action .= '</div>';
         return $action;

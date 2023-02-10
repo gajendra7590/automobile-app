@@ -9,17 +9,21 @@
             <div class="form-group col-md-6">
                 <label>Agent Name</label>
                 <input name="agent_name" type="text" class="form-control autoCapitalized"
-                    value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" placeholder="Agent Name">
-            </div>
-            <div class="form-group col-md-6">
-                <label>Agent Phone</label>
-                <input name="agent_phone" type="text" class="form-control"
-                    value="{{ isset($data['agent_phone']) ? $data['agent_phone'] : '' }}" placeholder="Agent Phone">
+                    value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" placeholder="Enter agent name">
             </div>
             <div class="form-group col-md-6">
                 <label>Agent Email</label>
                 <input name="agent_email" type="text" class="form-control"
-                    value="{{ isset($data['agent_email']) ? $data['agent_email'] : '' }}" placeholder="Agent Email">
+                    value="{{ isset($data['agent_email']) ? $data['agent_email'] : '' }}"
+                    placeholder="Enter agent email address">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>Agent Phone</label>
+                <input name="agent_phone" type="text" class="form-control"
+                    value="{{ isset($data['agent_phone']) ? $data['agent_phone'] : '' }}"
+                    placeholder="Enter agent phone number">
             </div>
             <div class="form-group col-md-6">
                 <label>Status : </label>
@@ -53,3 +57,37 @@
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            agent_name: {
+                required: true
+            },
+            agent_email: {
+                required: false,
+                email: true
+            },
+            agent_phone: {
+                required: true,
+                minlength: 10,
+                maxlength: 10,
+                digits: true
+            }
+        },
+        messages: {
+            agent_name: {
+                required: "The Agent name field is required"
+            },
+            agent_email: {
+                required: "The Agent email address field is required",
+                email: "The Agent email address should valid email address"
+            },
+            agent_phone: {
+                required: "The Agent phone number field is required",
+                minlength: "The Agent phone number should valid 10 digits",
+                maxlength: "The Agent phone number should valid 10 digits",
+                digits: "The Agent phone number should valid 10 digits",
+            }
+        }
+    });
+</script>

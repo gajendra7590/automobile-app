@@ -23,7 +23,7 @@
                             <h3 class="box-title"> All Bank Financers List</h3>
                             <div class="pull-right">
                                 <a href="{{ route('bankFinancers.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New Bank Financer" data-modal_size="modal-lg">
+                                    data-modal_title="CREATE NEW BANK FINANCER" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
@@ -37,11 +37,8 @@
                                         <th>#</th>
                                         <th>Bank Name</th>
                                         <th>Bank Branch Code</th>
-                                        <th>Bank Manager Name</th>
-                                        <th>Bank Financer Name</th>
-                                        <th>Bank Financer Contact</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th width="5%">Action</th>
                                     </tr>
                                 </thead>
                             </table>

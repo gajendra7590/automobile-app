@@ -19,36 +19,40 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Dealer Code</label>
             <input type="text" class="form-control autoCapitalized" placeholder="Dealer Code" name="dealer_code"
                 value='{{ isset($data) && $data->dealer_code ? $data->dealer_code : '' }}' />
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Company Name</label>
             <input type="text" class="form-control autoCapitalized" placeholder="Company Name" name="company_name"
                 value='{{ isset($data) && $data->company_name ? $data->company_name : '' }}' />
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Company Email</label>
             <input type='email' class="form-control" placeholder="Company Email" name="company_email"
                 value="{{ isset($data) && $data->company_email ? $data->company_email : '' }}" />
         </div>
-        <div class="form-group col-md-6">
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
             <label>Company Office Phone</label>
             <input type='text' class="form-control" placeholder="Company Office Phone" name="company_office_phone"
                 value="{{ isset($data) && $data->company_office_phone ? $data->company_office_phone : '' }}" />
         </div>
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-6">
             <label>Company Address</label>
             <input type='text' class="form-control" placeholder="Company Address" name="company_address"
                 value="{{ isset($data) && $data->company_address ? $data->company_address : '' }}" />
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label>GST Number</label>
             <input type='text' class="form-control" placeholder="GST Number" name="company_gst_no"
                 value="{{ isset($data) && $data->company_gst_no ? $data->company_gst_no : '' }}" />
         </div>
+    </div>
+    <div class="row">
 
         <div class="form-group col-md-4">
             <label>Contact Person Name</label>
@@ -66,24 +70,28 @@
             <input type='text' class="form-control" placeholder="Contact Person Phone" name="contact_person_phone"
                 value="{{ isset($data) && $data->contact_person_phone ? $data->contact_person_phone : '' }}" />
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-4">
             <label>Contact Person Phone Alternate</label>
             <input type='text' class="form-control" placeholder="Contact Person Phone Alternate"
                 name="contact_person_phone2"
                 value="{{ isset($data) && $data->contact_person_phone2 ? $data->contact_person_phone2 : '' }}" />
         </div>
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-4">
             <label>Contact Person Address</label>
             <input type='text' class="form-control" placeholder="Contact Person Address"
                 name="contact_person_address"
                 value="{{ isset($data) && $data->contact_person_address ? $data->contact_person_address : '' }}" />
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-4">
             <label>Contact Person Document file</label>
             <input type='file' class="form-control" placeholder="Contact Person Document file"
                 name="contact_person_document_file"
                 value="{{ isset($data) && $data->contact_person_document_file ? $data->contact_person_document_file : '' }}" />
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-12">
             <label>Status : </label>
             <select class="form-control" name="active_status">
@@ -106,10 +114,44 @@
                     @if (isset($method) && $method == 'PUT')
                         UPDATE
                     @else
-                        SAVE
+                        CREATE
                     @endif
                 </button>
             </div>
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            branch_id: {
+                required: true
+            },
+            dealer_code: {
+                required: true
+            },
+            company_name: {
+                required: true
+            },
+            company_email: {
+                required: true,
+                email: true
+            }
+        },
+        messages: {
+            branch_id: {
+                required: "The branch name field is required"
+            },
+            dealer_code: {
+                required: "The dealer code field is required"
+            },
+            company_name: {
+                required: "The company name field is required"
+            },
+            company_email: {
+                required: "The company email field is required",
+                email: "The company email should valid email"
+            }
+        }
+    });
+</script>

@@ -12,17 +12,19 @@
             <input type="text" class="form-control autoCapitalized" placeholder="Bank Name" name="bank_name"
                 value='{{ isset($data) && $data->bank_name ? $data->bank_name : '' }}' />
         </div>
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-4">
             <label>Bank Branch Code</label>
             <input type='text' class="form-control autoCapitalized" placeholder="Bank Branch Code"
                 name="bank_branch_code"
                 value="{{ isset($data) && $data->bank_branch_code ? $data->bank_branch_code : '' }}" />
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <label>Bank Contact Number</label>
             <input type='text' class="form-control" placeholder="Bank Contact Number" name="bank_contact_number"
                 value="{{ isset($data) && $data->bank_contact_number ? $data->bank_contact_number : '' }}" />
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-4">
             <label>Bank Email Address</label>
             <input type='email' class="form-control" placeholder="Bank Email Address" name="bank_email_address"
@@ -135,3 +137,23 @@
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            bank_name: {
+                required: true
+            },
+            financer_type: {
+                required: true
+            }
+        },
+        messages: {
+            bank_name: {
+                required: "The Bank name field is required"
+            },
+            financer_type: {
+                required: "The Financer type field is required"
+            }
+        }
+    });
+</script>

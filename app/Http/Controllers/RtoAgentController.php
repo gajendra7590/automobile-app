@@ -214,7 +214,7 @@ class RtoAgentController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('rto-agents.edit', ['rto_agent' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="Update RTO Agent"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('rto-agents.edit', ['rto_agent' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="UPDATE RTO AGENT DETAIL"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         // $action .= '<a href="' . route('gst-rates.destroy', ['gst-rate' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete State"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

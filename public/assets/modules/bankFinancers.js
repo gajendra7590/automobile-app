@@ -29,19 +29,6 @@ $(document).ready(function () {
                     data: "bank_branch_code",
                     name: "bank_branch_code",
                 },
-
-                {
-                    data: "bank_manager_name",
-                    name: "bank_manager_name",
-                },
-                {
-                    data: "bank_financer_name",
-                    name: "bank_financer_name",
-                },
-                {
-                    data: "bank_financer_contact",
-                    name: "bank_financer_contact",
-                },
                 {
                     data: "active_status",
                     name: "active_status",

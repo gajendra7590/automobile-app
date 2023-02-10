@@ -41,7 +41,7 @@
                                         <th>Agent Phone</th>
                                         <th>Agent Email</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th width="5%">Action</th>
                                     </tr>
                                 </thead>
                             </table>
