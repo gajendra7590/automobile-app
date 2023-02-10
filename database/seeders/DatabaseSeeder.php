@@ -20,13 +20,14 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             //Address
             CountrySeeder::class,
-            StateSeeder::class,
-            DistrictSeeder::class,
-            CitySeeder::class,
+            StateDistrictCitySeeder::class,
+            // StateSeeder::class,
+            // DistrictSeeder::class,
+            // CitySeeder::class,
             //Brands
             BrandSeeder::class,
-            ModelSeeder::class,
-            ColorSeeder::class,
+            //ModelSeeder::class,
+            //ColorSeeder::class,
             GstRateSeeder::class,
             RtoGstRateSeeder::class,
 
