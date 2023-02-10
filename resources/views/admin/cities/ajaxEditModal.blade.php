@@ -13,7 +13,6 @@
             <div class="form-group col-md-12">
                 <label>Select District : </label>
                 <select class="form-control" name="district_id">
-                    <option value="">---- Select District ----</option>
                     @isset($districts)
                         @foreach ($districts as $district)
                             <option
@@ -27,25 +26,25 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <label>City Name</label>
-                <input name="cities[{{ $rand }}][city_name]" type="text" required
-                    data-msg-required="The city name field is required" class="form-control" value=""
+                <input name="city_name" type="text" required data-msg-required="The city name field is required"
+                    class="form-control" value="{{ isset($data['city_name']) ? $data['city_name'] : '' }}"
                     placeholder="City name..">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>City Code</label>
-                <input name="cities[{{ $rand }}][city_code]" type="text" class="form-control" value=""
-                    placeholder="City Code..">
+                <input name="city_code" type="text" class="form-control"
+                    value="{{ isset($data['city_code']) ? $data['city_code'] : '' }}" placeholder="City Code..">
             </div>
             <div class="form-group col-md-4">
                 <label>Status : </label>
-                <select class="form-control" name="cities[{{ $rand }}][active_status]">
-                    <option value="1" selected="selected">Active</option>
-                    <option value="0">In Active </option>
+                <select class="form-control" name="active_status">
+                    <option value="1"
+                        {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}
+                        selected="selected">Active</option>
+                    <option value="0"
+                        {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
+                        In Active </option>
                 </select>
-            </div>
-            <div class="form-group col-md-1">
-                <a href="#" class="btn btn-md btn-success addMoreInFormGroup addAjaxElement"
-                    data-container_el="#city_container"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
@@ -55,7 +54,7 @@
             @if (isset($method) && $method == 'PUT')
                 UPDATE
             @else
-                SAVE
+                CREATE
             @endif
         </button>
     </div>
@@ -65,11 +64,17 @@
         rules: {
             district_id: {
                 required: true
+            },
+            city_name: {
+                required: true
             }
         },
         messages: {
             district_id: {
                 required: "The District name field is required"
+            },
+            city_name: {
+                required: "The City name field is required"
             }
         }
     });

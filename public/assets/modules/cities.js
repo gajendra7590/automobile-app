@@ -69,18 +69,18 @@ $(document).on("click", ".addAjaxElement", function (e) {
     let html =
         '<div class="row">' +
         '    <div class="form-group col-md-4">' +
-        "        <label>Color Name</label>" +
+        "        <label>CITY NAME</label>" +
         '        <input name="cities[' +
         randCode +
-        '][city_name]" type="text" class="form-control" value=""' +
-        '            placeholder="Color name..">' +
+        '][city_name]" type="text" class="form-control" value="" required data-msg-required="The city name field is required"' +
+        '            placeholder="CITY NAME..">' +
         "    </div>" +
         '    <div class="form-group col-md-3">' +
-        "        <label>Color Code</label>" +
+        "        <label>CITY CODE</label>" +
         '        <input name="cities[' +
         randCode +
         '][city_code]" type="text" class="form-control" value=""' +
-        '            placeholder="Color Code..">' +
+        '            placeholder="CITY CODE..">' +
         "    </div>" +
         '    <div class="form-group col-md-4">' +
         "        <label>Status : </label>" +

@@ -230,7 +230,7 @@ class CityController extends Controller
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.cities.ajaxModal', [
+            'data'       => view('admin.cities.ajaxEditModal', [
                 'action' => route(
                     'cities.update',
                     ['city' => $id]
@@ -340,7 +340,7 @@ class CityController extends Controller
     public function getActions($row)
     {
         $action = '<div class="action-btn-container">';
-        $action .= '<a href="' . route('cities.edit', ['city' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="Update City"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+        $action .= '<a href="' . route('cities.edit', ['city' => $row->id]) . '" class="btn btn-sm btn-primary ajaxModalPopup" data-modal_title="UPDATE CITY" data-modal_size="modal-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
         //$action .= '<a href="' . route('cities.destroy', ['city' => $row->id]) . '" data-id="' . $row->id . '" class="btn btn-sm btn-danger ajaxModalDelete" data-modal_title="Delete City"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
         $action .= '</div>';
         return $action;

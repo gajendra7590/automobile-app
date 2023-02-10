@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('cities.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New City">
+                                    data-modal_title="CREATE NEW CITY" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>
