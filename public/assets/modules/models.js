@@ -67,7 +67,8 @@ $(document).ready(function () {
                 <label>Model Name</label>
                 <input name="models[` +
             randCode +
-            `][model_name]" type="text" class="form-control" value=""
+            `][model_name]" type="text" class="form-control" value="" required
+                    data-msg-required="The model name field is required"
                     placeholder="Model Name..">
             </div>
             <div class="form-group col-md-3">

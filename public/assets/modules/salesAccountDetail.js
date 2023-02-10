@@ -18,7 +18,7 @@ $(document).ready(function () {
                 }
             })
             .catch(function (e) {
-                console.log(e);
+                // console.log(e);
             });
     }
 

@@ -34,8 +34,9 @@
         <div class="row">
             <div class="form-group col-md-3">
                 <label>Color Name</label>
-                <input name="colors[{{ $rand }}][color_name]" type="text"
-                    class="form-control autoCapitalized" value="" placeholder="COLOR NAME..">
+                <input name="colors[{{ $rand }}][color_name]" type="text" required
+                    data-msg-required="The color name field is required" class="form-control autoCapitalized"
+                    value="" placeholder="COLOR NAME..">
             </div>
             <div class="form-group col-md-3">
                 <label>Color Code</label>
@@ -44,7 +45,8 @@
             </div>
             <div class="form-group col-md-3">
                 <label>SKU Code</label>
-                <input name="colors[{{ $rand }}][sku_code]" type="text" class="form-control autoCapitalized"
+                <input name="colors[{{ $rand }}][sku_code]" type="text" required
+                    data-msg-required="The SKU Code field is required" class="form-control autoCapitalized"
                     value="" placeholder="SKU CODE..">
             </div>
             <div class="form-group col-md-2">
@@ -71,3 +73,23 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            bike_model: {
+                required: true
+            },
+            model_variant_id: {
+                required: true
+            }
+        },
+        messages: {
+            bike_model: {
+                required: "The model field is required"
+            },
+            model_variant_id: {
+                required: "The model variant field is required"
+            }
+        }
+    });
+</script>

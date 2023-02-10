@@ -63,7 +63,8 @@ $(document).ready(function () {
                 <label>Variant Code</label>
                 <input name="variants[` +
             randCode +
-            `][variant_name]" type="text" class="form-control autoCapitalized" value=""
+            `][variant_name]" type="text" class="form-control autoCapitalized" value="" required
+                    data-msg-required="The variant code field is required"
                     placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-4">

@@ -67,7 +67,8 @@ $(document).ready(function () {
                 <label>Color Name</label>
                 <input name="colors[` +
             randCode +
-            `][color_name]" type="text" class="form-control autoCapitalized" value="" placeholder="Color name..">
+            `][color_name]" type="text" class="form-control autoCapitalized" value="" required
+                    data-msg-required="The color name field is required" placeholder="Color name..">
             </div>
             <div class="form-group col-md-3">
                 <label>Color Code</label>
@@ -79,7 +80,8 @@ $(document).ready(function () {
                 <label>SKU Code</label>
                 <input name="colors[` +
             randCode +
-            `][sku_code]" type="text" class="form-control autoCapitalized" value="" placeholder="SKU Code..">
+            `][sku_code]" type="text" class="form-control autoCapitalized" value="" required
+                    data-msg-required="The SKU Code field is required" placeholder="SKU Code..">
             </div>
             <div class="form-group col-md-2">
                 <label>Status : </label>

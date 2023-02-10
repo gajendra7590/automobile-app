@@ -90,6 +90,11 @@
       text-transform: uppercase !important;
   }
 
+  .ajaxFormSubmit .form-group label.error {
+      text-transform : none !important;
+      color: red;
+  }
+
   label.required:after {
       content: "*";
       color: red;

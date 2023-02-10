@@ -27,8 +27,9 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label>Variant Code</label>
-                <input name="variants[{{ $rand }}][variant_name]" type="text"
-                    class="form-control autoCapitalized" value="" placeholder="Variant Code..">
+                <input name="variants[{{ $rand }}][variant_name]" type="text" required
+                    data-msg-required="The variant code field is required" class="form-control autoCapitalized"
+                    value="" placeholder="Variant Code..">
             </div>
             <div class="form-group col-md-4">
                 <label>Variant Status : </label>
@@ -54,3 +55,17 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            model_id: {
+                required: true
+            }
+        },
+        messages: {
+            model_id: {
+                required: "The model field is required"
+            }
+        }
+    });
+</script>

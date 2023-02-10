@@ -11,7 +11,7 @@
                 <label>SKU Code</label>
                 <select class="form-control" name="model_color_id">
                     @if (!isset($data->id))
-                        <option value="0">---SELECT SKU CODE---</option>
+                        <option value="">---SELECT SKU CODE---</option>
                     @endif
                     @isset($sku_codes)
                         @foreach ($sku_codes as $sku_code)
@@ -30,6 +30,8 @@
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="registration_amount"
                     value='{{ isset($data->registration_amount) ? $data->registration_amount : '' }}' />
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-4">
                 <label>INSURANCE AMOUNT</label>
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="insurance_amount"
@@ -45,6 +47,8 @@
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="accessories_amount"
                     value='{{ isset($data->accessories_amount) ? $data->accessories_amount : '' }}' />
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-4">
                 <label>OTHER CHARGES</label>
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="other_charges"
@@ -84,3 +88,65 @@
             </div>
         </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            model_color_id: {
+                required: true
+            },
+            ex_showroom_price: {
+                required: true,
+                number: true
+            },
+            registration_amount: {
+                required: true,
+                number: true
+            },
+            insurance_amount: {
+                required: true,
+                number: true
+            },
+            hypothecation_amount: {
+                required: true,
+                number: true
+            },
+            accessories_amount: {
+                required: true,
+                number: true
+            },
+            other_charges: {
+                required: false,
+                number: true
+            }
+        },
+        messages: {
+            model_color_id: {
+                required: "The SKU code field is required"
+            },
+            ex_showroom_price: {
+                required: "The Ex showrom price field is required",
+                number: "The Ex showrom price should valid amount"
+            },
+            registration_amount: {
+                required: "The Registration amount field is required",
+                number: "The Registration amount should valid amount"
+            },
+            insurance_amount: {
+                required: "The Insurance amount field is required",
+                number: "The Insurance amount should valid amount"
+            },
+            hypothecation_amount: {
+                required: "The Hyp amount field is required",
+                number: "The Hyp amount should valid amount"
+            },
+            accessories_amount: {
+                required: "The Accessories amount field is required",
+                number: "The Accessories amount should valid amount"
+            },
+            other_charges: {
+                required: "The Other charges field is required",
+                number: "The Other charges should valid amount"
+            }
+        }
+    });
+</script>

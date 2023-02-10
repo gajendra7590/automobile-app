@@ -75,8 +75,8 @@ class BranchController extends Controller
             $validator = Validator::make($postData, [
                 'branch_name' => 'required|string|unique:branches,branch_name,NULL,id',
                 'branch_email' => 'required|email',
-                'branch_phone' => 'required|string|min:10|max:13',
-                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_phone' => 'required|numeric|digits:10',
+                'branch_phone2' => 'nullable|numeric|digits:10',
                 'branch_address_line' => 'nullable|string',
                 'branch_city' => 'nullable|string',
                 'branch_district' => 'nullable|string',
@@ -184,8 +184,8 @@ class BranchController extends Controller
             $validator = Validator::make($postData, [
                 'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
                 'branch_email' => 'required|email',
-                'branch_phone' => 'required|string|min:10|max:13',
-                'branch_phone' => 'required|string|min:10|max:13',
+                'branch_phone' => 'required|numeric|digits:10',
+                'branch_phone2' => 'nullable|numeric|digits:10',
                 'branch_address_line' => 'nullable|string',
                 'branch_city' => 'nullable|string',
                 'branch_district' => 'nullable|string',

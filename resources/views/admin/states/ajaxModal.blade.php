@@ -38,8 +38,22 @@
             @if (isset($method) && $method == 'PUT')
                 UPDATE
             @else
-                SAVE
+                CREATE
             @endif
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            state_name: {
+                required: true
+            }
+        },
+        messages: {
+            state_name: {
+                required: "The State name field is required"
+            }
+        }
+    });
+</script>

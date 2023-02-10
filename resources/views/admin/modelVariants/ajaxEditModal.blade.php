@@ -48,3 +48,23 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            model_id: {
+                required: true
+            },
+            variant_name: {
+                required: true
+            }
+        },
+        messages: {
+            model_id: {
+                required: "The model name field is required"
+            },
+            variant_name: {
+                required: "The variant code field is required"
+            }
+        }
+    });
+</script>

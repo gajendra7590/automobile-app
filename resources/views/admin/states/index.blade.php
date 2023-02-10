@@ -25,7 +25,7 @@
                             </div>
                             <div class="pull-right">
                                 <a href="{{ route('states.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
-                                    data-modal_title="Add New State">
+                                    data-modal_title="CREATE NEW STATE" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
                             </div>

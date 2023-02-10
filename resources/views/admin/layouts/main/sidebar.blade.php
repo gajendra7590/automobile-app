@@ -140,7 +140,7 @@
                 </li>
             @endif
             <li
-                class="treeview {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'active' : '' }}">
+                class="treeview {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-shopping-cart"></i>
                     <span>PURCHASE INVENTORIES</span>
@@ -149,7 +149,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu"
-                    {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') ? 'display:"block"' : '' }}>
+                    {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'display:"block"' : '' }}>
 
                     <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
                         <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i>PURCHASES

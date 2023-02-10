@@ -53,6 +53,8 @@
                     value="{{ isset($data['color_code']) ? $data['color_code'] : '' }}"
                     placeholder="Please enter model code..">
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-6">
                 <label>SKU Code</label>
                 <input name="sku_code" type="text" class="form-control autoCapitalized"
@@ -86,3 +88,35 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            bike_model: {
+                required: true
+            },
+            model_variant_id: {
+                required: true
+            },
+            color_name: {
+                required: true
+            },
+            sku_code: {
+                required: true
+            }
+        },
+        messages: {
+            bike_model: {
+                required: "The model field is required"
+            },
+            model_variant_id: {
+                required: "The model variant field is required"
+            },
+            color_name: {
+                required: "The color name field is required"
+            },
+            sku_code: {
+                required: "The SKU Code field is required"
+            }
+        }
+    });
+</script>

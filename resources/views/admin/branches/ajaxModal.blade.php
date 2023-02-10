@@ -8,24 +8,29 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label>Branch Name</label>
-            <input type='text' class="form-control autoCapitalized" placeholder="Branch Name" required
-                name="branch_name" value="{{ isset($data) && $data->branch_name ? $data->branch_name : '' }}" />
+            <input type='text' class="form-control autoCapitalized" placeholder="Branch Name" name="branch_name"
+                value="{{ isset($data) && $data->branch_name ? $data->branch_name : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Branch Email</label>
-            <input type='text' class="form-control" placeholder="Branch Email" required name="branch_email"
+            <input type='text' class="form-control" placeholder="Branch Email" name="branch_email"
                 value="{{ isset($data) && $data->branch_email ? $data->branch_email : '' }}" />
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-6">
             <label>Branch Phone</label>
-            <input type='text' class="form-control" placeholder="Branch Phone" required name="branch_phone"
+            <input type='text' class="form-control" placeholder="Branch Phone" name="branch_phone"
                 value="{{ isset($data) && $data->branch_phone ? $data->branch_phone : '' }}" />
         </div>
         <div class="form-group col-md-6">
             <label>Branch Phone2</label>
-            <input type='text' class="form-control" placeholder="Branch Phone2" required name="branch_phone2"
+            <input type='text' class="form-control" placeholder="Branch Phone2" name="branch_phone2"
                 value="{{ isset($data) && $data->branch_phone2 ? $data->branch_phone2 : '' }}" />
         </div>
+
+    </div>
+    <div class="row">
 
         <div class="form-group col-md-8">
             <label>Branch Address Line</label>
@@ -47,6 +52,9 @@
                 @endisset
             </select>
         </div>
+
+    </div>
+    <div class="row">
         <div class="form-group col-md-4">
             <label>Branch District</label>
             <select name="branch_district" class="form-control ajaxChangeCDropDown" data-dep_dd_name="branch_city"
@@ -79,6 +87,8 @@
             <input type='text' class="form-control" placeholder="Branch Pincode" name="branch_pincode"
                 value="{{ isset($data) && $data->branch_pincode ? $data->branch_pincode : '' }}" />
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-6">
             <label>Branch GST Number</label>
             <input type='text' class="form-control" placeholder="Branch GST Number" name="gstin_number"
@@ -98,6 +108,8 @@
                 </option>
             </select>
         </div>
+    </div>
+    <div class="row">
         <div class="form-group col-md-12">
             <label>Branch More Detail</label>
             <textarea type='text' class="form-control" placeholder="Branch More Detail" name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>
@@ -116,6 +128,23 @@
             </div>
         </div>
     </div>
-
-
 </form>
+
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            branch_name: {
+                required: true
+            },
+            branch_email: {
+                required: true,
+                email: true
+            },
+            branch_phone: {
+                required: true,
+                digits: true,
+                minlength: 10
+            }
+        }
+    });
+</script>

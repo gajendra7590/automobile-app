@@ -27,7 +27,8 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <label>Model Name</label>
-                <input name="models[{{ $rand }}][model_name]" type="text" class="form-control" value=""
+                <input name="models[{{ $rand }}][model_name]" type="text" required
+                    data-msg-required="The model name field is required" class="form-control" value=""
                     placeholder="Model Name..">
             </div>
             <div class="form-group col-md-3">
@@ -59,3 +60,17 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            brand_id: {
+                required: true
+            }
+        },
+        messages: {
+            brand_id: {
+                required: "The brand field is required"
+            }
+        }
+    });
+</script>
