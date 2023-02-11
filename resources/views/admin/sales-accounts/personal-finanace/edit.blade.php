@@ -87,3 +87,61 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            total_outstanding: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            total_finance_amount: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            finance_due_date: {
+                required: true,
+                date: true
+            },
+            financier_id: {
+                required: true
+            },
+            no_of_emis: {
+                required: true,
+                digits: true,
+                min: 1
+            },
+            rate_of_interest: {
+                required: true,
+                number: true,
+                min: 1
+            }
+        },
+        messages: {
+            total_outstanding: {
+                required: "The total outstanding field is required.",
+                number: "The total outstanding should valid price",
+                min: "The total outstanding should valid price",
+            },
+            total_finance_amount: {
+                required: "The finance amount field is required.",
+                number: "The finance amount should valid price",
+                min: "The finance amount should valid price",
+            },
+            finance_due_date: {
+                required: "The finance due date field is required.",
+                date: "The finance due date should valid date."
+            },
+            financier_id: {
+                required: "The financer field is required.",
+            },
+            no_of_emis: {
+                required: "The No of EMIs field is required.",
+            },
+            rate_of_interest: {
+                required: "The Rate of intrest field is required.",
+            }
+        },
+    });
+</script>

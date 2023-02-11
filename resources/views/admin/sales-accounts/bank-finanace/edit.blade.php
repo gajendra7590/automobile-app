@@ -52,3 +52,45 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            total_outstanding: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            total_finance_amount: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            finance_due_date: {
+                required: true,
+                date: true
+            },
+            financier_id: {
+                required: true
+            }
+        },
+        messages: {
+            total_outstanding: {
+                required: "The total outstanding field is required.",
+                number: "The total outstanding should valid price",
+                min: "The total outstanding should valid price",
+            },
+            total_finance_amount: {
+                required: "The total finance amount field is required.",
+                number: "The total finance amount should valid price",
+                min: "The total finance amount should valid price",
+            },
+            finance_due_date: {
+                required: "The finance due date field is required.",
+                date: "The finance due date should valid date."
+            },
+            financier_id: {
+                required: "The financer field is required.",
+            }
+        },
+    });
+</script>

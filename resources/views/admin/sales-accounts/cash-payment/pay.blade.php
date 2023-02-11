@@ -75,3 +75,59 @@
         </button>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            total_outstanding: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            paid_amount: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            paid_date: {
+                required: true,
+                date: true
+            },
+            collected_by: {
+                required: true
+            },
+            next_due_date: {
+                required: true,
+                date: true
+            },
+            payment_note: {
+                required: true,
+            }
+        },
+        messages: {
+            total_outstanding: {
+                required: "The total outstanding field is required.",
+                number: "The total outstanding should valid price",
+                min: "The total outstanding should valid price",
+            },
+            paid_amount: {
+                required: "The paid amount field is required.",
+                number: "The paid amount should valid price",
+                min: "The paid amount should valid price",
+            },
+            paid_date: {
+                required: "The paid date field is required.",
+                date: "The paid date should valid date."
+            },
+            collected_by: {
+                required: "The salesman field is required.",
+            },
+            next_due_date: {
+                required: "The next due date field is required.",
+                date: "The next due date should valid date."
+            },
+            payment_note: {
+                required: "The payment note field is required.",
+            }
+        },
+    });
+</script>

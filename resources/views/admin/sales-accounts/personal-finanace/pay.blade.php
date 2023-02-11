@@ -74,8 +74,8 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
-            <button type="submit" class="btn btn-success pull-right" id="ajaxFormSubmit">
-                SAVE
+            <button type="submit" class="btn btn-primary pull-right" id="ajaxFormSubmit">
+                PAY INSTALLMENT
             </button>
         </div>
 </form>
@@ -106,4 +106,36 @@
         })
 
     })
+</script>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            pay_method_note: {
+                required: true
+            },
+            pay_amount: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            collected_by_salesman_id: {
+                required: true,
+                min: 1
+            }
+        },
+        messages: {
+            pay_method_note: {
+                required: "The payment note field is required."
+            },
+            pay_amount: {
+                required: "The payment amount field is required.",
+                number: "The payment amount should valid price",
+                min: "The payment amount should valid price",
+            },
+            collected_by_salesman_id: {
+                required: "The salesman field is required.",
+                min: "The salesman field is required."
+            }
+        },
+    });
 </script>
