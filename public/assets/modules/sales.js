@@ -188,4 +188,197 @@ $(document).ready(function () {
             }
         }
     );
+
+    $(".salesFormAjaxSubmit").validate({
+        // errorElement: 'span',
+        // errorClass: 'text-muted error',
+        rules: {
+            branch_id: {
+                required: true,
+            },
+            customer_name: {
+                required: true,
+            },
+            customer_guardian_name: {
+                required: true,
+            },
+            customer_address_line: {
+                required: true,
+            },
+            customer_state: {
+                required: true,
+            },
+            customer_district: {
+                required: true,
+            },
+            customer_city: {
+                required: true,
+            },
+            customer_zipcode: {
+                required: true,
+                digits: true,
+                minlength: 6,
+                maxlength: 6,
+            },
+            customer_mobile_number: {
+                required: true,
+                digits: true,
+                minlength: 10,
+                maxlength: 10,
+            },
+            customer_mobile_number_alt: {
+                required: false,
+                digits: true,
+                minlength: 10,
+                maxlength: 10,
+            },
+            customer_email_address: {
+                required: false,
+                email: true,
+            },
+            witness_person_name: {
+                required: true,
+            },
+            witness_person_phone: {
+                required: true,
+                digits: true,
+                minlength: 10,
+                maxlength: 10,
+            },
+            ex_showroom_price: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            registration_amount: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            insurance_amount: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            hypothecation_amount: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            accessories_amount: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            other_charges: {
+                required: true,
+                number: true,
+            },
+        },
+        messages: {
+            branch_id: {
+                required: "The branch field is required.",
+            },
+            customer_name: {
+                required: "The customer name field is required.",
+            },
+            customer_guardian_name: {
+                required: "The  guardian name field is required.",
+            },
+            customer_address_line: {
+                required: "The address line is required.",
+            },
+            customer_state: {
+                required: "The state field is required.",
+            },
+            customer_district: {
+                required: "The district field is required.",
+            },
+            customer_city: {
+                required: "The city field is required.",
+            },
+            customer_zipcode: {
+                required: "The zipcode field is required.",
+                digits: "the zipcode should valid 6 digits",
+                minlength: "the zipcode should valid 6 digits",
+                maxlength: "the zipcode should valid 6 digits",
+            },
+            customer_mobile_number: {
+                required: "The phone field is required.",
+                digits: "the phone should valid 10 digits",
+                minlength: "the phone should valid 10 digits",
+                maxlength: "the phone should valid 10 digits",
+            },
+            customer_mobile_number_alt: {
+                digits: "the alt phone should valid 10 digits",
+                minlength: "the alt phone should valid 10 digits",
+                maxlength: "the alt phone should valid 10 digits",
+            },
+            customer_email_address: {
+                email: "Customer email should valid email.",
+            },
+            witness_person_name: {
+                required: "The witness person name field is required.",
+            },
+            witness_person_phone: {
+                required: "The witness person phone field is required.",
+                digits: "the witness person phone should valid 10 digits",
+                minlength: "the witness person phone should valid 10 digits",
+                maxlength: "the witness person phone should valid 10 digits",
+            },
+            ex_showroom_price: {
+                required: "The exshowroom amount field is required.",
+                number: "The exshowroom amount invalid price.",
+                min: "The exshowroom amount invalid price.",
+            },
+            registration_amount: {
+                required: "The registration amount field is required.",
+                number: "The registration amount invalid price.",
+                min: "The registration amount invalid price.",
+            },
+            insurance_amount: {
+                required: "The insurance amount field is required.",
+                number: "The insurance amount invalid price.",
+                min: "The insurance amount invalid price.",
+            },
+            hypothecation_amount: {
+                required: "The hyp amount field is required.",
+                number: "The hyp amount invalid price.",
+                min: "The hyp amount invalid price.",
+            },
+            accessories_amount: {
+                required: "The accessories amount field is required.",
+                number: "The accessories amount invalid price.",
+                min: "The accessories amount invalid price.",
+            },
+            other_charges: {
+                required: "The other charges field is required.",
+                number: "The other charges invalid price.",
+                min: "The other charges invalid price.",
+            },
+        },
+        submitHandler: function (form, event) {
+            event.preventDefault();
+            let formObj = $(".salesFormAjaxSubmit");
+            var url = formObj.attr("action");
+            var method = formObj.attr("method");
+            var redirect = formObj.data("redirect");
+            var data = new FormData(formObj[0]);
+            CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
+                if (
+                    typeof result.status != "undefined" &&
+                    result.status == true
+                ) {
+                    if (redirect != undefined) {
+                        if (result.data?.id) {
+                            redirect = redirect.replace("{id}", result.data.id);
+                        }
+                        window.location.href = redirect;
+                    } else {
+                        // window.location.href = "";
+                    }
+                }
+            });
+        },
+    });
 });

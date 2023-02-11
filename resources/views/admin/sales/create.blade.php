@@ -15,8 +15,8 @@
         </section>
 
         <section class="content">
-            <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
-                enctype="multipart/form-data" data-redirect="">
+            <form class="salesFormAjaxSubmit ajaxForm" role="form" method="POST"
+                action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" data-redirect="">
                 @csrf
                 @if (isset($method) && $method == 'PUT')
                     @method('PUT')
@@ -76,18 +76,6 @@
                                                 @isset($purchase->engine_number)
                                                     {{ $purchase->engine_number }} |
                                                 @endisset
-
-                                                {{-- @isset($purchase->brand->name)
-                                                    {{ $purchase->brand->name }} -
-                                                @endisset --}}
-                                                {{--
-                                                @isset($purchase->model->model_name)
-                                                    {{ $purchase->model->model_name }} -
-                                                @endisset --}}
-
-                                                {{-- @isset($purchase->modelColor->color_name)
-                                                    {{ $purchase->modelColor->color_name }}
-                                                @endisset --}}
                                                 @isset($purchase->model->model_name)
                                                     {{ $purchase->model->model_name }}
                                                 @endisset
@@ -113,8 +101,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row {{ isset($htmlData) && $htmlData != '' ? '' : 'hideElement' }}"
-                            id="ajaxLoadContainer">
+                        <div class="{{ isset($htmlData) && $htmlData != '' ? '' : 'hideElement' }}" id="ajaxLoadContainer">
                             {!! isset($htmlData) ? $htmlData : '' !!}
                         </div>
                     </div>
