@@ -9,19 +9,19 @@
         @method('PUT')
     @endif
     <div class="box-body" id="city_container">
-        <input type="hidden" value="{{$district_id}}" name="district_id">
-        <input type="hidden" value="{{$type}}" name="form_type">
-        <input type="hidden" value="{{$ddname}}" name="ddname">
+        <input type="hidden" value="{{ $district_id }}" name="district_id">
+        <input type="hidden" value="{{ $type }}" name="form_type">
+        <input type="hidden" value="{{ $ddname }}" name="ddname">
         <div class="row">
             <div class="form-group col-md-4">
                 <label>City Name</label>
-                <input name="cities[{{ $rand }}][city_name]" type="text" class="form-control" value=""
-                    placeholder="City name..">
+                <input name="cities[{{ $rand }}][city_name]" type="text" class="form-control autoCapitalized"
+                    value="" placeholder="City name..">
             </div>
             <div class="form-group col-md-3">
                 <label>City Code</label>
-                <input name="cities[{{ $rand }}][city_code]" type="text" class="form-control" value=""
-                    placeholder="City Code..">
+                <input name="cities[{{ $rand }}][city_code]" type="text" class="form-control autoCapitalized"
+                    value="" placeholder="City Code..">
             </div>
             <div class="form-group col-md-4">
                 <label>Status : </label>

@@ -4,7 +4,7 @@
 
     @php
         $isEdit = isset($method) && $method == 'PUT' ? true : false;
-        $isDisabled = isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '';
+        $isDisabled = isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '';
     @endphp
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -59,7 +59,7 @@
                                 <label>SELECT STOCK INVENTORY</label>
                                 <select id="purchase" name="purchase_id" class="form-control"
                                     data-ajax_load="{{ route('ajaxLoadeView') }}"
-                                    {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+                                    {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
                                     @if ($isEdit == false)
                                         <option value="">---Select Purachse---</option>
                                     @endif
@@ -88,7 +88,7 @@
                             <div class="form-group col-md-6">
                                 <label>SALESMAN NAME</label>
                                 <select name="salesman_id" class="form-control"
-                                    {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+                                    {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
                                     <option value="">---Select Salesman---</option>
                                     @if (isset($salesmans))
                                         @foreach ($salesmans as $key => $salesman)

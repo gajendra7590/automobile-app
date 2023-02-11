@@ -161,3 +161,7 @@
  }
 
 
+ .disabledBtn {
+    pointer-events: none;
+ }
+

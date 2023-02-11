@@ -3,7 +3,7 @@
      <div class="form-group col-md-2">
          <label>PREFIX</label>
          <select name="customer_gender" class="form-control"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option {{ isset($data['customer_gender']) && $data['customer_gender'] == '1' ? 'selected' : '' }}
                  value="1">Mr.</option>
              <option {{ isset($data['customer_gender']) && $data['customer_gender'] == '2' ? 'selected' : '' }}
@@ -16,12 +16,12 @@
          <label>CUSTOMER NAME</label>
          <input name="customer_name" type="text" class="form-control"
              value="{{ isset($data['customer_name']) ? $data['customer_name'] : '' }}" placeholder="Customer Name.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-2">
          <label>RELATION</label>
          <select name="customer_relationship" class="form-control"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option
                  {{ isset($data['customer_relationship']) && $data['customer_relationship'] == '1' ? 'selected' : '' }}
                  value="1">S/o</option>
@@ -38,7 +38,7 @@
          <input name="customer_guardian_name" type="text" class="form-control"
              value="{{ isset($data['customer_guardian_name']) ? $data['customer_guardian_name'] : '' }}"
              placeholder="Customer Guardian Name.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -47,7 +47,7 @@
          <input name="customer_address_line" type="text" class="form-control"
              value="{{ isset($data['customer_address_line']) ? $data['customer_address_line'] : '' }}"
              placeholder="Customer Address Line.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -56,7 +56,7 @@
          <select name="customer_state" data-dep_dd_name="customer_district"
              data-url="{{ url('getAjaxDropdown') . '?req=districts' }}" data-dep_dd2_name="customer_city"
              class="form-control ajaxChangeCDropDown"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="">---Select Customer State---</option>
              @isset($states)
                  @foreach ($states as $state)
@@ -71,7 +71,7 @@
          <label>CUSTOMER DISTRICT</label>
          <select name="customer_district" class="form-control ajaxChangeCDropDown" data-dep_dd_name="customer_city"
              data-url="{{ url('getAjaxDropdown') . '?req=cities' }}" data-dep_dd2_name=""
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="">---Select District---</option>
              @isset($districts)
                  @foreach ($districts as $district)
@@ -85,15 +85,16 @@
      <div class="form-group col-md-3">
          <label>CUSTOMER CITY/VILLAGE
              <span style="margin-left: 40px;">
-                 <a href="{{ route('plusAction') }}" class="plusAction" id="city" data-type="city"
-                     aria-hidden="true" data-modal_title="Add New City/Village/Town" data-modal-index="1200"
-                     data-modal_size="modal-md">
+                 <a href="{{ route('plusAction') }}"
+                     class="plusAction {{ isset($data['status']) && $data['status'] == 'close' ? 'disabledBtn' : '' }}"
+                     id="city" data-type="city" aria-hidden="true" data-modal_title="Add New City/Village/Town"
+                     data-modal-index="1200" data-modal_size="modal-md">
                      <i class="fa fa-plus-circle" title="Add New City/Village/Town"></i>
                  </a>
              </span>
          </label>
          <select name="customer_city" class="form-control"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="">---Select City/Village----</option>
              @isset($cities)
                  @foreach ($cities as $city)
@@ -108,7 +109,7 @@
          <label>ZIPCODE</label>
          <input name="customer_zipcode" type="text" class="form-control"
              value="{{ isset($data['customer_zipcode']) ? $data['customer_zipcode'] : '' }}" placeholder="XXXXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -117,21 +118,21 @@
          <input name="customer_mobile_number" type="text" class="form-control"
              value="{{ isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : '' }}"
              placeholder="Customer Phone.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
          <label>CUSTOMER ALTERNATE PHONE NUMBER</label>
          <input name="customer_mobile_number_alt" type="text" class="form-control"
              value="{{ isset($data['customer_mobile_number_alt']) ? $data['customer_mobile_number_alt'] : '' }}"
              placeholder="Customer Alternate Phone.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
          <label>CUSTOMER EMAIL ADDRESS</label>
          <input name="customer_email_address" type="text" class="form-control"
              value="{{ isset($data['customer_email_address']) ? $data['customer_email_address'] : '' }}"
              placeholder="Customer Email.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -140,14 +141,14 @@
          <input name="witness_person_name" type="text" class="form-control"
              value="{{ isset($data['witness_person_name']) ? $data['witness_person_name'] : '' }}"
              placeholder="Witness Person Name.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-6">
          <label>WITNESS PERSON PHONE NUMBER</label>
          <input name="witness_person_phone" type="text" class="form-control"
              value="{{ isset($data['witness_person_phone']) ? $data['witness_person_phone'] : '' }}"
              placeholder="Witness Person Phone.."
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <!-- CUSTOMER INFO START CLOSE -->
@@ -302,7 +303,7 @@
      <div class="form-group col-md-3">
          <label>IS EXCHANGE</label>
          <select class="form-control" name="is_exchange_avaliable"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="No"
                  {{ isset($purchaseModel['is_exchange_avaliable']) && $purchaseModel['is_exchange_avaliable'] == 'No' ? 'selected="selected"' : '' }}>
                  No
@@ -317,7 +318,7 @@
          <label>PAYMENT TYPE</label>
          <select name="payment_type" class="form-control ajaxChangeCDropDown" data-dep_dd_name="hyp_financer"
              data-url="{{ url('getAjaxDropdown') . '?req=financiers_list' }}" data-dep_dd2_name=""
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="1"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
                  By Cash
@@ -338,7 +339,7 @@
          <label>HYPOTHECATION FINANCER</label>
          <select name="hyp_financer" class="form-control"
              {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="">---Select Hypothecation Financer----</option>
              @isset($bank_financers)
                  @foreach ($bank_financers as $bank_financer)
@@ -357,7 +358,7 @@
              value="{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}"
              placeholder="Description..."
              {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -365,19 +366,19 @@
          <label>EX-SHOWROOM PRICE</label>
          <input name="ex_showroom_price" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['ex_showroom_price']) ? $data['ex_showroom_price'] : '' }}" placeholder="₹ XXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
          <label>REGISTRATION AMOUNT</label>
          <input name="registration_amount" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['registration_amount']) ? $data['registration_amount'] : '' }}"
-             placeholder="₹ XXXX" {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             placeholder="₹ XXXX" {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
          <label>INSURANCE AMOUNT</label>
          <input name="insurance_amount" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['insurance_amount']) ? $data['insurance_amount'] : '' }}" placeholder="₹ XXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
  <div class="row">
@@ -385,24 +386,24 @@
          <label>HYPOTHECATION AMOUNT</label>
          <input name="hypothecation_amount" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['hypothecation_amount']) ? $data['hypothecation_amount'] : '' }}"
-             placeholder="₹ XXXX" {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             placeholder="₹ XXXX" {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-3">
          <label>ACCESSORIES AMOUNT</label>
          <input name="accessories_amount" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['accessories_amount']) ? $data['accessories_amount'] : '' }}" placeholder="₹ XXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-3">
          <label>OTHER AMOUNT</label>
          <input name="other_charges" type="text" class="form-control totalAmountCal"
              value="{{ isset($data['other_charges']) ? $data['other_charges'] : '' }}" placeholder="₹ XXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-3">
          <label>GRAND TOTAL AMOUNT</label>
          <input name="total_amount" type="text" class="form-control" readonly
              value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}" placeholder="₹ XXXX"
-             {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
+             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
