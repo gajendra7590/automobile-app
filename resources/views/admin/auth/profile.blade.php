@@ -58,7 +58,7 @@
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Update Your Profile</h3>
                                 </div>
-                                <form class="ajaxFormSubmit" role="form" method="POST"
+                                <form class="ajaxFormSubmitUP ajaxForm" role="form" method="POST"
                                     action="{{ isset($actionProfileUpdate) ? $actionProfileUpdate : '' }}"
                                     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
                                     @csrf
@@ -96,7 +96,7 @@
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Change Your Password</h3>
                                 </div>
-                                <form class="ajaxFormSubmit" role="form" method="POST"
+                                <form class="ajaxFormSubmitCP ajaxForm" role="form" method="POST"
                                     action="{{ isset($actionPasswordUpdate) ? $actionPasswordUpdate : '' }}"
                                     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
                                     @csrf
@@ -110,8 +110,8 @@
                                                 placeholder="********" name="password">
                                         </div>
                                         <div class="form-group">
-                                            <label for="oldPassword">Your New Password</label>
-                                            <input type="password" class="form-control" id="oldPassword"
+                                            <label for="newPassword">Your New Password</label>
+                                            <input type="password" class="form-control" id="newPassword"
                                                 placeholder="********" name="new_password">
                                         </div>
                                     </div>
@@ -131,5 +131,90 @@
 @endsection
 
 @push('after-script')
+    <script>
+        $(".ajaxFormSubmitCP").validate({
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                new_password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            messages: {
+                password: {
+                    required: "The password field is required.",
+                },
+                new_password: {
+                    required: "The new password field is required.",
+                }
+            },
+            submitHandler: function(form, event) {
+                event.preventDefault();
+                let formObj = $(".ajaxFormSubmitCP");
+                var url = formObj.attr("action");
+                var method = formObj.attr("method");
+                var redirect = formObj.data("redirect");
+                var data = new FormData(formObj[0]);
+                CRUD.AJAXSUBMIT(url, method, data).then(function(result) {
+                    if (
+                        typeof result.status != "undefined" &&
+                        result.status == true
+                    ) {
+                        if (redirect != undefined) {
+                            if (result.data?.id) {
+                                redirect = redirect.replace("{id}", result.data.id);
+                            }
+                            window.location.href = "";
+                        }
+                    }
+                });
+            },
+        });
+
+        $(".ajaxFormSubmitUP").validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "The name field is required.",
+                },
+                new_password: {
+                    required: "The email field is required.",
+                    email: "The email field should valid email address."
+                }
+            },
+            submitHandler: function(form, event) {
+                event.preventDefault();
+                let formObj = $(".ajaxFormSubmitUP");
+                var url = formObj.attr("action");
+                var method = formObj.attr("method");
+                var redirect = formObj.data("redirect");
+                var data = new FormData(formObj[0]);
+                CRUD.AJAXSUBMIT(url, method, data).then(function(result) {
+                    if (
+                        typeof result.status != "undefined" &&
+                        result.status == true
+                    ) {
+                        if (redirect != undefined) {
+                            if (result.data?.id) {
+                                redirect = redirect.replace("{id}", result.data.id);
+                            }
+                            window.location.href = "";
+                        }
+                    }
+                });
+            },
+        });
+    </script>
     <script src="{{ asset('assets/modules/profile.js') }}"></script>
 @endpush

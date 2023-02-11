@@ -11,6 +11,8 @@
                 <input type="text" class="form-control"
                     value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" disabled>
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-4">
                 <label>TOTAL BALANCE</label>
                 <input type="text" class="form-control" value="{{ isset($total_balance) ? $total_balance : '' }}"
@@ -25,6 +27,8 @@
                 <input type="text" class="form-control"
                     value="{{ isset($total_outstanding) ? $total_outstanding : '' }}" disabled>
             </div>
+        </div>
+        <div class="row">
             <input type="hidden" name="rto_agent_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
             <div class="form-group col-md-4">
                 <label>PAYMENT AMOUNT</label>
@@ -45,11 +49,14 @@
                     @endif
                 </select>
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-12">
                 <label>PAYMENT NOTE(IF ANY :)</label>
                 <textarea name="payment_note" class="form-control" rows="5" value="" placeholder="Payment Note(If Any)"></textarea>
             </div>
         </div>
+    </div>
     </div>
     <!-- /.box-body -->
     <div class="box-footer">
@@ -62,3 +69,35 @@
         </div>
     </div>
 </form>
+<script>
+    $(".ajaxFormSubmit").validate({
+        rules: {
+            payment_amount: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            payment_date: {
+                required: false,
+                date: true,
+            },
+            payment_note: {
+                required: true
+            },
+        },
+        messages: {
+            payment_amount: {
+                required: "The payment amount field is required.",
+                number: "The payment amount invalid price.",
+                min: "The payment amount invalid price.",
+            },
+            payment_date: {
+                required: "The payment date field is required.",
+                date: "The payment date should valid date",
+            },
+            payment_note: {
+                required: "The payment note field is required."
+            },
+        }
+    });
+</script>

@@ -18,8 +18,8 @@
                     <h3 class="box-title">Upload Document</h3>
                 </div>
 
-                <form action="{{ route('documentUploads.store') }}" class="ajaxFormSubmit" data-redirect="" method="POST"
-                    enctype="multipart/form-data">
+                <form action="{{ route('documentUploads.store') }}" class="ajaxFormSubmitDU ajaxForm" data-redirect=""
+                    method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body" data-select2-id="15">
                         <div class="row">
@@ -76,5 +76,58 @@
     </div>
 @endsection
 @push('after-script')
+    <script>
+        $(".ajaxFormSubmitDU").validate({
+            rules: {
+                document_section_type: {
+                    required: true
+                },
+                document_section_id: {
+                    required: true
+                },
+                document_section_title: {
+                    required: true
+                },
+                document_file: {
+                    required: true
+                }
+            },
+            messages: {
+                document_section_type: {
+                    required: "The document section category field is required.",
+                },
+                document_section_id: {
+                    required: "The document section field is required.",
+                },
+                document_section_title: {
+                    required: "The document description field is required.",
+                },
+                document_file: {
+                    required: "The document field is required."
+                }
+            },
+            submitHandler: function(form, event) {
+                event.preventDefault();
+                let formObj = $(".ajaxFormSubmitDU");
+                var url = formObj.attr("action");
+                var method = formObj.attr("method");
+                var redirect = formObj.data("redirect");
+                var data = new FormData(formObj[0]);
+                CRUD.AJAXSUBMIT(url, method, data).then(function(result) {
+                    if (
+                        typeof result.status != "undefined" &&
+                        result.status == true
+                    ) {
+                        if (redirect != undefined) {
+                            if (result.data?.id) {
+                                redirect = redirect.replace("{id}", result.data.id);
+                            }
+                            window.location.href = "";
+                        }
+                    }
+                });
+            },
+        });
+    </script>
     <script src="{{ asset('assets/modules/documentUploads.js') }}"></script>
 @endpush

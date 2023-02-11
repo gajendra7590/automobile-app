@@ -239,7 +239,7 @@
                     <span>DOCUMENT UPLOADS</span></a>
             </li>
 
-            <li class="treeview {{ Request::is('profile*') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('profile') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-key"></i>
                     <span>MANAGE PROFILE</span>
@@ -247,7 +247,7 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
-                <ul class="treeview-menu {{ Request::is('profile*') ? 'display:"block"' : '' }}">
+                <ul class="treeview-menu {{ Request::is('profile') ? 'display:"block"' : '' }}">
                     <li><a href="{{ route('profile') }}"><i class="fa fa-user"></i>MY PROFILE</a></li>
                     <li><a href="{{ route('profile') }}"><i class="fa fa-key"></i>CHANGE PASSWORD</a></li>
                     <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out"></i>LOGOUT</a></li>
