@@ -6,6 +6,7 @@ use App\Models\Purchase;
 use App\Models\Quotation;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
+use Illuminate\Support\Facades\DB;
 
 trait DownloadReportHelper
 {
@@ -148,15 +149,27 @@ trait DownloadReportHelper
                     ->leftJoin('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
                     ->leftJoin('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
                     ->leftJoin('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
+                    ->leftJoin('purchase_transfers', 'purchases.id', '=', 'purchase_transfers.purchase_id')
+                    ->leftJoin('brokers', 'purchase_transfers.broker_id', '=', 'brokers.id')
                     ->leftJoin('bank_financers', 'sales.hyp_financer', '=', 'bank_financers.id')
                     ->leftJoin('u_states', 'sales.customer_state', '=', 'u_states.id')
                     ->leftJoin('u_cities', 'sales.customer_district', '=', 'u_cities.id')
                     ->leftJoin('u_districts', 'sales.customer_city', '=', 'u_districts.id')
                     ->select([
-                        'customer_gender', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'customer_address_line', 'u_states.state_name', 'u_cities.city_name', 'u_districts.district_name', 'customer_zipcode', 'customer_mobile_number', 'customer_mobile_number_alt', 'customer_email_address', 'witness_person_name', 'witness_person_phone', 'branches.branch_name', 'bike_brands.name as brand_name', 'bike_models.model_name', 'bike_colors.color_name', 'purchases.bike_type', 'purchases.bike_fuel_type', 'purchases.break_type', 'purchases.wheel_type', 'purchases.vin_number', 'purchases.vin_physical_status', 'purchases.variant', 'purchases.sku', 'purchases.sku_description', 'purchases.hsn_number', 'purchases.engine_number', 'purchases.key_number', 'purchases.service_book_number', 'tyre_brands.name as tyre_brands_name', 'purchases.tyre_front_number', 'purchases.tyre_rear_number', 'battery_brands.name as battery_brands_name', 'purchases.battery_number', 'purchases.bike_description', 'sales.is_exchange_avaliable', 'sales.is_exchange_avaliable', 'sales.payment_type', 'bank_financers.bank_name', 'sales.hyp_financer_description', 'sales.ex_showroom_price', 'sales.registration_amount', 'sales.insurance_amount', 'sales.hypothecation_amount', 'sales.accessories_amount', 'sales.other_charges', 'sales.total_amount',
-                    ]);
+                        'brokers.name as broker_name', 'customer_gender', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'customer_address_line', 'u_states.state_name', 'u_cities.city_name', 'u_districts.district_name', 'customer_zipcode', 'customer_mobile_number', 'customer_mobile_number_alt', 'customer_email_address', 'witness_person_name', 'witness_person_phone', 'branches.branch_name', 'bike_brands.name as brand_name', 'bike_models.model_name', 'bike_colors.color_name', 'purchases.bike_type', 'purchases.bike_fuel_type', 'purchases.break_type', 'purchases.wheel_type', 'purchases.vin_number', 'purchases.vin_physical_status', 'purchases.variant', 'purchases.sku', 'purchases.sku_description', 'purchases.hsn_number', 'purchases.engine_number', 'purchases.key_number', 'purchases.service_book_number', 'tyre_brands.name as tyre_brands_name', 'purchases.tyre_front_number', 'purchases.tyre_rear_number', 'battery_brands.name as battery_brands_name', 'purchases.battery_number', 'purchases.bike_description', 'sales.is_exchange_avaliable', 'sales.is_exchange_avaliable', 'sales.payment_type', 'bank_financers.bank_name', 'sales.hyp_financer_description', 'sales.ex_showroom_price', 'sales.registration_amount', 'sales.insurance_amount', 'sales.hypothecation_amount', 'sales.accessories_amount', 'sales.other_charges', 'sales.total_amount',
+                    ])->when(request('broker_id'), function ($q) {
+                        $q->where('brokers.id', request('broker_id'));
+                    })->when(request('branch_id'), function ($q) {
+                        $q->where('branches.id', request('branch_id'));
+                    })->when(request('financer_id'), function ($q) {
+                        $q->where('bank_financers.id', request('financer_id'));
+                    })->when(request('finance_type'), function ($q) {
+                        $q->where('payment_type', request('finance_type'));
+                    })->when(request('status'), function ($q) {
+                        $q->where('status', request('status'));
+                    });
                 $heading = [
-                    'Customer Gender', 'Customer Name', 'Customer Relationship', 'Customer Guardian Name', 'Customer Address Line', 'State Name', 'City Name', 'District Name', 'Customer Zipcode', 'Customer Mobile Number', 'Customer Mobile Number Alt', 'Customer Email Address', 'Witness Person Name', 'Witness Person Phone', 'Branch Name', 'Brand Name', 'Model Name', 'Color Name', 'Bike Type', 'Bike Fuel Type', 'Break Type', 'Wheel Type', 'Vin Number', 'Vin Physical Status', 'Variant', 'Sku', 'Sku Description', 'Hsn Number', 'Engine Number', 'Key Number', 'Service Book Number', 'Tyre Brands Name', 'Tyre Front Number', 'Tyre Rear Number', 'Battery Brands Name', 'Battery Number', 'Bike Description', 'Is Exchange Avaliable', 'Payment Type', 'Bank Name', 'Hyp Financer Description', 'Ex Showroom Price', 'Registration Amount', 'Insurance Amount', 'Hypothecation Amount', 'Accessories Amount', 'Other Charges', 'Total Amount', 'Cust Name',
+                    'Broker Name', 'Customer Gender', 'Customer Name', 'Customer Relationship', 'Customer Guardian Name', 'Customer Address Line', 'State Name', 'City Name', 'District Name', 'Customer Zipcode', 'Customer Mobile Number', 'Customer Mobile Number Alt', 'Customer Email Address', 'Witness Person Name', 'Witness Person Phone', 'Branch Name', 'Brand Name', 'Model Name', 'Color Name', 'Bike Type', 'Bike Fuel Type', 'Break Type', 'Wheel Type', 'Vin Number', 'Vin Physical Status', 'Variant', 'Sku', 'Sku Description', 'Hsn Number', 'Engine Number', 'Key Number', 'Service Book Number', 'Tyre Brands Name', 'Tyre Front Number', 'Tyre Rear Number', 'Battery Brands Name', 'Battery Number', 'Bike Description', 'Is Exchange Avaliable', 'Payment Type', 'Bank Name', 'Hyp Financer Description', 'Ex Showroom Price', 'Registration Amount', 'Insurance Amount', 'Hypothecation Amount', 'Accessories Amount', 'Other Charges', 'Total Amount', 'Cust Name',
                 ];
                 config(['date_filter' => 'sales.created_at']);
                 break;

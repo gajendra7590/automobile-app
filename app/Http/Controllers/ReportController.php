@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\BankFinancer;
 use App\Models\BikeBrand;
+use App\Models\Branch;
 use App\Models\Broker;
 use App\Models\Salesman;
 use App\Traits\DownloadReportHelper;
+use Exception;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -52,7 +54,7 @@ class ReportController extends Controller
                 break;
             case 'financers':
                 $view = 'financers';
-                $dropdowns = ['brands'];
+                $dropdowns = ['branches', 'brokers'];
                 break;
             case 'accounts':
                 $view = 'accounts';
@@ -74,17 +76,20 @@ class ReportController extends Controller
                 $view = 'purchase';
                 break;
         }
+        if (in_array('branches', $dropdowns)) {
+            $data['branches'] = Branch::whereActiveStatus(1)->get();
+        }
         if (in_array('brands', $dropdowns)) {
-            $data['brands'] = BikeBrand::get();
+            $data['brands'] = BikeBrand::whereActiveStatus(1)->get();
         }
         if (in_array('brokers', $dropdowns)) {
-            $data['brokers'] = Broker::get();
+            $data['brokers'] = Broker::whereActiveStatus(1)->get();
         }
         if (in_array('financers', $dropdowns)) {
-            $data['financers'] = BankFinancer::get();
+            $data['financers'] = BankFinancer::whereActiveStatus(1)->get();
         }
         if (in_array('salesmans', $dropdowns)) {
-            $data['salesmans'] = Salesman::get();
+            $data['salesmans'] = Salesman::whereActiveStatus(1)->get();
         }
         $data['action'] = route('downloadReport');
         $data['type'] = $type;
@@ -99,15 +104,19 @@ class ReportController extends Controller
 
     public function downloadReport(Request $request)
     {
-        $result = self::getReport();
-        $filename = (request('type') ?? 'purchase') . "_report.csv";
-        header('Content-Type: application/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '";');
-        $f = fopen('php://output', 'w');
-        foreach ($result as $line) {
-            fputcsv($f, $line);
+        try {
+            $result = self::getReport();
+            $filename = (request('type') ?? 'purchase') . "_report.csv";
+            header('Content-Type: application/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            $f = fopen('php://output', 'w');
+            foreach ($result as $line) {
+                fputcsv($f, $line);
+            }
+            fclose($f);
+            exit();
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()], 422);
         }
-        fclose($f);
-        exit();
     }
 }
