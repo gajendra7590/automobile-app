@@ -75,24 +75,36 @@ trait DownloadReportHelper
         $heading = [];
         switch (request('type')) {
             case 'vehicle_purchase_register':
-                $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')
-                    ->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')
-                    ->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')
-                    ->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')
-                    ->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
-                    ->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
-                    ->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('model_id')), function ($q) {
+                $query = Purchase::leftJoin('branches', 'purchases.bike_branch', '=', 'branches.id')
+                    ->leftJoin('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')
+                    ->leftJoin('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')
+                    ->leftJoin('bike_models', 'purchases.bike_model', '=', 'bike_models.id')
+                    ->leftJoin('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
+                    ->leftJoin('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
+                    ->leftJoin('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                    ->leftJoin('purchase_transfers', 'purchases.id', '=', 'purchase_transfers.purchase_id')
+                    ->leftJoin('brokers', 'brokers.id', '=', 'purchase_transfers.broker_id')
+                    ->when(!empty(request('broker_id')), function ($q) {
+                        $q->where('purchase_transfers.broker_id', request('broker_id'));
+                    })->when(!empty(request('model_id')), function ($q) {
                         $q->where('purchases.bike_model', request('model_id'));
                     })->when(!empty(request('brand_id')), function ($q) {
                         $q->where('purchases.bike_brand', request('brand_id'));
-                    })->select('branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
-                $heading = ['Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
+                    })->select('brokers.name as broker_name', 'branches.branch_name as branch', 'bike_dealers.dealer_code as dealer_code', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_colors.color_name as color', 'battery_brands.name as battery_brand', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'battery_number', 'bike_type', 'bike_fuel_type', 'break_type', 'wheel_type', 'dc_number', 'dc_date', 'vin_number', 'vin_physical_status', 'variant', 'sku', 'sku_description', 'hsn_number', 'engine_number', 'key_number', 'service_book_number', 'gst_rate', 'gst_rate_percent', 'pre_gst_amount', 'gst_amount', 'ex_showroom_price', 'discount_price', 'grand_total', 'bike_description', 'transfer_status');
+                $heading = ['Broker Name', 'Branch', 'Dealer Code', 'Dealer Company Name', 'Brand', 'Model', 'Color', 'Battery Brand', 'Tyre Brand', 'Tyre front Number', 'Tyre rear Number', 'Battery Number', 'Bike Type', 'Bike fuel Type', 'Break Type', 'Wheel Type', 'Dc Number', 'Dc Date', 'Vin Number', 'Vin Physical Status', 'Variant', 'SKU', 'SKU Description', 'HSN Number', 'Engine Number', 'key Number', 'Service book Number', 'Gst Rate', 'Gst Rate Percent', 'Pre Gst Amount', 'Gst Amount', 'Ex Showroom Price', 'Discount Price', 'Grand Total', 'Bike Description', 'Transfer Status'];
                 config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'pending_purchase_invoice':
-                $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('model_id')), function ($q) {
+                $query = Purchase::leftJoin('branches', 'purchases.bike_branch', '=', 'branches.id')
+                    ->leftJoin('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')
+                    ->leftJoin('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')
+                    ->leftJoin('bike_models', 'purchases.bike_model', '=', 'bike_models.id')
+                    ->leftJoin('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
+                    ->leftJoin('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
+                    ->leftJoin('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                    ->when(!empty(request('transfer_status')), function ($q) {
+                        $q->where('transfer_status', request('transfer_status'));
+                    })->when(!empty(request('model_id')), function ($q) {
                         $q->where('purchases.bike_model', request('model_id'));
                     })->when(!empty(request('brand_id')), function ($q) {
                         $q->where('purchases.bike_brand', request('brand_id'));
@@ -101,8 +113,16 @@ trait DownloadReportHelper
                 config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'vehicle_stock_inventory':
-                $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
-                    ->when(!empty(request('model_id')), function ($q) {
+                $query = Purchase::leftJoin('branches', 'purchases.bike_branch', '=', 'branches.id')
+                    ->leftJoin('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')
+                    ->leftJoin('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')
+                    ->leftJoin('bike_models', 'purchases.bike_model', '=', 'bike_models.id')
+                    ->leftJoin('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
+                    ->leftJoin('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
+                    ->leftJoin('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                    ->when(!empty(request('transfer_status')), function ($q) {
+                        $q->where('transfer_status', request('transfer_status'));
+                    })->when(!empty(request('model_id')), function ($q) {
                         $q->where('purchases.bike_model', request('model_id'));
                     })->when(!empty(request('brand_id')), function ($q) {
                         $q->where('purchases.bike_brand', request('brand_id'));
@@ -121,7 +141,16 @@ trait DownloadReportHelper
                 config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'brokers_agents':
-                $query = Purchase::join('branches', 'purchases.bike_branch', '=', 'branches.id')->join('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')->join('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')->join('bike_models', 'purchases.bike_model', '=', 'bike_models.id')->join('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')->join('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')->join('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                $query = Purchase::leftJoin('branches', 'purchases.bike_branch', '=', 'branches.id')
+                    ->leftJoin('bike_dealers', 'purchases.bike_dealer', '=', 'bike_dealers.id')
+                    ->leftJoin('bike_brands', 'purchases.bike_brand', '=', 'bike_brands.id')
+                    ->leftJoin('bike_models', 'purchases.bike_model', '=', 'bike_models.id')
+                    ->leftJoin('bike_colors', 'purchases.bike_model_color', '=', 'bike_colors.id')
+                    ->leftJoin('battery_brands', 'purchases.battery_brand_id', '=', 'battery_brands.id')
+                    ->leftJoin('tyre_brands', 'purchases.tyre_brand_id', '=', 'tyre_brands.id')
+                    ->when(!empty(request('transfer_status')), function ($q) {
+                        $q->where('transfer_status', request('transfer_status'));
+                    })
                     ->when(!empty(request('model_id')), function ($q) {
                         $q->where('purchases.bike_model', request('model_id'));
                     })
@@ -157,15 +186,17 @@ trait DownloadReportHelper
                     ->leftJoin('u_districts', 'sales.customer_city', '=', 'u_districts.id')
                     ->select([
                         'brokers.name as broker_name', 'customer_gender', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'customer_address_line', 'u_states.state_name', 'u_cities.city_name', 'u_districts.district_name', 'customer_zipcode', 'customer_mobile_number', 'customer_mobile_number_alt', 'customer_email_address', 'witness_person_name', 'witness_person_phone', 'branches.branch_name', 'bike_brands.name as brand_name', 'bike_models.model_name', 'bike_colors.color_name', 'purchases.bike_type', 'purchases.bike_fuel_type', 'purchases.break_type', 'purchases.wheel_type', 'purchases.vin_number', 'purchases.vin_physical_status', 'purchases.variant', 'purchases.sku', 'purchases.sku_description', 'purchases.hsn_number', 'purchases.engine_number', 'purchases.key_number', 'purchases.service_book_number', 'tyre_brands.name as tyre_brands_name', 'purchases.tyre_front_number', 'purchases.tyre_rear_number', 'battery_brands.name as battery_brands_name', 'purchases.battery_number', 'purchases.bike_description', 'sales.is_exchange_avaliable', 'sales.is_exchange_avaliable', 'sales.payment_type', 'bank_financers.bank_name', 'sales.hyp_financer_description', 'sales.ex_showroom_price', 'sales.registration_amount', 'sales.insurance_amount', 'sales.hypothecation_amount', 'sales.accessories_amount', 'sales.other_charges', 'sales.total_amount',
-                    ])->when(request('broker_id'), function ($q) {
+                    ])->when(!empty(request('broker_id')), function ($q) {
                         $q->where('brokers.id', request('broker_id'));
-                    })->when(request('branch_id'), function ($q) {
+                    })->when(!empty(request('transfer_status')), function ($q) {
+                        $q->where('purchases.transfer_status', request('transfer_status'));
+                    })->when(!empty(request('branch_id')), function ($q) {
                         $q->where('branches.id', request('branch_id'));
-                    })->when(request('financer_id'), function ($q) {
+                    })->when(!empty(request('financer_id')), function ($q) {
                         $q->where('bank_financers.id', request('financer_id'));
-                    })->when(request('finance_type'), function ($q) {
+                    })->when(!empty(request('finance_type')), function ($q) {
                         $q->where('payment_type', request('finance_type'));
-                    })->when(request('status'), function ($q) {
+                    })->when(!empty(request('status')), function ($q) {
                         $q->where('status', request('status'));
                     });
                 $heading = [
@@ -180,19 +211,19 @@ trait DownloadReportHelper
                     ->leftJoin('u_districts', 'u_districts.id', '=', 'rto_registration.contact_district_id')
                     ->leftJoin('gst_rto_rates', 'gst_rto_rates.id', '=', 'rto_registration.gst_rto_rate_id')
                     ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'rto_registration.sale_id')
-                    ->when(request('rto_status'), function ($q) {
+                    ->when(!empty(request('rto_status')), function ($q) {
                         $q->whereIn('recieved_date', '!=', [null, '']);
                     })
-                    ->when(request('sent_to_rto'), function ($q) {
+                    ->when(!empty(request('sent_to_rto')), function ($q) {
                         $q->whereIn('submit_date', '!=', [null, '']);
                     })
-                    ->when(request('pending_registration_number'), function ($q) {
+                    ->when(!empty(request('pending_registration_number')), function ($q) {
                         $q->whereIn('rc_number', '!=', [null, '']);
                     })
-                    ->when(request('rc_status'), function ($q) {
+                    ->when(!empty(request('rc_status')), function ($q) {
                         $q->whereRcStatus(request('rc_status'));
                     })
-                    ->when(request('payment_outstanding'), function ($q) {
+                    ->when(!empty(request('payment_outstanding')), function ($q) {
                         $q->whereIn('sale_payment_accounts', '!=', [null, '']);
                     });
                 $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];
@@ -204,19 +235,19 @@ trait DownloadReportHelper
                     ->leftJoin('u_districts', 'u_districts.id', '=', 'rto_registration.contact_district_id')
                     ->leftJoin('gst_rto_rates', 'gst_rto_rates.id', '=', 'rto_registration.gst_rto_rate_id')
                     ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'rto_registration.sale_id')
-                    ->when(request('rto_status'), function ($q) {
+                    ->when(!empty(request('rto_status')), function ($q) {
                         $q->whereIn('recieved_date', '!=', [null, '']);
                     })
-                    ->when(request('sent_to_rto'), function ($q) {
+                    ->when(!empty(request('sent_to_rto')), function ($q) {
                         $q->whereIn('submit_date', '!=', [null, '']);
                     })
-                    ->when(request('pending_registration_number'), function ($q) {
+                    ->when(!empty(request('pending_registration_number')), function ($q) {
                         $q->whereIn('rc_number', '!=', [null, '']);
                     })
-                    ->when(request('rc_status'), function ($q) {
+                    ->when(!empty(request('rc_status')), function ($q) {
                         $q->whereRcStatus(request('rc_status'));
                     })
-                    ->when(request('payment_outstanding'), function ($q) {
+                    ->when(!empty(request('payment_outstanding')), function ($q) {
                         $q->whereIn('sale_payment_accounts', '!=', [null, '']);
                     });
                 $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];

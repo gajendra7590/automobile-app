@@ -2,6 +2,17 @@
     <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data">
         <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='col-md-12'>
+            <div class="form-group col-md-2">
+                <label>BROKER</label>
+                <select name="broker_id" class="form-control">
+                    <option value="">---Select Broker----</option>
+                    @isset($brokers)
+                        @foreach ($brokers as $key => $broker)
+                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
             <div class="form-group col-md-4">
                 <label>RTO STATUS</label>
                 <select name="rto_status" class="form-control">

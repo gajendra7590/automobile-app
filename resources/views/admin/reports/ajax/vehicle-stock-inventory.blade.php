@@ -1,7 +1,18 @@
 <section class="content">
-    <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" >
-        <input type="hidden" name="type" value="{{isset($type) && !empty($type) ? $type : 'purchase' }}">
+    <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data">
+        <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='col-md-12'>
+            <div class="form-group col-md-2">
+                <label>BROKER</label>
+                <select name="broker_id" class="form-control">
+                    <option value="">---Select Broker----</option>
+                    @isset($brokers)
+                        @foreach ($brokers as $key => $broker)
+                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
             <div class="form-group col-md-3">
                 <label>BIKE BRAND</label>
                 <select name="brand_id" data-dep_dd_name="model_id"
@@ -46,7 +57,7 @@
             </div>
             <div class="form-group col-md-2">
                 <label>AGE</label>
-                <input type='number' name="age" class="form-control" placeholder="enter age" min="0"/>
+                <input type='number' name="age" class="form-control" placeholder="enter age" min="0" />
             </div>
         </div>
         <div class="form-group col-md-12 pull-left">

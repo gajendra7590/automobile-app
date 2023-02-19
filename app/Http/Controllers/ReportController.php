@@ -30,47 +30,47 @@ class ReportController extends Controller
         switch ($type) {
             case 'vehicle_purchase_register':
                 $view = 'vehicle-purchase-register';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             case 'pending_purchase_invoice':
                 $view = 'pending-purchase-invoice';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             case 'vehicle_stock_inventory':
                 $view = 'vehicle-stock-inventory';
-                $dropdowns = ['brands', 'brokers'];
+                $dropdowns = ['brokers', 'brands', 'brokers'];
                 break;
             case 'quotation_list':
                 $view = 'quotation-list';
-                $dropdowns = ['brands', 'financers'];
+                $dropdowns = ['brokers', 'brands', 'financers'];
                 break;
             case 'sales_register':
                 $view = 'sales-register';
-                $dropdowns = ['brands', 'financers', 'salesmans'];
+                $dropdowns = ['brokers', 'brands', 'financers', 'salesmans'];
                 break;
             case 'brokers_agents':
                 $view = 'brokers-agents';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             case 'financers':
                 $view = 'financers';
-                $dropdowns = ['branches', 'brokers'];
+                $dropdowns = ['brokers', 'branches', 'brokers'];
                 break;
             case 'accounts':
                 $view = 'accounts';
-                $dropdowns = ['branches'];
+                $dropdowns = ['brokers', 'branches'];
                 break;
             case 'rto':
                 $view = 'rto';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             case 'receipt_voucher':
                 $view = 'receipt-voucher';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             case 'payment_voucher':
                 $view = 'payment-voucher';
-                $dropdowns = ['brands'];
+                $dropdowns = ['brokers', 'brands'];
                 break;
             default:
                 $view = 'purchase';

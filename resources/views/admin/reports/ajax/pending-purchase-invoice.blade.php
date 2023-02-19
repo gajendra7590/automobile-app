@@ -1,7 +1,18 @@
 <section class="content">
-    <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data" >
-        <input type="hidden" name="type" value="{{isset($type) && !empty($type) ? $type : 'purchase' }}">
+    <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data">
+        <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='col-md-12'>
+            <div class="form-group col-md-2">
+                <label>BROKER</label>
+                <select name="broker_id" class="form-control">
+                    <option value="">---Select Broker----</option>
+                    @isset($brokers)
+                        @foreach ($brokers as $key => $broker)
+                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
             <div class="form-group col-md-2">
                 <label>BIKE BRAND</label>
                 <select name="brand_id" data-dep_dd_name="model_id"
@@ -37,11 +48,13 @@
             <div class="col-md-6 pull-right dateshow" hidden>
                 <div class="form-group col-md-6">
                     <label>START DATE</label>
-                    <input type='date' name="start_date" class="form-control" value="{{date('Y-m-d')}}" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
+                    <input type='date' name="start_date" class="form-control" value="{{ date('Y-m-d') }}"
+                        placeholder="0000-00-00" min="{{ date('Y-m-d') }}" />
                 </div>
                 <div class="form-group col-md-6">
                     <label>END DATE</label>
-                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00" min="{{date('Y-m-d')}}"/>
+                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00"
+                        min="{{ date('Y-m-d') }}" />
                 </div>
             </div>
         </div>
@@ -56,19 +69,19 @@
 </section>
 
 <script>
-    $(document).ready(function (){
-        $("[name=start_date]").on('change',function (e){
-            $('[name=end_date]').attr("min",$(this).val());
+    $(document).ready(function() {
+        $("[name=start_date]").on('change', function(e) {
+            $('[name=end_date]').attr("min", $(this).val());
         })
 
-        $("[name=end_date]").on('change',function (e){
-            $('[name=start_date]').attr("max",$(this).val());
+        $("[name=end_date]").on('change', function(e) {
+            $('[name=start_date]').attr("max", $(this).val());
         })
 
-        $("[name=duration]").on('change',function (e){
-            if($(this).val() == 'custom'){
+        $("[name=duration]").on('change', function(e) {
+            if ($(this).val() == 'custom') {
                 $('.dateshow').show();
-            }else{
+            } else {
                 $('.dateshow').hide();
             }
         })
