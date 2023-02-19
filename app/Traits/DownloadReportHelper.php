@@ -173,6 +173,54 @@ trait DownloadReportHelper
                 ];
                 config(['date_filter' => 'sales.created_at']);
                 break;
+            case 'rto':
+                $query = RtoRegistration::select(['contact_name', 'contact_mobile_number', 'contact_address_line', 'u_cities.city_name', 'u_states.state_name', 'u_districts.district_name', 'contact_zipcode', 'sku', 'financer_name', 'gst_rto_rates.gst_rate', 'ex_showroom_amount', 'tax_amount', 'hyp_amount', 'tr_amount', 'fees', 'total_amount', 'remark', 'rc_number', 'rc_status', 'customer_given_name', 'customer_given_date', 'customer_given_note'])
+                    ->leftJoin('u_cities', 'u_cities.id', '=', 'rto_registration.contact_city_id')
+                    ->leftJoin('u_states', 'u_states.id', '=', 'rto_registration.contact_state_id')
+                    ->leftJoin('u_districts', 'u_districts.id', '=', 'rto_registration.contact_district_id')
+                    ->leftJoin('gst_rto_rates', 'gst_rto_rates.id', '=', 'rto_registration.gst_rto_rate_id')
+                    ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'rto_registration.sale_id')
+                    ->when(request('rto_status'), function ($q) {
+                        $q->whereIn('recieved_date', '!=', [null, '']);
+                    })
+                    ->when(request('sent_to_rto'), function ($q) {
+                        $q->whereIn('submit_date', '!=', [null, '']);
+                    })
+                    ->when(request('pending_registration_number'), function ($q) {
+                        $q->whereIn('rc_number', '!=', [null, '']);
+                    })
+                    ->when(request('rc_status'), function ($q) {
+                        $q->whereRcStatus(request('rc_status'));
+                    })
+                    ->when(request('payment_outstanding'), function ($q) {
+                        $q->whereIn('sale_payment_accounts', '!=', [null, '']);
+                    });
+                $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];
+                break;
+            case 'accounts':
+                $query = RtoRegistration::select(['contact_name', 'contact_mobile_number', 'contact_address_line', 'u_cities.city_name', 'u_states.state_name', 'u_districts.district_name', 'contact_zipcode', 'sku', 'financer_name', 'gst_rto_rates.gst_rate', 'ex_showroom_amount', 'tax_amount', 'hyp_amount', 'tr_amount', 'fees', 'total_amount', 'remark', 'rc_number', 'rc_status', 'customer_given_name', 'customer_given_date', 'customer_given_note'])
+                    ->leftJoin('u_cities', 'u_cities.id', '=', 'rto_registration.contact_city_id')
+                    ->leftJoin('u_states', 'u_states.id', '=', 'rto_registration.contact_state_id')
+                    ->leftJoin('u_districts', 'u_districts.id', '=', 'rto_registration.contact_district_id')
+                    ->leftJoin('gst_rto_rates', 'gst_rto_rates.id', '=', 'rto_registration.gst_rto_rate_id')
+                    ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'rto_registration.sale_id')
+                    ->when(request('rto_status'), function ($q) {
+                        $q->whereIn('recieved_date', '!=', [null, '']);
+                    })
+                    ->when(request('sent_to_rto'), function ($q) {
+                        $q->whereIn('submit_date', '!=', [null, '']);
+                    })
+                    ->when(request('pending_registration_number'), function ($q) {
+                        $q->whereIn('rc_number', '!=', [null, '']);
+                    })
+                    ->when(request('rc_status'), function ($q) {
+                        $q->whereRcStatus(request('rc_status'));
+                    })
+                    ->when(request('payment_outstanding'), function ($q) {
+                        $q->whereIn('sale_payment_accounts', '!=', [null, '']);
+                    });
+                $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];
+                break;
             case 'quotation_list':
                 $query = Quotation::join('branches', 'branches.id', '=', 'quotations.branch_id')
                     ->join('salesmans',  'salesmans.id',  '=',  'quotations.salesman_id')
@@ -341,8 +389,6 @@ trait DownloadReportHelper
                 ];
                 config(['date_filter' => 'sales.created_at']);
                 break;
-            case 'rto':
-                RtoRegistration::get();
             default:
                 //
                 break;

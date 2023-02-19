@@ -58,7 +58,7 @@ class ReportController extends Controller
                 break;
             case 'accounts':
                 $view = 'accounts';
-                $dropdowns = ['brands'];
+                $dropdowns = ['branches'];
                 break;
             case 'rto':
                 $view = 'rto';
