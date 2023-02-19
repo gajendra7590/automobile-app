@@ -159,16 +159,18 @@
                         <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>PURCHASE INVOICES
                         </a>
                     </li>
-                    <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
-                        <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i>BROKER
-                            TRANSFERS
-                        </a>
-                    </li>
-                    <li class="{{ Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
-                        <a href="{{ route('purchaseDealerPayments.index') }}"><i class="fa fa-exchange"></i>
-                            PURCHASE DEALER PAYMENTS
-                        </a>
-                    </li>
+                    @if (auth()->user() && auth()->user()->is_admin == '1')
+                        <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
+                            <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i>
+                                BROKER TRANSFERS
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
+                            <a href="{{ route('purchaseDealerPayments.index') }}"><i class="fa fa-exchange"></i>
+                                PURCHASE DEALER PAYMENTS
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
 
@@ -201,11 +203,6 @@
                 </ul>
             </li>
 
-            <li class="{{ Request::is('customerReturns*') ? 'active' : '' }}">
-                <a href="{{ route('customerReturns.index') }}"><i class="fa fa-undo"></i>
-                    <span>CUSTOMER RETURNS</span></a>
-            </li>
-
             <li
                 class="treeview {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'active' : '' }}">
                 <a href="#">
@@ -217,27 +214,40 @@
                 </a>
                 <ul class="treeview-menu"
                     {{ Request::is('rtoRegistration*') || Request::is('rtoAgentPayments*') ? 'display:"block"' : '' }}>
-
                     <li class="{{ Request::is('rtoRegistration*') ? 'active' : '' }}">
                         <a href="{{ route('rtoRegistration.index') }}"><i
                                 class="fa fa-registered"></i>REGISTRATIONS</a>
                     </li>
-                    <li class="{{ Request::is('rtoAgentPayments*') ? 'active' : '' }}">
-                        <a href="{{ route('rtoAgentPayments.index') }}"><i class="fa fa-credit-card"></i>AGENT
-                            PAYMENTS</a>
-                    </li>
+                    @if (auth()->user() && auth()->user()->is_admin == '1')
+                        <li class="{{ Request::is('rtoAgentPayments*') ? 'active' : '' }}">
+                            <a href="{{ route('rtoAgentPayments.index') }}"><i class="fa fa-credit-card"></i>AGENT
+                                PAYMENTS</a>
+                        </li>
+                    @endif
                 </ul>
             </li>
 
-            <li class="{{ Request::is('reports*') ? 'active' : '' }}">
-                <a href="{{ route('reports.index') }}"><i class="fa fa-bar-chart"></i>
-                    <span>REPORTS</span></a>
-            </li>
+            @if (auth()->user() && auth()->user()->is_admin == '1')
+                <li class="{{ Request::is('customerReturns*') ? 'active' : '' }}">
+                    <a href="{{ route('customerReturns.index') }}"><i class="fa fa-undo"></i>
+                        <span>CUSTOMER RETURNS</span></a>
+                </li>
 
-            <li class="{{ Request::is('documentUploads*') ? 'active' : '' }}">
-                <a href="{{ route('documentUploads.index') }}"><i class="fa fa-upload"></i>
-                    <span>DOCUMENT UPLOADS</span></a>
-            </li>
+                <li class="{{ Request::is('reports*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.index') }}"><i class="fa fa-bar-chart"></i>
+                        <span>REPORTS</span></a>
+                </li>
+
+                <li class="{{ Request::is('documentUploads*') ? 'active' : '' }}">
+                    <a href="{{ route('documentUploads.index') }}"><i class="fa fa-upload"></i>
+                        <span>DOCUMENT UPLOADS</span></a>
+                </li>
+
+                <li class="{{ Request::is('updateNonEditableDetail*') ? 'active' : '' }}">
+                    <a href="{{ route('updateNonEditableDetail.index') }}"><i class="fa fa-pencil-square-o"></i>
+                        <span>UPDATE NON EDITABLE DETAIL</span></a>
+                </li>
+            @endif
 
             <li class="treeview {{ Request::is('profile') ? 'active' : '' }}">
                 <a href="#">
