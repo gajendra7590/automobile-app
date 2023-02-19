@@ -66,7 +66,8 @@
                     <option value="close">Close</option>
                 </select>
             </div>
-
+        </div>
+        <div class="col-md-12">
             <div class="form-group col-md-2">
                 <label>DURATION</label>
                 <select name="duration" class="form-control">
@@ -98,3 +99,5 @@
         </div>
     </form>
 </section>
+
+<script src="{{ asset('assets/modules/report.js') }}"></script>

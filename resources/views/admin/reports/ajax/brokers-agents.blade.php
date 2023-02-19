@@ -37,6 +37,16 @@
                 </select>
             </div>
             <div class="form-group col-md-2">
+                <label>SALE TYPE</label>
+                <select name="sale_type" class="form-control">
+                    <option value="">---Sale Type----</option>
+                    <option value="sold">Sold</option>
+                    <option value="unsold">Unsold</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
                 <label>DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>
@@ -67,3 +77,5 @@
         </div>
     </form>
 </section>
+
+<script src="{{ asset('assets/modules/report.js') }}"></script>

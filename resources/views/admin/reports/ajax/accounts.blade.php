@@ -32,7 +32,6 @@
                     <option value="1">Close</option>
                 </select>
             </div>
-
             <div class="form-group col-md-2">
                 <label>DOWN PAYMENTS </label>
                 <select name="down_payment" class="form-control">
@@ -41,7 +40,6 @@
                     <option value="1">Close</option>
                 </select>
             </div>
-
             <div class="form-group col-md-2">
                 <label>PAYMENT TYPE</label>
                 <select name="payment_type" class="form-control">
@@ -50,7 +48,8 @@
                     <option value="1">Credit</option>
                 </select>
             </div>
-
+        </div>
+        <div class="col-md-12">
             <div class="form-group col-md-2">
                 <label>DURATION</label>
                 <select name="duration" class="form-control">
@@ -82,3 +81,5 @@
         </div>
     </form>
 </section>
+
+<script src="{{ asset('assets/modules/report.js') }}"></script>

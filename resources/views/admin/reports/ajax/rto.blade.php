@@ -55,8 +55,9 @@
                     <option value="1"> Close </option>
                 </select>
             </div>
-
-            <div class="form-group col-md-4">
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
                 <label>DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>
@@ -87,3 +88,5 @@
         </div>
     </form>
 </section>
+
+<script src="{{ asset('assets/modules/report.js') }}"></script>

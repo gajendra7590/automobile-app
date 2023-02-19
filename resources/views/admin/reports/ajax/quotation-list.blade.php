@@ -56,6 +56,29 @@
                 </select>
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
+                <label>DURATION</label>
+                <select name="duration" class="form-control">
+                    <option value="last_month">Last Month</option>
+                    <option value="last_six_months">Last Six Months</option>
+                    <option value="last_one_year">Last One Year</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            <div class="col-md-6 pull-right dateshow" hidden>
+                <div class="form-group col-md-6">
+                    <label>START DATE</label>
+                    <input type='date' name="start_date" class="form-control" value="{{ date('Y-m-d') }}"
+                        placeholder="0000-00-00" min="{{ date('Y-m-d') }}" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label>END DATE</label>
+                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00"
+                        min="{{ date('Y-m-d') }}" />
+                </div>
+            </div>
+        </div>
         <div class="form-group col-md-12 pull-left">
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
@@ -65,3 +88,5 @@
         </div>
     </form>
 </section>
+
+<script src="{{ asset('assets/modules/report.js') }}"></script>
