@@ -17,6 +17,8 @@ class CustomerReturnSalePaymentAccounts extends Model
 
     protected $fillable = [
         'id',
+        'sno',
+        'year',
         'account_uuid',
         'sale_id',
         'sales_total_amount',

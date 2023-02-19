@@ -11,9 +11,11 @@ class Quotation extends Model
 
     protected $table = 'quotations';
 
-    protected $appends = ['cust_name'];
+    protected $appends = ['cust_name', 'serial_number'];
 
     protected $fillable = [
+        'sno',
+        'year',
         'branch_id',
         'salesman_id',
         'customer_gender',
@@ -62,7 +64,22 @@ class Quotation extends Model
         parent::boot();
         self::creating(function ($model) {
             $model->uuid = 'enq/' . date('dmY') . '/' . rand(11111, 55555);
+
+            //YearWise Genertae Unique ID
+            $findModel = Quotation::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
         });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
     }
 
     public function getGenderAttribute()

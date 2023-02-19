@@ -14,6 +14,8 @@ class SalePaymentAccounts extends Model
     protected $table = 'sale_payment_accounts';
 
     protected $fillable = [
+        'sno',
+        'year',
         'account_uuid',
         'sale_id',
         'sales_total_amount',
@@ -47,6 +49,8 @@ class SalePaymentAccounts extends Model
 
     protected $casts = [];
 
+    protected $appends = ['serial_number'];
+
     //TRANSACTION TYPES
     const TRANS_TYPE_CREDIT = 1;
     const TRANS_TYPE_DEBIT  = 2;
@@ -78,7 +82,22 @@ class SalePaymentAccounts extends Model
 
         static::creating(function ($model) {
             $model->account_uuid = random_uuid('acc');
+
+            //YearWise Genertae Unique ID
+            $findModel = SalePaymentAccounts::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
         });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
     }
 
     //Fitler by branch - local scope

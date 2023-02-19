@@ -21,6 +21,15 @@ class DashboardController extends Controller
     public function dashboardIndex()
     {
 
+        // $model = Purchase::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+        // $year = date('Y');
+        // $sno  = 1;
+        // if ($year == $model->year) {
+        //     $sno = ($model->sno) + 1;
+        // }
+
+        // dd($model);
+
         $total_sales = self::totalSales();
         $total_registration = self::totalRtoRegistrations();
 

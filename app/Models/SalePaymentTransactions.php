@@ -12,6 +12,8 @@ class SalePaymentTransactions extends Model
     protected $table = 'sale_payment_transactions';
 
     protected $fillable = [
+        'sno',
+        'year',
         'sale_id',
         'sale_payment_account_id',
         'transaction_for',
@@ -29,6 +31,29 @@ class SalePaymentTransactions extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    protected $appends = ['serial_number'];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            //YearWise Genertae Unique ID
+            $findModel = SalePaymentTransactions::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
+        });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
+    }
 
     /**
      * MApping With Account

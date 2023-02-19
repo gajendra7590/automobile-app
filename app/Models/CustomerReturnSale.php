@@ -23,6 +23,8 @@ class CustomerReturnSale extends Model
 
     protected $fillable = [
         'id',
+        'sno',
+        'year',
         'sale_uuid',
         'branch_id',
         'purchase_id',
@@ -56,6 +58,7 @@ class CustomerReturnSale extends Model
         'status',
         'sp_account_id',
         'rto_account_id',
+        'sale_date',
         'created_by',
         'updated_by'
     ];

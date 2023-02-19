@@ -13,6 +13,8 @@ class PurchaseTransfer extends Model
     protected $table = "purchase_transfers";
 
     protected $fillable = [
+        'sno',
+        'year',
         'purchase_id',
         'broker_id',
         'transfer_date',
@@ -29,6 +31,30 @@ class PurchaseTransfer extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    protected $appends = ['serial_number'];
+
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            //YearWise Genertae Unique ID
+            $findModel = PurchaseTransfer::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
+        });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
+    }
 
     public function broker()
     {

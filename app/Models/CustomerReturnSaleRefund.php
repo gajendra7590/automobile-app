@@ -11,6 +11,8 @@ class CustomerReturnSaleRefund extends Model
     protected $table = 'customer_return_sale_refunds';
 
     protected $fillable = [
+        'sno',
+        'year',
         'sale_id',
         'sale_account_id',
         'amount_refund',
@@ -23,4 +25,27 @@ class CustomerReturnSaleRefund extends Model
     protected $hidden = [];
 
     protected $casts = [];
+
+    protected $appends = ['serial_number'];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            //YearWise Genertae Unique ID
+            $findModel = CustomerReturnSale::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
+        });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
+    }
 }

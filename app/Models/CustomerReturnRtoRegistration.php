@@ -18,6 +18,8 @@ class CustomerReturnRtoRegistration extends Model
 
     protected $fillable = [
         'id',
+        'sno',
+        'year',
         'sale_id',
         'rto_agent_id',
         'contact_name',

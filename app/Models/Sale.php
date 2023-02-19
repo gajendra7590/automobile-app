@@ -16,9 +16,11 @@ class Sale extends Model
 
     protected $table = 'sales';
 
-    protected $appends = ['cust_name'];
+    protected $appends = ['cust_name', 'serial_number'];
 
     protected $fillable = [
+        'sno',
+        'year',
         'sale_uuid',
         'branch_id',
         'purchase_id',
@@ -53,13 +55,34 @@ class Sale extends Model
         'created_by',
         'updated_by',
         'sp_account_id',
-        'rto_account_id'
+        'rto_account_id',
+        'sale_date'
     ];
 
     protected $hidden = [];
 
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            //YearWise Genertae Unique ID
+            $findModel = Sale::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
+        });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
+    }
 
     public function getFullNameAttribute()
     {

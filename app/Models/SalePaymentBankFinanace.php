@@ -12,6 +12,8 @@ class SalePaymentBankFinanace extends Model
     protected $table = 'sale_payment_bank_finanace';
 
     protected $fillable = [
+        'sno',
+        'year',
         'sale_id',
         'sale_payment_account_id',
         'payment_name',
@@ -32,9 +34,23 @@ class SalePaymentBankFinanace extends Model
 
     protected $casts = [];
 
+    protected $appends = ['serial_number'];
+
     public static function boot()
     {
         parent::boot();
+
+        self::creating(function ($model) {
+            //YearWise Genertae Unique ID
+            $findModel = SalePaymentBankFinanace::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
+            $year = date('Y');
+            $sno  = 1;
+            if ($year == $findModel->year) {
+                $sno = ($findModel->sno) + 1;
+            }
+            $model->year = $year;
+            $model->sno = $sno;
+        });
 
         self::saved(function ($model) {
             updateDuesOrPaidBalance($model->sale_payment_account_id);
@@ -51,6 +67,11 @@ class SalePaymentBankFinanace extends Model
         self::deleted(function ($model) {
             updateDuesOrPaidBalance($model->sale_payment_account_id);
         });
+    }
+
+    public function getSerialNumberAttribute()
+    {
+        return $this->year . '/' . $this->sno;
     }
 
     /**
