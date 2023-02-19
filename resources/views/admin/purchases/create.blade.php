@@ -117,7 +117,7 @@
                                 <select name="bike_model" data-dep_dd_name="bike_model_variant"
                                     data-dep_dd2_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $isSoldOut }}>
+                                    class="form-control ajaxChangeCDropDown commonSelect2" {{ $isSoldOut }}>
                                     <option value="">---Select Model---</option>
                                     @if (isset($models))
                                         @foreach ($models as $key => $model)
@@ -172,7 +172,7 @@
                                     @if (isset($bike_types))
                                         @foreach ($bike_types as $key => $name)
                                             <option
-                                                {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : (strtolower($key) == 'bike' ? 'selected' : '') }}
+                                                {{ isset($data->bike_type) && $data->bike_type == $key ? 'selected="selected"' : (strtolower($key) == 'motorcycle' ? 'selected' : '') }}
                                                 value="{{ $key }}">{{ $name }}</option>
                                         @endforeach
                                     @endif

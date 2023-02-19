@@ -93,7 +93,7 @@
                  </a>
              </span>
          </label>
-         <select name="customer_city" class="form-control"
+         <select name="customer_city" class="form-control commonSelect2"
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="">---Select City/Village----</option>
              @isset($cities)
@@ -407,3 +407,8 @@
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
+ <script>
+     $(".commonSelect2").select2({
+         placeholder: "Select an option",
+     });
+ </script>

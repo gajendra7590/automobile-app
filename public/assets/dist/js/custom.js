@@ -332,3 +332,7 @@ $(document).on("change", ".ajaxDtFilter", function () {
     let value = $(this).val();
     tableObj.column(col_index).search(value).draw();
 });
+
+$(".commonSelect2").select2({
+    placeholder: "Select an option",
+});

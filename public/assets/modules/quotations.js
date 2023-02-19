@@ -200,7 +200,6 @@ $(document).ready(function () {
             },
             bike_brand: {
                 required: true,
-                minlength: 17,
             },
             bike_model: {
                 required: true,

@@ -185,7 +185,7 @@
                                             </a>
                                         </span>
                                     </label>
-                                    <select name="customer_city" class="form-control" {{ $isClosed }}>
+                                    <select name="customer_city" class="form-control commonSelect2" {{ $isClosed }}>
                                         <option value="">---Select City/Village----</option>
                                         @isset($cities)
                                             @foreach ($cities as $city)
@@ -310,10 +310,11 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>MODEL NAME</label>
+                                    <br />
                                     <select name="bike_model" data-dep_dd_name="bike_model_variant"
                                         data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
-                                        data-dep_dd2_name="bike_color" class="form-control ajaxChangeCDropDown"
-                                        {{ $isClosed }}>
+                                        data-dep_dd2_name="bike_color"
+                                        class="form-control ajaxChangeCDropDown commonSelect2" {{ $isClosed }}>
                                         <option value="">---Select Model----</option>
                                         @isset($models)
                                             @foreach ($models as $model)
@@ -443,4 +444,12 @@
 
 @push('after-script')
     <script src="{{ asset('assets/modules/quotations.js') }}"></script>
+@endpush
+
+@push('after-css')
+    <style>
+        .select2-selection {
+            width: 170%;
+        }
+    </style>
 @endpush

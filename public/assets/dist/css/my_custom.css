@@ -8,7 +8,7 @@
     float: right;
 }
 
-.hideElement{
+.hideElement {
     display: none !important;
 }
 
@@ -16,24 +16,23 @@
     width: 100% !important;
 }
 
-
 /* The switch - the box around the slider */
 .switch {
     position: relative;
     display: inline-block;
     width: 40px;
     height: 22px;
-  }
+}
 
-  /* Hide default HTML checkbox */
-  .switch input {
+/* Hide default HTML checkbox */
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
 
-  /* The slider */
-  .slider {
+/* The slider */
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -41,11 +40,11 @@
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
 
-  .slider:before {
+.slider:before {
     position: absolute;
     content: "";
     height: 18px;
@@ -53,115 +52,118 @@
     left: 3px;
     bottom: 3px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
 
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
+input:checked + .slider {
+    background-color: #2196f3;
+}
 
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196f3;
+}
 
-  input:checked + .slider:before {
+input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
-  }
+}
 
-  /* Rounded sliders */
-  .slider.round {
+/* Rounded sliders */
+.slider.round {
     border-radius: 22px;
-  }
+}
 
-  .slider.round:before {
+.slider.round:before {
     border-radius: 50%;
-  }
+}
 
+/* FORM VALIDATION */
+input.error {
+    border-color: red;
+}
 
-  /* FORM VALIDATION */
-  input.error {
-      border-color: red;
-  }
+.ajaxFormSubmit .form-group label,
+.ajaxForm .form-group label {
+    text-transform: uppercase !important;
+}
 
-  .ajaxFormSubmit .form-group label,.ajaxForm .form-group label {
-      text-transform: uppercase !important;
-  }
+.ajaxFormSubmit .form-group label.error,
+.ajaxForm .form-group label.error {
+    text-transform: none !important;
+    color: red;
+    font-size: 12px;
+    border: red;
+}
 
-  .ajaxFormSubmit .form-group label.error,.ajaxForm .form-group label.error {
-      text-transform : none !important;
-      color: red;
-      font-size: 12px;
-      border: red;
-  }
+.ajaxFormSubmit .form-group label.error,
+.ajaxForm .form-group label.error {
+    text-transform: none !important;
+    color: red;
+    font-size: 12px;
+}
 
-   .ajaxFormSubmit .form-group label.error,
-   .ajaxForm .form-group label.error {
-       text-transform: none !important;
-       color: red;
-       font-size: 12px;
-   }
+label.required:after {
+    content: "*";
+    color: red;
+    font-size: 18px;
+    /* padding-left: 3px; */
+}
 
-  label.required:after {
-      content: "*";
-      color: red;
-      font-size: 18px;
-      /* padding-left: 3px; */
-  }
-
- .myCustomTable thead {
+.myCustomTable thead {
     background: #3c8dbc !important;
     color: #fff !important;
- }
+}
 
- .myCustomTable tfoot {
+.myCustomTable tfoot {
     background: #b9b3a9 !important;
     color: #fffffffa !important;
- }
+}
 
- h3.box-title, .content-header small, .breadcrumb li,.content-header h1 {
-     text-transform: uppercase;
- }
+h3.box-title,
+.content-header small,
+.breadcrumb li,
+.content-header h1 {
+    text-transform: uppercase;
+}
 
- table#ajaxDataTable thead tr th {
-     text-transform: uppercase;
- }
+table#ajaxDataTable thead tr th {
+    text-transform: uppercase;
+}
 
- .custom-fitler-container {
+.custom-fitler-container {
     padding-right: 4px;
- }
+}
 
- .filter-options {
-     padding-right: 9px;
- }
+.filter-options {
+    padding-right: 9px;
+}
 
- .filter-options input,.filter-options select {
+.filter-options input,
+.filter-options select {
     height: 29px !important;
- }
+}
 
- .filter-options .cust_col {
+.filter-options .cust_col {
     padding-left: 0px !important;
- }
+}
 
- .dumyContent {
-     min-height: 200px;
-     text-align: center;
-     margin-top: 59px;
-     color: #3c8dbc;
-     font-size: 18px;
- }
+.dumyContent {
+    min-height: 200px;
+    text-align: center;
+    margin-top: 59px;
+    color: #3c8dbc;
+    font-size: 18px;
+}
 
- p.account_status_note {
-     margin-top: 12px;
-     font-size: 16px;
-     color: #2c5fc6;
-     margin-left: 2px;
- }
+p.account_status_note {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #2c5fc6;
+    margin-left: 2px;
+}
 
-
- .disabledBtn {
+.disabledBtn {
     pointer-events: none;
- }
-
+}

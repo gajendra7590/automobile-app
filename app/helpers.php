@@ -32,7 +32,7 @@ if (!function_exists('bike_types')) {
     function bike_types()
     {
         return [
-            'Bike' => "Bike",
+            'Motorcycle' => "Motorcycle",
             'Scooter' => "Scooter"
         ];
     }
