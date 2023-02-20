@@ -24,7 +24,7 @@ class UpdateNonEditableInfoController extends Controller
             'quotaions' => 'Quotaions',
             'purchases' => 'Purchases',
             'sales' => 'Sales',
-            'rto_registration' => 'RTO Registration'
+            // 'rto_registration' => 'RTO Registration'
         ];
         $data = array(
             'method' => 'POST',
@@ -45,20 +45,51 @@ class UpdateNonEditableInfoController extends Controller
         $data = array();
         switch (request('document_type')) {
             case 'quotaions':
-                $data['data'] = Quotation::find(request('model_id'));
+                $modal = Quotation::find(request('model_id'));
+                $data['data'] = $modal;
+                $data['branches'] = self::_getBranchById($modal->branch_id);
                 $data['salesmans'] = self::_getSalesman();
                 $data['states'] = self::_getStates();
                 $data['districts'] = self::_getDistricts();
                 $data['cities'] = self::_getCities();
+                $data['request_type'] = 'quotaions';
+                $data['hyp_financer'] = self::_getFinaceirs($modal->payment_type);
+
+                $data['brands'] = self::_getBrandById($modal->bike_brand);
+                $data['models'] = self::_getModelById($modal->bike_model);
+                $data['variants'] = self::_getVaraintById($modal->bike_model_variant);
+                $data['colors'] = self::_getColorById($modal->bike_color);
+
                 break;
             case 'purchases':
-                # code...
+                $modal = Purchase::find(request('model_id'));
+                $data['data'] = $modal;
+                $data['vin_physical_statuses'] = vin_physical_statuses();
+                $data['battery_brands'] = self::_getBatteryBrands();
+                $data['tyre_brands'] = self::_getTyreBrands();
+                $data['request_type'] = 'purchases';
+                $data['branches'] = self::_getBranchById($modal->bike_branch);
+                $data['dealers'] = self::_getDealerById($modal->bike_dealer);
+                $data['brands'] = self::_getBrandById($modal->bike_brand);
+                $data['models'] = self::_getModelById($modal->bike_model);
+                $data['variants'] = self::_getVaraintById($modal->bike_model_variant);
+                $data['colors'] = self::_getColorById($modal->bike_model_color);
+                $data['bike_types'] = bike_types();
+                $data['bike_fuel_types'] = bike_fuel_types();
                 break;
             case 'sales':
-                # code...
+                $modal = Sale::find(request('model_id'));
+                $data['data'] = $modal;
+                $data['branches'] = self::_getBranchById($modal->branch_id);
+                $data['salesmans'] = self::_getSalesman();
+                $data['states'] = self::_getStates();
+                $data['districts'] = self::_getDistricts();
+                $data['cities'] = self::_getCities();
+                $data['hyp_financer'] = self::_getFinaceirs($modal->payment_type);
+                $data['request_type'] = 'sales';
                 break;
             case 'rto_registration':
-                # code...
+                $data['request_type'] = 'rto_registration';
                 break;
             default:
                 # code...

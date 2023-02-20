@@ -148,6 +148,20 @@ trait CommonHelper
     }
 
     /**
+     * Get One Brand By Id
+     */
+    public static function _getBrandById($brand_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeBrand::select('id', 'name');
+        } else {
+            $model =  BikeBrand::select('*');
+        }
+        return $model->where('id', $brand_id)->get();
+    }
+
+    /**
      * Get All Models
      */
     public static function _getModels($brand_id = 0, $select_all = false)
@@ -187,6 +201,20 @@ trait CommonHelper
     }
 
     /**
+     * Get One Model By Id
+     */
+    public static function _getModelById($model_id, $select_all = false)
+    {
+        $model = null;
+        if ($select_all == false) {
+            $model = BikeModel::select('id', 'model_name', 'variant_code');
+        } else {
+            $model =  BikeModel::select('*');
+        }
+        return $model->where('id', $model_id)->get();
+    }
+
+    /**
      * Get All Variants
      */
     public static function _getVaraints($model_id, $select_all = false)
@@ -200,15 +228,15 @@ trait CommonHelper
     }
 
     /**
-     * Get One Variant
+     * Get One Variant By Id
      */
     public static function _getVaraintById($varId, $select_all = false)
     {
         $model = null;
         if ($select_all == false) {
-            $model = BikeModel::select('id', 'model_id', 'variant_name');
+            $model = BikeModelVariant::select('id', 'model_id', 'variant_name');
         } else {
-            $model =  BikeModel::select('*');
+            $model =  BikeModelVariant::select('*');
         }
         return $model->where('id', $varId)->get();
     }
@@ -226,7 +254,7 @@ trait CommonHelper
     }
 
     /**
-     * Get One Colors
+     * Get One Colors By Id
      */
     public static function _getColorById($color_id, $select_all = false)
     {

@@ -70,7 +70,9 @@ $(document).ready(function () {
 
         URL = URL + "?document_type=" + document_type + "&model_id=" + model_id;
         $("#ajaxModalSize").addClass("modal-lg");
-        $(".ajaxModalTitle").html("UPDATE INFO");
+        $(".ajaxModalTitle").html(
+            "UPDATE INFO - " + document_type.toUpperCase()
+        );
         $(".ajaxModalBody").attr("tabindex", 1);
 
         $(".ajaxModalBody").html(
