@@ -6,11 +6,13 @@ use App\Models\Purchase;
 use App\Models\Quotation;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
+use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UpdateNonEditableInfoController extends Controller
 {
+    use CommonHelper;
     /**
      * Display a listing of the resource.
      *
@@ -41,9 +43,13 @@ class UpdateNonEditableInfoController extends Controller
     {
         $postData = $request->all();
         $data = array();
-        switch ($postData['document_type']) {
+        switch (request('document_type')) {
             case 'quotaions':
-                # code...
+                $data['data'] = Quotation::find(request('model_id'));
+                $data['salesmans'] = self::_getSalesman();
+                $data['states'] = self::_getStates();
+                $data['districts'] = self::_getDistricts();
+                $data['cities'] = self::_getCities();
                 break;
             case 'purchases':
                 # code...
@@ -65,7 +71,8 @@ class UpdateNonEditableInfoController extends Controller
             'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view(
                 'admin.updateNotEditableInfo.ajax.' . $postData['document_type'],
-                ['action' => route('updateNonEditableDetail.store'), 'data' => $data]
+                ['action' => route('updateNonEditableDetail.store')],
+                $data
             )->render()
         ]);
     }
@@ -78,7 +85,64 @@ class UpdateNonEditableInfoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $postData = $request->all();
+            $status = false;
+            if (request('type')) {
+                switch (request('type')) {
+                    case 'quotaions':
+                        $qModel = Quotation::find(request('id'));
+                        if ($qModel) {
+                            unset($postData['id']);
+                            unset($postData['type']);
+                            $qModel->update($postData);
+                            $status = true;
+                        }
+                        break;
+                    case 'purchases':
+                        $qModel = Purchase::find(request('id'));
+                        if ($qModel) {
+                            unset($postData['id']);
+                            unset($postData['type']);
+                            $qModel->update($postData);
+                            $status = true;
+                        }
+                        break;
+                    case 'sales':
+                        $qModel = Sale::find(request('id'));
+                        if ($qModel) {
+                            unset($postData['id']);
+                            unset($postData['type']);
+                            $qModel->update($postData);
+                            $status = true;
+                        }
+                        break;
+                    case 'rto_registration':
+                        $qModel = RtoRegistration::find(request('id'));
+                        if ($qModel) {
+                            unset($postData['id']);
+                            unset($postData['type']);
+                            $qModel->update($postData);
+                            $status = true;
+                        }
+                        break;
+                }
+            }
+
+            //IF Status Success
+            if ($status == true) {
+                return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
+            } else {
+                return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.update_error'),], 419);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**

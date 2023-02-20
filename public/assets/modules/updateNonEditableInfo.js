@@ -88,4 +88,38 @@ $(document).ready(function () {
 
         //AJAX
     });
+
+    /**
+     * Function for update single input common submit
+     */
+    $(document).on("click", ".updateFormInfo", function (e) {
+        e.preventDefault();
+        let field_name = $(this).data("field_name");
+        let input_type = $(this).data("input_type");
+        let field_value = "";
+        if (input_type == "select") {
+            field_value = $(
+                "select[name='" + field_name + "'] option:selected"
+            ).val();
+        } else {
+            field_value = $("input[name='" + field_name + "']").val();
+        }
+        let URL = $("input[name='url']").val();
+        let id = $("input[name='id']").val();
+        let type = $("input[name='type']").val();
+
+        let fd = new FormData();
+        fd.append("id", id);
+        fd.append("type", type);
+        fd.append(field_name, field_value);
+
+        CRUD.AJAXSUBMIT(URL, "POST", fd).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                //$("#ajaxModalCommon").modal("hide");
+            } else {
+                //toastr.error("Something went wrong");
+                // to do
+            }
+        });
+    });
 });
