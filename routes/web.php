@@ -196,6 +196,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('updateNonEditableDetail', 'UpdateNonEditableInfoController');
     Route::get('getDocumentTypeAjaxSelect2Data', 'UpdateNonEditableInfoController@getDocumentTypeData')->name('getDocumentTypeAjaxSelect2Data');
 
+    //bulk upload purchases
+    Route::resource('bulkUploadPurchases', 'BulkUploadPurchaseController');
+
+    //Plus Button City Create
     Route::post('cityStore', 'PlusActionController@cityStore')->name('cityStore');
 });
 
