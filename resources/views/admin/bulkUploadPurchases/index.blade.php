@@ -58,7 +58,7 @@
                         <div class="box-footer">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <a class="btn btn-danger" href="{{ route('documentUploads.index') }}">BACK</a>
+                                    {{-- <a class="btn btn-danger" href="{{ route('documentUploads.index') }}">BACK</a> --}}
                                     <button class="btn btn-primary pull-right" type="submit">UPLOAD</button>
                                 </div>
                             </div>
