@@ -93,17 +93,19 @@
                  </a>
              </span>
          </label>
-         <select name="customer_city" class="form-control commonSelect2"
-             {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
-             <option value="">---Select City/Village----</option>
-             @isset($cities)
-                 @foreach ($cities as $city)
-                     <option
-                         {{ isset($data['customer_city']) && $data['customer_city'] == $city->id ? 'selected="selected"' : '' }}
-                         value="{{ $city->id }}">{{ $city->city_name }}</option>
-                 @endforeach
-             @endisset
-         </select>
+         <div class="input-group col-sm-12">
+             <select name="customer_city" class="form-control commonSelect2" style="width: 100%"
+                 {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
+                 <option value="">---Select City/Village----</option>
+                 @isset($cities)
+                     @foreach ($cities as $city)
+                         <option
+                             {{ isset($data['customer_city']) && $data['customer_city'] == $city->id ? 'selected="selected"' : '' }}
+                             value="{{ $city->id }}">{{ $city->city_name }}</option>
+                     @endforeach
+                 @endisset
+             </select>
+         </div>
      </div>
      <div class="form-group col-md-3">
          <label>ZIPCODE</label>

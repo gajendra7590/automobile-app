@@ -59,6 +59,13 @@
     $(".ajaxFormSubmit").validate({
         // errorElement: 'span',
         // errorClass: 'text-muted error',
+        errorPlacement: function(error, element) {
+            if (element.parent(".input-group").length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
         rules: {
             sale_id: {
                 required: true,

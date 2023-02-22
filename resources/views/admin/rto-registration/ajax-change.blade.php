@@ -56,16 +56,18 @@
     </div>
     <div class="form-group col-md-3">
         <label>Contact City</label>
-        <select name="contact_city_id" class="form-control" {{ $editDisable }}>
-            <option value="">---Select City---</option>
-            @if (isset($cities))
-                @foreach ($cities as $key => $city)
-                    <option
-                        {{ isset($data['contact_city_id']) && $data['contact_city_id'] == $city->id ? 'selected="selected"' : '' }}
-                        value="{{ $city->id }}">{{ $city->city_name }}</option>
-                @endforeach
-            @endif
-        </select>
+        <div class="input-group col-sm-12">
+            <select name="contact_city_id" class="form-control commonSelect2" style="width:100%" {{ $editDisable }}>
+                <option value="">---Select City---</option>
+                @if (isset($cities))
+                    @foreach ($cities as $key => $city)
+                        <option
+                            {{ isset($data['contact_city_id']) && $data['contact_city_id'] == $city->id ? 'selected="selected"' : '' }}
+                            value="{{ $city->id }}">{{ $city->city_name }}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
     </div>
     <div class="form-group col-md-3">
         <label>Contact Zipcode</label>
@@ -202,3 +204,9 @@
             placeholder="Customer Given Note" />
     </div>
 </div>
+
+<script>
+    $(".commonSelect2").select2({
+        placeholder: "Select an option",
+    });
+</script>

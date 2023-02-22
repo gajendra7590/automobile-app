@@ -185,16 +185,19 @@
                                             </a>
                                         </span>
                                     </label>
-                                    <select name="customer_city" class="form-control commonSelect2" {{ $isClosed }}>
-                                        <option value="">---Select City/Village----</option>
-                                        @isset($cities)
-                                            @foreach ($cities as $city)
-                                                <option
-                                                    {{ isset($data['customer_city']) && $data['customer_city'] == $city->id ? 'selected="selected"' : '' }}
-                                                    value="{{ $city->id }}">{{ $city->city_name }}</option>
-                                            @endforeach
-                                        @endisset
-                                    </select>
+                                    <div class="input-group col-sm-12">
+                                        <select name="customer_city" class="form-control commonSelect2"
+                                            style="width: 100%" {{ $isClosed }}>
+                                            <option value="">---Select City/Village----</option>
+                                            @isset($cities)
+                                                @foreach ($cities as $city)
+                                                    <option
+                                                        {{ isset($data['customer_city']) && $data['customer_city'] == $city->id ? 'selected="selected"' : '' }}
+                                                        value="{{ $city->id }}">{{ $city->city_name }}</option>
+                                                @endforeach
+                                            @endisset
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>ZIPCODE</label>
@@ -311,19 +314,21 @@
                                 <div class="form-group col-md-3">
                                     <label>MODEL NAME</label>
                                     <br />
-                                    <select name="bike_model" data-dep_dd_name="bike_model_variant"
-                                        data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
-                                        data-dep_dd2_name="bike_color"
-                                        class="form-control ajaxChangeCDropDown commonSelect2" {{ $isClosed }}>
-                                        <option value="">---Select Model----</option>
-                                        @isset($models)
-                                            @foreach ($models as $model)
-                                                <option
-                                                    {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected' : '' }}
-                                                    value="{{ $model->id }}">{{ $model->model_name }}</option>
-                                            @endforeach
-                                        @endisset
-                                    </select>
+                                    <div class="input-group col-sm-12">
+                                        <select name="bike_model" data-dep_dd_name="bike_model_variant"
+                                            style="width:100%;" data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
+                                            data-dep_dd2_name="bike_color"
+                                            class="form-control ajaxChangeCDropDown commonSelect2" {{ $isClosed }}>
+                                            <option value="">---Select Model----</option>
+                                            @isset($models)
+                                                @foreach ($models as $model)
+                                                    <option
+                                                        {{ isset($data['bike_model']) && $data['bike_model'] == $model->id ? 'selected' : '' }}
+                                                        value="{{ $model->id }}">{{ $model->model_name }}</option>
+                                                @endforeach
+                                            @endisset
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label>MODEL VARIANT NAME</label>
@@ -405,14 +410,14 @@
 
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>PURCHASE VISIT DATE</label>
+                                    <label>QUOTATIONS DATE</label>
                                     <input name="purchase_visit_date" type="date" class="form-control"
                                         {{ isset($is_readonly) && $is_readonly ? $is_readonly : '' }}
                                         value="{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : date('Y-m-d') }}"
                                         placeholder="0000-00-00" {{ $isClosed }}>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>PURCHASE ESTIMATED DATE</label>
+                                    <label>DELIVERY DATE</label>
                                     <input name="purchase_est_date" type="date" class="form-control"
                                         value="{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : date('Y-m-d', strtotime('+1 month')) }}"
                                         placeholder="0000-00-00" {{ $isClosed }}>
@@ -448,8 +453,6 @@
 
 @push('after-css')
     <style>
-        .select2-selection {
-            width: 170%;
-        }
+
     </style>
 @endpush
