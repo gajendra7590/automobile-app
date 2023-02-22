@@ -181,41 +181,38 @@
      </div>
  </div>
  <div class="row">
-     <div class="form-group col-md-3">
+     <div class="form-group col-md-2">
          <label>VEHICLE TYPE</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['bike_type']) ? $purchaseModel['bike_type'] : '' }}" disabled />
      </div>
-     <div class="form-group col-md-3">
+     <div class="form-group col-md-2">
          <label>FUEL TYPE</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['bike_fuel_type']) ? $purchaseModel['bike_fuel_type'] : '' }}" disabled />
      </div>
-     <div class="form-group col-md-3">
+     {{-- <div class="form-group col-md-3">
          <label>BREAK TYPE</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['break_type']) ? $purchaseModel['break_type'] : '' }}" disabled />
-     </div>
-     <div class="form-group col-md-3">
+     </div> --}}
+     {{-- <div class="form-group col-md-3">
          <label>WHEAL TYPE</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['wheel_type']) ? $purchaseModel['wheel_type'] : '' }}" disabled />
-     </div>
- </div>
-
- <div class="row">
-     <div class="form-group col-md-4">
+     </div> --}}
+     <div class="form-group col-md-3">
          <label>VIN NUMBER(CHASIS NUMBER)</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['vin_number']) ? $purchaseModel['vin_number'] : '' }}" disabled />
      </div>
-     <div class="form-group col-md-4">
+     <div class="form-group col-md-2">
          <label>VIN PHYSICAL STATUS</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['vin_physical_status']) ? $purchaseModel['vin_physical_status'] : '' }}"
              disabled />
      </div>
-     <div class="form-group col-md-4">
+     <div class="form-group col-md-3">
          <label>VARIANT CODE</label>
          <input type="text" class="form-control"
              value="{{ isset($purchaseModel['variants']['variant_name']) ? $purchaseModel['variants']['variant_name'] : '' }}"

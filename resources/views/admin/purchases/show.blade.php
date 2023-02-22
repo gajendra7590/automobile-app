@@ -38,12 +38,12 @@
         <td>{{ isset($data['bike_type']) ? $data['bike_type'] : '--' }}</td>
         <th>FUEL TYPE</th>
         <td>{{ isset($data['bike_fuel_type']) ? $data['bike_fuel_type'] : '--' }}</td>
-        <th>BREAK TYPE</th>
-        <td>{{ isset($data['break_type']) ? $data['break_type'] : '--' }}</td>
+        {{-- <th>BREAK TYPE</th>
+        <td>{{ isset($data['break_type']) ? $data['break_type'] : '--' }}</td> --}}
     </tr>
     <tr>
-        <th>BIKE TYPE</th>
-        <td>{{ isset($data['wheel_type']) ? $data['wheel_type'] : '--' }}</td>
+        {{-- <th>BIKE TYPE</th>
+        <td>{{ isset($data['wheel_type']) ? $data['wheel_type'] : '--' }}</td> --}}
         <th>DC NUMBER</th>
         <td>{{ isset($data['dc_number']) ? $data['dc_number'] : '--' }}</td>
         <th>DC DATE</th>

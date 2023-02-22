@@ -132,7 +132,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label class="required">MODEL VARIANT</label>
                                 <select name="bike_model_variant" data-dep_dd_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
@@ -149,7 +149,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label class="required">VARIANT COLOR</label>
                                 <select name="bike_model_color" class="form-control" {{ $isSoldOut }}
                                     {{ $isSoldOut }}>
@@ -165,7 +165,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label class="required">VEHICLE TYPE</label>
                                 <select name="bike_type" class="form-control" {{ $isSoldOut }} {{ $isSoldOut }}>
                                     <option value="">Select Vehicle Type</option>
@@ -178,7 +178,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label class="required">FUEL TYPE</label>
                                 <select name="bike_fuel_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">Select Fuel Type</option>
@@ -191,7 +191,7 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group col-md-2">
+                            {{-- <div class="form-group col-md-2">
                                 <label class="required">BREAK TYPE</label>
                                 <select name="break_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">---Select Break Type---</option>
@@ -203,8 +203,8 @@
                                         @endforeach
                                     @endif
                                 </select>
-                            </div>
-                            <div class="form-group col-md-2">
+                            </div> --}}
+                            {{-- <div class="form-group col-md-2">
                                 <label class="required">WHEAL TYPE</label>
                                 <select name="wheel_type" class="form-control" {{ $isSoldOut }}>
                                     <option value="">---Select Wheal Type---</option>
@@ -216,7 +216,7 @@
                                         @endforeach
                                     @endif
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="row">
@@ -242,7 +242,8 @@
                             <div class="form-group col-md-3">
                                 <label class="required">HSN NUMBER</label>
                                 <input type="text" class="form-control" {{ $isSoldOut }} placeholder="HSN Number"
-                                    name="hsn_number" value="{{ isset($data->hsn_number) ? $data->hsn_number : '' }}" />
+                                    name="hsn_number"
+                                    value="{{ isset($data->hsn_number) ? $data->hsn_number : '87112029' }}" />
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="required">ENGINE NUMBER</label>
