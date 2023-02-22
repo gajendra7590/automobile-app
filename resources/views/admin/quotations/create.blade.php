@@ -251,15 +251,15 @@
                                         {{ isset($data['sp_account_id']) && $data['sp_account_id'] > 0 ? 'disabled' : '' }}>
                                         <option value="1"
                                             {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
-                                            By Cash
+                                            Cash / Credit
                                         </option>
                                         <option value="2"
                                             {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
-                                            Bank Finance
+                                            Finance
                                         </option>
                                         <option value="3"
                                             {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
-                                            Personal Finance
+                                            Private Finance
                                         </option>
                                     </select>
                                 </div>

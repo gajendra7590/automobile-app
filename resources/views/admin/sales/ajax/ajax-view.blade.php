@@ -116,17 +116,17 @@
  </div>
  <div class="row">
      <div class="form-group col-md-4">
-         <label>CUSTOMER PHONE NUMBER</label>
+         <label>MOBILE NUMBER</label>
          <input name="customer_mobile_number" type="text" class="form-control"
              value="{{ isset($data['customer_mobile_number']) ? $data['customer_mobile_number'] : '' }}"
-             placeholder="Customer Phone.."
+             placeholder="MOBILE NUMBER.."
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
-         <label>CUSTOMER ALTERNATE PHONE NUMBER</label>
+         <label>ALTERNATE MOBILE NUMBER</label>
          <input name="customer_mobile_number_alt" type="text" class="form-control"
              value="{{ isset($data['customer_mobile_number_alt']) ? $data['customer_mobile_number_alt'] : '' }}"
-             placeholder="Customer Alternate Phone.."
+             placeholder="ALTERNATE MOBILE NUMBER.."
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-4">
@@ -139,17 +139,17 @@
  </div>
  <div class="row">
      <div class="form-group col-md-6">
-         <label>WITNESS PERSON NAME</label>
+         <label>REFERENCE NAME</label>
          <input name="witness_person_name" type="text" class="form-control"
              value="{{ isset($data['witness_person_name']) ? $data['witness_person_name'] : '' }}"
-             placeholder="Witness Person Name.."
+             placeholder="REFERENCE NAME.."
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
      <div class="form-group col-md-6">
-         <label>WITNESS PERSON PHONE NUMBER</label>
+         <label>REFERENCE MOBILE NUMBER</label>
          <input name="witness_person_phone" type="text" class="form-control"
              value="{{ isset($data['witness_person_phone']) ? $data['witness_person_phone'] : '' }}"
-             placeholder="Witness Person Phone.."
+             placeholder="REFERENCE MOBILE NUMBER.."
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
      </div>
  </div>
@@ -320,21 +320,21 @@
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="1"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
-                 By Cash
+                 Cash / Credit
              </option>
              {{-- @if (isset($data['id'])) --}}
              <option value="2"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
-                 Bank Finance
+                 Finance
              </option>
              <option value="3"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
-                 Personal Finance
+                 Private Finance
              </option>
              {{-- @endif --}}
          </select>
      </div>
-     <div class="form-group col-md-6">
+     <div class="form-group col-md-3">
          <label>HYPOTHECATION FINANCER</label>
          <select name="hyp_financer" class="form-control"
              {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
@@ -348,6 +348,11 @@
                  @endforeach
              @endisset
          </select>
+     </div>
+     <div class="form-group col-md-3">
+         <label>SALE DATE</label>
+         <input type="date" class="form-control" name="sale_date"
+             value="{{ isset($data['sale_date']) ? $data['sale_date'] : date('Y-m-d') }}" />
      </div>
  </div>
  <div class="row">

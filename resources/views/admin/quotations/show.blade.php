@@ -46,9 +46,9 @@
         </td>
     </tr>
     <tr>
-        <th>SHOWROOM VISIT DATE</th>
+        <th>QUOTATION DATE</th>
         <td>{{ isset($data['purchase_visit_date']) ? $data['purchase_visit_date'] : '--' }}</td>
-        <th>PURCHASE EST DATE</th>
+        <th>DELIVERY DATE</th>
         <td>{{ isset($data['purchase_est_date']) ? $data['purchase_est_date'] : '--' }}</td>
         <th>BRAND NAME</th>
         <td>{{ isset($data['brand']['name']) ? $data['brand']['name'] : '--' }}</td>

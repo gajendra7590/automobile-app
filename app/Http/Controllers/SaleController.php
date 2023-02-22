@@ -38,7 +38,7 @@ class SaleController extends Controller
             $postData = $request->all();
             $data = Sale::select('*')
                 ->branchWise()
-                ->select('id', 'branch_id', 'purchase_id', 'customer_name', 'total_amount', 'created_at', 'status', 'sp_account_id')
+                ->select('id', 'branch_id', 'purchase_id', 'customer_name', 'total_amount', 'sale_date', 'status', 'sp_account_id', 'created_at')
                 ->with([
                     'purchase',
                     'salesman' => function ($model) {
@@ -125,8 +125,8 @@ class SaleController extends Controller
                 ->addColumn('total_amount', function ($row) {
                     return '₹' . $row->total_amount;
                 })
-                ->addColumn('created_at', function ($row) {
-                    return date('Y-m-d', strtotime($row->created_at));
+                ->addColumn('sale_date', function ($row) {
+                    return date('Y-m-d', strtotime($row->sale_date));
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->status == 'open') {
@@ -137,7 +137,7 @@ class SaleController extends Controller
                 })
                 ->rawColumns([
                     'action', 'branch_name', 'broker_status', 'customer_name',
-                    'bike_detail', 'total_amount', 'created_at', 'status'
+                    'bike_detail', 'total_amount', 'sale_date', 'status'
                 ])
                 ->make(true);
         }
@@ -175,6 +175,7 @@ class SaleController extends Controller
             $data['purchases'] = self::_getInStockPurchases();
             $data['salesmans'] = self::_getSalesman();
         }
+
         return view('admin.sales.create', $data);
     }
 
@@ -219,7 +220,8 @@ class SaleController extends Controller
                     'hypothecation_amount',
                     'accessories_amount',
                     'other_charges',
-                    'total_amount'
+                    'total_amount',
+                    'sale_date'
                 );
                 $formValidationArr = [
                     'purchase_id' => 'required|exists:purchases,id',
@@ -249,7 +251,8 @@ class SaleController extends Controller
                     'hypothecation_amount' => 'required|numeric',
                     'accessories_amount' => 'required|numeric',
                     'other_charges' => 'required|numeric',
-                    'total_amount' => 'required|numeric'
+                    'total_amount' => 'required|numeric',
+                    'sale_date'  => 'required|date',
                 ];
                 if (isset($postData['payment_type']) && (in_array($postData['payment_type'], ['2', '3']))) {
                     $formValidationArr['hyp_financer'] = 'required|exists:bank_financers,id';
@@ -477,7 +480,8 @@ class SaleController extends Controller
                     'hypothecation_amount',
                     'accessories_amount',
                     'other_charges',
-                    'total_amount'
+                    'total_amount',
+                    'sale_date'
                 );
                 $formValidationArr = [
                     'purchase_id' => 'nullable|exists:purchases,id',
@@ -507,7 +511,8 @@ class SaleController extends Controller
                     'hypothecation_amount' => 'nullable|numeric',
                     'accessories_amount' => 'nullable|numeric',
                     'other_charges' => 'nullable|numeric',
-                    'total_amount' => 'nullable|numeric'
+                    'total_amount' => 'nullable|numeric',
+                    'sale_date'  => 'required|date',
                 ];
                 if (isset($postData['payment_type']) && (in_array($postData['payment_type'], ['2', '3']))) {
                     $formValidationArr['hyp_financer'] = 'nullable|exists:bank_financers,id';

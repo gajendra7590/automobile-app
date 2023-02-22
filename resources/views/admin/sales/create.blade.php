@@ -57,33 +57,44 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label>SELECT STOCK INVENTORY</label>
-                                <select id="purchase" name="purchase_id" class="form-control"
-                                    data-ajax_load="{{ route('ajaxLoadeView') }}"
-                                    {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
-                                    @if ($isEdit == false)
-                                        <option value="">---Select Purachse---</option>
-                                    @endif
-                                    @if (isset($purchases))
-                                        @foreach ($purchases as $key => $purchase)
-                                            <option
-                                                {{ isset($data['purchase_id']) && $data['purchase_id'] == $purchase->id ? 'selected="selected"' : '' }}
-                                                value="{{ $purchase->id }}">
+                                <div class="input-group col-sm-12">
+                                    <select id="purchase" name="purchase_id" class="form-control commonSelect2"
+                                        style="width: 100%;" data-ajax_load="{{ route('ajaxLoadeView') }}"
+                                        {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
+                                        @if ($isEdit == false)
+                                            <option value="">---Select Purachse---</option>
+                                        @endif
+                                        @if (isset($purchases))
+                                            @foreach ($purchases as $key => $purchase)
+                                                <option
+                                                    {{ isset($data['purchase_id']) && $data['purchase_id'] == $purchase->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $purchase->id }}">
 
-                                                @isset($purchase->vin_number)
-                                                    {{ $purchase->vin_number }} |
-                                                @endisset
+                                                    @isset($purchase->vin_number)
+                                                        {{ $purchase->vin_number }} |
+                                                    @endisset
 
-                                                @isset($purchase->engine_number)
-                                                    {{ $purchase->engine_number }} |
-                                                @endisset
-                                                @isset($purchase->model->model_name)
-                                                    {{ $purchase->model->model_name }}
-                                                @endisset
+                                                    @isset($purchase->engine_number)
+                                                        {{ $purchase->engine_number }} |
+                                                    @endisset
 
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                                                    @isset($purchase->model->model_name)
+                                                        {{ $purchase->model->model_name }} |
+                                                    @endisset
+
+                                                    @isset($purchase->sku)
+                                                        {{ $purchase->sku }} |
+                                                    @endisset
+
+                                                    @isset($purchase->created_at)
+                                                        {{ date('Y-m-d', strtotime($purchase->created_at)) }}
+                                                    @endisset
+
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>SALESMAN NAME</label>

@@ -82,7 +82,7 @@
                                         <th width="15%">BRAND & MODEL</th>
                                         <th width="12%">PAY TYPE</th>
                                         <th width="12%">TOTAL AMOUNT</th>
-                                        <th>VISIT DATE</th>
+                                        <th>QUOTATIONS DATE</th>
                                         <th width="4%">STATUS</th>
                                         <th width="5%">ACTION</th>
                                     </tr>

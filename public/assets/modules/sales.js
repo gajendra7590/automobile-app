@@ -68,8 +68,8 @@ $(document).ready(function () {
                     name: "total_amount",
                 },
                 {
-                    data: "created_at",
-                    name: "created_at",
+                    data: "sale_date",
+                    name: "sale_date",
                 },
                 {
                     data: "status",
@@ -281,6 +281,10 @@ $(document).ready(function () {
                 required: true,
                 number: true,
             },
+            sale_date: {
+                required: true,
+                date: true,
+            },
         },
         messages: {
             branch_id: {
@@ -311,27 +315,27 @@ $(document).ready(function () {
                 maxlength: "the zipcode should valid 6 digits",
             },
             customer_mobile_number: {
-                required: "The phone field is required.",
-                digits: "the phone should valid 10 digits",
-                minlength: "the phone should valid 10 digits",
-                maxlength: "the phone should valid 10 digits",
+                required: "The mobile number field is required.",
+                digits: "the mobile number should valid 10 digits",
+                minlength: "the mobile number should valid 10 digits",
+                maxlength: "the mobile number should valid 10 digits",
             },
             customer_mobile_number_alt: {
-                digits: "the alt phone should valid 10 digits",
-                minlength: "the alt phone should valid 10 digits",
-                maxlength: "the alt phone should valid 10 digits",
+                digits: "the alt mobile number should valid 10 digits",
+                minlength: "the alt mobile number should valid 10 digits",
+                maxlength: "the alt mobile number should valid 10 digits",
             },
             customer_email_address: {
                 email: "Customer email should valid email.",
             },
             witness_person_name: {
-                required: "The witness person name field is required.",
+                required: "The reference person name field is required.",
             },
             witness_person_phone: {
-                required: "The witness person phone field is required.",
-                digits: "the witness person phone should valid 10 digits",
-                minlength: "the witness person phone should valid 10 digits",
-                maxlength: "the witness person phone should valid 10 digits",
+                required: "The reference mobile number field is required.",
+                digits: "the reference mobile number should valid 10 digits",
+                minlength: "the reference mobile number should valid 10 digits",
+                maxlength: "the reference mobile number should valid 10 digits",
             },
             ex_showroom_price: {
                 required: "The exshowroom amount field is required.",
