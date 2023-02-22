@@ -247,6 +247,11 @@
                     <a href="{{ route('updateNonEditableDetail.index') }}"><i class="fa fa-pencil-square-o"></i>
                         <span>UPDATE NON EDITABLE DETAIL</span></a>
                 </li>
+
+                <li class="{{ Request::is('bulkUploadPurchases*') ? 'active' : '' }}">
+                    <a href="{{ route('bulkUploadPurchases.index') }}"><i class="fa fa-upload"></i>
+                        <span>BULK UPLOAD PURCHASES</span></a>
+                </li>
             @endif
 
             <li class="treeview {{ Request::is('profile') ? 'active' : '' }}">
