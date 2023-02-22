@@ -25,10 +25,6 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
-                    data: "branch_name",
-                    name: "branch_name",
-                },
-                {
                     data: "company_name",
                     name: "company_name",
                 },
@@ -37,16 +33,16 @@ $(document).ready(function () {
                     name: "company_email",
                 },
                 {
-                    data: "company_gst_no",
-                    name: "company_gst_no",
+                    data: "branch_name",
+                    name: "branch_name",
                 },
                 {
                     data: "purchase_sum_grand_total",
                     name: "purchase_sum_grand_total",
                 },
                 {
-                    data: "dealer_payment_sum_payment_amount",
-                    name: "dealer_payment_sum_payment_amount",
+                    data: "dealer_payment_sum_debit_amount",
+                    name: "dealer_payment_sum_debit_amount",
                 },
                 {
                     data: "total_outstanding",

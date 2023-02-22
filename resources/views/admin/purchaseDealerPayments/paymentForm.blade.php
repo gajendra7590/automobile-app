@@ -29,13 +29,35 @@
             </div>
         </div>
         <div class="row">
+            <div class="form-group col-md-6">
+                <label>TRANSACTION TYPE</label>
+                <select class="form-control" name="transaction_type">
+                    <option value="1">DEBIT</option>
+                    <option value="2">CREDIT</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>PAID FROM ACCOUNT</label>
+                <select class="form-control" name="bank_account_id">
+                    @if (isset($bank_accounts))
+                        @foreach ($bank_accounts as $bank_account)
+                            <option value="1">
+                                {{ strtoupper($bank_account->bank_account_holder_name . ' - ' . $bank_account->bank_account_number) }}
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        </div>
+        <div class="row">
             <input type="hidden" name="dealer_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
             <div class="form-group col-md-4">
-                <label>PAYMENT AMOUNT</label>
+                <label>AMOUNT</label>
                 <input name="payment_amount" type="text" class="form-control" value="" placeholder="₹0.00">
             </div>
             <div class="form-group col-md-4">
-                <label>PAYMENT DATE</label>
+                <label>DATE</label>
                 <input name="payment_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
                     placeholder="yyyy-mm-dd">
             </div>

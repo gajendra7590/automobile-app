@@ -30,10 +30,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>BRANCH NAME</th>
                                         <th>DEALER NAME</th>
                                         <th>DEALER EMAIL</th>
-                                        <th>DEALER GST CODE</th>
+                                        <th>BRANCH NAME</th>
                                         <th>TOTAL BALANCE</th>
                                         <th>TOTAL PAID</th>
                                         <th>TOTAL OUTSTANDING</th>

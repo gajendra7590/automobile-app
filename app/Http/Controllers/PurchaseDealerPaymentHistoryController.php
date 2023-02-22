@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccounts;
 use App\Models\BikeDealer;
 use App\Models\Purchase;
 use App\Models\PurchaseDealerPaymentHistory;
@@ -30,7 +31,8 @@ class PurchaseDealerPaymentHistoryController extends Controller
                     }
                 ])
                 ->withSum('purchase', 'grand_total')
-                ->withSum('dealer_payment', 'payment_amount');
+                ->withSum('dealer_payment', 'credit_amount')
+                ->withSum('dealer_payment', 'debit_amount');
             // ->withCount('registrations');
 
 
@@ -47,31 +49,34 @@ class PurchaseDealerPaymentHistoryController extends Controller
                 })
                 ->addColumn('purchase_sum_grand_total', function ($row) {
                     $balance = (floatval($row->purchase_sum_grand_total) > 0) ? floatval($row->purchase_sum_grand_total) : 0.00;
+                    $credit_total =  (floatval($row->dealer_payment_sum_credit_amount) > 0) ? floatval($row->dealer_payment_sum_credit_amount) : 0.00;
+                    $balance += $credit_total;
                     return convertBadgesPrice($balance, 'info');
                 })
-                ->addColumn('dealer_payment_sum_payment_amount', function ($row) {
-                    $balance = (floatval($row->dealer_payment_sum_payment_amount) > 0) ? floatval($row->dealer_payment_sum_payment_amount) : 0.00;
+                ->addColumn('dealer_payment_sum_debit_amount', function ($row) {
+                    $balance = (floatval($row->dealer_payment_sum_debit_amount) > 0) ? floatval($row->dealer_payment_sum_debit_amount) : 0.00;
                     return convertBadgesPrice($balance, 'success');
                 })
                 ->addColumn('total_outstanding', function ($row) {
-
                     $balance = (floatval($row->purchase_sum_grand_total) > 0) ? floatval($row->purchase_sum_grand_total) : 0.00;
-                    $balance2 = (floatval($row->dealer_payment_sum_payment_amount) > 0) ? floatval($row->dealer_payment_sum_payment_amount) : 0.00;
-
-
+                    $credit_total =  (floatval($row->dealer_payment_sum_credit_amount) > 0) ? floatval($row->dealer_payment_sum_credit_amount) : 0.00;
+                    $balance += $credit_total;
+                    $balance2 = (floatval($row->dealer_payment_sum_debit_amount) > 0) ? floatval($row->dealer_payment_sum_debit_amount) : 0.00;
                     $total_outs = floatval($balance - $balance2);
                     return convertBadgesPrice((($total_outs > 0) ? $total_outs : 0), 'danger');
                 })
                 ->addColumn('buffer_amount', function ($row) {
                     $balance = (floatval($row->purchase_sum_grand_total) > 0) ? floatval($row->purchase_sum_grand_total) : 0.00;
-                    $balance2 = (floatval($row->dealer_payment_sum_payment_amount) > 0) ? floatval($row->dealer_payment_sum_payment_amount) : 0.00;
+                    $credit_total =  (floatval($row->dealer_payment_sum_credit_amount) > 0) ? floatval($row->dealer_payment_sum_credit_amount) : 0.00;
+                    $balance += $credit_total;
+                    $balance2 = (floatval($row->dealer_payment_sum_debit_amount) > 0) ? floatval($row->dealer_payment_sum_debit_amount) : 0.00;
                     $total_outs = floatval($balance - $balance2);
                     return convertBadgesPrice((($total_outs < 0) ? (-$total_outs) : 0), 'primary');
                 })
                 ->rawColumns([
                     'branch_name',
                     'purchase_sum_grand_total',
-                    'dealer_payment_sum_payment_amount',
+                    'dealer_payment_sum_debit_amount',
                     'total_outstanding',
                     'buffer_amount',
                     'action'
@@ -97,17 +102,27 @@ class PurchaseDealerPaymentHistoryController extends Controller
         }
 
         $model = BikeDealer::find($postData['dealer_id']);
-        $total_paid = PurchaseDealerPaymentHistory::where('dealer_id', $postData['dealer_id'])->sum('payment_amount');
-        $total_balance = Purchase::where('bike_dealer', $postData['dealer_id'])->sum('grand_total');
-        $total_outstanding = (($total_balance - $total_paid) > 0) ? ($total_balance - $total_paid) : 0;
+        $credit_amount = floatval(PurchaseDealerPaymentHistory::where('dealer_id', $postData['dealer_id'])->sum('credit_amount'));
+
+        $debit_amount = floatval(PurchaseDealerPaymentHistory::where('dealer_id', $postData['dealer_id'])->sum('debit_amount'));
+
+        $total_balance = floatval(Purchase::where('bike_dealer', $postData['dealer_id'])->sum('grand_total'));
+
+        $total_balance += $credit_amount;
+
+        $total_outstanding = (($total_balance - $debit_amount) > 0) ? ($total_balance - $debit_amount) : 0;
+
+        $bank_accounts = BankAccounts::get();
+
         $data = array(
             'action' => route('purchaseDealerPayments.store'),
             'method' => 'POST',
             'data'   => $model,
             'paymentSources' => depositeSources(),
             'total_balance'  => $total_balance,
-            'total_paid'     => $total_paid,
+            'total_paid'     => $debit_amount,
             'total_outstanding'  => $total_outstanding,
+            'bank_accounts'    => $bank_accounts
         );
         return response()->json([
             'status'     => true,
@@ -127,13 +142,15 @@ class PurchaseDealerPaymentHistoryController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('dealer_id', 'payment_amount', 'payment_date', 'payment_mode', 'payment_note');
-            $validator = Validator::make($postData, [
-                'dealer_id'    => 'required|exists:bike_dealers,id',
-                'payment_amount'  => "required|numeric|min:1",
-                'payment_date'    => "required|date",
-                'payment_mode'    => "required|string",
-                'payment_note'    => "required|string"
+            $postData = $request->all();
+            $validator = Validator::make($request->all(), [
+                'dealer_id'        => 'required|exists:bike_dealers,id',
+                'transaction_type' => 'required|in:1,2',
+                'bank_account_id'  => 'required|exists:bank_accounts,id',
+                'payment_amount'   => "required|numeric|min:1",
+                'payment_date'     => "required|date",
+                'payment_mode'     => "required",
+                'payment_note'     => "required"
             ]);
 
             //If Validation failed
@@ -145,8 +162,16 @@ class PurchaseDealerPaymentHistoryController extends Controller
                     'errors'     => $validator->errors()
                 ]);
             }
-
-            PurchaseDealerPaymentHistory::create($postData);
+            PurchaseDealerPaymentHistory::create([
+                'dealer_id'         =>  isset($postData['dealer_id']) ? $postData['dealer_id'] : null,
+                'transaction_type'  =>  isset($postData['transaction_type']) ? $postData['transaction_type'] : null,
+                'bank_account_id'   =>  isset($postData['bank_account_id']) ? $postData['bank_account_id'] : null,
+                'credit_amount'     => (isset($postData['transaction_type']) && ($postData['transaction_type']) == '2') ? floatval($postData['payment_amount']) : 0.00,
+                'debit_amount'      => (isset($postData['transaction_type']) && ($postData['transaction_type']) == '1') ? floatval($postData['payment_amount']) : 0.00,
+                'payment_mode'      =>  isset($postData['payment_mode']) ? $postData['payment_mode'] : null,
+                'payment_date'      =>  isset($postData['payment_date']) ? date('Y-m-d', strtotime($postData['payment_date'])) : null,
+                'payment_note'      =>  isset($postData['payment_note']) ? $postData['payment_note'] : null
+            ]);
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -173,7 +198,14 @@ class PurchaseDealerPaymentHistoryController extends Controller
     public function show($id)
     {
         $transactions = PurchaseDealerPaymentHistory::where('dealer_id', $id)
-            ->with(['dealer'])->get();
+            ->with([
+                'dealer' => function ($dealer) {
+                    $dealer->select('id', 'branch_id', 'company_name', 'company_email');
+                },
+                'bankAccount' => function ($dealer) {
+                    $dealer->select('id', 'bank_account_holder_name', 'bank_account_number');
+                }
+            ])->get();
         $data = array(
             'transactions'   => $transactions,
             'dealer_name'     => BikeDealer::where('id', $id)->value('company_name')

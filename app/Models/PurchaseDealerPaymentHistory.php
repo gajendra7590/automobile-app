@@ -15,13 +15,13 @@ class PurchaseDealerPaymentHistory extends Model
         'sno',
         'year',
         'dealer_id',
+        'transaction_type',
+        'bank_account_id',
         'credit_amount',
-        'credit_mode',
         'debit_amount',
-        'debit_mode',
-        'payment_note',
+        'payment_mode',
         'payment_date',
-        'transaction_type'
+        'payment_note'
     ];
 
     protected  $hidden = [];
@@ -38,7 +38,7 @@ class PurchaseDealerPaymentHistory extends Model
             $findModel = PurchaseDealerPaymentHistory::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ($year == $findModel->year) {
+            if (($findModel) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -54,5 +54,10 @@ class PurchaseDealerPaymentHistory extends Model
     public function dealer()
     {
         return $this->belongsTo(BikeDealer::class, 'dealer_id');
+    }
+
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccounts::class, 'bank_account_id');
     }
 }
