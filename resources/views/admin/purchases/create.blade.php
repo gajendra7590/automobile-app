@@ -114,20 +114,23 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="required">MODEL NAME</label>
-                                <select name="bike_model" data-dep_dd_name="bike_model_variant"
-                                    data-dep_dd2_name="bike_model_color"
-                                    data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
-                                    class="form-control ajaxChangeCDropDown commonSelect2" {{ $isSoldOut }}>
-                                    <option value="">---Select Model---</option>
-                                    @if (isset($models))
-                                        @foreach ($models as $key => $model)
-                                            <option
-                                                {{ isset($data->bike_model) && $data->bike_model == $model->id ? 'selected="selected"' : '' }}
-                                                value="{{ $model->id }}">
-                                                {{ $model->model_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                                <div class="input-group col-sm-12">
+                                    <select name="bike_model" data-dep_dd_name="bike_model_variant"
+                                        data-dep_dd2_name="bike_model_color"
+                                        data-url="{{ url('getAjaxDropdown') . '?req=variants' }}"
+                                        class="form-control ajaxChangeCDropDown commonSelect2 skuDescriptionBuilder"
+                                        {{ $isSoldOut }}>
+                                        <option value="">---Select Model---</option>
+                                        @if (isset($models))
+                                            @foreach ($models as $key => $model)
+                                                <option
+                                                    {{ isset($data->bike_model) && $data->bike_model == $model->id ? 'selected="selected"' : '' }}
+                                                    value="{{ $model->id }}">
+                                                    {{ $model->model_name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -136,7 +139,7 @@
                                 <label class="required">MODEL VARIANT</label>
                                 <select name="bike_model_variant" data-dep_dd_name="bike_model_color"
                                     data-url="{{ url('getAjaxDropdown') . '?req=colors' }}"
-                                    class="form-control ajaxChangeCDropDown" {{ $isSoldOut }}>
+                                    class="form-control ajaxChangeCDropDown skuDescriptionBuilder" {{ $isSoldOut }}>
                                     <option value="">Select Model Variant</option>
                                     @if (isset($variants))
                                         @foreach ($variants as $key => $variant)
@@ -151,8 +154,8 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="required">VARIANT COLOR</label>
-                                <select name="bike_model_color" class="form-control" {{ $isSoldOut }}
-                                    {{ $isSoldOut }}>
+                                <select name="bike_model_color" class="form-control skuDescriptionBuilder"
+                                    {{ $isSoldOut }} {{ $isSoldOut }}>
                                     <option value="">Select Variant Color</option>
                                     @if (isset($colors))
                                         @foreach ($colors as $key => $color)
@@ -222,7 +225,7 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label class="required">VIN NUMBER(CHASIS NUMBER) </label>
-                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                <input type="text" class="form-control onlyAlphaNumberic" {{ $isSoldOut }}
                                     placeholder="VIN Number(Chasis Number)" name="vin_number"
                                     value="{{ isset($data->vin_number) ? $data->vin_number : '' }}" />
                             </div>
@@ -247,7 +250,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="required">ENGINE NUMBER</label>
-                                <input type="text" class="form-control" {{ $isSoldOut }}
+                                <input type="text" class="form-control onlyAlphaNumberic" {{ $isSoldOut }}
                                     placeholder="Engine Number" name="engine_number"
                                     value="{{ isset($data->engine_number) ? $data->engine_number : '' }}" />
                             </div>
@@ -267,8 +270,8 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label>SKU DESCRIPTION</label>
-                                <input type="text" class="form-control" {{ $isSoldOut }}
-                                    placeholder="SKU Description" name="sku_description"
+                                <input type="text" class="form-control" readonly placeholder="SKU Description"
+                                    name="sku_description"
                                     value="{{ isset($data->sku_description) ? $data->sku_description : '' }}" />
                             </div>
                         </div>
@@ -374,6 +377,8 @@
                                     value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0.0 }}"
                                     {{ $isSoldOut }} />
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-3">
                                 <label>DISCOUNT AMOUNT(-)</label>
                                 <input type="number" class="form-control totalAmountCal" placeholder="Discount Amount"
@@ -399,7 +404,8 @@
                                     placeholder="Grand Total" name="grand_total" readonly
                                     value="{{ isset($data->grand_total) ? $data->grand_total : 0.0 }}" />
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-12">
                                 <label>VEHICLE DESCRIPTION</label>
                                 <textarea name="bike_description" rows="5" class="form-control" {{ $isSoldOut }}>{{ isset($data->bike_description) ? $data->bike_description : '' }}</textarea>

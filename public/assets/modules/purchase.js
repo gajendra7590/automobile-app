@@ -127,8 +127,6 @@ $(document).ready(function () {
     mainDataTable();
 
     $(".purchaseFormAjaxSubmit").validate({
-        // errorElement: 'span',
-        // errorClass: 'text-muted error',
         rules: {
             bike_branch: {
                 required: true,
@@ -248,6 +246,13 @@ $(document).ready(function () {
                 required: "The dc date field is required.",
                 date: "The dc date field should valid date.",
             },
+        },
+        errorPlacement: function (error, element) {
+            if (element.parent(".input-group").length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function (form, event) {
             event.preventDefault();

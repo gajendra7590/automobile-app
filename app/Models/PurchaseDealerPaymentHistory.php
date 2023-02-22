@@ -15,10 +15,13 @@ class PurchaseDealerPaymentHistory extends Model
         'sno',
         'year',
         'dealer_id',
-        'payment_amount',
-        'payment_mode',
+        'credit_amount',
+        'credit_mode',
+        'debit_amount',
+        'debit_mode',
         'payment_note',
-        'payment_date'
+        'payment_date',
+        'transaction_type'
     ];
 
     protected  $hidden = [];

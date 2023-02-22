@@ -323,6 +323,12 @@ $(document).ready(function () {
         current_Value = current_Value.toUpperCase();
         $(this).val(current_Value);
     });
+
+    $(document).on("keyup keypress", ".onlyAlphaNumberic", function (e) {
+        let current_Value = $(this).val();
+        current_Value = current_Value.replace(/[^a-z0-9]/gi, "").toUpperCase();
+        $(this).val(current_Value);
+    });
 });
 
 // DATATABLE FILTER
@@ -331,6 +337,19 @@ $(document).on("change", ".ajaxDtFilter", function () {
     let col_index = $(this).data("col_index");
     let value = $(this).val();
     tableObj.column(col_index).search(value).draw();
+});
+
+$(document).on("change", ".skuDescriptionBuilder", function (e) {
+    e.preventDefault();
+    var skuDescription = "";
+    $(".skuDescriptionBuilder").each(function (i, e) {
+        let selectedVal = $(this).val();
+        if (selectedVal != "") {
+            let selectedText = $(this).find("option:selected").text();
+            skuDescription = skuDescription + " " + selectedText.trim();
+        }
+    });
+    $('input[name="sku_description"]').val(skuDescription);
 });
 
 $(".commonSelect2").select2({
