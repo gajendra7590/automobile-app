@@ -65,6 +65,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::get('plusAction', 'AjaxCommonController@plusAction')->name('plusAction');
 
+    //paidFromBankAccounts
+    Route::resource('paidFromBankAccounts', 'PaidFromBankAccountController');
+
     //GST
     Route::resource('gst-rates', 'GstRateController');
 

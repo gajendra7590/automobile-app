@@ -28,7 +28,7 @@
             </li>
             @if (auth()->user() && auth()->user()->is_admin == '1')
                 <li
-                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('modelVariants*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'active' : '' }}">
+                    class="treeview {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('modelVariants*') || Request::is('colors*') || Request::is('paidFromBankAccounts*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-calculator"></i>
                         <span>ALL BASIC SETTINGS</span>
@@ -37,7 +37,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu"
-                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('modelVariants*') || Request::is('colors*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'display:"block"' : '' }}>
+                        {{ Request::is('branches*') || Request::is('brands*') || Request::is('models*') || Request::is('modelVariants*') || Request::is('colors*') || Request::is('paidFromBankAccounts*') || Request::is('states*') || Request::is('districts*') || Request::is('cities*') || Request::is('gst-rates*') || Request::is('gst-rto-rates*') || Request::is('tyreBrands*') || Request::is('batteryBrands*') || Request::is('skuSalesPrice*') ? 'display:"block"' : '' }}>
                         <li class="{{ Request::is('branches*') ? 'active' : '' }}">
                             <a href="{{ route('branches.index') }}">
                                 <i class="fa fa-building-o"></i>BRANCHES
@@ -61,6 +61,11 @@
                         <li class="{{ Request::is('colors*') ? 'active' : '' }}">
                             <a href="{{ route('colors.index') }}">
                                 <i class="fa fa-paint-brush"></i>MODEL VARIANT COLORS
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('paidFromBankAccounts*') ? 'active' : '' }}">
+                            <a href="{{ route('paidFromBankAccounts.index') }}">
+                                <i class="fa fa-bank"></i>PAID FROM BANK ACCOUNTS
                             </a>
                         </li>
                         <li class="{{ Request::is('skuSalesPrice*') ? 'active' : '' }}">
