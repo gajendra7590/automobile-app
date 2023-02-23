@@ -279,14 +279,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label>HYPOTHECATION FINANCER NOTE</label>
+
+                            <div class="row" id="financeDetailSection"
+                                style="display:{{ $action_type == 'create' || (isset($data['payment_type']) && $data['payment_type'] == '1') ? 'none' : 'block' }}">
+                                <div class="form-group col-md-10">
+                                    <label>FINANCE SCHEME DETAIL</label>
                                     <input name="hyp_financer_description" type="text" class="form-control"
                                         value="{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}"
-                                        placeholder="Description..."
-                                        {{ isset($data['payment_type']) && in_array($data['payment_type'], [2, 3]) ? '' : 'disabled' }}
-                                        {{ $isClosed }}>
+                                        placeholder="FINANCE SCHEME DETAIL..." readonly>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <a href="{{ route('openFinanceDetail') }}"
+                                        class="btn btn-md btn-primary ajaxModalPopup financeDetail"
+                                        style="margin-top: 26px;" data-modal_title="ADD FINANCE DETAIL"
+                                        data-modal_size="modal-lg">
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD FINANCE DETAIL
+                                    </a>
                                 </div>
                             </div>
 

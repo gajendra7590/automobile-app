@@ -53,7 +53,7 @@ class PlusActionController extends Controller
 
             DB::commit();
 
-            if(request('ddname') || request('form_type')){
+            if (request('ddname') || request('form_type')) {
                 $data['html'] = "<option value='$city->id'> $city->city_name</option>";
                 $data['type'] = request('ddname') ? request('ddname') : request('form_type');
             }
@@ -66,6 +66,29 @@ class PlusActionController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
+    }
+
+
+    /**
+     * Function for openFinanceDetail
+     */
+    public function openFinanceDetail(Request $request)
+    {
+        try {
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.ajax_model_loaded'),
+                'data'       => view('admin.ajaxViews.financeDetail')->render()
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,

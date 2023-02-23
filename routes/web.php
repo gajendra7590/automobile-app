@@ -201,6 +201,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Plus Button City Create
     Route::post('cityStore', 'PlusActionController@cityStore')->name('cityStore');
+    Route::get('openFinanceDetail', 'PlusActionController@openFinanceDetail')->name('openFinanceDetail');
 });
 
 

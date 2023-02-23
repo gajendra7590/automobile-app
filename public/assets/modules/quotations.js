@@ -132,13 +132,12 @@ $(document).ready(function () {
         let val = $(this).val();
         if (val == "1") {
             $('select[name="hyp_financer"]').attr("disabled", "disabled");
-            $('input[name="hyp_financer_description"]').attr(
-                "disabled",
-                "disabled"
-            );
+            $('input[name="hyp_financer_description"]').val("");
+            $("#financeDetailSection").hide();
         } else {
             $('select[name="hyp_financer"]').removeAttr("disabled");
             $('input[name="hyp_financer_description"]').removeAttr("disabled");
+            $("#financeDetailSection").show();
         }
     });
 
