@@ -72,7 +72,7 @@ class PaidFromBankAccountController extends Controller
                 'bank_name'                => 'required',
                 'bank_account_number'      => 'required',
                 'bank_account_holder_name' => 'required',
-                'bank_ifsc_code'           => 'required',
+                //'bank_ifsc_code'           => 'required',
                 'bank_branch_name'         => 'required'
             ]);
 
@@ -154,7 +154,7 @@ class PaidFromBankAccountController extends Controller
                 'bank_name'                => 'required',
                 'bank_account_number'      => 'required',
                 'bank_account_holder_name' => 'required',
-                'bank_ifsc_code'           => 'required',
+                //'bank_ifsc_code'           => 'required',
                 'bank_branch_name'         => 'required'
             ]);
             if ($validator->fails()) {
