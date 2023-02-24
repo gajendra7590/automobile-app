@@ -36,8 +36,8 @@
             </select>
         </div>
         <div class="form-group col-md-2">
-            <label>ROI %</label>
-            <input type="text" class="form-control" placeholder="ROI %" name="roi" value='' />
+            <label>RATE OF INTEREST</label>
+            <input type="text" class="form-control" placeholder="RATE OF INTEREST" name="roi" value='' />
         </div>
         <div class="form-group col-md-2">
             <button type="submit" class="btn btn-primary" id="ajaxFormSubmit" style="margin-top: 24px;">
@@ -50,19 +50,34 @@
     $('.ajaxFormSubmitFinanaceDetail').submit(function(e) {
         e.preventDefault();
 
-        let emi_amount = $("input[name='emi_amount']").val();
+        let emi_amount = parseFloat($("input[name='emi_amount']").val());
+        if (isNaN(emi_amount)) {
+            toastr.error("Please enter valid amount");
+            return false;
+        }
         let emi_type = $("select[name='emi_type'] option:selected").val();
         let number_of_emi = $("select[name='number_of_emi'] option:selected").val();
         let tenour = $("select[name='tenour'] option:selected").val();
         let roi = $("input[name='roi']").val();
+        if (roi != "") {
+            roi = parseFloat(roi);
+            if (isNaN(roi)) {
+                toastr.error("Please enter valid ROI");
+                return false;
+            }
+        }
 
-        let schemeDetail = "DOWN PAYMENT SCHEME - ( TOTAL AMOUNT ₹";
-        schemeDetail += emi_amount + ' - ';
-        schemeDetail += emi_type + ' INSTALLMENT - ';
-        schemeDetail += number_of_emi + ' EMI - TENOUR ';
-        schemeDetail += tenour + ' - ';
-        schemeDetail += roi + ' % ROI)';
+
+        let schemeDetail = "DOWN PAYMENT SCHEME - ( ";
+        schemeDetail += 'EMI AMOUNT : ₹' + emi_amount + ' - ';
+        schemeDetail += "EMI TYPE : " + emi_type + ' - ';
+        schemeDetail += "NUMBER OF EMI : " + number_of_emi + ' - ';
+        schemeDetail += 'TENOUR : ' + tenour;
+        if (roi != "") {
+            schemeDetail += ' - RATE OF INTEREST : ' + roi + '%';
+        }
+        schemeDetail += ' )';
         $('input[name="hyp_financer_description"]').val(schemeDetail);
-        $('#ajaxModalCommon').modal('hide');
+        // $('#ajaxModalCommon').modal('hide');
     });
 </script>
