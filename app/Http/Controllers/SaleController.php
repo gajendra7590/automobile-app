@@ -628,6 +628,54 @@ class SaleController extends Controller
         return $pdf->stream('invoice.pdf');
     }
 
+    /**
+     * Function for genertae delivery Tax Challan
+     * @param $id  Sales ID
+     * @return Generate PDF Invoice
+     */
+    public function deliveryTaxChallan(Request $request, $id)
+    {
+        $id = base64_decode($id);
+        $branch_id = self::getCurrentUserBranch();
+        $where = array();
+        if ($branch_id > 0) {
+            $where = array('branch_id' => $branch_id);
+        }
+
+        $saleModel = Sale::where('id', $id)
+            ->where($where)
+            ->with([
+                'financer' => function ($financer) {
+                    $financer->select('id', 'bank_name');
+                },
+                'branch',
+                'purchase'
+            ])
+            ->first();
+        if (!$saleModel) {
+            return view('admin.accessDenied');
+        }
+
+        // return $saleModel;
+
+        $broker_name = brokerNameByPurchase($saleModel->purchase_id);
+        return view('admin.sales.deliveryTaxChallan', ['data' => $saleModel, 'broker_name' => $broker_name]);
+
+        $pdf = Pdf::loadView('admin.sales.deliveryTaxChallan', ['data' => $saleModel, 'broker_name' => $broker_name]);
+        return $pdf->stream('invoice.pdf');
+    }
+
+
+    /**
+     * Function for genertae delivery Challan With Txns
+     * @param $id  Sales ID
+     * @return Generate PDF Invoice
+     */
+    public function deliveryChallanWithTxn(Request $request, $id)
+    {
+        dd($id);
+    }
+
 
     public function getActions($row)
     {
@@ -638,8 +686,11 @@ class SaleController extends Controller
             $action .= '<li><a href="' . route('sales.edit', ['sale' => $row->id]) . '" class="" data-modal_title="UPDATE DETAIL">UPDATE</a></li>';
         }
 
-        $action .= '<li><a href="' . route('deliveryChallanFull', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN FULL</a></li>';
-        $action .= '<li><a href="' . route('deliveryChallanOnRoad', ['id' => base64_encode($row->id)]) . '" target="_blank" class="" data-modal_title="UPDATE DETAIL">DELIVERY CHALLAN ON ROAD</a></li>';
+        $action .= '<li><a href="' . route('deliveryChallanFull', ['id' => base64_encode($row->id)]) . '" target="_blank" class="">DELIVERY CHALLAN FULL</a></li>';
+        $action .= '<li><a href="' . route('deliveryChallanOnRoad', ['id' => base64_encode($row->id)]) . '" target="_blank" class="">DELIVERY CHALLAN ON ROAD</a></li>';
+
+        $action .= '<li><a href="' . route('deliveryTaxChallan', ['id' => base64_encode($row->id)]) . '" target="_blank" class="">DELIVERY TAX CHALLAN</a></li>';
+        $action .= '<li><a href="' . route('deliveryChallanWithTxn', ['id' => base64_encode($row->id)]) . '" target="_blank" class="">DELIVERY CHALLAN WITH TXN</a></li>';
 
         $action  .= '</ul>';
         $action  .= '</div>';

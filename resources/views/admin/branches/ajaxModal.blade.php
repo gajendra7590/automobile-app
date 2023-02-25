@@ -110,6 +110,35 @@
         </div>
     </div>
     <div class="row">
+        <div class="form-group col-md-8">
+            <label>Branch(Brand) Logo</label>
+            <input type='file' class="form-control" name="branch_logo_image" onchange="readURL(this);"
+                accept="image/jpg, image/jpeg, image/png" value="" />
+        </div>
+        @if (isset($data['branch_logo']) && !empty($data['branch_logo']))
+            <div class="form-group col-md-3 hideImgSec">
+                <img id="branch_logo_img" src="{{ $data['branch_logo'] }}" height="70px" width="120px" />
+                <input type="hidden" name="branch_logo" value="{{ $data['branch_logo'] }}" />
+            </div>
+            <div class="form-group col-md-1 hideImgSec">
+                <a href="#" class="btn btn-sm btn-primary" id="removeLogoImage">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+            </div>
+        @else
+            <div class="form-group col-md-3 hideImgSec" style="display:none;">
+                <img id="branch_logo_img" src="" height="70px" width="120px" />
+                <input type="hidden" name="branch_logo" value="" />
+            </div>
+            <div class="form-group col-md-1 hideImgSec" style="display:none;">
+                <a href="#" class="btn btn-sm btn-primary" id="removeLogoImage">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+            </div>
+        @endif
+
+    </div>
+    <div class="row">
         <div class="form-group col-md-12">
             <label>Branch More Detail</label>
             <textarea type='text' class="form-control" placeholder="Branch More Detail" name="branch_more_detail"> {{ isset($data) && $data->branch_more_detail ? $data->branch_more_detail : '' }} </textarea>
@@ -147,4 +176,22 @@
             }
         }
     });
+
+    $('#removeLogoImage').click(function(e) {
+        e.preventDefault();
+        $('input[name="branch_logo"]').val("");
+        $('#branch_logo_img').attr('src', "");
+        $('.hideImgSec').hide();
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#branch_logo_img').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+            $('.hideImgSec').show();
+        }
+    }
 </script>

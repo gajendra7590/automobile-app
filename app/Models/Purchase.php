@@ -185,6 +185,11 @@ class Purchase extends Model
         return $this->hasOne(Sale::class);
     }
 
+    public function gst_detail()
+    {
+        return $this->belongsTo(GstRates::class, 'gst_rate');
+    }
+
     public function invoice()
     {
         return $this->hasOne(PurchaseInvoice::class, 'purchase_id');

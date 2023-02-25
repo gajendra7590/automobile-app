@@ -28,6 +28,7 @@ class Branch extends Model
         'ifsc_code',
         'bank_name',
         'bank_branch',
+        'branch_logo',
         'active_status'
     ];
 
@@ -46,5 +47,18 @@ class Branch extends Model
         self::updating(function ($model) {
             $model->branch_name = !empty($model->branch_name) ? strtoupper($model->branch_name) : "";
         });
+    }
+
+
+    /**
+     * Function for assesor
+     */
+    public function getBranchLogoAttribute($logo)
+    {
+        if (!empty($logo)) {
+            return url($logo);
+        } else {
+            return "";
+        }
     }
 }

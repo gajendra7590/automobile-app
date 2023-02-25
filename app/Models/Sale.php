@@ -167,7 +167,7 @@ class Sale extends Model
     public function purchase()
     {
         return $this->belongsTo(Purchase::class, 'purchase_id')
-            ->select('id', 'bike_branch', 'bike_dealer', 'bike_brand', 'bike_model', 'bike_model_color', 'sku', 'engine_number', 'vin_number', 'hsn_number', 'key_number', 'transfer_status', 'created_at')
+            ->select('id', 'bike_branch', 'bike_dealer', 'bike_brand', 'bike_model', 'bike_model_color', 'sku', 'engine_number', 'vin_number', 'hsn_number', 'key_number', 'transfer_status', 'tyre_brand_id', 'gst_rate', 'battery_brand_id', 'created_at')
             ->with([
                 'branch' => function ($model) {
                     $model->select('id', 'branch_name');
@@ -189,6 +189,9 @@ class Sale extends Model
                 },
                 'batteryBrand' => function ($model) {
                     $model->select('id', 'name');
+                },
+                'gst_detail' => function ($tax_detail) {
+                    $tax_detail->select('id', 'gst_rate', 'cgst_rate', 'sgst_rate');
                 }
             ]);
     }

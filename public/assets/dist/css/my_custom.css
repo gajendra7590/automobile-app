@@ -167,3 +167,7 @@ p.account_status_note {
 .disabledBtn {
     pointer-events: none;
 }
+
+.ajaxModalTitle {
+    text-transform: uppercase;
+}

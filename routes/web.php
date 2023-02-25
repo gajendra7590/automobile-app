@@ -121,6 +121,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('ajax-loade-view', 'SaleController@ajaxLoadeView')->name('ajaxLoadeView');
     Route::get('deliveryChallanFull/{id}', 'SaleController@deliveryChallanFull')->name('deliveryChallanFull');
     Route::get('deliveryChallanOnRoad/{id}', 'SaleController@deliveryChallanOnRoad')->name('deliveryChallanOnRoad');
+    Route::get('deliveryTaxChallan/{id}', 'SaleController@deliveryTaxChallan')->name('deliveryTaxChallan');
+    Route::get('deliveryChallanWithTxn/{id}', 'SaleController@deliveryChallanWithTxn')->name('deliveryChallanWithTxn');
 
 
     // SALES ACCOUNT

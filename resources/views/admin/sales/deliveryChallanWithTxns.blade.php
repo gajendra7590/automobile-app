@@ -237,12 +237,12 @@
                 <table>
                     <tr style="text-align: center;">
                         <td style="text-align: center;height: 4rem;">
-                            for {{ isset($data->branch) ? $data->branch->branch_name : '' }}
+                            {{ isset($data->branch) ? $data->branch->branch_name : '' }}
                         </td>
                     </tr>
                     <tr>
                         <td style="text-align: center; height: 4rem;">
-                            Authorised Signatory
+                            Signature
                         </td>
                     </tr>
                 </table>

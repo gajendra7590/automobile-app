@@ -8,6 +8,7 @@ use App\Models\District;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
@@ -153,6 +154,7 @@ class BranchController extends Controller
     public function edit($id)
     {
         $branch = Branch::find($id);
+        // dd($branch->toArray());
         $data = array(
             'data' => $branch,
             'action' => route('branches.update', ['branch' => $id]),
@@ -182,19 +184,20 @@ class BranchController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
-                'branch_name' => 'required|string|unique:branches,branch_name,' . $id . ',id',
-                'branch_email' => 'required|email',
-                'branch_phone' => 'required|numeric|digits:10',
-                'branch_phone2' => 'nullable|numeric|digits:10',
-                'branch_address_line' => 'nullable|string',
-                'branch_city' => 'nullable|string',
-                'branch_district' => 'nullable|string',
-                'branch_state' => 'nullable|string',
-                'branch_county' => 'nullable|string',
-                'branch_pincode' => 'nullable|string',
-                'gstin_number' => 'nullable|string',
-                'branch_more_detail' => 'nullable|string',
-                'active_status'      => 'required|in:0,1'
+                'branch_name'           => 'required|string|unique:branches,branch_name,' . $id . ',id',
+                'branch_email'          => 'required|email',
+                'branch_phone'          => 'required|numeric|digits:10',
+                'branch_phone2'         => 'nullable|numeric|digits:10',
+                'branch_address_line'   => 'nullable|string',
+                'branch_city'           => 'nullable|string',
+                'branch_district'       => 'nullable|string',
+                'branch_state'          => 'nullable|string',
+                'branch_county'         => 'nullable|string',
+                'branch_pincode'        => 'nullable|string',
+                'gstin_number'          => 'nullable|string',
+                'branch_more_detail'    => 'nullable|string',
+                'active_status'         => 'required|in:0,1',
+                'branch_logo_image'     => 'nullable|mimes:jpg,jpeg,png'
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
@@ -203,6 +206,8 @@ class BranchController extends Controller
             if (!$branch) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
+
+            // dd($postData);
             $createData = $request->only([
                 'branch_name',
                 'branch_email',
@@ -218,6 +223,15 @@ class BranchController extends Controller
                 'gstin_number',
                 'active_status'
             ]);
+
+            //UPLOAD LOGO
+            if (request()->file('branch_logo_image')) {
+                $imageName = strtolower(Str::slug($postData['branch_name'])) . '-' . date('YmdHis');
+                $imageName .= '.' . $request->branch_logo_image->getClientOriginalExtension();
+                $request->branch_logo_image->move(public_path('/uploads'), $imageName);
+                $createData['branch_logo'] = 'uploads/' . $imageName;
+            }
+
             $branch->update($createData);
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
