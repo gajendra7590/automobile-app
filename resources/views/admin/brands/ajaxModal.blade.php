@@ -8,11 +8,11 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label>Select Branch : </label>
-                <select class="form-control" name="baranch_id">
+                <select class="form-control" name="branch_id">
                     @isset($branches)
                         @foreach ($branches as $branch)
                             <option
-                                {{ isset($data['baranch_id']) && $data['baranch_id'] == $branch->id ? 'selected="selected"' : '' }}
+                                {{ isset($data['branch_id']) && $data['branch_id'] == $branch->id ? 'selected="selected"' : '' }}
                                 value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                         @endforeach
                     @endisset

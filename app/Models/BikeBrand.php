@@ -41,4 +41,9 @@ class BikeBrand extends Model
     {
         return $this->hasMany(BikeModel::class, 'brand_id');
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 }

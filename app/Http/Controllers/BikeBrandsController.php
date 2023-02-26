@@ -19,7 +19,11 @@ class BikeBrandsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = BikeBrand::select('*');
+            $data = BikeBrand::with([
+                'branch' => function ($branch) {
+                    $branch->select('id', 'branch_name');
+                }
+            ])->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -29,11 +33,14 @@ class BikeBrandsController extends Controller
                         return "<label class='switch'><input type='checkbox' value='$row->id' data-type='brand' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
+                ->addColumn('branch_name', function ($row) {
+                    return isset($row->branch->branch_name) ? $row->branch->branch_name : "";
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['active_status', 'action'])
+                ->rawColumns(['active_status', 'branch_name', 'action'])
                 ->make(true);
         } else {
             return view('admin.brands.index');
@@ -69,6 +76,7 @@ class BikeBrandsController extends Controller
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'name' => "required|unique:bike_brands,name",
+                'baranch_id' => "required|branches,id",
                 'active_status'      => 'required|in:0,1'
             ]);
 
@@ -144,6 +152,7 @@ class BikeBrandsController extends Controller
             $postData = $request->only('name', 'code', 'description', 'active_status');
             $validator = Validator::make($postData, [
                 'name' => "required|unique:bike_brands,name," . $id,
+                'baranch_id' => "required|branches,id",
                 'active_status'      => 'required|in:0,1'
             ]);
             if ($validator->fails()) {

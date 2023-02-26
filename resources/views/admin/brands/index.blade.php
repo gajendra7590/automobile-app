@@ -36,6 +36,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Branch Name</th>
                                         <th>Brand Name</th>
                                         <th>Brand Code</th>
                                         <th>Status</th>
