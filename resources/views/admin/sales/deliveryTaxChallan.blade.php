@@ -12,15 +12,14 @@
     <table style="border:1px solid; width:100%;">
         <tr style="border:1px solid;">
             <td style="text-align: left;" colspan="2">
-
                 <div style="align-content: center;">
-                    {{-- <img src="https://autoshop.systrailsolutions.com/uploads/gurukripa-agency-20230226132845.png"
-                        style="height: 51px;margin-top:5px;"> --}}
-                    <img src="{{ isset($data->branch) ? strtoupper($data->branch->branch_logo) : '' }}"
-                        style="height: 51px;width: 100px;">
-                    <span style="margin-left: 180px !important;font-size:20px;">
-                        <b>TAX INVOICE</b>
-                    </span>
+                    <div style="margin-top: 10px;margin-left: 5px;">
+                        <img src="{{ isset($data->branch) ? $data->branch->branch_logo : '' }}"
+                            style="height: 56px;width: 120px;">
+
+                        <span style="vertical-align: middle;margin-left: 180px;font-size: 22px;font-weight: 700;">TAX
+                            INVOICE</span>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -400,7 +399,7 @@
         </tr>
         <tr>
             <td style="border-bottom: 1px solid;text-align: center;padding: 7px 0px 0px;" width="50%">
-                Customer's Seal and Signature
+                Customer's Seal And Signature
             </td>
             <td style="border-bottom: 1px solid;border-left: 1px solid;text-align: center;padding: 7px 0px 0px;"
                 width="50%">
@@ -414,7 +413,7 @@
             <td style="padding: 6px;text-align: center;font-size:13px;" colspan="2">
                 SUBJECT TO SUBJECT TO KHANDWA JURISDICTION JURISDICTION
                 <br>
-                This is a Computer Generated Invoice
+                <span style="text-transform: capitalize;">****This Is A Computer Generated Invoice****</span>
             </td>
         </tr>
     </table>
