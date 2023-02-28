@@ -18,7 +18,7 @@
                     <h3 class="box-title">
                         BULK UPLOAD PURCHASES
                     </h3>
-                    <a href="{{ url('assets/sample_files/sample_purchase.csv') }}" class="btn btn-sm btn-info pull-right">
+                    <a href="{{ url('assets/sample_files/sample_purchase.csv') }}" download="sample_purchase.csv" class="btn btn-sm btn-info pull-right">
                         <i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD SAMPLE FILE
                     </a>
                 </div>
