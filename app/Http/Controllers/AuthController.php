@@ -131,8 +131,9 @@ class AuthController extends Controller
             $user->email = $request->email;
             if ($request->profile_image) {
                 $file = request()->file('profile_image');
-                $path = 'uploads/images/' . time() . '-' . $file->getClientOriginalName();
-                $file = Storage::disk('public')->put($path, file_get_contents($file));
+                $file_name = time() . '-' . $file->getClientOriginalName();
+                $request->profile_image->move(public_path('/uploads/profile_image'), $file_name);
+                $path = 'uploads/profile_image/'.$file_name;
                 $user->profile_image =  $path;
             }
             $user->save();

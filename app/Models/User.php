@@ -56,9 +56,10 @@ class User extends Authenticatable
 
     public function getProfileImageAttribute($value){
         if(!empty($value)){
-            return env('APP_URL') . '/storage' . '/' . $value;
+            return asset($value);
         } else {
-            return url('/assets/dist/img/default-avatar.png');
+            // return url('/assets/dist/img/default-avatar.png');
+            return asset('assets/dist/img/default-avatar.png');
         }
     }
 }
