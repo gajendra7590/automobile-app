@@ -43,7 +43,7 @@ class PurchaseInvoice extends Model
             $findModel = PurchaseInvoice::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ($year == $findModel->year) {
+            if ( isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
