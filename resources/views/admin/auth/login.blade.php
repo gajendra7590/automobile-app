@@ -2,7 +2,7 @@
 @section('container')
     <div class="login-box">
         <div class="login-logo">
-            <a href="/"><b>Aakash</b> Automobiles</a>
+            <a href="/"><b>ASP</b> VDMS</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
