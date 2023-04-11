@@ -198,7 +198,7 @@ class PurchaseController extends Controller
                 //'wheel_type'                => "required",
                 'dc_number'                 => "required",
                 'dc_date'                   => "required|date",
-                'vin_number'                => "required|min:17",
+                'vin_number'                => "required|min:17|unique:purchases,vin_number",
                 'vin_physical_status'       => "required",
                 'hsn_number'                => "required|min:6",
                 'engine_number'             => "required",
@@ -378,7 +378,7 @@ class PurchaseController extends Controller
                 //'wheel_type'                => "required",
                 'dc_number'                 => "nullable",
                 'dc_date'                   => "nullable",
-                'vin_number'                => "required|min:17",
+                'vin_number'                => "required|min:17|unique:purchases,vin_number,".$id,
                 'vin_physical_status'       => "nullable",
                 'hsn_number'                => "nullable|min:6",
                 'engine_number'             => "nullable",
@@ -453,6 +453,7 @@ class PurchaseController extends Controller
         $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
         if ($row->status == '1') {
             $action .= '<li><a href="' . route('purchases.edit', ['purchase' => $row->id]) . '" class="" data-title="Update Purchase Detail" data-modal_title="Update Purchase">UPDATE</a></li>';
+            $action .= '<li><a href="' . route('purchaseReturnToDealers.show', ['purchaseReturnToDealer' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-md" data-title="PURCHASE RETURN TO DEALER" data-modal_title="CREATE PURCHASE RETURN TO DEALER">RETURN TO DEALER</a></li>';
         }
         $action  .= '</ul>';
         $action  .= '</div>';

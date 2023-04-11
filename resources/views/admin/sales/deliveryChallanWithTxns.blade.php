@@ -89,16 +89,28 @@
                         <td style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem;"></td>
                         <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;"></td>
                     </tr>
-                    <tr>
-                        <td
-                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
-                            HYP:
-                        </td>
-                        <td
-                            style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
-                            {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : '' }}
-                        </td>
-                    </tr>
+                    @if (isset($data->payment_type) && ($data->payment_type != '1'))
+                        <tr>
+                            <td
+                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                                HYP:
+                            </td>
+                            <td
+                                style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
+                                {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : 'N/A' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                                HYP DESCRIPTION:
+                            </td>
+                            <td
+                                style=" width:75%;text-align: center; height: 2rem;font-size:14px;border-bottom: 1px solid;">
+                                {{ isset($data->hyp_financer_description) && $data->hyp_financer_description ? $data->hyp_financer_description : 'N/A' }}
+                            </td>
+                        </tr>
+                    @endif
                     <tr>
                         <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
                             BROKER:

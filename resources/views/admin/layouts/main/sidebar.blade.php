@@ -145,7 +145,7 @@
                 </li>
             @endif
             <li
-                class="treeview {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
+                class="treeview {{ Request::is('purchases*') || Request::is('purchaseReturnToDealers*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
                 <a href="#">
                     <i class="fa fa-shopping-cart"></i>
                     <span>PURCHASE INVENTORIES</span>
@@ -154,12 +154,19 @@
                     </span>
                 </a>
                 <ul class="treeview-menu"
-                    {{ Request::is('purchases*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'display:"block"' : '' }}>
+                    {{ Request::is('purchases*') || Request::is('purchaseReturnToDealers*') || Request::is('purchaseInvoices*') || Request::is('purchaseTransfers*') || Request::is('purchaseDealerPayments*') ? 'display:"block"' : '' }}>
 
                     <li class="{{ Request::is('purchases*') ? 'active' : '' }}">
                         <a href="{{ route('purchases.index') }}"><i class="fa fa-rub"></i>PURCHASES
                         </a>
                     </li>
+
+                    <li class="{{ Request::is('purchaseReturnToDealers*') ? 'active' : '' }}">
+                        <a href="{{ route('purchaseReturnToDealers.index') }}"><i class="fa fa-rub"></i>PURCHASE RETURN TO DEALER
+                        </a>
+                    </li>
+
+
                     <li class="{{ Request::is('purchaseInvoices*') ? 'active' : '' }}">
                         <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>PURCHASE INVOICES
                         </a>

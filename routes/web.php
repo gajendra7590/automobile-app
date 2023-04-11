@@ -97,6 +97,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('purchaseReturn/{id}', 'PurchaseTransferController@returnIndex')->name('returnIndex');
     Route::post('purchaseReturn/{id}', 'PurchaseTransferController@returnSave')->name('returnSave');
 
+    //Purchase Return To Dealers
+    Route::resource('purchaseReturnToDealers', 'PurchaseReturnController');
+
     //Invoices
     Route::resource('purchaseInvoices', 'PurchaseInvoicesController');
 
