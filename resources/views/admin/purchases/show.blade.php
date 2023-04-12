@@ -107,7 +107,13 @@
         <td>{{ isset($data['grand_total']) ? priceFormate($data['grand_total']) : '--' }}</td>
     </tr>
     <tr>
-        <th>DESCRIPTION</th>
-        <td>{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
+        <th colspan="2">DESCRIPTION</th>
+        <td colspan="4">{{ isset($data['bike_description']) ? $data['bike_description'] : '--' }}</td>
     </tr>
+    @if (isset($data['purchase_return_note']))
+    <tr>
+        <th colspan="2">RETURN DESCRIPTION</th>
+        <td colspan="4">{{ isset($data['purchase_return_note']) ? $data['purchase_return_note'] : '--' }}</td>
+    </tr>
+    @endif
 </table>

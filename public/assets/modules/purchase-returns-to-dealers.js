@@ -55,6 +55,10 @@ $(document).ready(function () {
                     name: "status",
                 },
                 {
+                    data: "created_at",
+                    name: "created_at",
+                },
+                {
                     data: "action",
                     name: "action",
                 },

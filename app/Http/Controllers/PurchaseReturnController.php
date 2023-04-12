@@ -139,6 +139,13 @@ class PurchaseReturnController extends Controller
                         return '<span class="label label-danger">NO</span>';
                     }
                 })
+                ->addColumn('created_at', function ($row) {
+                    if ($row->created_at) {
+                        return date('Y-m-d H:i:s',strtotime($row->created_at));
+                    } else {
+                        return '';
+                    }
+                })
                 ->rawColumns([
                     'action', 'purchase_id', 'branch.branch_name', 'bike_detail', 'grand_total', 'transfer_status', 'status'
                 ])
@@ -240,7 +247,7 @@ class PurchaseReturnController extends Controller
      */
     public function edit($id)
     {
-        $purchaseModel = Purchase::with([
+        $purchaseModel = PurchaseReturns::with([
             'branch' => function ($model) {
                 $model->select('id', 'branch_name');
             },

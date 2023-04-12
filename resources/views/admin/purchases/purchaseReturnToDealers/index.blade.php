@@ -66,6 +66,7 @@
                                         <th>GRAND TOTAL</th>
                                         <th>TRANSFER</th>
                                         <th>STATUS</th>
+                                        <th>RETURN DATE</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
