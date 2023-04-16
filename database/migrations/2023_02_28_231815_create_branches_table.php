@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('branch_pincode', 20)->nullable();
             $table->text('branch_more_detail')->nullable();
             $table->string('account_number', 50)->nullable();
-            $table->string('ifsc_code', 10)->nullable();
+            $table->string('ifsc_code', 50)->nullable();
             $table->string('bank_name', 100)->nullable();
             $table->string('bank_branch', 100)->nullable();
             $table->text('gstin_number')->nullable();
