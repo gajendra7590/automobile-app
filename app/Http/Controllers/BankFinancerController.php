@@ -194,7 +194,7 @@ class BankFinancerController extends Controller
                 'bank_financer_pan_card' => 'nullable',
                 'more_details' => 'nullable',
                 'active_status' => 'required|in:0,1',
-                'financer_type' => 'required|in:0,1',
+                'financer_type' => 'required|in:0,1,2',
             ];
             $validator = Validator::make($postData, $validateArray);
             if ($validator->fails()) {
