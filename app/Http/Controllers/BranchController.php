@@ -86,6 +86,10 @@ class BranchController extends Controller
                 'branch_pincode' => 'nullable|string',
                 'gstin_number' => 'nullable|string',
                 'branch_more_detail' => 'nullable|string',
+                'account_number' => 'nullable|string',
+                'ifsc_code' => 'nullable|string',
+                'bank_name' => 'nullable|string',
+                'bank_branch' => 'nullable|string',
                 'active_status'      => 'required|in:0,1'
             ]);
 
@@ -112,6 +116,10 @@ class BranchController extends Controller
                 'branch_pincode',
                 'branch_more_detail',
                 'gstin_number',
+                'account_number',
+                'ifsc_code',
+                'bank_name',
+                'bank_branch',
                 'active_status'
             ]);
 
@@ -196,6 +204,10 @@ class BranchController extends Controller
                 'branch_pincode'        => 'nullable|string',
                 'gstin_number'          => 'nullable|string',
                 'branch_more_detail'    => 'nullable|string',
+                'account_number' => 'nullable|string',
+                'ifsc_code' => 'nullable|string',
+                'bank_name' => 'nullable|string',
+                'bank_branch' => 'nullable|string',
                 'active_status'         => 'required|in:0,1',
                 'branch_logo_image'     => 'nullable|mimes:jpg,jpeg,png'
             ]);
@@ -221,6 +233,10 @@ class BranchController extends Controller
                 'branch_pincode',
                 'branch_more_detail',
                 'gstin_number',
+                'account_number',
+                'ifsc_code',
+                'bank_name',
+                'bank_branch',
                 'active_status'
             ]);
 
