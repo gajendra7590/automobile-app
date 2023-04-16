@@ -75,10 +75,11 @@
                                         <th width="12%">BRANCH NAME</th>
                                         <th width="12%">CUSTOMER NAME</th>
                                         <th width="25%">BIKE DETAIL</th>
-                                        <th width="12%">TOTAL AMOUNT</th>
-                                        <th width="10%">SALE DATE</th>
-                                        <th width="5%">STATUS</th>
-                                        <th width="5%">BROKER</th>
+                                        <th>CHASIS NUMBER</th>
+                                        <th>TOTAL AMOUNT</th>
+                                        <th>SALE DATE</th>
+                                        <th>STATUS</th>
+                                        <th>BROKER</th>
                                         <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>

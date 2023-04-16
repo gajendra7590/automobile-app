@@ -93,8 +93,10 @@ class Sale extends Model
     public function scopeBranchWise($query)
     {
         $branch_id = self::getCurrentUserBranch();
-        if ($branch_id != '0' || $branch_id != 'null') {
+        if (!empty($branch_id)) {
             return $query->where('branch_id', $branch_id);
+        } else {
+            return $query;
         }
     }
 

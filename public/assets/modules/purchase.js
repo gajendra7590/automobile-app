@@ -82,10 +82,10 @@ $(document).ready(function () {
                     data: "sku",
                     name: "sku",
                 },
-                // {
-                //     data: "variant",
-                //     name: "variant",
-                // },
+                {
+                    data: "vin_number",
+                    name: "vin_number",
+                },
                 {
                     data: "dc_number",
                     name: "dc_number",

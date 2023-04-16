@@ -64,6 +64,10 @@ $(document).ready(function () {
                     name: "bike_detail",
                 },
                 {
+                    data: "purchase.vin_number",
+                    name: "purchase.vin_number",
+                },
+                {
                     data: "total_amount",
                     name: "total_amount",
                 },
@@ -87,7 +91,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1, -2, -3],
+                    targets: [-1, -2, -3, 3,  4],
                 },
                 {
                     searchable: false,
