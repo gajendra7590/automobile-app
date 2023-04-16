@@ -89,10 +89,10 @@ class BankFinancerController extends Controller
                 'bank_financer_contact' => 'nullable|digits:10',
                 'bank_financer_email' => 'nullable|email',
                 'bank_financer_address' => 'nullable',
-                'bank_financer_aadhar_card' => 'nullable|min:12|max:12',
+                'bank_financer_aadhar_card' => 'nullable',
                 'bank_financer_pan_card' => 'nullable',
-                'financer_type' => 'required|in:0,1,2',
                 'more_details' => 'nullable',
+                'financer_type' => 'required|in:0,1,2',
                 'active_status' => 'required|in:0,1'
             ];
             $postData = $request->all();
@@ -187,10 +187,10 @@ class BankFinancerController extends Controller
                 'bank_manager_contact' => 'nullable|digits:10',
                 'bank_manager_email' => 'nullable|email',
                 'bank_financer_name' => 'nullable',
-                'bank_financer_contact' => 'required|digits:10',
+                'bank_financer_contact' => 'nullable|digits:10',
                 'bank_financer_email' => 'nullable|email',
                 'bank_financer_address' => 'nullable',
-                'bank_financer_aadhar_card' => 'nullable|min:12|max:12',
+                'bank_financer_aadhar_card' => 'nullable',
                 'bank_financer_pan_card' => 'nullable',
                 'more_details' => 'nullable',
                 'active_status' => 'required|in:0,1',
