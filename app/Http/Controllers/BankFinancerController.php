@@ -91,7 +91,7 @@ class BankFinancerController extends Controller
                 'bank_financer_address' => 'nullable',
                 'bank_financer_aadhar_card' => 'nullable|min:12|max:12',
                 'bank_financer_pan_card' => 'nullable',
-                'financer_type' => 'required|in:0,1',
+                'financer_type' => 'required|in:0,1,2',
                 'more_details' => 'string',
                 'active_status' => 'required|in:0,1'
             ];
