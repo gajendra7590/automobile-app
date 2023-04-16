@@ -70,6 +70,9 @@ class SaleController extends Controller
                     if ($search_string != "") {
                         $query->where('id', $search_string)
                             ->orWhere('customer_name', 'LIKE', '%' . $search_string . '%')
+                            ->orWhereHas('purchase', function ($q) use ($search_string) {
+                                $q->where('vin_number', 'LIKE', '%' . $search_string . '%');
+                            })
                             ->orWhereHas('purchase.branch', function ($q) use ($search_string) {
                                 $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
                             })

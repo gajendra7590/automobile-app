@@ -89,6 +89,7 @@ class PurchaseController extends Controller
                                 })
                                 ->orwhere('sku', 'LIKE', '%' . $search_string . '%')
                                 ->orwhere('dc_number', 'LIKE', '%' . $search_string . '%')
+                                ->orwhere('vin_number', 'LIKE', '%' . $search_string . '%')
                                 ->orwhereDate('dc_date', $search_string)
                                 ->orwhere('grand_total', 'LIKE', '%' . $search_string . '%');
                         });

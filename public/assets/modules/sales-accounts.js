@@ -56,7 +56,7 @@ $(document).ready(function () {
                     targets: [],
                 },
             ],
-            order: [[0, "asc"]],
+            order: [[0, "desc"]],
         });
     }
     mainDataTable();
