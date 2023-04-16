@@ -108,7 +108,7 @@
                     </tr>
                     <tr style="border-top: 1px solid;">
                         <td style="border-right: 1px solid;width:25%;text-align: center; height: 2rem;">
-                            {{ isset($data->branch) && $data->branch ? $data->branch->branch_name : '' }}
+                            {{ isset($data->brand) && $data->brand ? $data->brand->name : '' }}
                         </td>
                         <td style="border-right: 1px solid;width:25%;text-align: center; height: 2rem;">
                             {{ isset($data->model) && $data->model ? $data->model->model_name : '' }}
