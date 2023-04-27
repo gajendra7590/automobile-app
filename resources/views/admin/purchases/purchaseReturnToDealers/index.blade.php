@@ -64,7 +64,6 @@
                                         <th>DC NUMBER</th>
                                         <th>DC DATE</th>
                                         <th>GRAND TOTAL</th>
-                                        <th>TRANSFER</th>
                                         <th>STATUS</th>
                                         <th>RETURN DATE</th>
                                         <th>ACTION</th>

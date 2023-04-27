@@ -10,6 +10,7 @@ use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -141,7 +142,7 @@ class PurchaseReturnController extends Controller
                 })
                 ->addColumn('created_at', function ($row) {
                     if ($row->created_at) {
-                        return date('Y-m-d H:i:s',strtotime($row->created_at));
+                        return date('Y-m-d H:i:s', strtotime($row->created_at));
                     } else {
                         return '';
                     }
@@ -160,7 +161,6 @@ class PurchaseReturnController extends Controller
      */
     public function create()
     {
-
     }
 
     /**
@@ -197,7 +197,7 @@ class PurchaseReturnController extends Controller
             //purchase_id
 
             $createModel = PurchaseReturns::create($purchaseReplicate);
-            if($createModel) {
+            if ($createModel) {
                 $getPurchase->delete();
             }
             DB::commit();
@@ -296,7 +296,6 @@ class PurchaseReturnController extends Controller
      */
     public function update(Request $request, $id)
     {
-
     }
 
     /**
@@ -310,11 +309,43 @@ class PurchaseReturnController extends Controller
         //
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function backToStock($id)
+    {
+        $findReturnData = PurchaseReturns::find($id);
+        if (!$findReturnData) {
+            return Redirect::back();
+        }
+
+        $findReturnData = $findReturnData->toArray();
+
+        unset($findReturnData['serial_number']);
+        unset($findReturnData['purchase_return_note']);
+
+        $findReturnData['transfer_status'] = 0;
+        $findReturnData['invoice_status']  = 0;
+        $findReturnData['is_editable']     = 1;
+        $findReturnData['status']          = 1;
+
+        //Back to stock
+        Purchase::create($findReturnData);
+
+        //Delete from return stock
+        PurchaseReturns::where('id', $id)->delete();
+        return redirect()->route('purchases.index');
+    }
+
     public function getActions($row)
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
         $action .= '<li><a href="' . route('purchaseReturnToDealers.edit', ['purchaseReturnToDealer' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="Purchase Detail" data-modal_title="View Purchase Detail">VIEW DETAIL</a></li>';
+        $action .= '<li><a href="' . route('backToStock', ['id' => $row->id]) . '" data-id="' . $row->id . '" class="" data-title="Back To Inventory">BACK TO INVENTORY</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;

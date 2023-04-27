@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     function mainDataTable() {
         tableObj = $("#ajaxDataTable").DataTable({
             processing: false,
@@ -45,10 +44,6 @@ $(document).ready(function () {
                 {
                     data: "grand_total",
                     name: "grand_total",
-                },
-                {
-                    data: "transfer_status",
-                    name: "transfer_status",
                 },
                 {
                     data: "status",

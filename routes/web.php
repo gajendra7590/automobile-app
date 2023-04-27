@@ -98,6 +98,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::post('purchaseReturn/{id}', 'PurchaseTransferController@returnSave')->name('returnSave');
 
     //Purchase Return To Dealers
+    Route::get('purchaseReturnToDealers/backToStock/{id}', 'PurchaseReturnController@backToStock')->name('backToStock');
     Route::resource('purchaseReturnToDealers', 'PurchaseReturnController');
 
     //Invoices
