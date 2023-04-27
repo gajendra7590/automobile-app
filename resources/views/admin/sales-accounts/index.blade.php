@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="col-xs-6 cust_col">
                                             <select class="form-control ajaxDtFilter" name="transfer_status"
-                                                data-col_index="5">
+                                                data-col_index="6">
                                                 <option value="">---ACCOUNT STATUS---</option>
                                                 <option value="0">DUE/OPEN</option>
                                                 <option value="1">CLOSED</option>
@@ -70,6 +70,7 @@
                                         <th>BRANCH NAME</th>
                                         <th>ACCOUNT NAME</th>
                                         <th>SALES PRICE</th>
+                                        <th>CHASSIS NUMBER</th>
                                         <th>CREATED DATE</th>
                                         <th width="6%">STATUS</th>
                                         <th width="5%">ACTION</th>

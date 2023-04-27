@@ -22,6 +22,10 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "branch_name",
+                    name: "branch_name",
+                },
+                {
                     data: "bank_name",
                     name: "bank_name",
                 },
@@ -49,7 +53,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1, -2],
+                    targets: [1, -1, -2],
                 },
                 {
                     searchable: false,

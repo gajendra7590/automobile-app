@@ -12,6 +12,7 @@ class BankAccounts extends Model
     protected $table = 'bank_accounts';
 
     protected $fillable = [
+        'branch_id',
         'bank_name',
         'bank_account_number',
         'bank_account_holder_name',
@@ -22,4 +23,9 @@ class BankAccounts extends Model
     protected  $hidden = [];
 
     protected $casts = [];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 }

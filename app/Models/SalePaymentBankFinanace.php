@@ -22,6 +22,7 @@ class SalePaymentBankFinanace extends Model
         'change_balance',
         'due_date',
         'paid_source',
+        'received_in_bank',
         'paid_date',
         'paid_note',
         'collected_by',
@@ -45,7 +46,7 @@ class SalePaymentBankFinanace extends Model
             $findModel = SalePaymentBankFinanace::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -96,5 +97,13 @@ class SalePaymentBankFinanace extends Model
     public function salesman()
     {
         return $this->belongsTo(Salesman::class, 'collected_by');
+    }
+
+    /**
+     * Bank account
+     */
+    public function receivedBank()
+    {
+        return $this->belongsTo(BankAccounts::class, 'received_in_bank');
     }
 }

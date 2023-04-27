@@ -21,6 +21,7 @@
                     placeholder="yyyy-mm-dd">
             </div>
         </div>
+        {{-- received_in_bank --}}
         <div class="row">
             <div class="form-group col-md-4">
                 <label>Payment Source</label>
@@ -56,12 +57,27 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-6">
+                <label>RECEIVED IN BANK ACCOUNT</label>
+                <select class="form-control" name="received_in_bank">
+                    <option value=""></option>
+                    @isset($bankAccounts)
+                        @foreach ($bankAccounts as $bankAccount)
+                            <option value="{{ $bankAccount->id }}">
+                                {{ $bankAccount->bank_name . ' - ' . $bankAccount->bank_account_number }}
+                            </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-6">
                 <label>Next Due Date</label>
                 <input name="next_due_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
                     placeholder="yyyy-mm-dd">
             </div>
-            <div class="form-group col-md-9">
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
                 <label>Payment Note(If Any)</label>
                 <input name="payment_note" type="text" class="form-control" value=""
                     placeholder="Payment Note...">

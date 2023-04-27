@@ -88,7 +88,7 @@
     </div>
     <div class="form-group col-md-3">
         <label>GST Rate (TAX RATE)</label>
-        <select name="gst_rto_rate_id" class="form-control onChangeSelect" {{ $editDisable }}>
+        <select name="gst_rto_rate_id" class="form-control onChangeSelect">
             <option value="">---GST Rate (TAX RATE)---</option>
             @if (isset($gst_rto_rates))
                 @foreach ($gst_rto_rates as $key => $gst_rto_rate)
@@ -100,46 +100,41 @@
             @endif
         </select>
         <input type='hidden' name="gst_rto_rate_percentage"
-            value="{{ isset($data['gst_rto_rate_percentage']) ? $data['gst_rto_rate_percentage'] : '' }}"
-            {{ $editReadOnly }} />
+            value="{{ isset($data['gst_rto_rate_percentage']) ? $data['gst_rto_rate_percentage'] : '' }}" />
     </div>
     <div class="form-group col-md-3">
         <label>Ex Showroom Amount</label>
         <input type='text' class="form-control onChangeInput" placeholder="₹0.00" name="ex_showroom_amount"
-            value="{{ isset($data['ex_showroom_amount']) ? $data['ex_showroom_amount'] : '' }}" {{ $priceDis }}
-            {{ $editReadOnly }} />
+            value="{{ isset($data['ex_showroom_amount']) ? $data['ex_showroom_amount'] : '' }}" {{ $priceDis }} />
     </div>
 </div>
 <div class="row">
     <div class="form-group col-md-3">
         <label>Tax Amount</label>
         <input type='text' class="form-control" placeholder="₹0.00" name="tax_amount"
-            value="{{ isset($data['tax_amount']) ? $data['tax_amount'] : '' }}" {{ $priceDis }} readonly
-            {{ $editReadOnly }} />
+            value="{{ isset($data['tax_amount']) ? $data['tax_amount'] : '' }}" {{ $priceDis }} readonly />
     </div>
     <div class="form-group col-md-3">
         <label>HYP Amount</label>
         <input type='text' class="form-control onChangeInput" placeholder="₹0.00" name="hyp_amount"
-            value="{{ isset($data['hyp_amount']) ? $data['hyp_amount'] : '' }}" {{ $priceDis }}
-            {{ $editReadOnly }} />
+            value="{{ isset($data['hyp_amount']) ? $data['hyp_amount'] : '' }}" {{ $priceDis }} />
     </div>
     <div class="form-group col-md-3">
         <label>TR Amount</label>
         <input type='text' class="form-control onChangeInput" placeholder="₹0.00" name="tr_amount"
-            value="{{ isset($data['tr_amount']) ? $data['tr_amount'] : '' }}" {{ $priceDis }}
-            {{ $editReadOnly }} />
+            value="{{ isset($data['tr_amount']) ? $data['tr_amount'] : '' }}" {{ $priceDis }} />
     </div>
     <div class="form-group col-md-3">
         <label>Fees</label>
         <input type='text' class="form-control onChangeInput" placeholder="₹0.00" name="fees"
-            value="{{ isset($data['fees']) ? $data['fees'] : '' }}" {{ $priceDis }} {{ $editReadOnly }} />
+            value="{{ isset($data['fees']) ? $data['fees'] : '' }}" {{ $priceDis }} />
     </div>
 </div>
 <div class="row">
     <div class="form-group col-md-3">
         <label>Total Amount</label>
         <input type='text' class="form-control" placeholder="₹0.00" name="total_amount"
-            value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}" readonly {{ $editReadOnly }} />
+            value="{{ isset($data['total_amount']) ? $data['total_amount'] : '' }}" readonly />
     </div>
     <div class="form-group col-md-9">
         <label>RTO Registration Remark(If Any)</label>

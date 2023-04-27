@@ -52,6 +52,13 @@
           </td>
       </tr>
       <tr>
+          <th>RECEIVED IN BANK NAME</th>
+          <td>{{ isset($data['receivedBank']['bank_name']) ? $data['receivedBank']['bank_name'] : '--' }}</td>
+          <th>RECEIVED IN BANK ACCOUNT</th>
+          <td>{{ isset($data['receivedBank']['bank_account_number']) ? $data['receivedBank']['bank_account_number'] : '--' }}
+          </td>
+      </tr>
+      <tr>
           <td colspan="4">Note : If you will pay more then installment amount it will adjust in next
               installment.</td>
       </tr>

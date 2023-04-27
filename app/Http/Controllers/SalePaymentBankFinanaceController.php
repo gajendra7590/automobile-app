@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccounts;
 use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
@@ -225,6 +226,9 @@ class SalePaymentBankFinanaceController extends Controller
                 },
                 'salesman' => function ($salesman) {
                     $salesman->select('id', 'name');
+                },
+                'receivedBank' => function ($receivedBank) {
+                    $receivedBank->select('id', 'bank_name', 'bank_account_number');
                 }
             ])->first();
 
@@ -612,7 +616,8 @@ class SalePaymentBankFinanaceController extends Controller
             $data = array(
                 'data' => $salePaymentAccount,
                 'depositeSources' => depositeSources(),
-                'salemans'        => self::_getSalesman()
+                'salemans'        => self::_getSalesman(),
+                'bankAccounts'   => self::_getBankAccounts()
             );
             return response()->json([
                 'status'     => true,
@@ -630,7 +635,7 @@ class SalePaymentBankFinanaceController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sales_account_id', 'total_outstanding', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'next_due_date', 'payment_note');
+            $postData = $request->only('sales_account_id', 'total_outstanding', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'received_in_bank', 'next_due_date', 'payment_note');
             $validator = Validator::make($postData, [
                 'sales_account_id'      => "required|exists:sale_payment_accounts,id",
                 'total_outstanding'     => "required|numeric|min:1",
@@ -639,6 +644,7 @@ class SalePaymentBankFinanaceController extends Controller
                 'paid_source'           => 'required|string',
                 'status'                => 'required|in:0,1,2,3',
                 'next_due_date'         => 'required|date|after:' . now()->format('Y-m-d'),
+                'received_in_bank'      => 'nullable|exists:bank_accounts,id',
                 'payment_note'          => 'nullable|string',
                 'collected_by'          => 'nullable|exists:salesmans,id'
             ]);
@@ -671,7 +677,8 @@ class SalePaymentBankFinanaceController extends Controller
                 'paid_note' => $postData['payment_note'],
                 'collected_by' => $postData['collected_by'],
                 'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
-                'status' => $postData['status']
+                'status' => $postData['status'],
+                'received_in_bank' => $postData['received_in_bank'],
             ]);
             //CREATE NEW TRANSACTION
             SalePaymentTransactions::create([

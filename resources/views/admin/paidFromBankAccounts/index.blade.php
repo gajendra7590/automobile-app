@@ -35,11 +35,12 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>BRANCH</th>
                                         <th>BANK NAME</th>
-                                        <th>ACCOUNT NUMBER</th>
-                                        <th>ACCOUNT HOLDER</th>
-                                        <th>IFSC CODE</th>
-                                        <th>BRANCH NAME</th>
+                                        <th>BANK ACCOUNT NUMBER</th>
+                                        <th>BANK ACCOUNT HOLDER</th>
+                                        <th>BANK IFSC CODE</th>
+                                        <th>BANK BRANCH NAME</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>

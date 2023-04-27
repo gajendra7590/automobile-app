@@ -34,6 +34,10 @@ $(document).ready(function () {
                     name: "sales_total_amount",
                 },
                 {
+                    data: "chassis_number",
+                    name: "chassis_number",
+                },
+                {
                     data: "created_at",
                     name: "created_at",
                 },
@@ -49,7 +53,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1, -2],
+                    targets: [-1, -2, 4],
                 },
                 {
                     searchable: false,

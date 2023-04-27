@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\BankAccounts;
 use App\Models\BankFinancer;
 use App\Models\BatteryBrand;
 use App\Models\Broker;
@@ -64,7 +65,7 @@ trait CommonHelper
         }
 
         //Filter by branch
-        if (self::getCurrentUserBranch() != '0') {
+        if (!empty(self::getCurrentUserBranch())) {
             $model = $model->where('id', self::getCurrentUserBranch());
         }
 
@@ -607,5 +608,21 @@ trait CommonHelper
             $model = $model->where('id', $id);
         }
         return $model->get();
+    }
+
+    /**
+     * Get All Branches
+     */
+    public static function _getBankAccounts($select_all = true)
+    {
+        $model = [];
+        //Filter by branch
+        if (!empty(self::getCurrentUserBranch())) {
+            $model = BankAccounts::where('id', self::getCurrentUserBranch())->get();
+        } else {
+            $model = BankAccounts::get();
+        }
+
+        return $model;
     }
 }

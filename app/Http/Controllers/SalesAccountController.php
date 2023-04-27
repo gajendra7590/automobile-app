@@ -60,8 +60,8 @@ class SalesAccountController extends Controller
             }
 
             //Filter By Status
-            if (isset($postData['columns'][5]['search']['value']) && ($postData['columns'][5]['search']['value'] != '')) {
-                $data->where('status', $postData['columns'][5]['search']['value']);
+            if (isset($postData['columns'][6]['search']['value']) && ($postData['columns'][6]['search']['value'] != '')) {
+                $data->where('status', $postData['columns'][6]['search']['value']);
             }
 
             $search_string = isset($postData['search']['value']) ? $postData['search']['value'] : "";
@@ -120,13 +120,20 @@ class SalesAccountController extends Controller
                         return '<span class="label label-warning">Open</span>';
                     }
                 })
+                ->addColumn('chassis_number', function ($row) {
+                    if (isset($row->sale->purchase)) {
+                        return $row->sale->purchase->vin_number;
+                    } else {
+                        return '--';
+                    }
+                })
                 ->addColumn('created_at', function ($row) {
                     return date('Y-m-d', strtotime($row->created_at));
                 })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['title', 'status', 'created_at', 'action'])
+                ->rawColumns(['title', 'status', 'chassis_number', 'created_at', 'action'])
                 ->make(true);
         }
     }

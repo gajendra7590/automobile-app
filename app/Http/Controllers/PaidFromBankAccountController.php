@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
+use App\Traits\CommonHelper;
+
 class PaidFromBankAccountController extends Controller
 {
+    use CommonHelper;
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +21,11 @@ class PaidFromBankAccountController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = BankAccounts::select('*');
+            $data = BankAccounts::select('*')->with([
+                'branch' => function ($branch) {
+                    $branch->select('id', 'branch_name');
+                }
+            ]);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -27,6 +34,9 @@ class PaidFromBankAccountController extends Controller
                     } else {
                         return "<label class='switch'><input type='checkbox' value='$row->id' data-type='branch' class='active_status'><span class='slider round'></span></label>";
                     }
+                })
+                ->addColumn('branch_name', function ($row) {
+                    return (isset($row->branch)) ? $row->branch->branch_name : "--";
                 })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
@@ -46,13 +56,15 @@ class PaidFromBankAccountController extends Controller
      */
     public function create()
     {
+        $branches = self::_getBranches();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
             'data'       => view('admin.paidFromBankAccounts.ajaxModal', [
                 'action' => route('paidFromBankAccounts.store'),
-                'method' => 'POST'
+                'method' => 'POST',
+                'branches' => $branches
             ])->render()
         ]);
     }
@@ -69,6 +81,7 @@ class PaidFromBankAccountController extends Controller
             DB::beginTransaction();;
             $postData = $request->all();
             $validator = Validator::make($postData, [
+                'branch_id'                => 'required|exists:bank_accounts,id',
                 'bank_name'                => 'required',
                 'bank_account_number'      => 'required',
                 'bank_account_holder_name' => 'required',
@@ -85,7 +98,7 @@ class PaidFromBankAccountController extends Controller
                     'errors'     => $validator->errors(),
                 ]);
             }
-            $createData = $request->only(['bank_name', 'bank_account_number', 'bank_account_holder_name', 'bank_ifsc_code', 'bank_branch_name']);
+            $createData = $request->only(['branch_id', 'bank_name', 'bank_account_number', 'bank_account_holder_name', 'bank_ifsc_code', 'bank_branch_name']);
             BankAccounts::create($createData);
             DB::commit();
             return response()->json([
@@ -125,10 +138,12 @@ class PaidFromBankAccountController extends Controller
     public function edit($id)
     {
         $bankAccount = BankAccounts::find($id);
+        $branches = (!empty($bankAccount->branch_id)) ? self::_getBranchById($bankAccount->branch_id) : self::_getBranches();
         $data = array(
             'data' => $bankAccount,
             'action' => route('paidFromBankAccounts.update', ['paidFromBankAccount' => $id]),
-            'method' => 'PUT'
+            'method' => 'PUT',
+            'branches' => $branches
         );
         return response()->json([
             'status'     => true,
@@ -151,6 +166,7 @@ class PaidFromBankAccountController extends Controller
             DB::beginTransaction();
             $postData = $request->all();
             $validator = Validator::make($postData, [
+                'branch_id'                => 'required|exists:bank_accounts,id',
                 'bank_name'                => 'required',
                 'bank_account_number'      => 'required',
                 'bank_account_holder_name' => 'required',
@@ -164,7 +180,7 @@ class PaidFromBankAccountController extends Controller
             if (!$branch) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => trans('messages.brand_not_found')]);
             }
-            $updateData = $request->only(['bank_name', 'bank_account_number', 'bank_account_holder_name', 'bank_ifsc_code', 'bank_branch_name']);
+            $updateData = $request->only(['branch_id', 'bank_name', 'bank_account_number', 'bank_account_holder_name', 'bank_ifsc_code', 'bank_branch_name']);
             $branch->update($updateData);
             DB::commit();
             return response()->json(['status' => true, 'statusCode' => 200, 'message' => trans('messages.update_success'),], 200);
