@@ -77,7 +77,7 @@ class PurchaseReturns extends Model
             $findModel = Purchase::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -94,7 +94,7 @@ class PurchaseReturns extends Model
     public function scopeBranchWise($query)
     {
         $branch_id = self::getCurrentUserBranch();
-        if ($branch_id != '0' || $branch_id != 'null') {
+        if (!empty($branch_id)) {
             return $query->where('bike_branch', $branch_id);
         }
     }

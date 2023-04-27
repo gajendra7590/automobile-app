@@ -66,7 +66,7 @@ class CustomerReturnSalePaymentAccounts extends Model
     public function scopeBranchWise($query)
     {
         $branch_id = self::getCurrentUserBranch();
-        if ($branch_id != '0' || $branch_id != 'null') {
+        if (!empty($branch_id)) {
             return $query->whereHas('sale', function ($sale) use ($branch_id) {
                 $sale->where('branch_id', $branch_id);
             });

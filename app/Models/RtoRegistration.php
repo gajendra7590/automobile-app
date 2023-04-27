@@ -63,7 +63,7 @@ class RtoRegistration extends Model
             $findModel = RtoRegistration::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -80,7 +80,7 @@ class RtoRegistration extends Model
     public function scopeBranchWise($query)
     {
         $branch_id = self::getCurrentUserBranch();
-        if ($branch_id != '0' || $branch_id != 'null') {
+        if (!empty($branch_id)) {
             return $query->whereHas('sale', function ($sale) use ($branch_id) {
                 $sale->where('branch_id', $branch_id);
             });
