@@ -60,6 +60,15 @@
       </tr>
 
       <tr>
+          <th>CHASSIS NUMBER</th>
+          <td> {{ isset($data['chasis_number']) ? $data['chasis_number'] : '--' }}</td>
+          <th>ENGINE NUMBER</th>
+          <td> {{ isset($data['engine_number']) ? $data['engine_number'] : '--' }}</td>
+          <th>BROKER NAME</th>
+          <td> {{ isset($data['broker_name']) ? $data['broker_name'] : '--' }}</td>
+      </tr>
+
+      <tr>
           <th>RC NUMBER</th>
           <td> {{ isset($data['rc_number']) ? $data['rc_number'] : '--' }}
           </td>

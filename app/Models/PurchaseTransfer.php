@@ -43,7 +43,7 @@ class PurchaseTransfer extends Model
             $findModel = PurchaseTransfer::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -69,6 +69,11 @@ class PurchaseTransfer extends Model
                 $city->select('id', 'city_name');
             }
         ]);
+    }
+
+    public function brokr()
+    {
+        return $this->belongsTo(Broker::class, 'broker_id');
     }
 
     public function purchase()

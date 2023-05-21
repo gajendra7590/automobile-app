@@ -66,7 +66,7 @@
                                     ACCOUNTS
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('loadReportSection') }}?type=receipt_voucher" class="loadeReport">
                                     RECEIPT VOUCHER
                                 </a>
@@ -75,7 +75,7 @@
                                 <a href="{{ route('loadReportSection') }}?type=payment_voucher" class="loadeReport">
                                     PAYMENT VOUCHER
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                         <div class="tab-content">
                             <div class="active tab-pane" id="reportContainer">

@@ -49,9 +49,6 @@ class RtoRegistrationController extends Controller
                 ->addColumn('contact_city', function ($row) {
                     return $row->contact_city ? $row->contact_city->city_name : '---';
                 })
-                ->addColumn('rc_number', function ($row) {
-                    return (!empty($row->rc_number)) ? $row->rc_number : '--';
-                })
                 ->addColumn('recieved_date', function ($row) {
                     return (!empty($row->recieved_date)) ? $row->recieved_date : '--';
                 })
@@ -364,7 +361,14 @@ class RtoRegistrationController extends Controller
         $postData = $request->all();
         $salesModel = Sale::with([
             'purchase' => function ($purchase) {
-                $purchase->select('id', 'sku');
+                $purchase->with([
+                    'purchase_transfer_latest' => function ($purchase_tf_latest) {
+                        $purchase_tf_latest->select('id', 'purchase_id', 'broker_id', 'status')
+                            ->with([
+                                'brokr:id,name,email'
+                            ]);
+                    }
+                ]);
             },
             'financer' => function ($purchase) {
                 $purchase->select('id', 'bank_name');

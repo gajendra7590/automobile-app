@@ -40,6 +40,9 @@
                                         <th>CONTACT NAME</th>
                                         <th>TOTAL AMOUNT</th>
                                         <th>RC NUMBER</th>
+                                        <th>CHASSIS NUMBER</th>
+                                        <th>ENGINE NUMBER</th>
+                                        <th>BROKER NAME</th>
                                         <th>SUBMIT DATE</th>
                                         <th>RECIEVED DATE</th>
                                         <th width="6%">ACTION</th>

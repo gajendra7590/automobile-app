@@ -76,6 +76,24 @@
     </div>
 </div>
 <div class="row">
+    <div class="form-group col-md-4">
+        <label>Chasis Number</label>
+        <input type='text' class="form-control" placeholder="Chasis Number" name="chasis_number" readonly
+            value="{{ isset($data['chasis_number']) ? $data['chasis_number'] : '' }}" />
+    </div>
+    <div class="form-group col-md-4">
+        <label>Engine Number</label>
+        <input type='text' class="form-control" placeholder="Engine Number" name="engine_number" readonly
+            value="{{ isset($data['engine_number']) ? $data['engine_number'] : '' }}" />
+    </div>
+    <div class="form-group col-md-4">
+        <label>Broker Name(If Any)</label>
+        <input type="hidden" name="broker_id" value="{{ isset($data['broker_id']) ? $data['broker_id'] : 0 }}" />
+        <input type='text' class="form-control" placeholder="Broker Name(If Any)" name="broker_name" readonly
+            value="{{ isset($data['broker_name']) ? $data['broker_name'] : '' }}" />
+    </div>
+</div>
+<div class="row">
     <div class="form-group col-md-3">
         <label>SKU</label>
         <input type='text' class="form-control" placeholder="SKU" name="sku" readonly

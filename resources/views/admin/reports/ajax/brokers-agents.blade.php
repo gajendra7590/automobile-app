@@ -1,8 +1,8 @@
 <section class="content">
     <form method="GET" redirect="nothing" action="{{ isset($action) ? $action : '' }}" enctype="multipart/form-data">
         <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
-        <div class='col-md-12'>
-            <div class="form-group col-md-2">
+        <div class='row'>
+            <div class="form-group col-md-3">
                 <label>BROKER</label>
                 <select name="broker_id" class="form-control">
                     <option value="">---Select Broker----</option>
@@ -13,7 +13,7 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>BIKE BRAND</label>
                 <select name="brand_id" data-dep_dd_name="model_id"
                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
@@ -25,7 +25,7 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>BIKE MODEL</label>
                 <select name="model_id" class="form-control">
                     <option value="">---Select Model----</option>
@@ -36,7 +36,7 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>SALE TYPE</label>
                 <select name="sale_type" class="form-control">
                     <option value="">---Sale Type----</option>
@@ -45,8 +45,8 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="form-group col-md-2">
+        <div class="row">
+            <div class="form-group col-md-3">
                 <label>DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>
@@ -55,13 +55,13 @@
                     <option value="custom">Custom</option>
                 </select>
             </div>
-            <div class="col-md-6 pull-right dateshow" hidden>
-                <div class="form-group col-md-6">
+            <div class="dateshow" hidden>
+                <div class="form-group col-md-3">
                     <label>START DATE</label>
                     <input type='date' name="start_date" class="form-control" value="{{ date('Y-m-d') }}"
                         placeholder="0000-00-00" min="{{ date('Y-m-d') }}" />
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-3">
                     <label>END DATE</label>
                     <input type='date' name="end_date" class="form-control" placeholder="0000-00-00"
                         min="{{ date('Y-m-d') }}" />

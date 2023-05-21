@@ -25,10 +25,6 @@ $(document).ready(function () {
                     data: "branchName",
                     name: "branchName",
                 },
-                // {
-                //     data: "agentName",
-                //     name: "agentName",
-                // },
                 {
                     data: "contact_name",
                     name: "contact_name",
@@ -37,25 +33,21 @@ $(document).ready(function () {
                     data: "total_amount",
                     name: "total_amount",
                 },
-                // {
-                //     data: "payment_amount",
-                //     name: "payment_amount",
-                // },
-                // {
-                //     data: "payment_date",
-                //     name: "payment_date",
-                // },
-                // {
-                //     data: "rc_number",
-                //     name: "rc_number",
-                // },
-                // {
-                //     data: "rc_status",
-                //     name: "rc_status",
-                // },
                 {
                     data: "rc_number",
                     name: "rc_number",
+                },
+                {
+                    data: "chasis_number",
+                    name: "chasis_number",
+                },
+                {
+                    data: "engine_number",
+                    name: "engine_number",
+                },
+                {
+                    data: "broker_name",
+                    name: "broker_name",
                 },
                 {
                     data: "submit_date",
