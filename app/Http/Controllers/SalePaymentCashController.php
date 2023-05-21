@@ -47,7 +47,8 @@ class SalePaymentCashController extends Controller
             $data = array(
                 'data' => $salePaymentAccount,
                 'depositeSources' => depositeSources(),
-                'salemans'        => self::_getSalesman()
+                'salemans'        => self::_getSalesman(),
+                'bankAccounts'   => self::_getBankAccounts()
             );
             return response()->json([
                 'status'     => true,
@@ -68,7 +69,7 @@ class SalePaymentCashController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sales_account_id', 'total_outstanding', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'next_due_date', 'payment_note');
+            $postData = $request->only('sales_account_id', 'total_outstanding', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'next_due_date', 'payment_note', 'received_in_bank');
             $validator = Validator::make($postData, [
                 'sales_account_id'      => "required|exists:sale_payment_accounts,id",
                 'total_outstanding'     => "required|numeric|min:1",
@@ -77,8 +78,9 @@ class SalePaymentCashController extends Controller
                 'paid_source'           => 'required|string',
                 'status'                => 'required|in:0,1,2,3',
                 'next_due_date'         => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
-                'payment_note'          => 'nullable|string',
-                'collected_by'          => 'nullable|exists:salesmans,id'
+                'payment_note'          => 'required|string',
+                'collected_by'          => 'nullable|exists:salesmans,id',
+                'received_in_bank'      => 'nullable|exists:bank_accounts,id',
             ]);
             //If Validation failed
             if ($validator->fails()) {
@@ -97,19 +99,20 @@ class SalePaymentCashController extends Controller
             //DEBIT SALES CASH PAYMENT
             $payment_name = 'Down Payment Paid By Customer.';
             $createdCashPayment = SalePaymentCash::create([
-                'sale_id' => $salePaymentAccount->sale_id,
+                'sale_id'                 => $salePaymentAccount->sale_id,
                 'sale_payment_account_id' => $salePaymentAccount->id,
-                'payment_name' => $payment_name,
-                'credit_amount' => 0,
-                'debit_amount' => $postData['paid_amount'],
-                'change_balance' => $newOutStanding,
-                'due_date'    => $postData['next_due_date'],
-                'paid_source' => $postData['paid_source'],
-                'paid_date' => $postData['paid_date'],
-                'paid_note' => $postData['payment_note'],
-                'collected_by' => $postData['collected_by'],
-                'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
-                'status' => $postData['status']
+                'payment_name'            => $payment_name,
+                'credit_amount'           => 0,
+                'debit_amount'            => $postData['paid_amount'],
+                'change_balance'          => $newOutStanding,
+                'due_date'                => $postData['next_due_date'],
+                'paid_source'             => $postData['paid_source'],
+                'paid_date'               => $postData['paid_date'],
+                'paid_note'               => $postData['payment_note'],
+                'collected_by'            => $postData['collected_by'],
+                'trans_type'              => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                'status'                  => $postData['status'],
+                'received_in_bank'        => isset($postData['received_in_bank']) ? $postData['received_in_bank'] : null,
             ]);
             //CREATE NEW TRANSACTION
             SalePaymentTransactions::create([
@@ -170,6 +173,9 @@ class SalePaymentCashController extends Controller
                 },
                 'salesman' => function ($salesman) {
                     $salesman->select('id', 'name');
+                },
+                'receivedBank' => function ($receivedBank) {
+                    $receivedBank->select('id', 'bank_name', 'bank_account_number');
                 }
             ])->first();
 

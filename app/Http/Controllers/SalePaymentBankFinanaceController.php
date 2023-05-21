@@ -645,7 +645,7 @@ class SalePaymentBankFinanaceController extends Controller
                 'status'                => 'required|in:0,1,2,3',
                 'next_due_date'         => 'required|date|after:' . now()->format('Y-m-d'),
                 'received_in_bank'      => 'nullable|exists:bank_accounts,id',
-                'payment_note'          => 'nullable|string',
+                'payment_note'          => 'required|string',
                 'collected_by'          => 'nullable|exists:salesmans,id'
             ]);
             //If Validation failed

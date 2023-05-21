@@ -23,7 +23,7 @@
         </div>
         {{-- received_in_bank --}}
         <div class="row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label>Payment Source</label>
                 <select class="form-control" name="paid_source">
                     @isset($depositeSources)
@@ -35,14 +35,16 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label>Status</label>
                 <select class="form-control" name="status">
                     <option value="1">PAID</option>
                     <option value="2">ON HOLD(IN CASE OF CHEQUE)</option>
                 </select>
             </div>
-            <div class="form-group col-md-4">
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
                 <label>Payment Collected By</label>
                 <select class="form-control" name="collected_by">
                     <option value="">---Select Salesman---</option>
@@ -55,12 +57,18 @@
                     @endisset
                 </select>
             </div>
-        </div>
-        <div class="row">
             <div class="form-group col-md-6">
+                <label>Next Due Date</label>
+                <input name="next_due_date" type="date" class="form-control"
+                    min="{{ date('Y-m-d', strtotime('+1 day')) }}" value="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                    placeholder="YYYY-MM-DD">
+            </div>
+        </div>
+        <div class="row col_bank_account">
+            <div class="form-group col-md-12">
                 <label>RECEIVED IN BANK ACCOUNT</label>
                 <select class="form-control" name="received_in_bank">
-                    <option value=""></option>
+                    <option value="">SELECT BANK ACCOUNT</option>
                     @isset($bankAccounts)
                         @foreach ($bankAccounts as $bankAccount)
                             <option value="{{ $bankAccount->id }}">
@@ -69,11 +77,6 @@
                         @endforeach
                     @endisset
                 </select>
-            </div>
-            <div class="form-group col-md-6">
-                <label>Next Due Date</label>
-                <input name="next_due_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
-                    placeholder="yyyy-mm-dd">
             </div>
         </div>
         <div class="row">
@@ -146,5 +149,18 @@
                 required: "The payment note field is required.",
             }
         },
+    });
+
+    $(document).ready(function() {
+        $('.col_bank_account').hide();
+        $('select[name="paid_source"]').change(function() {
+            let val = $(this).val();
+            if (val == 'Cash') {
+                $('.col_bank_account').hide();
+                $('select[name="received_in_bank"]').prop('selectedIndex', 0);
+            } else {
+                $('.col_bank_account').show();
+            }
+        });
     });
 </script>

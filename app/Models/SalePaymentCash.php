@@ -26,7 +26,8 @@ class SalePaymentCash extends Model
         'paid_note',
         'collected_by',
         'trans_type',
-        'status'
+        'status',
+        'received_in_bank'
     ];
 
 
@@ -46,7 +47,7 @@ class SalePaymentCash extends Model
             $findModel = SalePaymentCash::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -97,5 +98,13 @@ class SalePaymentCash extends Model
     public function salesman()
     {
         return $this->belongsTo(Salesman::class, 'collected_by');
+    }
+
+    /**
+     * Bank account
+     */
+    public function receivedBank()
+    {
+        return $this->belongsTo(BankAccounts::class, 'received_in_bank');
     }
 }

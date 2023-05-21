@@ -31,7 +31,8 @@ class SalePaymentPersonalFinanace extends Model
         'amount_paid_source',
         'amount_paid_note',
         'collected_by',
-        'status'
+        'status',
+        'received_in_bank'
     ];
 
 
@@ -50,7 +51,7 @@ class SalePaymentPersonalFinanace extends Model
             $findModel = SalePaymentPersonalFinanace::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -101,5 +102,13 @@ class SalePaymentPersonalFinanace extends Model
     public function salesman()
     {
         return $this->belongsTo(Salesman::class, 'collected_by');
+    }
+
+    /**
+     * Bank account
+     */
+    public function receivedBank()
+    {
+        return $this->belongsTo(BankAccounts::class, 'received_in_bank');
     }
 }

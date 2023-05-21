@@ -28,10 +28,14 @@
                     @endisset
                 </select>
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-12">
                 <label>PAYMENT NOTE</label>
                 <textarea class="form-control" name="pay_method_note" placeholder="Ex : Cheque No / Bank Detail | UPI Trans ID Etc.."></textarea>
             </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-6">
                 <label>PAYMENT OPTION</label>
                 <select class="form-control" name="pay_option">
@@ -45,7 +49,9 @@
                     value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
                     placeholder="₹ 0.00" readonly>
             </div>
-            <div class="form-group col-md-12">
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
                 <label>PAYMENT COLLECTED BY SALESMAN</label>
                 <select class="form-control" name="collected_by_salesman_id">
                     <option value="0">---SELECT SALESMAN---</option>
@@ -60,11 +66,28 @@
                 <div class="form-group col-md-6 hideElement" id="due_date_ele">
                     <label>NEXT DUE DATE</label>
                     <input name="next_due_Date" type="date" class="form-control"
-                        value="{{ isset($data['emi_due_date']) ? date('Y-m-d', strtotime($data['emi_due_date'])) : date('Y-m-d') }}"
+                        min="{{ isset($data['emi_due_date']) ? date('Y-m-d', strtotime($data['emi_due_date'])) : date('Y-m-d', strtotime('+1 day')) }}"
+                        value="{{ isset($data['emi_due_date']) ? date('Y-m-d', strtotime($data['emi_due_date'])) : date('Y-m-d', strtotime('+1 day')) }}"
                         placeholder="YYYY-MM-DD" disabled>
                 </div>
             @endif
-
+        </div>
+        <div class="row col_bank_account">
+            <div class="form-group col-md-12">
+                <label>RECEIVED IN BANK ACCOUNT</label>
+                <select class="form-control" name="received_in_bank">
+                    <option value="">SELECT BANK ACCOUNT</option>
+                    @isset($bankAccounts)
+                        @foreach ($bankAccounts as $bankAccount)
+                            <option value="{{ $bankAccount->id }}">
+                                {{ $bankAccount->bank_name . ' - ' . $bankAccount->bank_account_number }}
+                            </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+        </div>
+        <div class="row">
             <div class="form-group col-md-12">
                 <p class="text-danger" style="font-size: 15px;">
                     <b>Important Note :</b> If You are paying advance partial payment, then can only pay for next emi
@@ -103,7 +126,18 @@
                 $('#due_date_ele').removeClass('hideElement');
                 $('input[name="next_due_Date"]').removeAttr('disabled');
             }
-        })
+        });
+
+        $('.col_bank_account').hide();
+        $('select[name="pay_method"]').change(function() {
+            let val = $(this).val();
+            if (val == 'Cash') {
+                $('.col_bank_account').hide();
+                $('select[name="received_in_bank"]').prop('selectedIndex', 0);
+            } else {
+                $('.col_bank_account').show();
+            }
+        });
 
     })
 </script>

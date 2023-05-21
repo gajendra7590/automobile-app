@@ -54,11 +54,27 @@
                 </select>
             </div>
         </div>
+        <div class="row col_bank_account">
+            <div class="form-group col-md-12">
+                <label>RECEIVED IN BANK ACCOUNT</label>
+                <select class="form-control" name="received_in_bank">
+                    <option value="">SELECT BANK ACCOUNT</option>
+                    @isset($bankAccounts)
+                        @foreach ($bankAccounts as $bankAccount)
+                            <option value="{{ $bankAccount->id }}">
+                                {{ $bankAccount->bank_name . ' - ' . $bankAccount->bank_account_number }}
+                            </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+        </div>
         <div class="row">
             <div class="form-group col-md-3">
                 <label>Next Due Date</label>
-                <input name="next_due_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
-                    placeholder="yyyy-mm-dd">
+                <input name="next_due_date" type="date" class="form-control"
+                    min="{{ date('Y-m-d', strtotime('+1 day')) }}" value="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                    placeholder="YYYY-MM-DD">
             </div>
             <div class="form-group col-md-9">
                 <label>Payment Note(If Any)</label>
@@ -129,5 +145,18 @@
                 required: "The payment note field is required.",
             }
         },
+    });
+
+    $(document).ready(function() {
+        $('.col_bank_account').hide();
+        $('select[name="paid_source"]').change(function() {
+            let val = $(this).val();
+            if (val == 'Cash') {
+                $('.col_bank_account').hide();
+                $('select[name="received_in_bank"]').prop('selectedIndex', 0);
+            } else {
+                $('.col_bank_account').show();
+            }
+        });
     });
 </script>

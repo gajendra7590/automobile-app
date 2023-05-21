@@ -271,6 +271,9 @@ class SalePaymentPersonalFinanaceController extends Controller
                 },
                 'salesman' => function ($salesman) {
                     $salesman->select('id', 'name');
+                },
+                'receivedBank' => function ($receivedBank) {
+                    $receivedBank->select('id', 'bank_name', 'bank_account_number');
                 }
             ])->first();
 
@@ -683,9 +686,10 @@ class SalePaymentPersonalFinanaceController extends Controller
             ])->first();
 
             $data['data'] = $installModel;
-            $data['totalDueCounts'] = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
-            $data['depositeSources'] = depositeSources();
-            $data['salemans'] = self::_getSalesman();
+            $data['totalDueCounts']   = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
+            $data['depositeSources']  = depositeSources();
+            $data['bankAccounts']     =  self::_getBankAccounts();
+            $data['salemans']         = self::_getSalesman();
 
             return response()->json([
                 'status'     => true,
@@ -708,14 +712,15 @@ class SalePaymentPersonalFinanaceController extends Controller
             try {
                 $postData = $request->all();
                 $validator = Validator::make($postData, [
-                    'id'              => 'required|exists:sale_payment_personal_finanace,id',
-                    'emi_due_amount'  => 'required|numeric|min:1',
-                    'pay_method'      => 'required',
-                    'pay_method_note' => 'required|string',
-                    'pay_option'      => 'required|in:full,partial',
-                    'pay_amount'      => 'required|numeric|min:1',
-                    'next_due_Date'   => 'nullable|date|after:today',
-                    'collected_by_salesman_id' => 'nullable|exists:salesmans,id',
+                    'id'                        => 'required|exists:sale_payment_personal_finanace,id',
+                    'emi_due_amount'            => 'required|numeric|min:1',
+                    'pay_method'                => 'required',
+                    'pay_method_note'           => 'required|string',
+                    'pay_option'                => 'required|in:full,partial',
+                    'pay_amount'                => 'required|numeric|min:1',
+                    'next_due_Date'             => 'nullable|date|after:today',
+                    'collected_by_salesman_id'  => 'nullable|exists:salesmans,id',
+                    'received_in_bank'          => 'nullable|exists:bank_accounts,id',
                 ]);
                 //If Validation failed
                 if ($validator->fails()) {
@@ -749,6 +754,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'pay_due'                   => 0.00,
                         'status'                    => SalePaymentAccounts::STATUS_PAID,
                         'collected_by_salesman_id'  => $postData['collected_by_salesman_id'],
+                        'received_in_bank'          => isset($postData['received_in_bank']) ? $postData['received_in_bank'] : null,
                     ]);
                     //Add Transaction
                     SalePaymentTransactions::create([
@@ -762,7 +768,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'transaction_paid_date'         => date('Y-m-d'),
                         'trans_type'                    => SalePaymentAccounts::TRANS_TYPE_DEBIT,
                         'status'                        => SalePaymentAccounts::STATUS_PAID,
-                        'reference_id'                   => $instModel->id
+                        'reference_id'                  => $instModel->id
                     ]);
                 }
                 //If Customer Pay Less That Due | CASE - 2
@@ -776,6 +782,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'amount_paid_note'           => $postData['pay_method_note'],
                         'status'                     => SalePaymentAccounts::STATUS_PAID,
                         'collected_by_salesman_id'   => $postData['collected_by_salesman_id'],
+                        'received_in_bank'           => isset($postData['received_in_bank']) ? $postData['received_in_bank'] : null,
                     ]);
                     SalePaymentTransactions::create([
                         'sale_id'                       => $instModel->sale_id,
@@ -878,6 +885,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                             'amount_paid_note'   => $postData['pay_method_note'],
                             'status'             => SalePaymentAccounts::PAY_STATUS_PAID,
                             'collected_by'       => $postData['collected_by_salesman_id'],
+                            'received_in_bank'   => isset($postData['received_in_bank']) ? $postData['received_in_bank'] : null,
                         ]);
                         //MARK PAID CURRENT EMI - TRANSACTION CREATE
                         SalePaymentTransactions::create([
