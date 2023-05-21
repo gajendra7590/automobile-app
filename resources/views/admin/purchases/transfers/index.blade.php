@@ -37,10 +37,12 @@
                                         <th>#</th>
                                         <th>BRANCH</th>
                                         <th>BROKER</th>
-                                        <th width="16%">BIKE INFO</th>
+                                        <th width="13%">BIKE INFO</th>
                                         <th>SKU</th>
+                                        <th>CHASSIS NUMBER</th>
                                         <th>TOTAL ON ROAD PRICE</th>
                                         <th>STATUS</th>
+                                        <th>TRANSFER DATE</th>
                                         <th width="5%">ACTION</th>
                                     </tr>
                                 </thead>

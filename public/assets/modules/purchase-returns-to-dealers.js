@@ -34,6 +34,10 @@ $(document).ready(function () {
                     name: "sku",
                 },
                 {
+                    data: "vin_number",
+                    name: "vin_number",
+                },
+                {
                     data: "dc_number",
                     name: "dc_number",
                 },

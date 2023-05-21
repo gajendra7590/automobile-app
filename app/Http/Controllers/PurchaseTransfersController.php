@@ -63,6 +63,8 @@ class PurchaseTransfersController extends Controller
                     if ($search_string != "") {
                         $query->where(function ($q) use ($search_string) {
                             $q->where('sku', 'LIKE', '%' . $search_string . '%')
+                                ->orWhere('vin_number', 'LIKE', '%' . $search_string . '%')
+                                ->orWhereDate('created_at', $search_string)
                                 ->orWhereHas('branch', function ($q) use ($search_string) {
                                     $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
                                 })
@@ -127,6 +129,9 @@ class PurchaseTransfersController extends Controller
                     } else {
                         return '<span class="label label-danger">SOLD_OUT</span>';
                     }
+                })
+                ->addColumn('created_at', function ($row) {
+                    return isset($row->created_at) ? date('Y-m-d', strtotime($row->created_at)) : "";
                 })
                 ->rawColumns([
                     'action', 'total_price_on_road', 'branch_name', 'bike_detail', 'grand_total', 'status'

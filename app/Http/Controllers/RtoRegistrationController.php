@@ -80,8 +80,9 @@ class RtoRegistrationController extends Controller
             'action' => route('rtoRegistration.store'),
             'method' => 'POST',
         ];
-        $data['sales'] = Sale::select(['id', 'customer_name'])
+        $data['sales'] = Sale::select(['id', 'purchase_id', 'customer_name'])
             ->branchWise()
+            ->with(['purchases:id,vin_number,engine_number'])
             ->where('rto_account_id', '0')
             ->orWhereNull('rto_account_id')->get();
         $data['rto_agents'] = self::_getRtoAgents();

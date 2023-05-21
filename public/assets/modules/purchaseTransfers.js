@@ -80,12 +80,20 @@ $(document).ready(function () {
                     name: "sku",
                 },
                 {
+                    data: "vin_number",
+                    name: "vin_number",
+                },
+                {
                     data: "total_price_on_road",
                     name: "total_price_on_road",
                 },
                 {
                     data: "status",
                     name: "status",
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
                 },
                 {
                     data: "action",

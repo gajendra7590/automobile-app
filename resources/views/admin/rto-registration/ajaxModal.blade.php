@@ -26,13 +26,15 @@
 
         <div class="form-group col-md-6">
             <label>Select Sale To Create RTO</label>
-            <select name="sale_id" class="form-control " data-url="{{ route('ajaxChangeContent') }}"
+            <select name="sale_id" class="form-control commonSelect2" data-url="{{ route('ajaxChangeContent') }}"
                 data-ele="rtoAjaxContainer" {{ $editDisable }}>
                 <option value="">---Select Sale To Create RTO---</option>
                 @if (isset($sales))
                     @foreach ($sales as $key => $sale)
                         <option {{ isset($data->sale_id) && $data->sale_id == $sale->id ? 'selected' : '' }}
-                            value="{{ $sale->id }}">{{ $sale->customer_name }}</option>
+                            value="{{ $sale->id }}">
+                            {{ $sale->customer_name . ' | ' . $sale->purchases->vin_number . ' | ' . $sale->purchases->engine_number }}
+                        </option>
                     @endforeach
                 @endif
             </select>
@@ -221,5 +223,9 @@
                 date: "The recieved date should valid date",
             },
         }
+    });
+
+    $(".commonSelect2").select2({
+        placeholder: "Select an option",
     });
 </script>
