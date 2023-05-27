@@ -241,7 +241,10 @@ class RtoRegistrationController extends Controller
             'action' => route('rtoRegistration.update', ['rtoRegistration' => $id]),
             'method' => 'PUT',
         ];
-        $responsePayload['sales'] = Sale::select(['id', 'customer_name'])->where('id', $rtoModel->sale_id)->get();
+        $responsePayload['sales'] = Sale::select(['id', 'purchase_id', 'customer_name'])
+        ->with(['purchases:id,vin_number,engine_number'])
+        ->where('id', $rtoModel->sale_id)
+        ->get();
         $responsePayload['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->where('id', $rtoModel->rto_agent_id)->get();
         $htmlData = array(
             'states' => self::_getStates(1),

@@ -2,6 +2,11 @@
     $editReadOnly = isset($method) && $method == 'PUT' ? 'readonly' : '';
     $editDisable = isset($method) && $method == 'PUT' ? 'disabled' : '';
 @endphp
+<style type="text/css">
+    span.select2-selection.select2-selection--single {
+        width: 420px !important;
+    }
+</style>
 <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
     enctype="multipart/form-data" data-redirect="ajaxModalCommon">
     @csrf
