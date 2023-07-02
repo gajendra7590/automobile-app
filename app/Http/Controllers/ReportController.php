@@ -65,7 +65,7 @@ class ReportController extends Controller
                 break;
             case 'accounts':
                 $view = 'accounts';
-                $dropdowns = ['brokers', 'branches'];
+                $dropdowns = ['brokers', 'branches','financers'];
                 break;
             case 'customer_wise_payment':
                 $view = 'customer-wise-payment';
@@ -75,13 +75,13 @@ class ReportController extends Controller
                 $view = 'financer-wise-payment';
                 $dropdowns = ['branches','financers'];
                 break;
-            case 'receipt_voucher':
-                $view = 'receipt-voucher';
-                $dropdowns = ['brokers', 'brands'];
+            case 'rto_agent_payment':
+                $view = 'rto-agent-payment';
+                $dropdowns = ['rto_agents', 'depositeSources'];
                 break;
-            case 'payment_voucher':
-                $view = 'payment-voucher';
-                $dropdowns = ['brokers', 'brands'];
+            case 'cust_trans_report':
+                $view = 'customer-transaction-report';
+                $dropdowns = ['branches', 'depositeSources'];
                 break;
             default:
                 $view = 'purchase';
@@ -114,6 +114,10 @@ class ReportController extends Controller
 
         if (in_array('rto_agents', $dropdowns)) {
             $data['rto_agents'] = RtoAgent::select('id','agent_name')->get();
+        }
+
+        if (in_array('depositeSources', $dropdowns)) {
+            $data['depositeSources'] = depositeSources();
         }
 
         $data['action'] = route('downloadReport');
