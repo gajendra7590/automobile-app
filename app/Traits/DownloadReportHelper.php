@@ -597,7 +597,7 @@ trait DownloadReportHelper
                 );
             }
         }
-        echo '<pre>';print_r($customer_payments);die;
+        // echo '<pre>';print_r($customer_payments);die;
         return $customer_payments;
     }
 
