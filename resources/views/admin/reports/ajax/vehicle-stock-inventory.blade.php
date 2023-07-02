@@ -61,15 +61,15 @@
                 </select>
             </div>
             <div class="col-md-6 pull-right dateshow" hidden>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-3">
                     <label>START DATE</label>
-                    <input type='date' name="start_date" class="form-control" value="{{ date('Y-m-d') }}"
-                        placeholder="0000-00-00" min="{{ date('Y-m-d') }}" />
+                    <input type='date' name="start_date" class="form-control" value="{{ date('Y-m-d',strtotime(' -30 day')) }}"
+                        placeholder="0000-00-00" max="{{ date('Y-m-d') }}" />
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-3">
                     <label>END DATE</label>
-                    <input type='date' name="end_date" class="form-control" placeholder="0000-00-00"
-                        min="{{ date('Y-m-d') }}" />
+                    <input type='date' name="end_date" value="{{ date('Y-m-d') }}" class="form-control" placeholder="0000-00-00"
+                        max="{{ date('Y-m-d') }}" />
                 </div>
             </div>
         </div>

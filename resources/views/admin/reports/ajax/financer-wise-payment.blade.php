@@ -3,51 +3,37 @@
         <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='row'>
             <div class="form-group col-md-3">
-                <label>BIKE BRAND NAME</label>
-                <select name="brand_id" data-dep_dd_name="model_id"
-                    data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
-                    <option value="">---Select Brand----</option>
-                    @isset($brands)
-                        @foreach ($brands as $key => $brand)
-                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                <label>BRANCH NAME</label>
+                <select name="branch_id" class="form-control">
+                    <option value="">All</option>
+                    @isset($branches)
+                        @foreach ($branches as $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                         @endforeach
                     @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>BIKE MODEL NAME</label>
-                <select name="model_id" class="form-control">
-                    <option value="">---Select Model----</option>
-                    @isset($models)
-                        @foreach ($models as $model)
-                            <option value="{{ $model->id }}">{{ $model->model_name }}</option>
+                <label>FINANACER NAME</label>
+                <select name="financer_id" class="form-control">
+                    <option value="">All</option>
+                    @isset($financers)
+                        @foreach ($financers as $financer)
+                            <option value="{{ $financer->id }}">{{ strtoupper($financer->bank_name) }}</option>
                         @endforeach
                     @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>STOCK STATUS</label>
-                <select name="status" class="form-control">
-                    <option value="">---Select Status----</option>
-                    <option value="open">Open</option>
+                <label>FINANACER PAYMENT STATUS</label>
+                <select name="customer_account_status" class="form-control">
+                    <option value="">All</option>
+                    <option value="due">Due</option>
                     <option value="close">Close</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>FINANCER NAME</label>
-                <select name="financer_id" class="form-control">
-                    <option value="">---Select Financer----</option>
-                    @isset($financers)
-                        @foreach ($financers as $financer)
-                            <option value="{{ $financer->id }}">{{ $financer->bank_name }}</option>
-                        @endforeach
-                    @endisset
-                </select>
-            </div>
-        </div>
-        <div class='row'>
-            <div class="form-group col-md-3">
-                <label>REPORT DURATION</label>
+                <label>DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>
                     <option value="last_six_months">Last Six Months</option>
@@ -69,8 +55,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group">
-                <div class="box-footer">
+            <div class="col-md-12">
+                <div class="box-footer" style="padding: 10px 0px !important;">
                     <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
                         DOWNLOAD
                     </button>

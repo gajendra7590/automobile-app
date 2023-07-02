@@ -272,10 +272,15 @@ class SaleController extends Controller
                     ]);
                 }
 
+
+                //CREATE FULL NAME
+                $full_name = strtoupper(custPrefix($postData['customer_gender']) .' '.$postData['customer_name'].' '.custRel($postData['customer_relationship']).' '.$postData['customer_guardian_name']);
+
                 //Add Some Keys
-                $postData['branch_id'] = Purchase::where(['id' => $postData['purchase_id']])->value('bike_branch');
-                $postData['sale_uuid'] = random_uuid('sale');
-                $postData['created_by'] = Auth::user()->id;
+                $postData['branch_id']          = Purchase::where(['id' => $postData['purchase_id']])->value('bike_branch');
+                $postData['sale_uuid']          = random_uuid('sale');
+                $postData['created_by']         = Auth::user()->id;
+                $postData['customer_full_name'] = $full_name;
                 //Create Sale
                 $createModel = Sale::create($postData);
                 //Mark Status Closed If Purchase With Quotation
@@ -533,6 +538,9 @@ class SaleController extends Controller
                     ]);
                 }
                 $postData['updated_by'] = Auth::user()->id;
+                //CREATE FULL NAME
+                //$full_name = strtoupper(custPrefix($postData['customer_gender']) .' '.$postData['customer_name'].' '.custRel($postData['customer_relationship']).' '.$postData['customer_guardian_name']);
+                //$postData['customer_full_name'] = $full_name;
                 $bpModel->update($postData);
                 DB::commit();
                 return response()->json([

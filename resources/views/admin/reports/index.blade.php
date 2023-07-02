@@ -63,7 +63,27 @@
                             </li>
                             <li>
                                 <a href="{{ route('loadReportSection') }}?type=accounts" class="loadeReport">
-                                    ACCOUNTS
+                                    PAYMENT ACCOUNTS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=customer_wise_payment" class="loadeReport">
+                                    CUSTOMER WISE PAYMENT
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=financer_wise_payment" class="loadeReport">
+                                    FINANCER WISE PAYMENT
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=rto_agent_payment" class="loadeReport">
+                                    RTO AGENTS PAYMENTS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('loadReportSection') }}?type=cust_trans_report" class="loadeReport">
+                                    CUSTOMER TRANSACTION REPORT
                                 </a>
                             </li>
                             {{-- <li>

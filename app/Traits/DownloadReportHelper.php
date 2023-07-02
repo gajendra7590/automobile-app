@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\BankFinancer;
 use App\Models\Purchase;
+use App\Models\PurchaseTransfer;
 use App\Models\Quotation;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
@@ -22,10 +24,25 @@ trait DownloadReportHelper
                 array_unshift($query, $heading);
             }
             $result = [];
-            if ($query && count($query)) {
-                foreach ($query as $value) {
-                    $result[] = (array)$value;
-                }
+            //SWITCH CASE IF NEEDED SOME CUSTOMIZATION INTO RESULT ELSE DEFAULT CASE RUN
+            switch (request('type')) {
+                case 'customer_wise_payment':
+                    if ($query && count($query)) {
+                        $result = self::customer_wise_payment_data_formate($query);
+                    }
+                    break;
+                case 'financer_wise_payment':
+                    if ($query && count($query)) {
+                        $result = self::financer_wise_payment_data_formate($query);
+                    }
+                    break;
+                default:
+                    if ($query && count($query)) {
+                        foreach ($query as $value) {
+                            $result[] = (array)$value;
+                        }
+                    }
+                    break;
             }
             return $result;
         } catch (\Exception $e) {
@@ -54,7 +71,7 @@ trait DownloadReportHelper
                     break;
                 case 'custom':
                     $end_date = request('end_date') ?? date('Y-m-d');
-                    $start_date = request('end_date') ?? date('Y-m-d', strtotime("$end_date -1 month"));
+                    $start_date = request('start_date') ?? date('Y-m-d');
                     break;
                 default:
                     $end_date = null;
@@ -71,6 +88,7 @@ trait DownloadReportHelper
 
     public static function setQuery()
     {
+        // die('hellloooo');
         $query = null;
         $heading = [];
         switch (request('type')) {
@@ -250,6 +268,162 @@ trait DownloadReportHelper
                     });
                 $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];
                 break;
+            case 'customer_wise_payment':
+                $query = Sale::select(
+                    // 'sales.*',
+                    'sale_date',
+                    'customer_address_line as address_line',
+                    'customer_zipcode',
+                    'customer_mobile_number',
+                    'witness_person_name',
+                    'witness_person_phone',
+                    'hyp_financer',
+                    'total_amount',
+                    'payment_type',
+                    'customer_gender',
+                    'customer_name',
+                    'customer_relationship',
+                    'customer_guardian_name',
+                    'branch_id',
+                    'u_cities.city_name',
+                    'u_states.state_name',
+                    'u_districts.district_name',
+                    'purchases.id as sale_purchase_id',
+                    'purchases.sku_description',
+                    'purchases.vin_number',
+                    'purchases.engine_number',
+                    'purchases.transfer_status',
+                    'purchases.invoice_status',
+                    'salesmans.name as salesman_name',
+                    'bank_financers.bank_name as bank_financer_name',
+                    'sa.id as sales_account_id',
+                    'sa.sales_total_amount',
+                    'sa.down_payment',
+                    'sa.due_payment_source',
+                    'sa.status',
+                    'sa.cash_outstaning_balance',
+                    'sa.cash_paid_balance',
+                    'sa.cash_status',
+                    'sa.bank_finance_outstaning_balance',
+                    'sa.bank_finance_paid_balance',
+                    'sa.bank_finance_status',
+                    'sa.bank_finance_amount',
+                    'sa.personal_finance_outstaning_balance',
+                    'sa.personal_finance_paid_balance',
+                    'sa.personal_finance_status',
+                    'sa.personal_finance_amount',
+                    'branches.branch_name as sale_branch_name',
+                )
+                    ->leftJoin('branches', 'branches.id', '=', 'sales.branch_id')
+                    ->leftJoin('u_cities', 'u_cities.id', '=', 'sales.customer_city')
+                    ->leftJoin('u_states', 'u_states.id', '=', 'sales.customer_state')
+                    ->leftJoin('u_districts', 'u_districts.id', '=', 'sales.customer_district')
+                    ->leftJoin('purchases', 'purchases.id', '=', 'sales.purchase_id')
+                    ->leftJoin('salesmans', 'salesmans.id', '=', 'sales.salesman_id')
+                    ->leftJoin('sale_payment_accounts as sa', 'sa.id', '=', 'sales.sp_account_id')
+                    ->leftJoin('bank_financers', 'bank_financers.id', '=', 'sa.financier_id')
+                    //->where('sales.id',"256")
+                    ->when(!empty(request('customer_account_status')), function ($q) {
+                        $status = (request('customer_account_status') == 'due') ? 0 : 1;
+                        $q->where('sa.status', $status);
+                    })
+                    ->when(!empty(request('branch_id')), function ($q) {
+                        $q->where('sales.branch_id', request('branch_id'));
+                    });
+                $heading = [
+                    'BRANCH NAME', 'SALES DATE', 'FULL NAME', 'ADDRESS', 'MOBILE NUMBER', 'REFERENCE DETAIL', 'MODEL SKU DETAIL', 'CHASIS NUMBER|ENGINE NUMBER', 'BROKER NAME',
+                    'SALESMAN NAME', 'SALES PRICE', 'PAYMENT TYPE', 'FINANCER NAME', 'DOWN PAYMENT', 'TOTAL CASH PAID', 'TOTAL CASH DUE', 'CASH STATUS', 'TOTAL BANK FINANCE AMOUNT',
+                    'TOTAL BANK FINANCE PAID', 'TOTAL BANK FINANCE DUE', 'BANK FINANCE STATUS', 'TOTAL PERSONAL FINANCE AMOUNT', 'TOTAL PERSONAL FINANCE PAID', 'TOTAL PERSONAL FINANCE DUE',
+                    'PERSONAL FINANCE STATUS', 'TOTAL PAID', 'TOTAL DUE', 'OVERALL STATUS'
+                ];
+                config(['date_filter' => 'sales.sale_date']);
+                break;
+            case 'financer_wise_payment':
+                $query = Sale::select(
+                    'sale_date',
+                    'customer_address_line as address_line',
+                    'customer_zipcode',
+                    'customer_mobile_number',
+                    'witness_person_name',
+                    'witness_person_phone',
+                    'hyp_financer',
+                    'total_amount',
+                    'payment_type',
+                    'customer_gender',
+                    'customer_name',
+                    'customer_relationship',
+                    'customer_guardian_name',
+                    'branch_id',
+                    'u_cities.city_name',
+                    'u_states.state_name',
+                    'u_districts.district_name',
+                    'purchases.id as sale_purchase_id',
+                    'purchases.sku_description',
+                    'purchases.vin_number',
+                    'purchases.engine_number',
+                    'purchases.transfer_status',
+                    'purchases.invoice_status',
+                    'salesmans.name as salesman_name',
+                    'bank_financers.bank_name as bank_financer_name',
+                    'sa.id as sales_account_id',
+                    'sa.sales_total_amount',
+                    'sa.down_payment',
+                    'sa.due_payment_source',
+                    'sa.status',
+                    'sa.cash_outstaning_balance',
+                    'sa.cash_paid_balance',
+                    'sa.cash_status',
+                    'sa.bank_finance_outstaning_balance',
+                    'sa.bank_finance_paid_balance',
+                    'sa.bank_finance_status',
+                    'sa.bank_finance_amount',
+                    'sa.personal_finance_outstaning_balance',
+                    'sa.personal_finance_paid_balance',
+                    'sa.personal_finance_status',
+                    'sa.personal_finance_amount',
+                    'branches.branch_name as sale_branch_name',
+                )
+                    ->leftJoin('branches', 'branches.id', '=', 'sales.branch_id')
+                    ->leftJoin('u_cities', 'u_cities.id', '=', 'sales.customer_city')
+                    ->leftJoin('u_states', 'u_states.id', '=', 'sales.customer_state')
+                    ->leftJoin('u_districts', 'u_districts.id', '=', 'sales.customer_district')
+                    ->leftJoin('purchases', 'purchases.id', '=', 'sales.purchase_id')
+                    ->leftJoin('salesmans', 'salesmans.id', '=', 'sales.salesman_id')
+                    ->leftJoin('sale_payment_accounts as sa', 'sa.id', '=', 'sales.sp_account_id')
+                    ->leftJoin('bank_financers', 'bank_financers.id', '=', 'sa.financier_id')
+                    //->where('sales.id',"256")
+                    ->where('sa.financier_id',">",0) // CHECK IF FINANCER IS EXISTS
+                    ->when(!empty(request('customer_account_status')), function ($q) {
+                        $q->where(function($q){
+                            $status = (request('customer_account_status') == 'due') ? 0 : 1;
+                            if(intval(request('financer_id')) > 0) {
+                                $finance = BankFinancer::find(request('financer_id'));
+                                if($finance && $finance->financer_type == '1') {
+                                    $q->where('sa.bank_finance_status', $status);
+                                } else if($finance && $finance->financer_type == '2') {
+                                    $q->where('sa.personal_finance_status', $status);
+                                } else {
+                                    $q->where('sa.bank_finance_status', $status)->orWhere('sa.personal_finance_status', $status);
+                                }
+                            } else {
+                                $q->where('sa.bank_finance_status', $status)->orWhere('sa.personal_finance_status', $status);
+                            }
+                        });
+                    })
+                    ->when(!empty(request('branch_id')), function ($q) {
+                        $q->where('sales.branch_id', request('branch_id'));
+                    })
+                    ->when(!empty(request('financer_id')), function ($q) {
+                        $q->where('sa.financier_id', request('financer_id'));
+                    });
+                $heading = [
+                    'BRANCH NAME', 'SALES DATE', 'FULL NAME', 'ADDRESS', 'MOBILE NUMBER', 'REFERENCE DETAIL', 'MODEL SKU DETAIL', 'CHASIS NUMBER|ENGINE NUMBER', 'BROKER NAME',
+                    'SALESMAN NAME', 'SALES PRICE', 'PAYMENT TYPE', 'FINANCER NAME', 'DOWN PAYMENT', 'TOTAL CASH PAID', 'TOTAL CASH DUE', 'CASH STATUS', 'TOTAL BANK FINANCE AMOUNT',
+                    'TOTAL BANK FINANCE PAID', 'TOTAL BANK FINANCE DUE', 'BANK FINANCE STATUS', 'TOTAL PERSONAL FINANCE AMOUNT', 'TOTAL PERSONAL FINANCE PAID', 'TOTAL PERSONAL FINANCE DUE',
+                    'PERSONAL FINANCE STATUS', 'TOTAL PAID', 'TOTAL DUE', 'OVERALL STATUS'
+                ];
+                config(['date_filter' => 'sales.sale_date']);
+                break;
             case 'quotation_list':
                 $query = Quotation::join('branches', 'branches.id', '=', 'quotations.branch_id')
                     ->join('salesmans',  'salesmans.id',  '=',  'quotations.salesman_id')
@@ -304,4 +478,129 @@ trait DownloadReportHelper
         config(['query' => $query, 'heading' => $heading]);
         return $query;
     }
+
+    //Function for formate data - customer_wise_payment_data_formate
+    public static function customer_wise_payment_data_formate($customer_payments)
+    {
+        if (count($customer_payments) > 1) {
+            foreach ($customer_payments as  $k => $cpay) {
+                if ($k == 0) {
+                    continue;
+                }
+                // echo '<pre>';print_r($cpay);
+                $total_due  = ($cpay['bank_finance_outstaning_balance'] + $cpay['cash_outstaning_balance'] + $cpay['personal_finance_outstaning_balance']);
+                $total_paid = ($cpay['cash_paid_balance'] + $cpay['bank_finance_paid_balance'] + $cpay['personal_finance_paid_balance']);
+
+                $BROKER_NAME = "";
+                if ($cpay['transfer_status'] == '1') {
+                    $transfer_data = PurchaseTransfer::where(['purchase_id' => $cpay['sale_purchase_id'], 'status' => '0'])
+                        ->select('id', 'purchase_id', 'broker_id', 'status')->with('brokr:id,name')->has('brokr')->first();
+                    if ($transfer_data) {
+                        $transfer_data = $transfer_data->toArray();
+                        $BROKER_NAME = isset($transfer_data['brokr']['name']) ? strtoupper($transfer_data['brokr']['name']) : "";
+                    }
+                }
+                $customer_payments[$k] = array(
+                    'BRANCH NAME'                   => $cpay['sale_branch_name'],
+                    'SALES DATE'                    => $cpay['sale_date'],
+                    'FULL NAME'                     => strtoupper($cpay['cust_name']),
+                    'ADDRESS'                       => $cpay['address_line'] . ' ' . $cpay['city_name'] . ' ' . $cpay['district_name'] . ' ' . $cpay['state_name'] . ' ' . $cpay['customer_zipcode'],
+                    'MOBILE NUMBER'                 => $cpay['customer_mobile_number'],
+                    'REFERENCE DETAIL'              => $cpay['witness_person_name'] . ' | PHONE-' . $cpay['witness_person_phone'],
+                    'MODEL SKU DETAIL'              => $cpay['sku_description'],
+                    'CHASIS NUMBER|ENGINE NUMBER'   => $cpay['vin_number'] . ' | ' . $cpay['engine_number'],
+                    'BROKER NAME'                   => $BROKER_NAME,
+                    'SALESMAN NAME'                 => $cpay['salesman_name'],
+                    'SALES PRICE'                   => $cpay['sales_total_amount'],
+                    'PAYMENT TYPE'                  => strtoupper(duePaySourcesQuotation($cpay['due_payment_source'])),
+                    'FINANCER NAME'                 => $cpay['bank_financer_name'],
+                    'DOWN PAYMENT'                  => $cpay['down_payment'],
+                    //CASH
+                    'TOTAL CASH PAID'               => round(($cpay['cash_paid_balance'] - $cpay['down_payment']), 2),
+                    'TOTAL CASH DUE'                => $cpay['cash_outstaning_balance'],
+                    'CASH STATUS'                   => ($cpay['cash_status'] == '0') ? 'DUE' : "CLOSED",
+                    //BANK FINANCE
+                    'TOTAL BANK FINANCE AMOUNT'     => $cpay['bank_finance_amount'],
+                    'TOTAL BANK FINANCE PAID'       => $cpay['bank_finance_paid_balance'],
+                    'TOTAL BANK FINANCE DUE'        => $cpay['bank_finance_outstaning_balance'],
+                    'BANK FINANCE STATUS'           => ($cpay['bank_finance_status'] == '0') ? "DUE" : "CLOSED",
+                    //PERSONAL FINANCE
+                    'TOTAL PERSONAL FINANCE AMOUNT' => $cpay['personal_finance_amount'],
+                    'TOTAL PERSONAL FINANCE PAID'   => $cpay['personal_finance_paid_balance'],
+                    'TOTAL PERSONAL FINANCE DUE'   => $cpay['personal_finance_outstaning_balance'],
+                    'PERSONAL FINANCE STATUS'       => ($cpay['personal_finance_status'] == '0') ? "DUE" : "CLOSED",
+                    //OVER ALL
+                    'TOTAL PAID'                    => $total_paid,
+                    'TOTAL DUE'                     => $total_due,
+                    'OVERALL STATUS'                => ($cpay['status'] == '0') ? "DUE" : "CLOSED",
+                );
+            }
+        }
+        return $customer_payments;
+    }
+
+    //Function for formate data - financer_wise_payment_data_formate
+    public static function financer_wise_payment_data_formate($customer_payments)
+    {
+        // die('financer_wise_payment_data_formate');
+        if (count($customer_payments) > 1) {
+            foreach ($customer_payments as  $k => $cpay) {
+                if ($k == 0) {
+                    continue;
+                }
+                // echo '<pre>';print_r($cpay);
+                $total_due  = ($cpay['bank_finance_outstaning_balance'] + $cpay['cash_outstaning_balance'] + $cpay['personal_finance_outstaning_balance']);
+                $total_paid = ($cpay['cash_paid_balance'] + $cpay['bank_finance_paid_balance'] + $cpay['personal_finance_paid_balance']);
+
+                $BROKER_NAME = "";
+                if ($cpay['transfer_status'] == '1') {
+                    $transfer_data = PurchaseTransfer::where(['purchase_id' => $cpay['sale_purchase_id'], 'status' => '0'])
+                        ->select('id', 'purchase_id', 'broker_id', 'status')->with('brokr:id,name')->has('brokr')->first();
+                    if ($transfer_data) {
+                        $transfer_data = $transfer_data->toArray();
+                        $BROKER_NAME = isset($transfer_data['brokr']['name']) ? strtoupper($transfer_data['brokr']['name']) : "";
+                    }
+                }
+                $customer_payments[$k] = array(
+                    'BRANCH NAME'                   => $cpay['sale_branch_name'],
+                    'SALES DATE'                    => $cpay['sale_date'],
+                    'FULL NAME'                     => strtoupper($cpay['cust_name']),
+                    'ADDRESS'                       => $cpay['address_line'] . ' ' . $cpay['city_name'] . ' ' . $cpay['district_name'] . ' ' . $cpay['state_name'] . ' ' . $cpay['customer_zipcode'],
+                    'MOBILE NUMBER'                 => $cpay['customer_mobile_number'],
+                    'REFERENCE DETAIL'              => $cpay['witness_person_name'] . ' | PHONE-' . $cpay['witness_person_phone'],
+                    'MODEL SKU DETAIL'              => $cpay['sku_description'],
+                    'CHASIS NUMBER|ENGINE NUMBER'   => $cpay['vin_number'] . ' | ' . $cpay['engine_number'],
+                    'BROKER NAME'                   => $BROKER_NAME,
+                    'SALESMAN NAME'                 => $cpay['salesman_name'],
+                    'SALES PRICE'                   => $cpay['sales_total_amount'],
+                    'PAYMENT TYPE'                  => strtoupper(duePaySourcesQuotation($cpay['due_payment_source'])),
+                    'FINANCER NAME'                 => $cpay['bank_financer_name'],
+                    'DOWN PAYMENT'                  => $cpay['down_payment'],
+                    //CASH
+                    'TOTAL CASH PAID'               => round(($cpay['cash_paid_balance'] - $cpay['down_payment']), 2),
+                    'TOTAL CASH DUE'                => $cpay['cash_outstaning_balance'],
+                    'CASH STATUS'                   => ($cpay['cash_status'] == '0') ? 'DUE' : "CLOSED",
+                    //BANK FINANCE
+                    'TOTAL BANK FINANCE AMOUNT'     => $cpay['bank_finance_amount'],
+                    'TOTAL BANK FINANCE PAID'       => $cpay['bank_finance_paid_balance'],
+                    'TOTAL BANK FINANCE DUE'        => $cpay['bank_finance_outstaning_balance'],
+                    'BANK FINANCE STATUS'           => ($cpay['bank_finance_status'] == '0') ? "DUE" : "CLOSED",
+                    //PERSONAL FINANCE
+                    'TOTAL PERSONAL FINANCE AMOUNT' => $cpay['personal_finance_amount'],
+                    'TOTAL PERSONAL FINANCE PAID'   => $cpay['personal_finance_paid_balance'],
+                    'TOTAL PERSONAL FINANCE DUE'   => $cpay['personal_finance_outstaning_balance'],
+                    'PERSONAL FINANCE STATUS'       => ($cpay['personal_finance_status'] == '0') ? "DUE" : "CLOSED",
+                    //OVER ALL
+                    'TOTAL PAID'                    => $total_paid,
+                    'TOTAL DUE'                     => $total_due,
+                    'OVERALL STATUS'                => ($cpay['status'] == '0') ? "DUE" : "CLOSED",
+                );
+            }
+        }
+        echo '<pre>';print_r($customer_payments);die;
+        return $customer_payments;
+    }
+
+
+
 }

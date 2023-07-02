@@ -6,14 +6,16 @@ use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\Branch;
 use App\Models\Broker;
+use App\Models\Sale;
 use App\Models\Salesman;
+use App\Traits\CommonHelper;
 use App\Traits\DownloadReportHelper;
 use Exception;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    use DownloadReportHelper;
+    use DownloadReportHelper,CommonHelper;
 
     public function index()
     {
@@ -56,13 +58,21 @@ class ReportController extends Controller
                 $view = 'financers';
                 $dropdowns = ['brokers', 'branches', 'brokers'];
                 break;
+            case 'rto':
+                $view = 'rto';
+                $dropdowns = ['brokers', 'brands'];
+                break;
             case 'accounts':
                 $view = 'accounts';
                 $dropdowns = ['brokers', 'branches'];
                 break;
-            case 'rto':
-                $view = 'rto';
-                $dropdowns = ['brokers', 'brands'];
+            case 'customer_wise_payment':
+                $view = 'customer-wise-payment';
+                $dropdowns = ['branches'];
+                break;
+            case 'financer_wise_payment':
+                $view = 'financer-wise-payment';
+                $dropdowns = ['branches','financers'];
                 break;
             case 'receipt_voucher':
                 $view = 'receipt-voucher';
@@ -76,21 +86,31 @@ class ReportController extends Controller
                 $view = 'purchase';
                 break;
         }
+
         if (in_array('branches', $dropdowns)) {
             $data['branches'] = Branch::whereActiveStatus(1)->get();
         }
+
         if (in_array('brands', $dropdowns)) {
             $data['brands'] = BikeBrand::whereActiveStatus(1)->get();
         }
+
         if (in_array('brokers', $dropdowns)) {
             $data['brokers'] = Broker::whereActiveStatus(1)->get();
         }
+
         if (in_array('financers', $dropdowns)) {
             $data['financers'] = BankFinancer::whereActiveStatus(1)->get();
         }
+
         if (in_array('salesmans', $dropdowns)) {
             $data['salesmans'] = Salesman::whereActiveStatus(1)->get();
         }
+
+        if (in_array('customers', $dropdowns)) {
+            $data['customers'] = Sale::select('id','sp_account_id','customer_name','customer_relationship','customer_guardian_name')->get();
+        }
+
         $data['action'] = route('downloadReport');
         $data['type'] = $type;
 

@@ -30,6 +30,7 @@ class Sale extends Model
         'customer_name',
         'customer_relationship',
         'customer_guardian_name',
+        'customer_full_name',
         'customer_address_line',
         'customer_state',
         'customer_district',

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\RtoRegistration;
+use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use Illuminate\Console\Command;
 
@@ -40,9 +41,26 @@ class Test extends Command
     public function handle()
     {
         // $this->updateDuesOrPaidBal();
-        $this->updateChasisNumberInRtoRegistration();
+        // $this->updateChasisNumberInRtoRegistration();
+        $this->updateCustomerBalance();
     }
 
+    /**
+     * Update customer balance
+     */
+    public function updateCustomerBalance() {
+        $sales = Sale::select('*')
+        // ->where('id','2')
+        ->chunk(100,function($sales){
+            foreach($sales as $k => $sale) {
+                $saleData = $sale->toArray();
+                $full_name = strtoupper(custPrefix($saleData['customer_gender']) .' '.$saleData['customer_name'].' '.custRel($saleData['customer_relationship']).' '.$saleData['customer_guardian_name']);
+                $sale->customer_full_name = $full_name;
+                $sale->save();
+            }
+        });
+
+    }
 
     public function updateChasisNumberInRtoRegistration()
     {
