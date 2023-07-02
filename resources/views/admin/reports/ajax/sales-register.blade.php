@@ -3,21 +3,21 @@
         <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='row'>
             <div class="form-group col-md-3">
-                <label>BROKER NAME</label>
-                <select name="broker_id" class="form-control">
-                    <option value="">---Select Broker----</option>
+                <label>BRANCH NAME</label>
+                <select name="branch_id" class="form-control">
+                    <option value="">ALL</option>
                     @isset($brokers)
-                        @foreach ($brokers as $key => $broker)
-                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
+                        @foreach ($branches as $key => $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                         @endforeach
                     @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>BIKE BRAND NAME</label>
+                <label>BRAND NAME</label>
                 <select name="brand_id" data-dep_dd_name="model_id"
                     data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
-                    <option value="">---Select Brand----</option>
+                    <option value="">ALL</option>
                     @isset($brands)
                         @foreach ($brands as $key => $brand)
                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -26,9 +26,9 @@
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>BIKE MODEL NAME</label>
+                <label>MODEL NAME</label>
                 <select name="model_id" class="form-control">
-                    <option value="">---Select Model----</option>
+                    <option value="">ALL</option>
                     @isset($models)
                         @foreach ($models as $model)
                             <option value="{{ $model->id }}">{{ $model->model_name }}</option>
@@ -37,31 +37,40 @@
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>PAYMENT TYPE</label>
-                <select name="payment_type" class="form-control">
-                    <option value="">---Select Payment Type----</option>
-                    <option value="1">By Cash</option>
-                    <option value="2">Bank Finance</option>
-                    <option value="3">Personal Finance</option>
-                </select>
-            </div>
-        </div>
-        <div class='row'>
-            <div class="form-group col-md-3">
-                <label>SALESMAN NAME</label>
-                <select name="financer_id" class="form-control">
-                    <option value="">---Select Salesman----</option>
-                    @isset($salesmans)
-                        @foreach ($salesmans as $salesman)
-                            <option value="{{ $salesman->id }}">{{ $salesman->bank_name }}</option>
+                <label>BROKER NAME</label>
+                <select name="broker_id" class="form-control">
+                    <option value="">ALL</option>
+                    @isset($brokers)
+                        @foreach ($brokers as $key => $broker)
+                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
                         @endforeach
                     @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
+                <label>SALESMAN NAME</label>
+                <select name="salesman_id" class="form-control">
+                    <option value="">ALL</option>
+                    @isset($salesmans)
+                        @foreach ($salesmans as $salesman)
+                            <option value="{{ $salesman->id }}">{{ $salesman->name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>PAYMENT TYPE</label>
+                <select name="payment_type" class="form-control">
+                    <option value="">ALL</option>
+                    <option value="1">BY CASH</option>
+                    <option value="2">BY BANK FINANACE</option>
+                    <option value="3">BY PERSONAL FINANACE</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
                 <label>FINANCER NAME</label>
                 <select name="financer_id" class="form-control">
-                    <option value="">---Select Financer----</option>
+                    <option value="">ALL</option>
                     @isset($financers)
                         @foreach ($financers as $financer)
                             <option value="{{ $financer->id }}">{{ $financer->bank_name }}</option>
@@ -69,7 +78,7 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>REPORT DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>
@@ -102,6 +111,4 @@
         </div>
     </form>
 </section>
-
-
 <script src="{{ asset('assets/modules/report.js') }}"></script>

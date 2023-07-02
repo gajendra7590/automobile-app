@@ -3,59 +3,72 @@
         <input type="hidden" name="type" value="{{ isset($type) && !empty($type) ? $type : 'purchase' }}">
         <div class='row'>
             <div class="form-group col-md-3">
-                <label>BROKER NAME</label>
-                <select name="broker_id" class="form-control">
-                    <option value="">---Select Broker----</option>
-                    @isset($brokers)
-                        @foreach ($brokers as $key => $broker)
-                            <option value="{{ $broker->id }}">{{ $broker->name }}</option>
+                <label>BRAND NAME</label>
+                <select name="brand_id" data-dep_dd_name="model_id"
+                    data-url="{{ url('getAjaxDropdown') . '?req=models' }}" class="form-control ajaxChangeCDropDown">
+                    <option value="">ALL</option>
+                    @isset($brands)
+                        @foreach ($brands as $key => $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                         @endforeach
                     @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>RTO STATUS</label>
-                <select name="rto_status" class="form-control">
-                    <option value="">---Select RTO status----</option>
-                    <option value="0"> Pending </option>
-                    <option value="1"> Close </option>
+                <label>MODEL NAME</label>
+                <select name="model_id" class="form-control">
+                    <option value="">ALL</option>
+                    @isset($models)
+                        @foreach ($models as $model)
+                            <option value="{{ $model->id }}">{{ $model->model_name }}</option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>AGENT NAME</label>
+                <select name="agent_id" class="form-control">
+                    <option value="">ALL</option>
+                    @isset($rto_agents)
+                        @foreach ($rto_agents as $key => $rto_agent)
+                            <option value="{{ $rto_agent->id }}">{{ $rto_agent->agent_name }}</option>
+                        @endforeach
+                    @endisset
                 </select>
             </div>
             <div class="form-group col-md-3">
                 <label>SENT TO RTO</label>
                 <select name="sent_to_rto" class="form-control">
-                    <option value="">---Select (sent to rto) status----</option>
-                    <option value="1"> Yes </option>
-                    <option value="0"> No </option>
+                    <option value="">ALL</option>
+                    <option value="yes">YES</option>
+                    <option value="no">NO</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
                 <label>PENDING REGISTRATION NUMBER</label>
                 <select name="pending_registration_number" class="form-control">
-                    <option value="">---Select pending registration number status----</option>
-                    <option value="1"> Yes </option>
-                    <option value="0"> No </option>
+                    <option value="">ALL</option>
+                    <option value="yes">YES</option>
+                    <option value="no">NO</option>
                 </select>
             </div>
-        </div>
-        <div class='row'>
             <div class="form-group col-md-3">
                 <label>RC STATUS</label>
                 <select name="rc_status" class="form-control">
-                    <option value="">---Select rc status----</option>
-                    <option value="0"> On Showroom </option>
-                    <option value="1"> Delivered to Customer </option>
+                    <option value="">ALL</option>
+                    <option value="on_showroom">ON SHOWROOM</option>
+                    <option value="del_to_customer">DELIVERED TO CUSTOMER</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
                 <label>PAYMENT OUTSTANDING</label>
                 <select name="payment_outstanding" class="form-control">
-                    <option value="">---Select payment outstanding----</option>
-                    <option value="0"> Pending </option>
-                    <option value="1"> Close </option>
+                    <option value="">ALL</option>
+                    <option value="pending">PENDING</option>
+                    <option value="close">CLOSE</option>
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>REPORT DURATION</label>
                 <select name="duration" class="form-control">
                     <option value="last_month">Last Month</option>

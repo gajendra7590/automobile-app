@@ -6,6 +6,7 @@ use App\Models\BankFinancer;
 use App\Models\BikeBrand;
 use App\Models\Branch;
 use App\Models\Broker;
+use App\Models\RtoAgent;
 use App\Models\Sale;
 use App\Models\Salesman;
 use App\Traits\CommonHelper;
@@ -48,7 +49,7 @@ class ReportController extends Controller
                 break;
             case 'sales_register':
                 $view = 'sales-register';
-                $dropdowns = ['brokers', 'brands', 'financers', 'salesmans'];
+                $dropdowns = ['branches','brands', 'brokers', 'financers', 'salesmans'];
                 break;
             case 'brokers_agents':
                 $view = 'brokers-agents';
@@ -56,11 +57,11 @@ class ReportController extends Controller
                 break;
             case 'financers':
                 $view = 'financers';
-                $dropdowns = ['brokers', 'branches', 'brokers'];
+                $dropdowns = ['brokers', 'branches'];
                 break;
             case 'rto':
                 $view = 'rto';
-                $dropdowns = ['brokers', 'brands'];
+                $dropdowns = ['rto_agents', 'brands'];
                 break;
             case 'accounts':
                 $view = 'accounts';
@@ -109,6 +110,10 @@ class ReportController extends Controller
 
         if (in_array('customers', $dropdowns)) {
             $data['customers'] = Sale::select('id','sp_account_id','customer_name','customer_relationship','customer_guardian_name')->get();
+        }
+
+        if (in_array('rto_agents', $dropdowns)) {
+            $data['rto_agents'] = RtoAgent::select('id','agent_name')->get();
         }
 
         $data['action'] = route('downloadReport');

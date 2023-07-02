@@ -8,6 +8,7 @@ use App\Models\PurchaseTransfer;
 use App\Models\Quotation;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
 trait DownloadReportHelper
@@ -19,7 +20,9 @@ trait DownloadReportHelper
             $query = self::setQuery();
             $query = self::setDate();
             $query = $query->get()->toArray();
+            // echo '<pre>';print_r($query);die;
             $heading = config('heading');
+            $heading = array_map('strtoupper', $heading);
             if (count($heading)) {
                 array_unshift($query, $heading);
             }
@@ -78,6 +81,7 @@ trait DownloadReportHelper
                     $start_date = null;
                     break;
             }
+            // echo config('date_filter').'  --  '.$start_date.' -- '.$end_date;
             if ($end_date && $start_date && config('date_filter')) {
                 $query = $query->whereDate(config('date_filter'), '>=', $start_date)->whereDate(config('date_filter'), '<=', $end_date);
             }
@@ -221,28 +225,68 @@ trait DownloadReportHelper
                 config(['date_filter' => 'sales.created_at']);
                 break;
             case 'rto':
-                $query = RtoRegistration::select(['contact_name', 'contact_mobile_number', 'contact_address_line', 'u_cities.city_name', 'u_states.state_name', 'u_districts.district_name', 'contact_zipcode', 'sku', 'chasis_number', 'engine_number', 'broker_name', 'financer_name', 'gst_rto_rates.gst_rate', 'ex_showroom_amount', 'tax_amount', 'hyp_amount', 'tr_amount', 'fees', 'total_amount', 'remark', 'rc_number', 'rc_status', 'customer_given_name', 'customer_given_date', 'customer_given_note'])
+                $query = Sale::select(
+                    'branches.branch_name as bike_branch_name','bike_brands.name as bike_brand_name','bike_models.model_name as bike_model_name',
+                    'rto_agents.agent_name','rto_registration.contact_name','rto_registration.contact_mobile_number','rto_registration.contact_address_line','u_cities.city_name', 'u_districts.district_name',
+                    'u_states.state_name','rto_registration.contact_zipcode', 'rto_registration.chasis_number', 'rto_registration.engine_number', 'rto_registration.broker_name', 'rto_registration.sku',
+                    'rto_registration.financer_name', 'gst_rto_rates.gst_rate','rto_registration.ex_showroom_amount','rto_registration.tax_amount','rto_registration.hyp_amount','rto_registration.tr_amount',
+                    'rto_registration.fees','rto_registration.total_amount','rto_registration.rc_number', 'rto_registration.rc_status','sales.sale_date','rto_registration.submit_date','rto_registration.recieved_date',
+                    'rto_registration.customer_given_name','rto_registration.customer_given_date','rto_registration.customer_given_note','rto_registration.remark','sale_payment_accounts.status as sale_payment_account_status'
+                    )
+                    ->join('rto_registration', 'rto_registration.sale_id', '=', 'sales.id')
+                    ->leftJoin('purchases', 'purchases.id', '=', 'sales.purchase_id')
+                    ->leftJoin('branches', 'branches.id', '=', 'purchases.bike_branch')
+                    ->leftJoin('bike_brands', 'bike_brands.id', '=', 'purchases.bike_brand')
+                    ->leftJoin('bike_models', 'bike_models.id', '=', 'purchases.bike_model')
+                    ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'sales.id')
+                    ->leftJoin('rto_agents', 'rto_agents.id', '=', 'rto_registration.rto_agent_id')
                     ->leftJoin('u_cities', 'u_cities.id', '=', 'rto_registration.contact_city_id')
                     ->leftJoin('u_states', 'u_states.id', '=', 'rto_registration.contact_state_id')
                     ->leftJoin('u_districts', 'u_districts.id', '=', 'rto_registration.contact_district_id')
                     ->leftJoin('gst_rto_rates', 'gst_rto_rates.id', '=', 'rto_registration.gst_rto_rate_id')
-                    ->leftJoin('sale_payment_accounts', 'sale_payment_accounts.sale_id', '=', 'rto_registration.sale_id')
-                    ->when(!empty(request('rto_status')), function ($q) {
-                        $q->whereNotIn('recieved_date', [null, '']);
+                    ->when(!empty(request('brand_id')), function ($q) {
+                        $q->where('purchases.bike_brand',request('brand_id'));
+                    })
+                    ->when(!empty(request('model_id')), function ($q) {
+                        $q->where('purchases.bike_model',request('model_id'));
+                    })
+                    ->when(!empty(request('agent_id')), function ($q) {
+                        $q->where('rto_agent_id', request('agent_id'));
                     })
                     ->when(!empty(request('sent_to_rto')), function ($q) {
-                        $q->whereNotIn('submit_date', [null, '']);
+                        if( (request('sent_to_rto') == 'yes')) {
+                            $q->where(function($q1){
+                                $q1->whereNotNull('rto_registration.submit_date')->orWhere('rto_registration.submit_date','!=','');
+                            });
+                        } else if( (request('sent_to_rto') == 'no')){
+                            $q->where(function($q1){
+                                $q1->whereNull('rto_registration.submit_date')->orWhere('rto_registration.submit_date','=','');
+                            });
+                        }
                     })
                     ->when(!empty(request('pending_registration_number')), function ($q) {
-                        $q->whereNotIn('rc_number', [null, '']);
+                        if( (request('pending_registration_number') == 'no')) {
+                            $q->where(function($q1){
+                                $q1->whereNotNull('rto_registration.rc_number')->orWhere('rto_registration.rc_number','!=','');
+                            });
+                        } else if( (request('pending_registration_number') == 'yes')){
+                            $q->where(function($q1){
+                                $q1->whereNull('rto_registration.rc_number')->orWhere('rto_registration.rc_number','=','');
+                            });
+                        }
                     })
                     ->when(!empty(request('rc_status')), function ($q) {
-                        $q->whereRcStatus(request('rc_status'));
+                        $status = (request('rc_status') == 'yes')?1:0;
+                        $q->whereRcStatus($status);
                     })
                     ->when(!empty(request('payment_outstanding')), function ($q) {
-                        $q->whereNotIn('sale_payment_accounts', [null, '']);
+                        $status = (request('payment_outstanding') == 'close')?1:0;
+                        $q->where('sale_payment_accounts.status', $status);
                     });
-                $heading = ['CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT STATE', 'CONTACT DISTRICT', 'CONTACT CITY', 'CONTACT ZIPCODE', 'SKU', 'CHASSIS NUMBER', 'ENGINE NUMBER', 'BROKER NAME', 'FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT', 'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RTO REGISTRATION REMARK(IF ANY)', 'RC NUMBER', 'RC STATUS', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)', 'Customer Given Name', 'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)'];
+                $heading = ['BRANCH NAME','BRAND NAME','MODEL NAME','AGENT NAME','CONTACT NAME', 'CONTACT MOBILE NUMBER', 'CONTACT ADDRESS LINE', 'CONTACT CITY', 'CONTACT DISTRICT', 'CONTACT STATE',
+                'CONTACT ZIPCODE', 'CHASSIS NUMBER', 'ENGINE NUMBER', 'BROKER NAME', 'SKU','FINANCER NAME', 'GST RATE (TAX RATE)', 'EX SHOWROOM AMOUNT', 'TAX AMOUNT',
+                'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RC NUMBER', 'RC STATUS', 'SALE DATE','SUBMIT DATE', 'RECIEVED DATE','CUSTOMER GIVEN NAME(WHOM GIVEN)',
+                'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)','REMARK','SALES PAYMENT ACCOUNT STATUS','',''];
                 break;
             case 'accounts':
                 $query = RtoRegistration::select(['contact_name', 'contact_mobile_number', 'contact_address_line', 'u_cities.city_name', 'u_states.state_name', 'u_districts.district_name', 'contact_zipcode', 'sku', 'financer_name', 'gst_rto_rates.gst_rate', 'ex_showroom_amount', 'tax_amount', 'hyp_amount', 'tr_amount', 'fees', 'total_amount', 'remark', 'rc_number', 'rc_status', 'customer_given_name', 'customer_given_date', 'customer_given_note'])
@@ -426,13 +470,14 @@ trait DownloadReportHelper
                 break;
             case 'quotation_list':
                 $query = Quotation::join('branches', 'branches.id', '=', 'quotations.branch_id')
-                    ->join('salesmans',  'salesmans.id',  '=',  'quotations.salesman_id')
-                    ->join('u_states',    'u_states.id',    '=',  'quotations.customer_state')
-                    ->join('u_districts', 'u_districts.id', '=',  'quotations.customer_district')
-                    ->join('u_cities',    'u_cities.id',    '=',  'quotations.customer_city')
-                    ->join('bike_brands', 'bike_brands.id', '=',  'quotations.bike_brand')
-                    ->join('bike_models', 'bike_models.id', '=',  'quotations.bike_color')
-                    ->join('bike_colors', 'bike_colors.id', '=',  'quotations.bike_model')
+                    ->leftJoin('salesmans',  'salesmans.id',  '=',  'quotations.salesman_id')
+                    ->leftJoin('u_states',    'u_states.id',    '=',  'quotations.customer_state')
+                    ->leftJoin('u_districts', 'u_districts.id', '=',  'quotations.customer_district')
+                    ->leftJoin('u_cities',    'u_cities.id',    '=',  'quotations.customer_city')
+                    ->leftJoin('bike_brands', 'bike_brands.id', '=',  'quotations.bike_brand')
+                    ->leftJoin('bike_models', 'bike_models.id', '=',  'quotations.bike_color')
+                    ->leftJoin('bike_colors', 'bike_colors.id', '=',  'quotations.bike_model')
+                    ->leftJoin('bank_financers',  'bank_financers.id',  '=',  'quotations.hyp_financer')
                     ->when(!empty(request('brand_id')), function ($q) {
                         $q->where('bike_brand', request('brand_id'));
                     })->when(!empty(request('model_id')), function ($q) {
@@ -442,34 +487,64 @@ trait DownloadReportHelper
                     })->when(!empty(request('financer_id')), function ($q) {
                         $q->where('hyp_financer', request('hyp_financer'));
                     })
-                    ->select(['branches.branch_name as branch_name', 'salesmans.name as salesman_name', 'customer_gender', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'customer_address_line', 'u_states.state_name', 'u_districts.district_name', 'u_cities.city_name', 'customer_zipcode', 'customer_mobile_number', 'customer_mobile_number_alt', 'customer_email_address', 'payment_type', 'is_exchange_avaliable', 'hyp_financer', 'hyp_financer_description', 'purchase_visit_date', 'purchase_est_date', 'bike_brands.name', 'bike_models.model_name', 'bike_colors.color_name', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'status', 'close_note']);
-                $heading = ['Branch', 'Salsesman', 'Customer Gender', 'Customer Name', 'Customer Relationship', 'Customer Guardian Name', 'Customer Address Line', 'Customer State', 'Customer District', 'Customer City', 'Customer Zipcode', 'Customer Mobile Number', 'Customer Mobile Number Alt', 'Customer Email Address', 'Payment Type', 'is Exchange Avaliable', 'hyp Financer', 'hyp Financer Description', 'Purchase Visit Date', 'Purchase EST Date', 'Bike Brand Name', 'Bike Model Name', 'Bike Color Name', 'Ex Showroom Price', 'Registration Amount', 'Insurance Amount', 'Hypothecation Amount', 'Accessories Amount', 'Other Charges', 'Total Amount', 'Status', 'Close Note'];
+                    ->select([
+                        'branches.branch_name as branch_name', 'salesmans.name as salesman_name', 'customer_gender', 'customer_name', 'customer_relationship', 'customer_guardian_name', 'customer_address_line', 'u_states.state_name', 'u_districts.district_name', 'u_cities.city_name', 'customer_zipcode', 'customer_mobile_number', 'customer_mobile_number_alt', 'customer_email_address', 'payment_type', 'is_exchange_avaliable', 'bank_financers.bank_name as hyp_financer', 'hyp_financer_description', 'purchase_visit_date', 'purchase_est_date', 'bike_brands.name', 'bike_models.model_name', 'bike_colors.color_name', 'ex_showroom_price', 'registration_amount', 'insurance_amount', 'hypothecation_amount', 'accessories_amount', 'other_charges', 'total_amount', 'status', 'close_note']);
+                $heading = ['Branch Name', 'Salsesman Name', 'Customer Gender', 'Customer Name', 'Customer Relationship', 'Customer Guardian Name', 'Customer Address Line', 'Customer State', 'Customer District', 'Customer City', 'Customer Zipcode', 'Customer Mobile Number', 'Customer Mobile Number Alt', 'Customer Email Address', 'Payment Type', 'is Exchange Avaliable', 'hyp Financer', 'hyp Financer Description', 'Purchase Visit Date', 'Purchase EST Date', 'Bike Brand Name', 'Bike Model Name', 'Bike Color Name', 'Ex Showroom Price', 'Registration Amount', 'Insurance Amount', 'Hypothecation Amount', 'Accessories Amount', 'Other Charges', 'Total Amount', 'Status', 'Close Note'];
                 config(['date_filter' => 'quotations.created_at']);
                 break;
             case 'sales_register':
                 $query = Sale::leftJoin('branches', 'branches.id', '=', 'sales.branch_id')
                     ->leftJoin('purchases',  'purchases.id',  '=',  'sales.purchase_id')
+                    ->leftJoin('bike_brands', 'bike_brands.id','=','purchases.bike_brand')
+                    ->leftJoin('bike_models', 'bike_models.id', '=','purchases.bike_model')
+                    ->leftJoin('bike_dealers', 'bike_dealers.id', '=','purchases.bike_dealer')
+                    ->leftJoin('purchase_transfers', 'purchase_transfers.purchase_id', '=','purchases.id')
+                    ->leftJoin('brokers', 'brokers.id', '=','purchase_transfers.broker_id')
                     ->leftJoin('quotations',  'quotations.id',  '=',  'sales.quotation_id')
                     ->leftJoin('salesmans',  'salesmans.id',  '=',  'sales.salesman_id')
                     ->leftJoin('u_states',    'u_states.id',    '=',  'sales.customer_state')
                     ->leftJoin('u_districts', 'u_districts.id', '=',  'sales.customer_district')
                     ->leftJoin('u_cities',    'u_cities.id',    '=',  'sales.customer_city')
+                    ->leftJoin('bank_financers',  'bank_financers.id',  '=',  'sales.hyp_financer')
+                    ->leftJoin('name_prefix',  'name_prefix.id',  '=',  'sales.customer_gender')
+                    ->leftJoin('relationships',  'relationships.id',  '=',  'sales.customer_relationship')
+                    ->leftJoin('payment_types',  'payment_types.id',  '=',  'sales.payment_type')
                     ->whereHas('purchases', function ($q) {
-                        $q->when(!empty(request('brand_id')), function ($q) {
+                        $q->when(!empty(request('branch_id')), function ($q) {
+                            $q->where('bike_branch', request('branch_id'));
+                        })->when(!empty(request('brand_id')), function ($q) {
                             $q->where('bike_brand', request('brand_id'));
                         })->when(!empty(request('model_id')), function ($q) {
                             $q->where('bike_model', request('model_id'));
-                        })->when(!empty(request('financer_id')), function ($q) {
-                            $q->where('hyp_financer', request('hyp_financer'));
+                        })->when(!empty(request('broker_id')), function ($q) {
+                            $q->where('purchase_transfers.broker_id', request('broker_id'))->where('purchase_transfers.status', '0');
                         });
-                    })->when(!empty(request('payment_type')), function ($q) {
-                        $q->where('payment_type', request('payment_type'));
-                    })->when(!empty(request('salesman_id')), function ($q) {
-                        $q->where('salesman_id', request('salesman_id'));
                     })
-                    ->select(['branches.branch_name as branch_name', 'purchases.dc_number as dc_number', 'quotations.uuid as quotation_uuid', 'salesmans.name as salesman_name', 'sales.customer_address_line', 'u_states.state_name', 'u_districts.district_name', 'u_cities.city_name', 'sales.customer_zipcode', 'sales.customer_mobile_number', 'sales.customer_mobile_number_alt', 'sales.customer_email_address', 'sales.witness_person_name', 'sales.witness_person_phone', 'sales.payment_type', 'sales.is_exchange_avaliable', 'sales.hyp_financer', 'sales.hyp_financer_description', 'sales.ex_showroom_price', 'sales.registration_amount', 'sales.insurance_amount', 'sales.hypothecation_amount', 'sales.accessories_amount', 'sales.other_charges', 'sales.total_amount', 'sales.status']);
-                $heading = ['branch name', 'dc number', 'quotation uuid', 'salesman name', 'customer address line', 'state name', 'district name', 'city name', 'customer zipcode', 'customer mobile number', 'customer mobile number alt', 'customer email address', 'witness person name', 'witness person phone', 'payment type', 'is exchange avaliable', 'hyp financer', 'hyp financer description', 'ex showroom price', 'registration amount', 'insurance amount', 'hypothecation amount', 'accessories amount', 'other charges', 'total amount', 'status', 'customer name'];
-                config(['date_filter' => 'sales.created_at']);
+                    ->when(!empty(request('salesman_id')), function ($q) {
+                        $q->where('sales.salesman_id', request('salesman_id'));
+                    })
+                    ->when(!empty(request('payment_type')), function ($q) {
+                        $q->where('sales.payment_type', request('payment_type'));
+                    })
+                    ->when(!empty(request('financer_id')), function ($q) {
+                        $q->where('sales.hyp_financer', request('financer_id'));
+                    })
+                    ->select(
+                        'branches.branch_name','bike_dealers.company_name as bike_dealer_name','brokers.name as broker_name','bike_brands.name as bike_brand_name','bike_models.model_name as bike_model_name','purchases.variant','purchases.sku',
+                        'purchases.sku_description','purchases.dc_number','purchases.dc_date','purchases.vin_number as chassis_number','purchases.engine_number','purchases.dc_number',
+                        'salesmans.name as salesman_name','name_prefix.name as customer_gender_prefix','sales.customer_name','relationships.name as customer_relationship_name',
+                        'sales.customer_guardian_name','sales.customer_address_line as address_line','u_cities.city_name as address_city_name','u_districts.district_name as address_district_name',
+                        'u_states.state_name as address_state_name','sales.customer_zipcode as address_customer_zipcode','sales.customer_mobile_number','sales.witness_person_name',
+                        'sales.witness_person_phone','sales.witness_person_name','payment_types.name as payment_mode','sales.is_exchange_avaliable','bank_financers.bank_name as bank_financer_name',
+                        'sales.hyp_financer_description as bank_finance_description','sales.ex_showroom_price','sales.registration_amount','sales.insurance_amount','sales.hypothecation_amount',
+                        'sales.accessories_amount','sales.other_charges','sales.total_amount','sales.status','sales.sale_date'
+                    );
+                $heading = ['branch name', 'bike dealer name', 'broker name', 'brand name', 'model name', 'varaint name', 'sku code', 'sku description',
+                'dc number', 'dc date', 'chassis number', 'engine number', 'salesman name', 'customer gender','customer name','customer relationship','customer guardian name',
+                'address line', 'address city', 'address district', 'address state','zipcode','customer mobile number','witness person name','witness person mobile','payment mode',
+                'is exchange avaliable','bank financer name','bank finance description','ex showroom price', 'registration amount', 'insurance amount', 'hypothecation amount',
+                'accessories amount', 'other charges', 'total amount', 'status', 'sales date','customer name','serial number'];
+                config(['date_filter' => 'sales.sale_date']);
                 break;
             default:
                 //

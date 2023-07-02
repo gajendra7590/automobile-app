@@ -43,22 +43,12 @@
                             </li>
                             <li>
                                 <a href="{{ route('loadReportSection') }}?type=sales_register" class="loadeReport">
-                                    SALES REGISTER
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('loadReportSection') }}?type=brokers_agents" class="loadeReport">
-                                    BROKERS / AGENTS
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('loadReportSection') }}?type=financers" class="loadeReport">
-                                    FINANCERS
+                                    SALES INVENTORY REPORT
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('loadReportSection') }}?type=rto" class="loadeReport">
-                                    RTO
+                                    RTO REGISTRATION
                                 </a>
                             </li>
                             <li>
