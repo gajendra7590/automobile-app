@@ -178,6 +178,7 @@ class Sale extends Model
                 'bike_model',
                 'bike_model_color',
                 'sku',
+                'sku_description',
                 'engine_number',
                 'vin_number',
                 'hsn_number',
@@ -212,7 +213,35 @@ class Sale extends Model
                 },
                 'gst_detail' => function ($tax_detail) {
                     $tax_detail->select('id', 'gst_rate', 'cgst_rate', 'sgst_rate');
+                },
+                'transfers' => function ($transfers) {
+                    $transfers->select('id', 'purchase_id', 'broker_id')->with('broker:id,name');
                 }
             ]);
+    }
+
+    public static function mergeAddress($saleData)
+    {
+        $address = "";
+        if (isset($saleData['sale']['customer_address_line'])) {
+            $address .= $saleData['sale']['customer_address_line'] . " ";
+        }
+
+        if (isset($saleData['sale']['city']['city_name'])) {
+            $address .= $saleData['sale']['city']['city_name'] . " ";
+        }
+
+        if (isset($saleData['sale']['district']['district_name'])) {
+            $address .= $saleData['sale']['district']['district_name'] . " ";
+        }
+
+        if (isset($saleData['sale']['state']['state_name'])) {
+            $address .= $saleData['sale']['state']['state_name'] . " ";
+        }
+
+        if (isset($saleData['sale']['customer_zipcode'])) {
+            $address .= $saleData['sale']['customer_zipcode'] . " ";
+        }
+        return strtoupper($address);
     }
 }

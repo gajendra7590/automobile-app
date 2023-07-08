@@ -78,4 +78,19 @@ class SalePaymentTransactions extends Model
     {
         return $this->belongsTo(User::class, 'payment_collected_by');
     }
+
+    public function cash_transactions()
+    {
+        return $this->hasMany(SalePaymentCash::class, 'sale_payment_account_id','id');
+    }
+
+    public function bank_transactions()
+    {
+        return $this->hasMany(SalePaymentBankFinanace::class, 'sale_payment_account_id','id');
+    }
+
+    public function personal_transactions()
+    {
+        return $this->hasMany(SalePaymentPersonalFinanace::class, 'sale_payment_account_id','id');
+    }
 }
