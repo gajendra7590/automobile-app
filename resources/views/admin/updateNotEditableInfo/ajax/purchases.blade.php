@@ -304,8 +304,9 @@
 
         <th width="20%">GST RATES</th>
         <td width="20%">
-            <input type="text" class="form-control" placeholder="GST RATES" name="dc_date"
-                value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}%" readonly />
+            <input type="text" class="form-control" placeholder="GST RATES" name="gst_rate_percent"
+                id="gst_rate_percent" value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}%"
+                readonly />
         </td>
         <td width="10%">
             ---
@@ -315,40 +316,47 @@
     <tr>
         <th width="20%">ACTUAL PRICE(PRE GST)</th>
         <td width="20%">
-            <input type="text" class="form-control" placeholder="ACTUAL PRICE(PRE GST)" name="pre_gst_amount"
-                value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0 }}" readonly />
+            <input type="text" class="form-control totalAmountCalT totalAmountCalT2"
+                placeholder="ACTUAL PRICE(PRE GST)" name="pre_gst_amount" id="pre_gst_amount"
+                value="{{ isset($data->pre_gst_amount) ? $data->pre_gst_amount : 0 }}" />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="pre_gst_amount"
+                data-input_type="input">SAVE</a>
         </td>
 
         <th width="20%">DISCOUNT AMOUNT</th>
         <td width="20%">
-            <input type="text" class="form-control" placeholder="DISCOUNT AMOUNT" name="discount_price"
-                value="{{ isset($data->discount_price) ? $data->discount_price : 0 }}" readonly />
+            <input type="text" class="form-control totalAmountCalT" placeholder="DISCOUNT AMOUNT"
+                name="discount_price" id="discount_price"
+                value="{{ isset($data->discount_price) ? $data->discount_price : 0 }}" />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="discount_price"
+                data-input_type="input">SAVE</a>
         </td>
     </tr>
 
     <tr>
         <th width="20%">GST AMOUNT</th>
         <td width="20%">
-            <input type="text" class="form-control" placeholder="GST AMOUNT" name="gst_amount"
-                value="{{ isset($data->gst_amount) ? $data->gst_amount : 0 }}" readonly />
+            <input type="text" class="form-control totalAmountCalT totalAmountCalT2" placeholder="GST AMOUNT"
+                name="gst_amount" id="gst_amount" value="{{ isset($data->gst_amount) ? $data->gst_amount : 0 }}"
+                readonly />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="gst_amount" data-input_type="input">SAVE</a>
         </td>
 
         <th width="20%">EX SHOWROOM PRICE</th>
         <td width="20%">
             <input type="text" class="form-control" placeholder="EX SHOWROOM PRICE" name="ex_showroom_price"
-                value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0 }}" readonly />
+                id="ex_showroom_price" value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0 }}"
+                readonly />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="ex_showroom_price"
+                data-input_type="input">SAVE</a>
         </td>
     </tr>
 
@@ -356,25 +364,62 @@
         <th width="20%">GRAND TOTAL</th>
         <td width="20%">
             <input type="text" class="form-control" placeholder="GRAND TOTAL" name="grand_total"
-                value="{{ isset($data->grand_total) ? $data->grand_total : 0 }}" readonly />
+                id="grand_total" value="{{ isset($data->grand_total) ? $data->grand_total : 0 }}" readonly />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="grand_total" data-input_type="input">SAVE</a>
         </td>
 
         <th width="20%">VEHICLE DESCRIPTION</th>
         <td width="20%">
             <input type="text" class="form-control" placeholder="VEHICLE DESCRIPTION" name="bike_description"
-                value="{{ isset($data->bike_description) ? $data->bike_description : '' }}" readonly />
+                value="{{ isset($data->bike_description) ? $data->bike_description : '' }}" />
         </td>
         <td width="10%">
-            ---
+            <a class="btn btn-primary updateFormInfo" data-field_name="bike_description"
+                data-input_type="input">SAVE</a>
         </td>
     </tr>
-
     <tr>
         <input type="hidden" name="url" value="{{ route('updateNonEditableDetail.store') }}">
         <input type="hidden" name="id" value="{{ isset($data['id']) ? $data['id'] : '0' }}" />
         <input type="hidden" name="type" value="{{ isset($request_type) ? $request_type : '' }}" />
     </tr>
 </table>
+<script>
+    $(".totalAmountCalT ").on("keyup keypress", function() {
+        calculateT();
+    });
+
+    $(".totalAmountCalT2").on("keyup keypress", function() {
+        calculateT();
+    });
+
+    function calculateT() {
+        let pre_gst_amount = parseFloat(
+            $('input[name="pre_gst_amount"]').val()
+        );
+        let discount_price = parseFloat(
+            $('input[name="discount_price"]').val()
+        );
+        let rate = parseFloat($("#gst_rate_percent").val());
+        console.log(rate)
+        discount_price = !isNaN(discount_price) ?
+            discount_price : 0.0;
+        pre_gst_amount = !isNaN(pre_gst_amount) ? pre_gst_amount : 0.0;
+        let pre_gst_re_total =
+            parseFloat(pre_gst_amount) - parseFloat(discount_price);
+        let gst_amount = parseFloat((pre_gst_re_total * rate) / 100);
+        let gst_amount2 = parseFloat((pre_gst_amount * rate) / 100);
+        $("#gst_rate_percent").val(
+            rate);
+        $('input[name="gst_amount"]').val(gst_amount);
+        let ex_showroom_total =
+            parseFloat(gst_amount2) + parseFloat(pre_gst_amount);
+        let total = parseFloat(gst_amount) + parseFloat(pre_gst_re_total);
+        $(
+            'input[name="ex_showroom_price"]').val(ex_showroom_total);
+        $(
+            'input[name="grand_total"]').val(total);
+    }
+</script>

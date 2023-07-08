@@ -242,10 +242,10 @@ class RtoRegistrationController extends Controller
             'method' => 'PUT',
         ];
         $responsePayload['sales'] = Sale::select(['id', 'purchase_id', 'customer_name'])
-        ->with(['purchases:id,vin_number,engine_number'])
-        ->where('id', $rtoModel->sale_id)
-        ->get();
-        $responsePayload['rto_agents'] = RtoAgent::select(['id', 'agent_name'])->where('id', $rtoModel->rto_agent_id)->get();
+            ->with(['purchases:id,vin_number,engine_number'])
+            ->where('id', $rtoModel->sale_id)
+            ->get();
+        $responsePayload['rto_agents'] = self::_getRtoAgents();
         $htmlData = array(
             'states' => self::_getStates(1),
             'districts' => self::_getDistricts($rtoModel->contact_state_id),
