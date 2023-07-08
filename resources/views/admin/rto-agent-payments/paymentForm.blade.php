@@ -32,11 +32,14 @@
             <input type="hidden" name="rto_agent_id" value="{{ isset($data['id']) ? $data['id'] : '' }}">
             <div class="form-group col-md-4">
                 <label>PAYMENT AMOUNT</label>
-                <input name="payment_amount" type="text" class="form-control" value="" placeholder="₹0.00">
+                <input name="payment_amount" type="text" class="form-control"
+                    value="{{ isset($editDetail->payment_amount) ? $editDetail->payment_amount : '' }}"
+                    placeholder="₹0.00">
             </div>
             <div class="form-group col-md-4">
                 <label>PAYMENT DATE</label>
-                <input name="payment_date" type="date" class="form-control" value="{{ date('Y-m-d') }}"
+                <input name="payment_date" type="date" class="form-control"
+                    value="{{ isset($editDetail->payment_date) ? $editDetail->payment_date : date('Y-m-d') }}"
                     placeholder="yyyy-mm-dd">
             </div>
             <div class="form-group col-md-4">
@@ -44,7 +47,9 @@
                 <select class="form-control" name="payment_mode">
                     @if (isset($paymentSources))
                         @foreach ($paymentSources as $paymentSource)
-                            <option value="{{ $paymentSource }}">{{ $paymentSource }}</option>
+                            <option value="{{ $paymentSource }}"
+                                {{ isset($editDetail->payment_mode) && $editDetail->payment_mode == $paymentSource ? 'selected="selected"' : '' }}>
+                                {{ $paymentSource }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -53,7 +58,7 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <label>PAYMENT NOTE(IF ANY :)</label>
-                <textarea name="payment_note" class="form-control" rows="5" value="" placeholder="Payment Note(If Any)"></textarea>
+                <textarea name="payment_note" class="form-control" rows="5" value="" placeholder="Payment Note(If Any)">{{ isset($editDetail->payment_note) ? $editDetail->payment_note : '' }}</textarea>
             </div>
         </div>
     </div>
@@ -63,7 +68,12 @@
         <div class="row">
             <div class="col-md-12">
                 <button type="submit" class="btn btn-primary" id="ajaxFormSubmit">
-                    CREATE PAYMENT
+                    @if (isset($editDetail->id))
+                        UPDATE PAYMENT DETAIL
+                    @else
+                        CREATE PAYMENT
+                    @endif
+
                 </button>
             </div>
         </div>

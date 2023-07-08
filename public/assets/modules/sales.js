@@ -91,7 +91,7 @@ $(document).ready(function () {
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [-1, -2, -3, 3,  4],
+                    targets: [-1, -2, -3, 3, 4],
                 },
                 {
                     searchable: false,
@@ -105,15 +105,16 @@ $(document).ready(function () {
 
     $(document).on("change", 'select[name="payment_type"]', function () {
         let val = $(this).val();
+        let url =
+            $("#addDinanceDetailBtn").data("url") + "?payment_type=" + val;
+        $("#addDinanceDetailBtn").attr("href", url);
+        $("#financeDetailSection").show();
         if (val == "1") {
             $('select[name="hyp_financer"]').attr("disabled", "disabled");
-            $('input[name="hyp_financer_description"]').val("");
-            $("#financeDetailSection").hide();
         } else {
             $('select[name="hyp_financer"]').removeAttr("disabled");
-            $('input[name="hyp_financer_description"]').removeAttr("disabled");
-            $("#financeDetailSection").show();
         }
+        $('input[name="hyp_financer_description"]').removeAttr("disabled");
     });
 
     $(document).on("change", "select[name='sale_id']", function () {

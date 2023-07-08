@@ -322,7 +322,6 @@
                  {{ isset($data['payment_type']) && $data['payment_type'] == '1' ? 'selected="selected"' : '' }}>
                  Cash / Credit
              </option>
-             {{-- @if (isset($data['id'])) --}}
              <option value="2"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
                  Finance
@@ -331,7 +330,6 @@
                  {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
                  Private Finance
              </option>
-             {{-- @endif --}}
          </select>
      </div>
      <div class="form-group col-md-3">
@@ -356,17 +354,19 @@
      </div>
  </div>
  <div class="row" id="financeDetailSection"
-     style="display:{{ !isset($data['payment_type']) || (isset($data['payment_type']) && $data['payment_type'] == '1') ? 'none' : 'block' }}">
-     <div class="form-group col-md-10">
-         <label>FINANCE SCHEME DETAIL</label>
+     style="display:{{ !isset($data['payment_type']) || (isset($data['payment_type']) && $data['payment_type'] == '1') ? 'block' : 'block' }}">
+     <div class="form-group col-md-9">
+         <label>PAYMENT SCHEME DETAIL</label>
          <input name="hyp_financer_description" type="text" class="form-control"
              value="{{ isset($data['hyp_financer_description']) ? $data['hyp_financer_description'] : '' }}"
-             placeholder="FINANCE SCHEME DETAIL..." readonly>
+             placeholder="PAYMENT SCHEME DETAIL..." readonly>
      </div>
-     <div class="form-group col-md-2">
-         <a href="{{ route('openFinanceDetail') }}" class="btn btn-md btn-primary ajaxModalPopup financeDetail"
-             style="margin-top: 26px;" data-modal_title="ADD FINANCE DETAIL" data-modal_size="modal-lg">
-             <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD FINANCE DETAIL
+     <div class="form-group col-md-3">
+         <a href="{{ route('openFinanceDetail') }}?payment_type={{ isset($data['payment_type']) ? $data['payment_type'] : 1 }}"
+             data-url="{{ route('openFinanceDetail') }}" class="btn btn-md btn-primary ajaxModalPopup financeDetail"
+             id="addDinanceDetailBtn" style="margin-top: 26px;" data-modal_title="ADD PAYMENT SCHEME DETAIL"
+             data-modal_size="modal-lg">
+             <i class="fa fa-plus-circle" aria-hidden="true"></i> ADD PAYMENT SCHEME DETAIL
          </a>
      </div>
  </div>

@@ -152,14 +152,10 @@ class RtoAgentPaymentHistoryController extends Controller
             ->with(['agent'])->get();
         $data = array(
             'transactions'   => $transactions,
-            'agent_name'     => RtoAgent::where('id', $id)->value('agent_name')
+            'agent_name'     => RtoAgent::where('id', $id)->value('agent_name'),
+            'agent_id'     => $id
         );
-        return response()->json([
-            'status'     => true,
-            'statusCode' => 200,
-            'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.rto-agent-payments.transactions', $data)->render()
-        ]);
+        return view('admin.rto-agent-payments.transaction-list', $data);
     }
 
     /**
@@ -170,6 +166,36 @@ class RtoAgentPaymentHistoryController extends Controller
      */
     public function edit(Request $request, $id)
     {
+
+        $editDetail = RtoAgentPaymentHistory::find($id);
+        if (!$editDetail) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 409,
+                'message'    => trans('messages.id_not_exist', ['ID', $editDetail['id']])
+            ]);
+        }
+
+        $model = RtoAgent::find($editDetail->rto_agent_id);
+        $total_paid = RtoAgentPaymentHistory::where('rto_agent_id', $editDetail->rto_agent_id)->sum('payment_amount');
+        $total_balance = RtoRegistration::where('rto_agent_id', $editDetail->rto_agent_id)->sum('total_amount');
+        $total_outstanding = (($total_balance - $total_paid) > 0) ? ($total_balance - $total_paid) : 0;
+        $data = array(
+            'action'             => route('rtoAgentPayments.update', ['rtoAgentPayment' => $id]),
+            'method'             => 'PUT',
+            'data'               => $model,
+            'paymentSources'     => depositeSources(),
+            'total_balance'      => $total_balance,
+            'total_paid'         => $total_paid,
+            'total_outstanding'  => $total_outstanding,
+            'editDetail'         => $editDetail
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.rto-agent-payments.paymentForm', $data)->render()
+        ]);
     }
 
     /**
@@ -181,7 +207,60 @@ class RtoAgentPaymentHistoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        try {
+            DB::beginTransaction();
+            $model = RtoAgentPaymentHistory::find($id);
+            if (!$model) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "SORRY! AGENT PAYMENT HISTORY ID NOT FOUND."
+                ]);
+            }
+
+            $postData = $request->only('rto_agent_id', 'payment_amount', 'payment_date', 'payment_mode', 'payment_note');
+            $validator = Validator::make($postData, [
+                'rto_agent_id'    => 'required|exists:rto_agents,id',
+                'payment_amount'  => "required|numeric|min:1",
+                'payment_date'    => "required|date",
+                'payment_mode'    => "required|string",
+                'payment_note'    => "required|string"
+            ]);
+
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            //UPDATE DATA
+            $model->update([
+                'payment_amount' => $postData['payment_amount'],
+                'payment_date'   => $postData['payment_date'],
+                'payment_mode'   => $postData['payment_mode'],
+                'payment_note'   => $postData['payment_note']
+            ]);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.create_success')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
     }
 
     /**
@@ -199,7 +278,7 @@ class RtoAgentPaymentHistoryController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('rtoAgentPayments.show', ['rtoAgentPayment' => $data->id]) . '" class="ajaxModalPopup" data="VIEW TRANSACTIONS" data-modal_title="VIEW TRANSACTIONS" data-modal_size="modal-lg" data-title="View">VIEW TRANSACTIONS</a></li>';
+        $action .= '<li><a href="' . route('rtoAgentPayments.show', ['rtoAgentPayment' => $data->id]) . '" class="" data="VIEW TRANSACTIONS" data-modal_title="VIEW TRANSACTIONS" data-modal_size="modal-lg" data-title="View">VIEW TRANSACTIONS</a></li>';
         $action .= '<li><a href="' . route('rtoAgentPayments.create') . '?agent_id=' . $data->id . '" class="ajaxModalPopup" data-modal_title="CREATE NEW PAYMENT" data-title="CREATE NEW PAYMENT" data-modal_size="modal-lg">CREATE NEW PAYMENT</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';

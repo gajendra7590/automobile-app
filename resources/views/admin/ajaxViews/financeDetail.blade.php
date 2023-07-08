@@ -5,7 +5,7 @@
     @endif
     <div class="row">
         <div class="form-group col-md-2">
-            <label>FINANCE AMOUNT</label>
+            <label>DOWN PAYMENT</label>
             <input type="text" class="form-control" placeholder="₹0.00" name="finance_amount" value='' />
         </div>
         <div class="form-group col-md-2">
@@ -35,6 +35,7 @@
         <div class="form-group col-md-2">
             <label>TENOUR</label>
             <select name="tenour" class="form-control">
+                <option value='6 MONTH'>6 MONTH</option>
                 <option value='1 YEAR'>1 YEAR</option>
                 <option value='1.5 YEAR'>1.5 YEAR</option>
                 <option value='2 YEAR'>2 YEAR</option>
@@ -80,7 +81,7 @@
             }
         }
 
-        let schemeDetail = "DOWN PAYMENT SCHEME : ₹"+finance_amount+" :- ";
+        let schemeDetail = "PAYMENT SCHEME : ₹" + finance_amount + " :- ";
         schemeDetail += '( EMI AMOUNT : ₹' + emi_amount + ' | ';
         schemeDetail += "EMI TYPE : " + emi_type + ' | ';
         schemeDetail += "NUMBER OF EMI : " + number_of_emi + ' | ';
@@ -90,6 +91,6 @@
         }
         schemeDetail += ' )';
         $('input[name="hyp_financer_description"]').val(schemeDetail);
-        // $('#ajaxModalCommon').modal('hide');
+        $('#ajaxModalCommon').modal('hide');
     });
 </script>

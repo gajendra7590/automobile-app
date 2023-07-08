@@ -82,12 +82,22 @@ class PlusActionController extends Controller
     public function openFinanceDetail(Request $request)
     {
         try {
-            return response()->json([
-                'status'     => true,
-                'statusCode' => 200,
-                'message'    => trans('messages.ajax_model_loaded'),
-                'data'       => view('admin.ajaxViews.financeDetail')->render()
-            ]);
+            $params = $request->all();
+            if (isset($params['payment_type']) && ($params['payment_type'] == '1')) {
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.ajax_model_loaded'),
+                    'data'       => view('admin.ajaxViews.financeDetailCash')->render()
+                ]);
+            } else {
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.ajax_model_loaded'),
+                    'data'       => view('admin.ajaxViews.financeDetail')->render()
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'status'     => false,
