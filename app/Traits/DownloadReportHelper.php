@@ -27,6 +27,7 @@ trait DownloadReportHelper
                 $query = self::setQuery();
                 $query = self::setDate();
                 $query = $query->get()->toArray();
+                //print_r($query);die;
                 $heading = config('heading');
                 $heading = array_map('strtoupper', $heading);
                 if (count($heading)) {
@@ -97,10 +98,11 @@ trait DownloadReportHelper
             if (!config('date_filter')) {
                 config(['date_filter' => 'created_at']);
             }
-
+            // dd(config('date_filter'));
             if ($end_date && $start_date && config('date_filter')) {
                 $query = $query->whereDate(config('date_filter'), '>=', $start_date)->whereDate(config('date_filter'), '<=', $end_date);
             }
+            //echo '<pre>';print_r($query->get()->toArray());die;
         }
         config(['query' => $query]);
         return $query;
@@ -179,7 +181,8 @@ trait DownloadReportHelper
                     })->doesntHave('invoice')
                     ->select(DB::raw("CASE purchases.status WHEN '1' THEN 'UNSOLD' ELSE 'SOLD' END AS status"), 'brokers.name as broker_name', 'branches.branch_name as branch', 'bike_dealers.company_name as dealer_company_name', 'bike_brands.name as brand', 'bike_models.model_name as model', 'bike_model_variants.variant_name', 'bike_colors.color_name as color', 'bike_type', 'bike_fuel_type', 'vin_number', 'vin_physical_status', 'hsn_number', 'engine_number', 'variant', 'sku', 'sku_description', 'key_number', 'service_book_number', 'battery_brands.name as battery_brand', 'battery_number', 'tyre_brands.name as tyre_brand', 'tyre_front_number', 'tyre_rear_number', 'dc_number', 'dc_date', 'gst_rate', 'pre_gst_amount', 'discount_price', 'gst_amount', 'ex_showroom_price', 'grand_total', 'bike_description');
                 $heading = ['STOCK STATUS', 'BROKER NAME', 'BRANCH NAME', 'DEALER NAME', 'BRAND NAME', 'MODEL NAME', 'MODEL VARIANT', 'VARIANT COLOR', 'VEHICLE TYPE', 'FUEL TYPE', 'VIN NUMBER(CHASIS NUMBER) ', 'VIN PHYSICAL STATUS', 'HSN NUMBER', 'ENGINE NUMBER', 'VARIANT CODE', 'SKU CODE', 'SKU DESCRIPTION', 'KEY NUMBER', 'SERVICE BOOK NUMBER', 'BATTERY BRAND', 'BATTERY NUMBER', 'TYRE BRAND', 'TYRE FRONT NUMBER', 'TYRE REAR NUMBER', 'DC NUMBER', 'DC DATE', 'GST RATE', 'ACTUAL PRICE(PRE GST)', 'DISCOUNT AMOUNT(-)', 'GST AMOUNT', 'EX SHOWROOM PRICE(+GST)', 'GRAND TOTAL', 'VEHICLE DESCRIPTION'];
-
+                // echo '<pre>';print_r($query->get()->toArray());die;
+                config(['date_filter' => 'purchases.created_at']);
                 break;
             case 'brokers_agents':
                 $query = Purchase::leftJoin('branches', 'purchases.bike_branch', '=', 'branches.id')
@@ -332,6 +335,7 @@ trait DownloadReportHelper
                     'HYP AMOUNT', 'TR AMOUNT', 'FEES', 'TOTAL AMOUNT', 'RC NUMBER', 'RC STATUS', 'SALE DATE', 'SUBMIT DATE', 'RECIEVED DATE', 'CUSTOMER GIVEN NAME(WHOM GIVEN)',
                     'CUSTOMER GIVEN DATE', 'CUSTOMER GIVEN NOTE(IF ANY)', 'REMARK', 'SALES PAYMENT ACCOUNT STATUS', '', ''
                 ];
+                config(['date_filter' => 'rto_registration.created_at']);
                 break;
             case 'accounts':
                 $query = Sale::select(
