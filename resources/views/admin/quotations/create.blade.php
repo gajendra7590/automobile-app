@@ -397,7 +397,7 @@
                                         placeholder="₹ XXXX" {{ $isClosed }}>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>ACCESSORIES AMOUNT</label>
+                                    <label>ACCESSORIES / HELMET AMOUNT</label>
                                     <input name="accessories_amount" type="text" class="form-control totalAmountCal"
                                         value="{{ isset($data['accessories_amount']) ? $data['accessories_amount'] : '' }}"
                                         placeholder="₹ XXXX" {{ $isClosed }}>

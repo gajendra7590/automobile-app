@@ -204,6 +204,9 @@ $(document).ready(function () {
             }
         },
         rules: {
+            salesman_id: {
+                required: true,
+            },
             branch_id: {
                 required: true,
             },
@@ -288,6 +291,9 @@ $(document).ready(function () {
             sale_date: {
                 required: true,
                 date: true,
+            },
+            hyp_financer_description: {
+                required: true,
             },
         },
         messages: {

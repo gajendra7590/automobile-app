@@ -244,8 +244,8 @@ class SaleController extends Controller
                     'customer_email_address' => 'nullable|email',
                     'witness_person_name' => 'required',
                     'witness_person_phone' => 'required|numeric|digits:10',
-                    'payment_type' => 'required|in:1,2,3',
                     'is_exchange_avaliable' => 'required|in:Yes,No',
+                    'payment_type' => 'required|in:1,2,3',
                     'hyp_financer' => 'nullable|exists:bank_financers,id',
                     'hyp_financer_description' => 'nullable',
                     'ex_showroom_price' => 'required|numeric',
@@ -274,13 +274,15 @@ class SaleController extends Controller
 
 
                 //CREATE FULL NAME
-                $full_name = strtoupper(custPrefix($postData['customer_gender']) .' '.$postData['customer_name'].' '.custRel($postData['customer_relationship']).' '.$postData['customer_guardian_name']);
+                $full_name = strtoupper(custPrefix($postData['customer_gender']) . ' ' . $postData['customer_name'] . ' ' . custRel($postData['customer_relationship']) . ' ' . $postData['customer_guardian_name']);
 
                 //Add Some Keys
                 $postData['branch_id']          = Purchase::where(['id' => $postData['purchase_id']])->value('bike_branch');
                 $postData['sale_uuid']          = random_uuid('sale');
                 $postData['created_by']         = Auth::user()->id;
                 $postData['customer_full_name'] = $full_name;
+                $postData['account_payment_type'] = $postData['payment_type'];
+                $postData['account_hyp_financer'] = $postData['hyp_financer'];
                 //Create Sale
                 $createModel = Sale::create($postData);
                 //Mark Status Closed If Purchase With Quotation
@@ -378,7 +380,9 @@ class SaleController extends Controller
     public function edit($id)
     {
         $auth = User::find(auth()->id());
-        $bpModel = Sale::where(['id' => $id])->first();
+        $bpModel = Sale::where(['id' => $id])->with([
+            'accountFinancer:id,bank_name'
+        ])->first();
         // return $bpModel;
         if (!$bpModel) {
             return response()->json([
@@ -433,6 +437,7 @@ class SaleController extends Controller
 
         $data['htmlData'] = (view('admin.sales.ajax.ajax-view')->with($data)->render());
         $data['purchases'] = self::_getPurchasesById($bpModel->purchase_id);
+        // return $data;
         return view('admin.sales.create', $data);
     }
 
@@ -523,7 +528,7 @@ class SaleController extends Controller
                     'sale_date'  => 'required|date',
                 ];
                 if (isset($postData['payment_type']) && (in_array($postData['payment_type'], ['2', '3']))) {
-                    $formValidationArr['hyp_financer'] = 'nullable|exists:bank_financers,id';
+                    $formValidationArr['hyp_financer'] = 'required|exists:bank_financers,id';
                 }
                 $validator = Validator::make($postData, $formValidationArr);
 

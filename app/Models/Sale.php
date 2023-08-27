@@ -41,10 +41,12 @@ class Sale extends Model
         'customer_email_address',
         'witness_person_name',
         'witness_person_phone',
-        'payment_type',
         'is_exchange_avaliable',
+        'payment_type',
         'hyp_financer',
         'hyp_financer_description',
+        'account_payment_type',
+        'account_hyp_financer',
         'ex_showroom_price',
         'registration_amount',
         'insurance_amount',
@@ -155,6 +157,11 @@ class Sale extends Model
     public function financer()
     {
         return $this->belongsTo(BankFinancer::class, 'hyp_financer');
+    }
+
+    public function accountFinancer()
+    {
+        return $this->belongsTo(BankFinancer::class, 'account_hyp_financer');
     }
 
     public function salesman()

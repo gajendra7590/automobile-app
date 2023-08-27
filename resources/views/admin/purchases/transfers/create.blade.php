@@ -1,25 +1,26 @@
-<form action="{{ isset($action) ? $action : '' }}" class="ajaxFormSubmit" data-redirect=""
-    method="{{ isset($method) ? $method : '' }}" enctype="multipart/form-data">
+<form action="{{ isset($action) ? $action : '' }}" class="ajaxFormSubmit" data-redirect="" method="POST"
+    enctype="multipart/form-data">
     @csrf
     @if (isset($method) && $method == 'PUT')
         @method('PUT')
     @endif
     <div class="box-body" data-select2-id="15">
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>SELECT PURCHASE</label>
-                    <input type="hidden" value="{{ route('getTransferPurchasesList') }}" id="select2SearchURL">
-                    <select name="purchase_id" class="form-control select2" id="select2Ele"
-                        data-placeholder="Select a document section..." style="width: 100%;" data-select2-id="7"
-                        tabindex="-1" aria-hidden="true">
-                    </select>
+            @if (isset($method) && $method != 'PUT')
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>SELECT PURCHASE</label>
+                        <input type="hidden" value="{{ route('getTransferPurchasesList') }}" id="select2SearchURL">
+                        <select name="purchase_id" class="form-control select2" id="select2Ele"
+                            data-placeholder="Select a document section..." style="width: 100%;" data-select2-id="7"
+                            tabindex="-1" aria-hidden="true">
+                        </select>
+                    </div>
                 </div>
-            </div>
+            @endif
             <div class="form-group col-md-12">
                 <label>BROKER NAME : </label>
                 <select class="form-control" name="broker_id">
-                    {{-- <option value="">---- Select Broker ----</option> --}}
                     @isset($brokers)
                         @foreach ($brokers as $broker)
                             <option
@@ -35,12 +36,14 @@
                     value="{{ isset($data['total_price_on_road']) ? $data['total_price_on_road'] : '' }}"
                     placeholder="₹0.00">
             </div>
-            <div class="form-group col-md-12">
-                <label>TRANSFER DATE</label>
-                <input name="transfer_date" type="date" class="form-control"
-                    value="{{ isset($data['transfer_date']) ? $data['transfer_date'] : date('Y-m-d') }}"
-                    placeholder="yyyy-mm-dd">
-            </div>
+            @if (isset($method) && $method != 'PUT')
+                <div class="form-group col-md-12">
+                    <label>TRANSFER DATE</label>
+                    <input name="transfer_date" type="date" class="form-control"
+                        value="{{ isset($data['transfer_date']) ? $data['transfer_date'] : date('Y-m-d') }}"
+                        placeholder="yyyy-mm-dd">
+                </div>
+            @endif
             <div class="form-group col-md-12">
                 <label>TRANSFER NOTE</label>
                 <textarea name="transfer_note" class="form-control">{{ isset($data['transfer_note']) ? $data['transfer_note'] : '' }}</textarea>
@@ -50,7 +53,13 @@
     <div class="box-footer">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary pull-right" type="submit">CREATE TRANSFER</button>
+                <button class="btn btn-primary pull-right" type="submit">
+                    @if (isset($method) && $method != 'PUT')
+                        CREATE TRANSFER
+                    @else
+                        UPDATE TRANSFER
+                    @endif
+                </button>
             </div>
         </div>
     </div>

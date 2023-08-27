@@ -24,7 +24,8 @@ class SalePaymentTransactions extends Model
         'transaction_paid_date',
         'trans_type',
         'status',
-        'reference_id'
+        'reference_id',
+        'is_dp'
     ];
 
 
@@ -42,7 +43,7 @@ class SalePaymentTransactions extends Model
             $findModel = SalePaymentTransactions::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;
@@ -81,16 +82,16 @@ class SalePaymentTransactions extends Model
 
     public function cash_transactions()
     {
-        return $this->hasMany(SalePaymentCash::class, 'sale_payment_account_id','id');
+        return $this->hasMany(SalePaymentCash::class, 'sale_payment_account_id', 'id');
     }
 
     public function bank_transactions()
     {
-        return $this->hasMany(SalePaymentBankFinanace::class, 'sale_payment_account_id','id');
+        return $this->hasMany(SalePaymentBankFinanace::class, 'sale_payment_account_id', 'id');
     }
 
     public function personal_transactions()
     {
-        return $this->hasMany(SalePaymentPersonalFinanace::class, 'sale_payment_account_id','id');
+        return $this->hasMany(SalePaymentPersonalFinanace::class, 'sale_payment_account_id', 'id');
     }
 }

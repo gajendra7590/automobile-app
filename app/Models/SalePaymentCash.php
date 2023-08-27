@@ -27,7 +27,8 @@ class SalePaymentCash extends Model
         'collected_by',
         'trans_type',
         'status',
-        'received_in_bank'
+        'received_in_bank',
+        'is_dp'
     ];
 
 

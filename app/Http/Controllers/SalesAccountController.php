@@ -183,6 +183,7 @@ class SalesAccountController extends Controller
             $postData = $request->only('sales_account_id', 'sales_total_amount', 'deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by', 'due_amount', 'due_date');
             $validator = Validator::make($postData, [
                 'sales_account_id'      => "required|exists:sale_payment_accounts,id",
+                'deposite_collected_by' => 'required|exists:salesmans,id',
                 'sales_total_amount'    => "required|numeric",
                 'deposite_amount'       => "required|numeric|min:1|lte:sales_total_amount",
                 'deposite_date'         => 'required|date',
@@ -228,7 +229,8 @@ class SalesAccountController extends Controller
                     'debit_amount'   => 0,
                     'change_balance' => $postData['sales_total_amount'],
                     'trans_type'     => 1,
-                    'status'         => 1
+                    'status'         => 1,
+                    'is_dp'          => 0
                 ],
                 [
                     'sale_id' => $salesAccountModel->sale_id,
@@ -236,7 +238,7 @@ class SalesAccountController extends Controller
                     'payment_name'   => "Down Payment Paid By Customer.",
                     'credit_amount'  => 0,
                     'debit_amount'   => $postData['deposite_amount'],
-                    'change_balance' => $postData['due_amount'],
+                    //'change_balance' => $postData['due_amount'],
                     'due_date'       => $postData['due_date'],
                     'paid_source'    => $postData['deposite_source'],
                     'paid_date'      => $postData['deposite_date'],
@@ -244,6 +246,7 @@ class SalesAccountController extends Controller
                     'collected_by'   => $postData['deposite_collected_by'],
                     'trans_type'     => 2,
                     'status'         => $postData['status'],
+                    'is_dp'          => 1
                 ]
             );
             foreach ($downPaymentData as $cashData) {
@@ -259,12 +262,16 @@ class SalesAccountController extends Controller
                     'transaction_paid_date' => isset($cashData['paid_date']) ? $cashData['paid_date'] : null,
                     'trans_type' => isset($cashData['trans_type']) ? $cashData['trans_type'] : '',
                     'status' => $cashData['status'],
-                    'reference_id' => $cashPaymentModel->id
+                    'reference_id' => $cashPaymentModel->id,
+                    'is_dp' => isset($cashData['is_dp']) ? $cashData['is_dp'] : 0,
                 ]);
             }
 
             //Sale Update Self Pay In Sales Model
-            Sale::where('id', $salesAccountModel['sale_id'])->update(['hyp_financer' => null, 'payment_type' => '1']);
+            Sale::where('id', $salesAccountModel['sale_id'])->update(['account_hyp_financer' => null, 'account_payment_type' => '1']);
+
+            updateDuesOrPaidBalance($salesAccountModel->id);
+
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -289,7 +296,11 @@ class SalesAccountController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = SalePaymentAccounts::find($id);
+        if (!$data) {
+            return redirect()->route('saleAccounts.index');
+        }
+        return view('admin.sales-accounts.show', ['data' => $data]);
     }
 
     /**
@@ -300,11 +311,29 @@ class SalesAccountController extends Controller
      */
     public function edit($id)
     {
-        $data = SalePaymentAccounts::find($id);
-        if (!$data) {
-            return redirect()->route('saleAccounts.index');
+        $accountModel = SalePaymentAccounts::with(['downPaymentByCustomer'])->where('id', $id)->first();
+        if (!$accountModel) {
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => trans('messages.id_not_exist')
+            ]);
         }
-        return view('admin.sales-accounts.show', ['data' => $data]);
+        $accountModel = $accountModel->toArray();
+        $data = array(
+            'depositeSources' => depositeSources(),
+            'duePaySources'   => duePaySources(),
+            'emiTerms'        => emiTerms(),
+            'salemans'        => self::_getSalesman(),
+            'action'          => route('saleAccounts.update', ['saleAccount' => $id]),
+            'data'            => $accountModel,
+        );
+        return response()->json([
+            'status'     => true,
+            'statusCode' => 200,
+            'message'    => trans('messages.ajax_model_loaded'),
+            'data'       => view('admin.sales-accounts.update', $data)->render()
+        ]);
     }
 
     /**
@@ -316,7 +345,89 @@ class SalesAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $salesAccountModel = SalePaymentAccounts::with(['downPaymentByCustomer'])->where('id', $id)->first();
+            if (!$salesAccountModel) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => trans('messages.id_not_exist')
+                ]);
+            }
+            DB::beginTransaction();
+            $postData = $request->only('sales_total_amount', 'deposite_amount', 'old_deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by');
+            $validator = Validator::make($postData, [
+                'deposite_amount'       => "required|numeric|min:1|lte:sales_total_amount",
+                'deposite_date'         => 'required|date',
+                'deposite_source'       => 'required|string',
+                'status'                => 'required|in:0,1,2',
+                'deposite_collected_by' => 'required|exists:salesmans,id',
+                'deposite_source_note'  => 'nullable|string'
+            ]);
+            //If Validation failed
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $buffer = ($postData['deposite_amount'] - $postData['old_deposite_amount']);
+            //IF AMOUNT INCREASE
+            if ($buffer > 0) {
+                if ($buffer > $salesAccountModel->cash_outstaning_balance) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => "Sorry! You have updated more than due cash balance"
+                    ]);
+                }
+            }
+            //UPDATE DP IN SALES ACCOUNT TABLE
+            $salesAccountModel->update(['down_payment' => $postData['deposite_amount']]);
+            //UPDATE CASH BALANCE TABLE
+            SalePaymentCash::where(['id' => $salesAccountModel->downPaymentByCustomer->id])
+                ->update([
+                    'debit_amount'   => $postData['deposite_amount'],
+                    'paid_source'    => $postData['deposite_source'],
+                    'paid_date'      => $postData['deposite_date'],
+                    'paid_note'      => $postData['deposite_source_note'],
+                    'collected_by'   => $postData['deposite_collected_by'],
+                    'status'         => $postData['status']
+                ]);
+            //CREATE NEW TRANSACTION  ENTRY IF ANY CHANGE IN DP AMOUNT
+            if ($buffer != 0) {
+                SalePaymentTransactions::create([
+                    'sale_id' => $salesAccountModel->sale_id,
+                    'sale_payment_account_id' => $salesAccountModel->id,
+                    'transaction_for' => 1,
+                    'transaction_name' => "Update Down Payment Deposite Price Changed",
+                    'transaction_amount' => $buffer,
+                    'transaction_paid_source' => $postData['deposite_source'],
+                    'transaction_paid_source_note' => $postData['deposite_source_note'],
+                    'transaction_paid_date' => $postData['deposite_date'],
+                    'trans_type'            => ($buffer > 0) ? 1 : 2,
+                    'status' => $postData['status'],
+                    'reference_id' => $salesAccountModel->downPaymentByCustomer->id
+                ]);
+            }
+            updateDuesOrPaidBalance($salesAccountModel->id);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.update_success')
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 409,
+                'message'    => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -334,7 +445,7 @@ class SalesAccountController extends Controller
     {
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
-        $action .= '<li><a href="' . route('saleAccounts.edit', ['saleAccount' => $row->id]) . '" class="">VIEW DETAIL</a></li>';
+        $action .= '<li><a href="' . route('saleAccounts.show', ['saleAccount' => $row->id]) . '" class="">VIEW DETAIL</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;

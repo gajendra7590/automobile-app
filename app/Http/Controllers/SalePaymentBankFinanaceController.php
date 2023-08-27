@@ -188,7 +188,7 @@ class SalePaymentBankFinanaceController extends Controller
                 ]);
 
                 //Sale Update Self Pay In Sales Model
-                Sale::where('id', $salesAccountModel->sale_id)->update(['hyp_financer' => $postData['financier_id'], 'payment_type' => '2']);
+                Sale::where('id', $salesAccountModel->sale_id)->update(['account_hyp_financer' => $postData['financier_id'], 'account_payment_type' => '2']);
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -467,7 +467,7 @@ class SalePaymentBankFinanaceController extends Controller
                 }
 
                 //Sale Update Self Pay In Sales Model
-                Sale::where('id', $bankFinanceModel->sale_id)->update(['hyp_financer' => $postData['financier_id'], 'payment_type' => '2']);
+                Sale::where('id', $bankFinanceModel->sale_id)->update(['account_hyp_financer' => $postData['financier_id'], 'account_payment_type' => '2']);
 
 
                 DB::commit();
@@ -576,7 +576,7 @@ class SalePaymentBankFinanaceController extends Controller
                 ]);
 
                 //Sale Update Self Pay In Sales Model
-                Sale::where('id', $CashModel->sale_id)->update(['hyp_financer' => null, 'payment_type' => '1']);
+                Sale::where('id', $CashModel->sale_id)->update(['account_hyp_financer' => null, 'account_payment_type' => '1']);
 
                 DB::commit();
                 return response()->json([

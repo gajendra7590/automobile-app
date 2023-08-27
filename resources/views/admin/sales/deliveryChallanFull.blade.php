@@ -3,8 +3,21 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ strip_tags(config('constants.APP_NAME')) }} | Delivery Challan</title>
+    <style>
+        * {
+            font-family: DejaVu Sans, sans-serif;
+        }
+
+        td {
+            font-size: 13px;
+        }
+
+        td {
+            font-size: 13px;
+        }
+    </style>
 </head>
 
 <body>
@@ -85,40 +98,36 @@
                             {{ isset($data->customer_mobile_number) ? $data->customer_mobile_number : '' }}
                         </td>
                     </tr>
+                    {{-- @if (isset($data->payment_type) && $data->payment_type != '1') --}}
                     <tr>
-                        <td style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem;"></td>
-                        <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;"></td>
+                        <td
+                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                            HYP:
+                        </td>
+                        <td
+                            style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:15px;border-bottom: 1px solid;">
+                            {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : '' }}
+                        </td>
                     </tr>
-                    @if (isset($data->payment_type) && ($data->payment_type != '1'))
-                        <tr>
-                            <td
-                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
-                                HYP:
-                            </td>
-                            <td
-                                style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
-                                {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : 'N/A' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
-                                HYP DESCRIPTION:
-                            </td>
-                            <td
-                                style=" width:75%;text-align: center; height: 2rem;font-size:14px;border-bottom: 1px solid;">
-                                {{ isset($data->hyp_financer_description) && $data->hyp_financer_description ? $data->hyp_financer_description : 'N/A' }}
-                            </td>
-                        </tr>
-                    @endif
-                        <tr>
-                            <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
-                                BROKER:
-                            </td>
-                            <td style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;">
-                                {{ isset($broker_name) && ($broker_name != '') ? $broker_name : '' }}
-                            </td>
-                        </tr>
+                    <tr>
+                        <td
+                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                            HYP DESCRIPTION:
+                        </td>
+                        <td
+                            style=" width:75%;text-align: center; height: 2rem;font-size:14px;border-bottom: 1px solid;">
+                            {{ isset($data->hyp_financer_description) && $data->hyp_financer_description ? $data->hyp_financer_description : '' }}
+                        </td>
+                    </tr>
+                    {{-- @endif --}}
+                    <tr>
+                        <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
+                            BROKER:
+                        </td>
+                        <td style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:14px;">
+                            {{ isset($broker_name) && $broker_name != '' ? $broker_name : '' }}
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -150,28 +159,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <td
-                            style="border-right: 1px solid;text-align: center; height: 2rem; font-weight: bold;font-size:14px;">
+                        <td style="border-right: 1px solid;text-align: center; height: 2rem; font-weight: bold;">
                             {{ isset($data->purchase->model) && $data->purchase->model->model_name ? $data->purchase->model->model_name : '' }}
                         </td>
-                        <td
-                            style="border-right: 1px solid;text-align: center; height: 2rem; font-weight: bold;font-size:14px;">
+                        <td style="border-right: 1px solid;text-align: center; height: 2rem; font-weight: bold;">
                             {{ isset($data->purchase->sku) && $data->purchase->sku ? $data->purchase->sku : '' }}
                         </td>
-                        <td
-                            style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
+                        <td style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;">
                             {{ isset($data->purchase->vin_number) && $data->purchase->vin_number ? $data->purchase->vin_number : '' }}
                         </td>
-                        <td
-                            style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
+                        <td style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;">
                             {{ isset($data->purchase->engine_number) && $data->purchase->engine_number ? $data->purchase->engine_number : '' }}
                         </td>
-                        <td
-                            style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
+                        <td style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;">
                             {{ isset($data->purchase->key_number) && $data->purchase->key_number ? $data->purchase->key_number : '' }}
                         </td>
-                        <td
-                            style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;font-size:14px;">
+                        <td style="text-align: center; height: 2rem; border-right: 1px solid; font-weight: bold;">
                             {{ isset($data->purchase->color) && $data->purchase->color->color_name ? $data->purchase->color->color_name : '' }}
                         </td>
                     </tr>

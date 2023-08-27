@@ -116,6 +116,11 @@ class SalePaymentAccounts extends Model
         return $this->belongsTo(Sale::class, 'sale_id');
     }
 
+    public function downPaymentByCustomer()
+    {
+        return $this->hasOne(SalePaymentCash::class, 'sale_payment_account_id')->where('is_dp', '1');
+    }
+
     public function installments()
     {
         return $this->hasMany(SalePaymentInstallments::class, 'sale_payment_account_id');

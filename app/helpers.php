@@ -91,7 +91,8 @@ if (!function_exists('depositeSources')) {
             'Netbanking'  => "Netbanking",
             'UPI'         => "UPI",
             'Credit Card' => "Credit Card",
-            'Debit Card'  => "Debit Card"
+            'Debit Card'  => "Debit Card",
+            'Vehicle Exchange'  => "Vehicle Exchange"
         ];
 
         if ($id > 0) {
@@ -132,6 +133,21 @@ if (!function_exists('duePaySourcesQuotation')) {
     }
 }
 
+if (!function_exists('paymentAccountTypes')) {
+    function paymentAccountTypes($id = 0)
+    {
+        $data = [
+            '1'  => "Cash / Credit",
+            '2'  => "Bank Finance",
+            '3'  => "Personal Finance"
+        ];
+        if ($id > 0) {
+            return isset($data[$id]) ? $data[$id] : "";
+        }
+        return $data;
+    }
+}
+
 if (!function_exists('emiTerms')) {
     function emiTerms($id = 0)
     {
@@ -139,7 +155,9 @@ if (!function_exists('emiTerms')) {
             '1'  => "Monthy",
             '2'  => "Quaterly",
             '3'  => "Half Yearly",
-            '4'  => "Half Yearly"
+            '4'  => "Yearly Yearly",
+            '5'  => 'Every 2 Month',
+            '6'  => 'Every 4 Month'
         ];
 
         if ($id > 0) {
@@ -156,7 +174,9 @@ if (!function_exists('emiTermsMonths')) {
             '1'  => 1,
             '2'  => 3,
             '3'  => 6,
-            '4'  => 12
+            '4'  => 12,
+            '5'  => 2,
+            '6'  => 4
         ];
         return isset($data[$id]) ? $data[$id] : 1;
     }

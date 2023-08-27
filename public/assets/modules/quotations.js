@@ -232,9 +232,8 @@ $(document).ready(function () {
                 min: 1,
             },
             hypothecation_amount: {
-                required: true,
                 number: true,
-                min: 1,
+                min: 0,
             },
             accessories_amount: {
                 required: true,

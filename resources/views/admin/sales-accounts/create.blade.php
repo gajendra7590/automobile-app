@@ -51,7 +51,6 @@
             <div class="form-group col-md-3">
                 <label>Payment Collected By</label>
                 <select class="form-control" name="deposite_collected_by">
-                    <option value="0">---SalesMan---</option>
                     @isset($salemans)
                         @foreach ($salemans as $k => $saleman)
                             <option value="{{ $saleman->id }}">{{ $saleman->name }} </option>

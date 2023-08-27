@@ -258,7 +258,7 @@ class PurchaseTransfersController extends Controller
         if (!$request->ajax()) {
             return redirect()->route('purchaseTransfers.index');
         } else {
-            $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
+            $model = PurchaseTransfer::find($id);
             if (!$model) {
                 return response()->json([
                     'status'     => true,
@@ -267,6 +267,103 @@ class PurchaseTransfersController extends Controller
                 ]);
             }
             $data['action']      = route('purchaseTransfers.update', ['purchaseTransfer' => $id]);
+            $data['method']      = "PUT";
+            $data['brokers']     = self::_getBrokers();
+            $data['data']        = $model;
+
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.retrieve_success'),
+                'data'       => (view('admin.purchases.transfers.create', $data)->render())
+            ]);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            try {
+                $model = PurchaseTransfer::find($id);
+                if (!$model) {
+                    return response()->json([
+                        'status'     => true,
+                        'statusCode' => 200,
+                        'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                    ]);
+                }
+
+
+                DB::beginTransaction();
+                $postData = $request->only('broker_id', 'total_price_on_road', 'transfer_note');
+                $validator = Validator::make($postData, [
+                    'broker_id'            => "required|exists:purchases,id",
+                    'total_price_on_road'  => "required|numeric|min:1",
+                    'transfer_note'        => "required|string"
+                ]);
+
+                //If Validation failed
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'     => false,
+                        'statusCode' => 419,
+                        'message'    => $validator->errors()->first(),
+                        'errors'     => $validator->errors()
+                    ]);
+                }
+                $postData['updated_by'] = Auth::user()->id;
+                $model->update($postData);
+                DB::commit();
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.update_success')
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 409,
+                    'message'    => $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function returnIndex(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return redirect()->route('purchaseTransfers.index');
+        } else {
+            $model = PurchaseTransfer::where(['id' => $id, 'status' => '0', 'active_status' => '1'])->first();
+            if (!$model) {
+                return response()->json([
+                    'status'     => true,
+                    'statusCode' => 200,
+                    'message'    => trans('messages.id_not_exist', ['ID' => $id])
+                ]);
+            }
+            $data['action']      = route('purchaseTransferReturnSave', ['id' => $id]);
             $data['method']      = "PUT";
             $data['brokers']     = self::_getBrokers();
             $data['purchase_id'] = $model->purchase_id;
@@ -280,14 +377,7 @@ class PurchaseTransfersController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function returnSave(Request $request, $id)
     {
         if (!$request->ajax()) {
             return redirect()->route('purchaseTransfers.index');
@@ -346,25 +436,17 @@ class PurchaseTransfersController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function getActions($row)
     {
         if ($row) {
             $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
             $action  .= '<ul class="dropdown-menu">';
             $action .= '<li><a href="' . route('purchases.show', ['purchase' => $row->id]) . '" data-id="' . $row->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-title="VIEW PURCHASE DETAIL" data-modal_title="VIEW PURCHASE DETAIL">VIEW PURCHASE DETAIL</a></li>';
-            if (isset($row->status) && ($row->status == '1')) {
-                $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="CREATE RETURN">CREATE RETURN</a></li>';
+            if ((isset($row->status) && ($row->status == '1')) || (Auth::user()->is_admin == '1')) {
+                $action .= '<li><a href="' . route('purchaseTransfers.edit', ['purchaseTransfer' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="UPDATE BROKER TRANSFER">UPDATE TRANSFER</a></li>';
+            }
+            if ((isset($row->status) && ($row->status == '1')) || (Auth::user()->is_admin == '1')) {
+                $action .= '<li><a href="' . route('purchaseTransferReturnIndex', ['id' => $row->transfers->id]) . '" data-id="' . $row->transfers->id . '" class="ajaxModalPopup" data-modal_size="modal-lg" data-modal_title="CREATE RETURN">CREATE RETURN</a></li>';
             }
             $action .= '<li><a href="' . route('purchaseTransferDeliveryChallan', ['id' => base64_encode($row->transfers->id)]) . '" data-id="' . $row->transfers->id . '" class="" title="DELIVERY CHALLAN" target="_blank">DELIVERY CHALLAN</a></li>';
             $action  .= '</ul>';

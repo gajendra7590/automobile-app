@@ -5,6 +5,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ strip_tags(config('constants.APP_NAME')) }} | Delivery Challan</title>
+    <style>
+        * {
+            font-family: DejaVu Sans, sans-serif;
+        }
+    </style>
 </head>
 
 <body>
@@ -89,28 +94,28 @@
                         <td style="border-bottom: 1px solid; width:25%; padding-left: 0.5rem; height: 2rem;"></td>
                         <td style="border-bottom: 1px solid; width:75%;text-align: center; height: 2rem;"></td>
                     </tr>
-                    @if (isset($data->payment_type) && ($data->payment_type != '1'))
-                        <tr>
-                            <td
-                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
-                                HYP:
-                            </td>
-                            <td
-                                style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
-                                {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : 'N/A' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td
-                                style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
-                                HYP DESCRIPTION:
-                            </td>
-                            <td
-                                style=" width:75%;text-align: center; height: 2rem;font-size:14px;border-bottom: 1px solid;">
-                                {{ isset($data->hyp_financer_description) && $data->hyp_financer_description ? $data->hyp_financer_description : 'N/A' }}
-                            </td>
-                        </tr>
-                    @endif
+                    {{-- @if (isset($data->payment_type) && $data->payment_type != '1') --}}
+                    <tr>
+                        <td
+                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                            HYP:
+                        </td>
+                        <td
+                            style=" width:75%;text-align: center; height: 2rem;font-weight: bold;font-size:18px;border-bottom: 1px solid;">
+                            {{ isset($data->financer) && $data->financer ? $data->financer->bank_name : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid;border-bottom: 1px solid; ">
+                            HYP DESCRIPTION:
+                        </td>
+                        <td
+                            style=" width:75%;text-align: center; height: 2rem;font-size:14px;border-bottom: 1px solid;">
+                            {{ isset($data->hyp_financer_description) && $data->hyp_financer_description ? $data->hyp_financer_description : '' }}
+                        </td>
+                    </tr>
+                    {{-- @endif --}}
                     <tr>
                         <td style=" width:25%; padding-left: 0.5rem; height: 2rem; border-right: 1px solid; ">
                             BROKER:

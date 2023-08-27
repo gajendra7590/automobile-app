@@ -91,12 +91,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('getPurchaseDetails/{id}', 'PurchaseController@getPurchaseDetails')->name('getPurchaseDetails');
     Route::get('getModelsList/{id}', 'PurchaseController@getModelsList')->name('getModelsList');
 
-    Route::get('purchaseTransfer/{id}', 'PurchaseTransferController@transferIndex')->name('transferIndex');
-    Route::post('purchaseTransfer/{id}', 'PurchaseTransferController@transferSave')->name('transferSave');
-
-    Route::get('purchaseReturn/{id}', 'PurchaseTransferController@returnIndex')->name('returnIndex');
-    Route::post('purchaseReturn/{id}', 'PurchaseTransferController@returnSave')->name('returnSave');
-
     //Purchase Return To Dealers
     Route::get('purchaseReturnToDealers/backToStock/{id}', 'PurchaseReturnController@backToStock')->name('backToStock');
     Route::resource('purchaseReturnToDealers', 'PurchaseReturnController');
@@ -106,7 +100,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Transfers & Returns
     Route::resource('purchaseTransfers', 'PurchaseTransfersController');
+
+    Route::get('purchaseTransferReturn/{id}', 'PurchaseTransfersController@returnIndex')->name('purchaseTransferReturnIndex');
+    Route::post('purchaseTransferReturn/{id}', 'PurchaseTransfersController@returnSave')->name('purchaseTransferReturnSave');
+
     Route::get('getTransferPurchasesList', 'PurchaseTransfersController@getTransferPurchasesList')->name('getTransferPurchasesList');
+
     //purchaseTransferDeliveryChallan
     Route::get('purchaseTransferDeliveryChallan/{id}', 'PurchaseTransfersController@show')->name('purchaseTransferDeliveryChallan');
 

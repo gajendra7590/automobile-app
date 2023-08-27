@@ -160,7 +160,7 @@ class QuotationController extends Controller
             try {
                 $postData = $request->all();
                 // dd($postData);
-                $validator = Validator::make($postData, [
+                $rules = [
                     'branch_id'                 => "required|exists:branches,id",
                     'salesman_id'               => "nullable|exists:salesmans,id",
                     'customer_gender'           => "required|in:1,2,3",
@@ -186,13 +186,18 @@ class QuotationController extends Controller
                     'ex_showroom_price'         => "required|numeric",
                     'registration_amount'       => "required|numeric",
                     'insurance_amount'          => "required|numeric",
-                    'hypothecation_amount'      => "required|numeric",
+                    'hypothecation_amount'      => "nullable|numeric",
                     'accessories_amount'        => "required|numeric",
                     'other_charges'             => "nullable|numeric",
                     'total_amount'              => "required|numeric",
                     'purchase_visit_date'       => "required|date",
                     'purchase_est_date'         => "required|date",
-                ]);
+                ];
+                if ($postData['payment_type'] != '1') {
+                    $rules['hypothecation_amount'] = "required|numeric|min:1";
+                }
+                $validator = Validator::make($postData, $rules);
+
 
                 //If Validation failed
                 if ($validator->fails()) {
@@ -361,7 +366,8 @@ class QuotationController extends Controller
                 }
 
                 $postData = $request->all();
-                $validator = Validator::make($postData, [
+
+                $rules = [
                     'branch_id'                 => "nullable|exists:branches,id",
                     'salesman_id'               => "nullable|exists:salesmans,id",
                     'customer_gender'           => "nullable|in:1,2,3",
@@ -387,13 +393,17 @@ class QuotationController extends Controller
                     'ex_showroom_price'         => "required|numeric",
                     'registration_amount'       => "required|numeric",
                     'insurance_amount'          => "required|numeric",
-                    'hypothecation_amount'      => "required|numeric",
+                    'hypothecation_amount'      => "nullable|numeric",
                     'accessories_amount'        => "required|numeric",
                     'other_charges'             => "nullable|numeric",
                     'total_amount'              => "required|numeric",
                     'purchase_visit_date'       => "required|date",
                     'purchase_est_date'         => "required|date",
-                ]);
+                ];
+                if ($postData['payment_type'] != '1') {
+                    $rules['hypothecation_amount'] = "required|numeric|min:1";
+                }
+                $validator = Validator::make($postData, $rules);
 
                 //If Validation failed
                 if ($validator->fails()) {

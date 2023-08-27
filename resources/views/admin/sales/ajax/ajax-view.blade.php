@@ -299,8 +299,8 @@
  <!-- BIKE INFO CLOSE -->
 
  <div class="row">
-     <div class="form-group col-md-3">
-         <label>IS EXCHANGE</label>
+     <div class="form-group col-md-1">
+         <label>EXCHANGE</label>
          <select class="form-control" name="is_exchange_avaliable"
              {{ isset($data['status']) && $data['status'] == 'close' ? 'disabled' : '' }}>
              <option value="No"
@@ -313,7 +313,7 @@
              </option>
          </select>
      </div>
-     <div class="form-group col-md-3">
+     <div class="form-group col-md-2">
          <label>PAYMENT TYPE</label>
          <select name="payment_type" class="form-control ajaxChangeCDropDown" data-dep_dd_name="hyp_financer"
              data-url="{{ url('getAjaxDropdown') . '?req=financiers_list' }}" data-dep_dd2_name=""
@@ -324,7 +324,7 @@
              </option>
              <option value="2"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '2' ? 'selected="selected"' : '' }}>
-                 Finance
+                 Bank Finance
              </option>
              <option value="3"
                  {{ isset($data['payment_type']) && $data['payment_type'] == '3' ? 'selected="selected"' : '' }}>
@@ -347,10 +347,19 @@
              @endisset
          </select>
      </div>
-     <div class="form-group col-md-3">
+     <div class="form-group col-md-2">
          <label>SALE DATE</label>
          <input type="date" class="form-control" name="sale_date"
              value="{{ isset($data['sale_date']) ? $data['sale_date'] : date('Y-m-d') }}" />
+     </div>
+     <div class="form-group col-md-4">
+         <label>PAYMENT TYPE & HYP IN FINANCE ACCOUNT</label>
+         @php
+             $pay_type = paymentAccountTypes(isset($data['account_payment_type']) ? $data['account_payment_type'] : '10000');
+             $financer = isset($data['accountFinancer']['bank_name']) ? $data['accountFinancer']['bank_name'] : '';
+             $account_type = $pay_type . (!empty($financer) ? ' - ' . $financer : '');
+         @endphp
+         <input type="text" class="form-control" value="{{ strtoupper($account_type) }}" readonly />
      </div>
  </div>
  <div class="row" id="financeDetailSection"

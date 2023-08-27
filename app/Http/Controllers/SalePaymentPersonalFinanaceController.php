@@ -87,7 +87,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'processing_fees'       => "nullable|numeric|min:0",
                     'financier_id'          => 'required|exists:bank_financers,id',
                     'finance_due_date'      => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
-                    'finance_terms'         => 'required|numeric|in:1,2,3,4',
+                    'finance_terms'         => 'required|numeric|in:1,2,3,4,5,6',
                     'no_of_emis'            => 'required|numeric|integer',
                     'rate_of_interest'      => 'required|numeric'
                 ]);
@@ -124,6 +124,15 @@ class SalePaymentPersonalFinanaceController extends Controller
                     case 4:
                         $T *= 12;
                         $term_value = 12;
+                        break;
+                        //NEW ADDED
+                    case 5:
+                        $T *= 2;
+                        $term_value = 2;
+                        break;
+                    case 6:
+                        $T *= 4;
+                        $term_value = 4;
                         break;
                 }
 
@@ -230,8 +239,8 @@ class SalePaymentPersonalFinanaceController extends Controller
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $salePaymentAccount->sale_id)
                     ->update([
-                        'hyp_financer' => $postData['financier_id'],
-                        'payment_type' => '3'
+                        'account_hyp_financer' => $postData['financier_id'],
+                        'account_payment_type' => '3'
                     ]);
 
                 DB::commit();
@@ -539,8 +548,8 @@ class SalePaymentPersonalFinanaceController extends Controller
 
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $salePaymentAccount->sale_id)->update([
-                    'hyp_financer' => $postData['financier_id'],
-                    'payment_type' => '3'
+                    'account_hyp_financer' => $postData['financier_id'],
+                    'account_payment_type' => '3'
                 ]);
 
                 DB::commit();
@@ -649,7 +658,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                 ]);
 
                 //Sale Update Self Pay In Sales Model
-                Sale::where('id', $CashModel->sale_id)->update(['hyp_financer' => null, 'payment_type' => '1']);
+                Sale::where('id', $CashModel->sale_id)->update(['account_hyp_financer' => null, 'account_payment_type' => '1']);
 
                 DB::commit();
                 return response()->json([

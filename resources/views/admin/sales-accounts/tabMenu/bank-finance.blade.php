@@ -35,7 +35,7 @@
                      <th width="20%">PAYMENT NAME</th>
                      <th>CREDIT BALANCE</th>
                      <th>DEBIT BALANCE</th>
-                     <th>CHANGE BALANCE</th>
+                     {{-- <th>CHANGE BALANCE</th> --}}
                      <th>DUE DATE</th>
                      <th>PAID SOURCE</th>
                      <th width="10%">PAID DATE</th>
@@ -52,7 +52,7 @@
                                  <td>{{ isset($cashPayment['payment_name']) ? $cashPayment['payment_name'] : '' }}</td>
                                  <td>{{ priceFormate($cashPayment['credit_amount']) }} </td>
                                  <td>{{ priceFormate($cashPayment['debit_amount']) }} </td>
-                                 <td>{{ priceFormate($cashPayment['change_balance']) }} </td>
+                                 {{-- <td>{{ priceFormate($cashPayment['change_balance']) }} </td> --}}
                                  <td>{{ isset($cashPayment['due_date']) && !empty($cashPayment['due_date']) ? date('d/m/Y', strtotime($cashPayment['due_date'])) : '--' }}
                                  </td>
                                  <td>{{ isset($cashPayment['paid_source']) ? $cashPayment['paid_source'] : '--' }}</td>

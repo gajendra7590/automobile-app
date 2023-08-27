@@ -157,7 +157,7 @@
                     </tr>
                     <tr>
                         <td style="border-bottom: 1px solid; text-align: left; height: 2rem;  padding-left: 0.5rem;">
-                            ACCESSORIES AMOUNT</td>
+                            ACCESSORIES / HELMET AMOUNT</td>
                         <td
                             style="border-left: 1px solid; border-bottom: 1px solid;  text-align: center; height: 2rem;">
                             {{ isset($data->accessories_amount) ? $data->accessories_amount : '' }}</td>

@@ -164,9 +164,18 @@
                     <a href="{{ route('saleAccounts.create') . '?id=' . (isset($data['id']) ? $data['id'] : 0) }}"
                         class="btn btn-xs btn-primary pull-right ajaxModalPopup" data-modal_size="modal-lg"
                         data-modal_title="DEPOSITE DOWNPAYMENT">
-                        <i class="fa fa-plus" aria-hidden="true"></i> DEPOSITE DOWNPAYMENT
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> PAY DOWN PAYMENT
                     </a>
                 @endif
+
+                @if (isset($data['payment_setup']) && $data['payment_setup'] == '1' && Auth::user()->is_admin == '1')
+                    <a href="{{ route('saleAccounts.edit', ['saleAccount' => isset($data['id']) ? $data['id'] : 0]) }}"
+                        class="btn btn-xs btn-warning pull-right ajaxModalPopup" data-modal_size="modal-lg"
+                        data-modal_title="UPDATE DOWN PAYMENT DETAIL">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> EDIT DOWN PAYMENT
+                    </a>
+                @endif
+
             </div>
             <div class="box-body no-padding">
                 <table class="table table-bordered myCustomTable">
