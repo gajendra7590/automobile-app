@@ -364,6 +364,7 @@ class SalesAccountController extends Controller
                 'deposite_amount'       => "required|numeric|min:1|lte:sales_total_amount",
                 'deposite_date'         => 'required|date',
                 'deposite_source'       => 'required|string',
+                'received_in_bank'      => 'nullable',
                 'status'                => 'required|in:0,1,2',
                 'deposite_collected_by' => 'required|exists:salesmans,id',
                 'deposite_source_note'  => 'nullable|string'
