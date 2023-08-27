@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RtoAgent;
+use App\Traits\CommonHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RtoAgentController extends Controller
 {
+    use CommonHelper;
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +22,7 @@ class RtoAgentController extends Controller
         if (!request()->ajax()) {
             return view('admin.rto-agents.index');
         } else {
-            $data = RtoAgent::select('*');
+            $data = RtoAgent::with(['branch'])->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -30,10 +32,13 @@ class RtoAgentController extends Controller
                         return "<label class='switch'><input type='checkbox' value='$row->id' data-type='rtoAgent' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
+                ->addColumn('branch_name', function ($row) {
+                    return isset($row->branch->branch_name) ? $row->branch->branch_name : "";
+                })
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
                 })
-                ->rawColumns(['active_status', 'action'])
+                ->rawColumns(['active_status', 'action', 'branch_name'])
                 ->make(true);
         }
     }
@@ -45,11 +50,13 @@ class RtoAgentController extends Controller
      */
     public function create()
     {
+        $branches = self::getAllBranchesWithInActive();
+        //dd($branches->toArray());
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.rto-agents.ajaxModal', ['action' => route('rto-agents.store')])->render()
+            'data'       => view('admin.rto-agents.ajaxModal', ['action' => route('rto-agents.store'), 'branches' => $branches])->render()
         ]);
     }
 
@@ -63,8 +70,9 @@ class RtoAgentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('agent_name', 'agent_phone', 'agent_email', 'active_status');
+            $postData = $request->only('branch_id', 'agent_name', 'agent_phone', 'agent_email', 'active_status');
             $validator = Validator::make($postData, [
+                'branch_id'      => "required",
                 'agent_name'     => "required",
                 'agent_phone'    => "required|numeric|digits:10",
                 'agent_email'    => "nullable|email",
@@ -119,8 +127,9 @@ class RtoAgentController extends Controller
      */
     public function edit($id)
     {
-        $gstRatesModel = RtoAgent::find($id);
-        if (!$gstRatesModel) {
+        $model = RtoAgent::find($id);
+        $branches = self::getAllBranchesWithInActive();
+        if (!$model) {
             return response()->json([
                 'status'     => false,
                 'statusCode' => 419,
@@ -136,7 +145,8 @@ class RtoAgentController extends Controller
                     'rto-agents.update',
                     ['rto_agent' => $id]
                 ),
-                'data' => $gstRatesModel,
+                'data' => $model,
+                'branches' => $branches,
                 'method' => 'PUT'
             ])->render()
         ]);
@@ -153,8 +163,9 @@ class RtoAgentController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('agent_name', 'agent_phone', 'agent_email', 'active_status');
+            $postData = $request->only('branch_id', 'agent_name', 'agent_phone', 'agent_email', 'active_status');
             $validator = Validator::make($postData, [
+                'branch_id'      => "required",
                 'agent_name'     => "required",
                 'agent_phone'    => "required|numeric|digits:10",
                 'agent_email'    => "nullable|email",

@@ -12,6 +12,7 @@ class RtoAgent extends Model
     protected $table = "rto_agents";
 
     protected $fillable = [
+        'branch_id',
         'agent_name',
         'agent_phone',
         'agent_email',
@@ -22,6 +23,10 @@ class RtoAgent extends Model
 
     protected $casts = [];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 
     public function payments()
     {

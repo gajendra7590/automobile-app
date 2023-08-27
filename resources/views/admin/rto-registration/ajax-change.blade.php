@@ -5,6 +5,18 @@
 @endphp
 <div class="row">
     <div class="form-group col-md-3">
+        <label>RTO Agent </label>
+        <select name="rto_agent_id" class="form-control">
+            @if (isset($rto_agents))
+                @foreach ($rto_agents as $key => $rto_agent)
+                    <option
+                        {{ (isset($data->rto_agent_id) && $data->rto_agent_id == $rto_agent->id) || $key == 0 ? 'selected' : '' }}
+                        value="{{ $rto_agent->id }}">{{ $rto_agent->agent_name }}</option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="form-group col-md-3">
         <label>Contact Name</label>
         <input type="text" class="form-control" placeholder="Contact Name" name="contact_name"
             value='{{ isset($data['contact_name']) ? $data['contact_name'] : '' }}' {{ $editReadOnly }} />
@@ -16,7 +28,7 @@
             value="{{ isset($data['contact_mobile_number']) ? $data['contact_mobile_number'] : '' }}"
             {{ $editReadOnly }} />
     </div>
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-3">
         <label>Contact Address Line</label>
         <input type='text' class="form-control" placeholder="Contact Address Line" name="contact_address_line"
             value="{{ isset($data['contact_address_line']) ? $data['contact_address_line'] : '' }}"
@@ -123,7 +135,8 @@
     <div class="form-group col-md-3">
         <label>Ex Showroom Amount</label>
         <input type='text' class="form-control onChangeInput" placeholder="₹0.00" name="ex_showroom_amount"
-            value="{{ isset($data['ex_showroom_amount']) ? $data['ex_showroom_amount'] : '' }}" {{ $priceDis }} />
+            value="{{ isset($data['ex_showroom_amount']) ? $data['ex_showroom_amount'] : '' }}"
+            {{ $priceDis }} />
     </div>
 </div>
 <div class="row">

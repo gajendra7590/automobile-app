@@ -144,7 +144,7 @@ class SalePaymentBankFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id'                      => $CashModel->sale_id,
                     'sale_payment_account_id'      => $CashModel->sale_payment_account_id,
-                    'transaction_for'              => 1,
+                    'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_BF,
                     'transaction_name'             => $payment_name,
                     'transaction_amount'           => $CashModel->debit_amount,
                     'transaction_paid_source'      => "Auto",
@@ -176,7 +176,7 @@ class SalePaymentBankFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id'                      => $financeModel->sale_id,
                     'sale_payment_account_id'      => $financeModel->sale_payment_account_id,
-                    'transaction_for'              => 2,
+                    'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_BF,
                     'transaction_name'             => $payment_name,
                     'transaction_amount'           => $financeModel->credit_amount,
                     'transaction_paid_source'      => "Auto",
@@ -404,7 +404,7 @@ class SalePaymentBankFinanaceController extends Controller
                     SalePaymentTransactions::create([
                         'sale_id'                      => $CashModel->sale_id,
                         'sale_payment_account_id'      => $CashModel->sale_payment_account_id,
-                        'transaction_for'              => 1,
+                        'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                         'transaction_name'             => $payment_name,
                         'transaction_amount'           => $CashModel->credit_amount,
                         'transaction_paid_source'      => "Auto",
@@ -454,7 +454,7 @@ class SalePaymentBankFinanaceController extends Controller
                     SalePaymentTransactions::create([
                         'sale_id'                      => $CashModel->sale_id,
                         'sale_payment_account_id'      => $CashModel->sale_payment_account_id,
-                        'transaction_for'              => 1,
+                        'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                         'transaction_name'             => $payment_name,
                         'transaction_amount'           => $CashModel->debit_amount,
                         'transaction_paid_source'      => "Auto",
@@ -468,8 +468,6 @@ class SalePaymentBankFinanaceController extends Controller
 
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $bankFinanceModel->sale_id)->update(['account_hyp_financer' => $postData['financier_id'], 'account_payment_type' => '2']);
-
-
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -548,7 +546,7 @@ class SalePaymentBankFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id'                      => $CashModel->sale_id,
                     'sale_payment_account_id'      => $CashModel->sale_payment_account_id,
-                    'transaction_for'              => 1,
+                    'transaction_for'              => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                     'transaction_name'             => $payment_name,
                     'transaction_amount'           => $CashModel->credit_amount,
                     'transaction_paid_source'      => "Auto",
@@ -646,7 +644,7 @@ class SalePaymentBankFinanaceController extends Controller
                 'next_due_date'         => 'required|date|after:' . now()->format('Y-m-d'),
                 'received_in_bank'      => 'nullable|exists:bank_accounts,id',
                 'payment_note'          => 'required|string',
-                'collected_by'          => 'nullable|exists:salesmans,id'
+                'collected_by'          => 'required|exists:salesmans,id'
             ]);
             //If Validation failed
             if ($validator->fails()) {
@@ -661,7 +659,7 @@ class SalePaymentBankFinanaceController extends Controller
 
             $salePaymentAccount = SalePaymentAccounts::find($postData['sales_account_id']);
 
-            $newOutStanding = floatval($postData['total_outstanding'] - $postData['paid_amount']);
+            //$newOutStanding = floatval($postData['total_outstanding'] - $postData['paid_amount']);
             //DEBIT SALES CASH PAYMENT
             $payment_name = 'Due Paid By Financer';
             $createdCashPayment = SalePaymentBankFinanace::create([
@@ -670,7 +668,7 @@ class SalePaymentBankFinanaceController extends Controller
                 'payment_name' => $payment_name,
                 'credit_amount' => 0,
                 'debit_amount' => $postData['paid_amount'],
-                'change_balance' => $newOutStanding,
+                // 'change_balance' => $newOutStanding,
                 'due_date'    => $postData['next_due_date'],
                 'paid_source' => $postData['paid_source'],
                 'paid_date' => $postData['paid_date'],
@@ -684,7 +682,7 @@ class SalePaymentBankFinanaceController extends Controller
             SalePaymentTransactions::create([
                 'sale_id' => $salePaymentAccount->sale_id,
                 'sale_payment_account_id' => $salePaymentAccount->id,
-                'transaction_for' => 1,
+                'transaction_for' => SalePaymentAccounts::TRANSACTION_TYPE_BF,
                 'transaction_name' => $payment_name,
                 'transaction_amount' => $postData['paid_amount'],
                 'transaction_paid_source' => $postData['paid_source'],
@@ -694,11 +692,138 @@ class SalePaymentBankFinanaceController extends Controller
                 'status' => $postData['status'],
                 'reference_id' => $createdCashPayment->id
             ]);
+
+            //UPDATE ACCOUNT STATUSES ACCORDING TO PAYMENT STATUS
+            updateDuesOrPaidBalance($salePaymentAccount->id);
+
             DB::commit();
             return response()->json([
                 'status'     => true,
                 'statusCode' => 200,
                 'message'    => trans('messages.create_success')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
+    }
+
+    /**
+     * Bank Finance Account Pay Edit Model Open
+     */
+    public function payEdit(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
+            $postData = $request->all();
+            $data = SalePaymentBankFinanace::find($id);
+            if (!$data) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Bank pay id does not exist"
+                ]);
+            }
+
+            $data = array(
+                'data' => $data,
+                'depositeSources' => depositeSources(),
+                'salemans'        => self::_getSalesman(),
+                'bankAccounts'    => self::_getBankAccounts(),
+                'salesAccount'    => SalePaymentAccounts::find($data->sale_payment_account_id)
+            );
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Pay Modal Loaded",
+                'data'       => view('admin.sales-accounts.bank-finanace.pay_edit', $data)->render()
+            ]);
+        }
+    }
+
+    /**
+     * Function for update bank finanace payment detail
+     */
+    public function payUpdate(Request $request, $id)
+    {
+        try {
+            $model = SalePaymentBankFinanace::find($id);
+            if (!$model) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Bank pay id does not exist"
+                ]);
+            }
+            DB::beginTransaction();
+            $postData = $request->only('total_outstanding', 'old_paid_amount', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'received_in_bank', 'next_due_date', 'payment_note');
+            $validator = Validator::make($postData, [
+                'total_outstanding'     => "required|numeric|min:1",
+                'paid_amount'           => "required|numeric|min:1",
+                'paid_date'             => 'required|date',
+                'paid_source'           => 'required|string',
+                'status'                => 'required|in:0,1,2,3',
+                'next_due_date'         => 'required|date|after:' . now()->format('Y-m-d'),
+                'received_in_bank'      => 'nullable|exists:bank_accounts,id',
+                'payment_note'          => 'required|string',
+                'collected_by'          => 'required|exists:salesmans,id'
+            ]);
+            //If Validation failed
+            if ($validator->fails()) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $diff = ($postData['paid_amount'] - $postData['old_paid_amount']);
+            $newOutStanding = floatval($postData['total_outstanding'] - $diff);
+            //DEBIT SALES CASH PAYMENT
+            $model->update([
+                'debit_amount'     => $postData['paid_amount'],
+                'due_date'         => $postData['next_due_date'],
+                'paid_source'      => $postData['paid_source'],
+                'paid_date'        => $postData['paid_date'],
+                'paid_note'        => $postData['payment_note'],
+                'collected_by'     => $postData['collected_by'],
+                'status'           => $postData['status'],
+                'received_in_bank' => $postData['received_in_bank']
+            ]);
+
+            //IF OLD & NEW PAY AMOUNT CHANGE THEN LOG IN TRANSACTION
+            if ($diff != 0) {
+                SalePaymentTransactions::create([
+                    'sale_id' => $model->sale_id,
+                    'sale_payment_account_id' => $model->sale_payment_account_id,
+                    'transaction_for' => SalePaymentAccounts::TRANSACTION_TYPE_BF,
+                    'transaction_name' => "Bank Finance Pay Amount Update & Edjust Amount.",
+                    'transaction_amount' => $diff,
+                    'transaction_paid_source' => $postData['paid_source'],
+                    'transaction_paid_source_note' => $postData['payment_note'],
+                    'transaction_paid_date' => $postData['paid_date'],
+                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'status' => $postData['status'],
+                    'reference_id' => $model->id
+                ]);
+            }
+
+            //UPDATE ACCOUNT STATUSES ACCORDING TO PAYMENT STATUS
+            updateDuesOrPaidBalance($model->sale_payment_account_id);
+
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.update_success')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

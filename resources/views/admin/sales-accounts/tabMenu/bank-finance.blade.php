@@ -77,12 +77,19 @@
                                              data-modal_title="VIEW BANK FINANCE PAYMENT DETAIL">
                                              <i class="fa fa-eye" aria-hidden="true"></i>
                                          </a>
-                                         @if ($cashPayment['status'] == '1')
-                                             {{-- <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
+                                         @if ($cashPayment['trans_type'] == '2')
+                                             <a href="{{ route('bankFinanacePayEdit', ['id' => $cashPayment['id']]) }}"
+                                                 class="btn btn-sm btn-warning ajaxModalPopup"
+                                                 data-modal_title="Update Payment Detail" data-modal_size="modal-lg">
+                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                             </a>
+                                         @endif
+                                         {{-- @if ($cashPayment['status'] == '1')
+                                             <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
                                                  class="btn btn-sm btn-primary" target="_blank">
                                                  <i class="fa fa-print" aria-hidden="true"></i>
-                                             </a> --}}
-                                         @endif
+                                             </a>
+                                         @endif --}}
                                      @else
                                          --
                                      @endif

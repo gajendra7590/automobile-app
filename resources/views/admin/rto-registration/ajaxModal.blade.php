@@ -4,7 +4,7 @@
 @endphp
 <style type="text/css">
     span.select2-selection.select2-selection--single {
-        width: 420px !important;
+        /* width: 420px !important; */
     }
 </style>
 <form class="ajaxFormSubmit" role="form" method="POST" action="{{ isset($action) ? $action : '' }}"
@@ -14,22 +14,7 @@
         @method('PUT')
     @endif
     <div class="row">
-
-        <div class="form-group col-md-6">
-            <label>RTO Agent </label>
-            <select name="rto_agent_id" class="form-control">
-                {{-- <option value="">---Select RTO Agent---</option> --}}
-                @if (isset($rto_agents))
-                    @foreach ($rto_agents as $key => $rto_agent)
-                        <option
-                            {{ (isset($data->rto_agent_id) && $data->rto_agent_id == $rto_agent->id) || $key == 0 ? 'selected' : '' }}
-                            value="{{ $rto_agent->id }}">{{ $rto_agent->agent_name }}</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
-
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
             <label>Select Sale To Create RTO</label>
             <select name="sale_id" class="form-control commonSelect2" data-url="{{ route('ajaxChangeContent') }}"
                 data-ele="rtoAjaxContainer" {{ $editDisable }}>
@@ -231,6 +216,6 @@
     });
 
     $(".commonSelect2").select2({
-        placeholder: "Select an option",
+        placeholder: "Select an sale model to create an RTO",
     });
 </script>

@@ -6,12 +6,24 @@
     @endif
     <div class="box-body">
         <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
+                <label>Branch Name</label>
+                <select name="branch_id" class="form-control">
+                    @if (isset($branches))
+                        @foreach ($branches as $key => $branch)
+                            <option
+                                {{ isset($data['branch_id']) && $data['branch_id'] == $branch->id ? 'selected' : '' }}
+                                value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+            <div class="form-group col-md-4">
                 <label>Agent Name</label>
                 <input name="agent_name" type="text" class="form-control autoCapitalized"
                     value="{{ isset($data['agent_name']) ? $data['agent_name'] : '' }}" placeholder="Enter agent name">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>Agent Email</label>
                 <input name="agent_email" type="text" class="form-control"
                     value="{{ isset($data['agent_email']) ? $data['agent_email'] : '' }}"

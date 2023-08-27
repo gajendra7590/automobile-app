@@ -476,12 +476,16 @@ trait CommonHelper
     /**
      * Get All RTo Agents
      */
-    public static function _getRtoAgents($select_all = false)
+    public static function _getRtoAgents($select_all = false, $branch_id = 0)
     {
         $model = RtoAgent::where('active_status', '1');
         //Select Specific
         if ($select_all == false) {
             $model = $model->select('id', 'agent_name');
+        }
+
+        if ($branch_id > 0) {
+            $model = $model->where('branch_id', $branch_id);
         }
         return $model->get();
     }

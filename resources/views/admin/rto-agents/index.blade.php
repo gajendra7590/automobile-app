@@ -37,6 +37,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Branch Name</th>
                                         <th>Agent Name</th>
                                         <th>Agent Phone</th>
                                         <th>Agent Email</th>

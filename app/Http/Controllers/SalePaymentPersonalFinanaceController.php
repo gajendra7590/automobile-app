@@ -211,7 +211,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id' => $salePaymentAccount->sale_id,
                     'sale_payment_account_id' => $salePaymentAccount->id,
-                    'transaction_for' => 1,
+                    'transaction_for' => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                     'transaction_name' => $payment_name,
                     'transaction_amount' => $postData['total_finance_amount'],
                     'transaction_paid_source' => 'Auto',
@@ -395,7 +395,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id' => $salePaymentAccount->sale_id,
                     'sale_payment_account_id' => $salePaymentAccount->id,
-                    'transaction_for' => 1,
+                    'transaction_for' => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                     'transaction_name' => $payment_name,
                     'transaction_amount' => $salePaymentAccount->personal_finance_amount,
                     'transaction_paid_source' => 'Auto',
@@ -521,7 +521,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                 SalePaymentTransactions::create([
                     'sale_id' => $salePaymentAccount->sale_id,
                     'sale_payment_account_id' => $salePaymentAccount->id,
-                    'transaction_for' => 1,
+                    'transaction_for' => SalePaymentAccounts::TRANSACTION_TYPE_CB,
                     'transaction_name' => $payment_name,
                     'transaction_amount' => $postData['total_finance_amount'],
                     'transaction_paid_source' => 'Auto',

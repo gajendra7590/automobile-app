@@ -22,6 +22,10 @@ $(document).ready(function () {
                     name: "id",
                 },
                 {
+                    data: "branch_name",
+                    name: "branch_name",
+                },
+                {
                     data: "agent_name",
                     name: "agent_name",
                 },

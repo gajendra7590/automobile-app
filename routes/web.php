@@ -140,8 +140,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Bank Finance Payment
     Route::resource('salesBankFinanace', 'SalePaymentBankFinanaceController');
+    //CREATE
     Route::get('bankFinanacePay/{id}', 'SalePaymentBankFinanaceController@payIndex')->name('bankFinanacePayIndex');
     Route::post('bankFinanacePay/{id}', 'SalePaymentBankFinanaceController@payStore')->name('bankFinanacePayStore');
+    //UPDATE
+    Route::get('bankFinanacePayEdit/{id}', 'SalePaymentBankFinanaceController@payEdit')->name('bankFinanacePayEdit');
+    Route::put('bankFinanacePayUpdate/{id}', 'SalePaymentBankFinanaceController@payUpdate')->name('bankFinanacePayUpdate');
+    //CANCEL
     Route::get('bankFinanaceCancel/{id}', 'SalePaymentBankFinanaceController@bankFinanaceCancel')->name('bankFinanaceCancel');
 
     //Personal Finance Payment

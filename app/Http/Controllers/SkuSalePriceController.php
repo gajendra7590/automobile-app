@@ -49,13 +49,18 @@ class SkuSalePriceController extends Controller
      */
     public function create()
     {
-        $skuCodes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')
+        $skuCodes = BikeColor::with([
+            'model:id,model_name',
+            'variant:id,variant_name'
+        ])
+            ->select('id', 'sku_code', 'sku_sale_price_id', 'bike_model', 'model_variant_id')
             ->where('sku_sale_price_id', '0')
             ->where(function ($model) {
                 $model->where('sku_code', '!=', "")
                     ->orWhereNotNull('sku_code');
             })
             ->get();
+        // dd($skuCodes->toArray());
         $data = array(
             'action'    => route('skuSalesPrice.store'),
             'method'    => 'POST',
@@ -143,9 +148,17 @@ class SkuSalePriceController extends Controller
         $model = SkuSalePrice::find($id);
         $sku_codes = (object) [];
         if (!empty($model->model_color_id)) {
-            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')->where('id', $model->model_color_id)->get();
+            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id', 'bike_model', 'model_variant_id')
+                ->with([
+                    'model:id,model_name',
+                    'variant:id,variant_name'
+                ])->where('id', $model->model_color_id)->get();
         } else {
-            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id')
+            $sku_codes = BikeColor::select('id', 'sku_code', 'sku_sale_price_id', 'bike_model', 'model_variant_id')
+                ->with([
+                    'model:id,model_name',
+                    'variant:id,variant_name'
+                ])
                 ->where('sku_sale_price_id', '0')
                 ->where(function ($model) {
                     $model->where('sku_code', '!=', "")

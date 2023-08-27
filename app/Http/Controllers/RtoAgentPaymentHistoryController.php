@@ -22,7 +22,8 @@ class RtoAgentPaymentHistoryController extends Controller
         if (!request()->ajax()) {
             return view('admin.rto-agent-payments.index');
         } else {
-            $data = RtoAgent::select('id', 'agent_name', 'active_status')
+            $data = RtoAgent::select('id', 'branch_id', 'agent_name', 'active_status')
+                ->with('branch')
                 ->withSum('payments', 'payment_amount')
                 ->withSum('registrations', 'total_amount')
                 ->withCount('registrations');
@@ -30,6 +31,9 @@ class RtoAgentPaymentHistoryController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return $this->getActions($row);
+                })
+                ->addColumn('agent_branch_name', function ($row) {
+                    return isset($row->branch->branch_name) ? $row->branch->branch_name : "";
                 })
                 ->addColumn('registrations_count', function ($row) {
                     return $row->registrations_count;
@@ -49,7 +53,7 @@ class RtoAgentPaymentHistoryController extends Controller
                     return convertBadgesPrice((($total_outs < 0) ? (-$total_outs) : 0), 'primary');
                 })
                 ->rawColumns([
-                    'registrations_count', 'registrations_sum_total_amount', 'payments_sum_payment_amount', 'total_outstanding', 'buffer_amount', 'active_status', 'action'
+                    'agent_branch_name', 'registrations_count', 'registrations_sum_total_amount', 'payments_sum_payment_amount', 'total_outstanding', 'buffer_amount', 'active_status', 'action'
                 ])
                 ->make(true);
         }

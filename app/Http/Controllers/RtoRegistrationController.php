@@ -85,7 +85,6 @@ class RtoRegistrationController extends Controller
             ->with(['purchases:id,vin_number,engine_number'])
             ->where('rto_account_id', '0')
             ->orWhereNull('rto_account_id')->get();
-        $data['rto_agents'] = self::_getRtoAgents();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -241,16 +240,18 @@ class RtoRegistrationController extends Controller
             'action' => route('rtoRegistration.update', ['rtoRegistration' => $id]),
             'method' => 'PUT',
         ];
-        $responsePayload['sales'] = Sale::select(['id', 'purchase_id', 'customer_name'])
+        $responsePayload['sales'] = Sale::select(['id', 'purchase_id', 'customer_name', 'branch_id'])
             ->with(['purchases:id,vin_number,engine_number'])
             ->where('id', $rtoModel->sale_id)
             ->get();
-        $responsePayload['rto_agents'] = self::_getRtoAgents();
+
+        $branch_id = $responsePayload['sales'][0]->branch_id;
         $htmlData = array(
             'states' => self::_getStates(1),
             'districts' => self::_getDistricts($rtoModel->contact_state_id),
             'cities' => self::_getCities($rtoModel->contact_district_id),
             'gst_rto_rates' => self::_getRtoGstRates(),
+            'rto_agents' => self::_getRtoAgents(false, $branch_id),
             'data' => $rtoModel,
             'action' => "edit"
         );
@@ -383,6 +384,7 @@ class RtoRegistrationController extends Controller
             'districts' => self::_getDistricts($salesModel->customer_state),
             'cities' => self::_getCities($salesModel->customer_district),
             'gst_rto_rates' => self::_getRtoGstRates(),
+            'rto_agents' => self::_getRtoAgents(false, $salesModel->branch_id),
             'data' => sales2RtoPayload($salesModel),
             'action' => "add"
         );
