@@ -111,6 +111,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Purchase Dealer Payments
     Route::resource('purchaseDealerPayments', 'PurchaseDealerPaymentHistoryController');
+    Route::get('purchaseDealerPaymentLedger/{id}', 'PurchaseDealerPaymentHistoryController@downloadLedger')->name('purchaseDealerPaymentLedger');
 
     //Quotations
     Route::resource('quotations', 'QuotationController');

@@ -14,6 +14,7 @@ class PurchaseDealerPaymentHistory extends Model
     protected $fillable = [
         'sno',
         'year',
+        'uuid',
         'dealer_id',
         'transaction_type',
         'bank_account_id',
@@ -38,7 +39,7 @@ class PurchaseDealerPaymentHistory extends Model
             $findModel = PurchaseDealerPaymentHistory::select('id', 'sno', 'year')->orderBy('id', 'DESC')->first();
             $year = date('Y');
             $sno  = 1;
-            if ( isset($findModel->year) && ($year == $findModel->year)) {
+            if (isset($findModel->year) && ($year == $findModel->year)) {
                 $sno = ($findModel->sno) + 1;
             }
             $model->year = $year;

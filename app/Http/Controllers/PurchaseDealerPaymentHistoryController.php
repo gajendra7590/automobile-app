@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class PurchaseDealerPaymentHistoryController extends Controller
 {
@@ -33,12 +34,8 @@ class PurchaseDealerPaymentHistoryController extends Controller
                 ->withSum('purchase', 'grand_total')
                 ->withSum('dealer_payment', 'credit_amount')
                 ->withSum('dealer_payment', 'debit_amount');
-            // ->withCount('registrations');
-
 
             // dd($data->get()->toArray());
-
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -164,6 +161,7 @@ class PurchaseDealerPaymentHistoryController extends Controller
             }
             PurchaseDealerPaymentHistory::create([
                 'dealer_id'         =>  isset($postData['dealer_id']) ? $postData['dealer_id'] : null,
+                'uuid'              => strtolower('pay_' . (Str::random(25))),
                 'transaction_type'  =>  isset($postData['transaction_type']) ? $postData['transaction_type'] : null,
                 'bank_account_id'   =>  isset($postData['bank_account_id']) ? $postData['bank_account_id'] : null,
                 'credit_amount'     => (isset($postData['transaction_type']) && ($postData['transaction_type']) == '2') ? floatval($postData['payment_amount']) : 0.00,
@@ -257,9 +255,119 @@ class PurchaseDealerPaymentHistoryController extends Controller
         $action  = '<div class="dropdown pull-right customDropDownOption"><button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="padding: 3px 10px !important;"><span class="caret"></span></button>';
         $action  .= '<ul class="dropdown-menu">';
         $action .= '<li><a href="' . route('purchaseDealerPayments.show', ['purchaseDealerPayment' => $data->id]) . '" class="ajaxModalPopup" data="VIEW TRANSACTIONS" data-modal_title="VIEW TRANSACTIONS" data-modal_size="modal-lg" data-title="View">VIEW TRANSACTIONS</a></li>';
+        $action .= '<li><a href="' . route('purchaseDealerPaymentLedger', ['id' => $data->id]) . '">PAYMENT LEDGER DOWNLOAD</a></li>';
         $action .= '<li><a href="' . route('purchaseDealerPayments.create') . '?dealer_id=' . $data->id . '" class="ajaxModalPopup" data-modal_title="CREATE NEW PAYMENT" data-title="CREATE NEW PAYMENT" data-modal_size="modal-lg">CREATE NEW PAYMENT</a></li>';
         $action  .= '</ul>';
         $action  .= '</div>';
         return $action;
+    }
+
+    public function downloadLedger($id)
+    {
+        $final_array[] = ['Date', 'Txn Type', 'Particulars', 'Vch Type', 'Vch No', 'Debit', 'Credit'];
+        //ALL PRUCHASES
+        $purchases = Purchase::select('id', 'uuid', 'vin_number', 'sku_description', 'grand_total', 'dc_date')
+            ->selectRaw('dc_date as transaction_date')
+            ->selectRaw('1 as is_purchase')
+            ->where(['bike_dealer' => $id])
+            ->orderBy('dc_date', 'ASC')
+            // ->whereDate('dc_date', '2023-08-16')
+            ->get();
+        $allPurchases = [];
+        if ($purchases) {
+            $allPurchases = $purchases->toArray();
+        }
+
+        //ALL DEALER TRANSACTIONS
+        $dealer_payment = PurchaseDealerPaymentHistory::select('id', 'uuid', 'transaction_type', 'credit_amount', 'debit_amount', 'payment_mode', 'payment_date')
+            ->selectRaw('payment_date as transaction_date')
+            ->selectRaw('0 as is_purchase')
+            ->where('dealer_id', $id)
+            ->orderBy('payment_date', 'ASC')
+            ->get();
+        $allTransactions = [];
+        if ($dealer_payment) {
+            $allTransactions = $dealer_payment->toArray();
+            foreach ($allTransactions as $allTransaction) {
+                $allPurchases[] = $allTransaction;
+            }
+        }
+
+        //SORTING
+        $collection = collect($allPurchases);
+        $final_sorted_result = $collection->sortBy([
+            ['transaction_date', 'asc'],
+            ['is_purchase', 'desc']
+        ]);
+        if ($final_sorted_result) {
+            $total_debit_amount = 0.00;
+            $total_credit_amount = 0.00;
+            foreach ($final_sorted_result as $key => $trans) {
+
+                $txn_type      = ($trans['is_purchase'] == '1') ? 'Cr' : (($trans['transaction_type'] == '2') ? 'Cr' : 'Dr');
+
+                $debit_amount  = 0.00;
+                $credit_amount  = 0.00;
+                if ($trans['is_purchase'] == '1') {
+                    $debit_amount  = 0.00;
+                    $credit_amount  = floatval($trans['grand_total']);
+                } else {
+                    if ($trans['transaction_type'] == '1') {
+                        $credit_amount  = 0.00;
+                        $debit_amount = floatval($trans['debit_amount']);
+                    } else if ($trans['transaction_type'] == '1') {
+                        $debit_amount = 0.00;
+                        $credit_amount  = floatval($trans['credit_amount']);
+                    }
+                }
+
+                $particulars = "";
+                if ($trans['is_purchase'] == '0') {
+                    $particulars = (($trans['transaction_type'] == '1') ? "TXN - BANK TRANSFER SEND TO DEALER" : "TXN - ADD CREDIT BALANCE");
+                } else {
+                    $particulars = 'RECEIVED STOCK - ' . $trans['vin_number'];
+                }
+
+                $vcr_type = 'RECEIVED STOCK';
+                if ($trans['is_purchase'] == '0') {
+                    $vcr_type = "TRANSACTION";
+                }
+
+                $final_array[] = [
+                    $trans['transaction_date'],
+                    $txn_type,
+                    $particulars,
+                    $vcr_type,
+                    $trans['uuid'],
+                    number_format($debit_amount, 2),
+                    number_format($credit_amount, 2)
+                ];
+
+                $total_debit_amount += $debit_amount;
+                $total_credit_amount += $credit_amount;
+            }
+
+            $final_array[] = [
+                'GRAND TOTAL',
+                '',
+                '',
+                '',
+                '',
+                number_format($total_debit_amount, 2),
+                number_format($total_credit_amount, 2)
+            ];
+
+            $filename = date('YmdHis') . '_' . rand(111111, 999999) . '_'  . "_report.csv";
+            header('Content-Type: application/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            $f = fopen('php://output', 'w');
+            foreach ($final_array as $line) {
+                fputcsv($f, $line);
+            }
+            fclose($f);
+            exit();
+        } else {
+            return redirect()->route('purchaseDealerPayments.index');
+        }
     }
 }
