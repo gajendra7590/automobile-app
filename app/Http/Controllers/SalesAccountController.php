@@ -163,7 +163,8 @@ class SalesAccountController extends Controller
             'action'          => route('saleAccounts.store'),
             'data'            => $accountModel,
             'financersList'   => [],
-            'salemans'        => self::_getSalesman()
+            'salemans'        => self::_getSalesman(),
+            'bankAccounts'   => self::_getBankAccounts()
         );
         return response()->json([
             'status'     => true,
@@ -180,10 +181,11 @@ class SalesAccountController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('sales_account_id', 'sales_total_amount', 'deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by', 'due_amount', 'due_date');
+            $postData = $request->only('sales_account_id', 'received_in_bank', 'sales_total_amount', 'deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by', 'due_amount', 'due_date');
             $validator = Validator::make($postData, [
                 'sales_account_id'      => "required|exists:sale_payment_accounts,id",
                 'deposite_collected_by' => 'required|exists:salesmans,id',
+                'received_in_bank'      => 'nullable',
                 'sales_total_amount'    => "required|numeric",
                 'deposite_amount'       => "required|numeric|min:1|lte:sales_total_amount",
                 'deposite_date'         => 'required|date',
@@ -244,6 +246,7 @@ class SalesAccountController extends Controller
                     'paid_date'      => $postData['deposite_date'],
                     'paid_note'      => $postData['deposite_source_note'],
                     'collected_by'   => $postData['deposite_collected_by'],
+                    'received_in_bank' => $postData['received_in_bank'],
                     'trans_type'     => 2,
                     'status'         => $postData['status'],
                     'is_dp'          => 1
@@ -326,6 +329,7 @@ class SalesAccountController extends Controller
             'emiTerms'        => emiTerms(),
             'salemans'        => self::_getSalesman(),
             'action'          => route('saleAccounts.update', ['saleAccount' => $id]),
+            'bankAccounts'   => self::_getBankAccounts(),
             'data'            => $accountModel,
         );
         return response()->json([
@@ -355,7 +359,7 @@ class SalesAccountController extends Controller
                 ]);
             }
             DB::beginTransaction();
-            $postData = $request->only('sales_total_amount', 'deposite_amount', 'old_deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by');
+            $postData = $request->only('sales_total_amount', 'received_in_bank', 'deposite_amount', 'old_deposite_amount', 'deposite_date', 'deposite_source', 'deposite_source_note', 'status', 'deposite_collected_by');
             $validator = Validator::make($postData, [
                 'deposite_amount'       => "required|numeric|min:1|lte:sales_total_amount",
                 'deposite_date'         => 'required|date',
@@ -395,7 +399,8 @@ class SalesAccountController extends Controller
                     'paid_date'      => $postData['deposite_date'],
                     'paid_note'      => $postData['deposite_source_note'],
                     'collected_by'   => $postData['deposite_collected_by'],
-                    'status'         => $postData['status']
+                    'status'         => $postData['status'],
+                    'received_in_bank' => $postData['received_in_bank'],
                 ]);
             //CREATE NEW TRANSACTION  ENTRY IF ANY CHANGE IN DP AMOUNT
             if ($buffer != 0) {

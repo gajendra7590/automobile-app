@@ -464,8 +464,14 @@ class PurchaseTransfersController extends Controller
             return redirect()->route('purchaseTransfers.index');
         } else {
             $postData = $request->all();
-            $data = Purchase::branchWise()->select('id', DB::raw('CONCAT(vin_number," | ",engine_number," | ",hsn_number) AS text'))
-                ->where(['transfer_status' => '0', 'status' => '1']);
+            $where = [];
+            if (Auth::user()->is_admin == '0') {
+                $where = ['status' => '1'];
+            }
+            $data = Purchase::branchWise()
+                ->select('id', DB::raw('CONCAT(vin_number," | ",engine_number," | ",hsn_number) AS text'))
+                ->where(['transfer_status' => '0'])
+                ->where($where);
             if (isset($postData['search']) && ($postData['search'] != "")) {
                 $data = $data->where('vin_number', 'LIKE', '%' . $postData['search'] . '%')
                     ->orwhere('engine_number', 'LIKE', '%' . $postData['search'] . '%')

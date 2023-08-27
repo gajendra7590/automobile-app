@@ -52,6 +52,22 @@
                 </select>
             </div>
         </div>
+        <div class="row col_bank_account">
+            <div class="form-group col-md-12">
+                <label>RECEIVED IN BANK ACCOUNT</label>
+                <select class="form-control" name="received_in_bank">
+                    <option value="">SELECT BANK ACCOUNT</option>
+                    @isset($bankAccounts)
+                        @foreach ($bankAccounts as $bankAccount)
+                            <option value="{{ $bankAccount->id }}"
+                                {{ isset($data['down_payment_by_customer']['received_in_bank']) && $data['down_payment_by_customer']['received_in_bank'] == $bankAccount->id ? "selected='selected'" : '' }}>
+                                {{ $bankAccount->bank_name . ' - ' . $bankAccount->bank_account_number }}
+                            </option>
+                        @endforeach
+                    @endisset
+                </select>
+            </div>
+        </div>
         <div class="row">
             <div class="form-group col-md-2">
                 <label>Payment Status</label>
