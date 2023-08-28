@@ -810,7 +810,7 @@ class SalePaymentBankFinanaceController extends Controller
                     'transaction_paid_source' => $postData['paid_source'],
                     'transaction_paid_source_note' => $postData['payment_note'],
                     'transaction_paid_date' => $postData['paid_date'],
-                    'trans_type' => SalePaymentAccounts::TRANS_TYPE_DEBIT,
+                    'trans_type'           => ($diff > 0) ? SalePaymentAccounts::TRANS_TYPE_DEBIT : SalePaymentAccounts::TRANS_TYPE_CREDIT,
                     'status' => $postData['status'],
                     'reference_id' => $model->id
                 ]);

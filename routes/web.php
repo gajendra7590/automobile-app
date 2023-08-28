@@ -137,6 +137,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     //Cash Payment
     Route::resource('salesCash', 'SalePaymentCashController');
+    Route::get('addChargesIndex/{id}', 'SalePaymentCashController@addChargesIndex')->name('addChargesIndex');
+    Route::post('addChargesSave/{id}', 'SalePaymentCashController@addChargesSave')->name('addChargesSave');
     Route::get('salesCashReceipt/{id}', 'SalePaymentCashController@salesCashReceipt')->name('salesCashReceipt');
 
     //Bank Finance Payment

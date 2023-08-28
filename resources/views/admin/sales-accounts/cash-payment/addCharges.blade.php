@@ -1,8 +1,7 @@
 <form role="form" method="POST" class="ajaxFormSubmit"
-    action="{{ route('salesCash.update', ['salesCash' => isset($data['id']) ? $data['id'] : 0]) }}"
-    enctype="multipart/form-data" data-redirect="ajaxModalCommon">
+    action="{{ route('addChargesSave', ['id' => isset($data['id']) ? $data['id'] : 0]) }}" enctype="multipart/form-data"
+    data-redirect="ajaxModalCommon">
     @csrf
-    @method('PUT')
     <div class="box-body">
         <!-- DEPOSITE SECTION-->
         <div class="row">

@@ -101,3 +101,18 @@
         </button>
     </div>
 </form>
+
+<script>
+    $(document).ready(function() {
+        $('.col_bank_account').hide();
+        $('select[name="deposite_source"]').change(function() {
+            let val = $(this).val();
+            if (val == 'Cash') {
+                $('.col_bank_account').hide();
+                $('select[name="received_in_bank"]').prop('selectedIndex', 0);
+            } else {
+                $('.col_bank_account').show();
+            }
+        });
+    });
+</script>

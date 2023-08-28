@@ -26,7 +26,7 @@
              @endif
 
              @if (isset($salesAccountData) && $salesAccountData->status == 0)
-                 <a href="{{ route('salesCash.edit', ['salesCash' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
+                 <a href="{{ route('addChargesIndex', ['id' => isset($salesAccountId) ? $salesAccountId : 0]) }}"
                      class="btn btn-sm btn-success ajaxModalPopup" data-modal_size="modal-lg"
                      data-modal_title="ADD CHARGES">
                      ADD CHARGES
@@ -45,8 +45,8 @@
                      <th width="20%">PAYMENT NAME</th>
                      <th>CREDIT BALANCE</th>
                      <th>DEBIT BALANCE</th>
-                     {{-- <th>CHANGE BALANCE</th> --}}
                      <th>DUE DATE</th>
+                     <th>FIRST DP</th>
                      <th>PAID SOURCE</th>
                      <th width="10%">PAID DATE</th>
                      <th>STATUS</th>
@@ -62,9 +62,9 @@
                                  <td>{{ isset($cashPayment['payment_name']) ? $cashPayment['payment_name'] : '' }}</td>
                                  <td>{{ priceFormate($cashPayment['credit_amount']) }} </td>
                                  <td>{{ priceFormate($cashPayment['debit_amount']) }} </td>
-                                 {{-- <td>{{ priceFormate($cashPayment['change_balance']) }} </td> --}}
                                  <td>{{ isset($cashPayment['due_date']) && !empty($cashPayment['due_date']) ? date('d/m/Y', strtotime($cashPayment['due_date'])) : '--' }}
                                  </td>
+                                 <td>{{ $cashPayment['is_dp'] == '1' ? 'YES' : 'NO' }} </td>
                                  <td>{{ isset($cashPayment['paid_source']) ? $cashPayment['paid_source'] : '--' }}</td>
                                  <td>{{ isset($cashPayment['paid_date']) && !empty($cashPayment['paid_date']) ? date('d/m/Y', strtotime($cashPayment['paid_date'])) : '--' }}
                                  </td>
@@ -101,6 +101,16 @@
                                                          <a href="{{ route('salesCashReceipt', ['id' => isset($cashPayment['id']) ? base64_encode($cashPayment['id']) : 0]) }}"
                                                              class="" target="_blank">
                                                              PRINT RECIEPT
+                                                         </a>
+                                                     </li>
+                                                 @endif
+
+                                                 @if ($cashPayment['is_dp'] != '1' && $cashPayment['paid_source'] != 'Auto')
+                                                     <li>
+                                                         <a href="{{ route('salesCash.edit', ['salesCash' => $cashPayment['id']]) }}"
+                                                             class="ajaxModalPopup" data-modal_title="Update Payment Detail"
+                                                             data-modal_size="modal-lg">
+                                                             UPDATE
                                                          </a>
                                                      </li>
                                                  @endif

@@ -104,7 +104,7 @@ class SalePaymentCashController extends Controller
                 'payment_name'            => $payment_name,
                 'credit_amount'           => 0,
                 'debit_amount'            => $postData['paid_amount'],
-                'change_balance'          => $newOutStanding,
+                'change_balance'          => 0.00, //$newOutStanding,
                 'due_date'                => $postData['next_due_date'],
                 'paid_source'             => $postData['paid_source'],
                 'paid_date'               => $postData['paid_date'],
@@ -128,14 +128,8 @@ class SalePaymentCashController extends Controller
                 'status' => $postData['status'],
                 'reference_id' => $createdCashPayment->id
             ]);
-
-
-            $outStandingBalance = getCashDueTotal($salePaymentAccount->id);
-            $updateDAta = ['cash_status' => '0', 'cash_outstaning_balance' => $outStandingBalance];
-            if (floatval($outStandingBalance) == 0) {
-                $updateDAta['cash_status'] = 1;
-            }
-            $salePaymentAccount->update($updateDAta);
+            //UPDATE STATUSES
+            updateDuesOrPaidBalance($salePaymentAccount->id);
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -199,6 +193,151 @@ class SalePaymentCashController extends Controller
         if (!$request->ajax()) {
             return redirect()->route('saleAccounts.index');
         } else {
+            $model = SalePaymentCash::where('id', $id)->first();
+            if (!$model) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Cash pay ID does not exis"
+                ]);
+            }
+            $salePaymentAccount = SalePaymentAccounts::find($model->sale_payment_account_id);
+            $data = array(
+                'data' => $model,
+                'depositeSources' => depositeSources(),
+                'salemans'        => self::_getSalesman(),
+                'bankAccounts'    => self::_getBankAccounts(),
+                'salesAccount'    => $salePaymentAccount
+            );
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => "Tab ajax data loaded",
+                'data'       => view('admin.sales-accounts.cash-payment.pay_edit', $data)->render()
+            ]);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $model = SalePaymentCash::where('id', $id)->first();
+            if (!$model) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Cash pay ID does not exis"
+                ]);
+            }
+            DB::beginTransaction();
+            $postData = $request->only('sales_account_id', 'total_outstanding', 'old_paid_amount', 'paid_amount', 'paid_date', 'paid_source', 'status', 'collected_by', 'next_due_date', 'payment_note', 'received_in_bank');
+            $validator = Validator::make($postData, [
+                'sales_account_id'      => "required|exists:sale_payment_accounts,id",
+                'total_outstanding'     => "required|numeric|min:1",
+                'paid_amount'           => "required|numeric|min:1|lte:total_outstanding",
+                'paid_date'             => 'required|date',
+                'paid_source'           => 'required|string',
+                'status'                => 'required|in:0,1,2,3',
+                'next_due_date'         => 'required|date',
+                'payment_note'          => 'required|string',
+                'collected_by'          => 'nullable|exists:salesmans,id',
+                'received_in_bank'      => 'nullable|exists:bank_accounts,id',
+            ]);
+            //If Validation failed
+            if ($validator->fails()) {
+                DB::rollBack();
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => $validator->errors()->first(),
+                    'errors'     => $validator->errors()
+                ]);
+            }
+
+            $diff = ($postData['paid_amount'] - $postData['old_paid_amount']);
+            $newOutStanding = floatval($postData['total_outstanding'] - $diff);
+            if ($newOutStanding < 0) {
+                return response()->json([
+                    'status'     => false,
+                    'statusCode' => 419,
+                    'message'    => "Sorry! Your outstanding balance to lower than paid balance"
+                ]);
+            }
+
+            //DEBIT SALES CASH PAYMENT
+            $model->update([
+                'debit_amount'            => $postData['paid_amount'],
+                'change_balance'          => 0.00, //$newOutStanding,
+                'due_date'                => $postData['next_due_date'],
+                'paid_source'             => $postData['paid_source'],
+                'paid_date'               => $postData['paid_date'],
+                'paid_note'               => $postData['payment_note'],
+                'collected_by'            => $postData['collected_by'],
+                'status'                  => $postData['status'],
+                'received_in_bank'        => isset($postData['received_in_bank']) ? $postData['received_in_bank'] : null,
+            ]);
+
+            if ($diff != 0) {
+                //CREATE NEW TRANSACTION
+                SalePaymentTransactions::create([
+                    'sale_id'                      => $model->sale_id,
+                    'sale_payment_account_id'      => $model->sale_payment_account_id,
+                    'transaction_for'              => 1,
+                    'transaction_name'             => "Due to previous cash pay change balance",
+                    'transaction_amount'           => $diff,
+                    'transaction_paid_source'      => $postData['paid_source'],
+                    'transaction_paid_source_note' => $postData['payment_note'],
+                    'transaction_paid_date'        => $postData['paid_date'],
+                    'trans_type'                   => ($diff > 0) ? SalePaymentAccounts::TRANS_TYPE_DEBIT : SalePaymentAccounts::TRANS_TYPE_CREDIT,
+                    'status'                       => $postData['status'],
+                    'reference_id'                 => $model->id
+                ]);
+            }
+            updateDuesOrPaidBalance($postData['sales_account_id']);
+            DB::commit();
+            return response()->json([
+                'status'     => true,
+                'statusCode' => 200,
+                'message'    => trans('messages.update_success')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'     => false,
+                'statusCode' => 419,
+                'message'    => $e->getMessage(),
+                'data'       => ['file' => $e->getFile(), 'line' => $e->getLine()]
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+
+    /**
+     * FUNCTION FOR ADD NEW CHARGES
+     */
+    public function addChargesIndex(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return redirect()->route('saleAccounts.index');
+        } else {
             $salePaymentAccount = SalePaymentAccounts::find($id);
             if (!$salePaymentAccount) {
                 return response()->json([
@@ -221,13 +360,9 @@ class SalePaymentCashController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * FUNCTION FOR SAVE NEW CHARGES
      */
-    public function update(Request $request, $id)
+    public function addChargesSave(Request $request, $id)
     {
         if (!$request->ajax()) {
             return redirect()->route('saleAccounts.index');
@@ -304,17 +439,6 @@ class SalePaymentCashController extends Controller
                 ]);
             }
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     /**
