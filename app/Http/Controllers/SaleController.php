@@ -282,7 +282,7 @@ class SaleController extends Controller
                 $postData['created_by']         = Auth::user()->id;
                 $postData['customer_full_name'] = $full_name;
                 $postData['account_payment_type'] = $postData['payment_type'];
-                $postData['account_hyp_financer'] = $postData['hyp_financer'];
+                $postData['account_hyp_financer'] = isset($postData['hyp_financer'])?$postData['hyp_financer']:null;
                 //Create Sale
                 $createModel = Sale::create($postData);
                 //Mark Status Closed If Purchase With Quotation
