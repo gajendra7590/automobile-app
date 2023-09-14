@@ -162,7 +162,8 @@
                     </li>
 
                     <li class="{{ Request::is('purchaseReturnToDealers*') ? 'active' : '' }}">
-                        <a href="{{ route('purchaseReturnToDealers.index') }}"><i class="fa fa-rub"></i>PURCHASE RETURN TO DEALER
+                        <a href="{{ route('purchaseReturnToDealers.index') }}"><i class="fa fa-rub"></i>PURCHASE
+                            RETURN TO DEALER
                         </a>
                     </li>
 
@@ -171,12 +172,13 @@
                         <a href="{{ route('purchaseInvoices.index') }}"><i class="fa fa-book"></i>PURCHASE INVOICES
                         </a>
                     </li>
+
+                    <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
+                        <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i>
+                            BROKER TRANSFERS
+                        </a>
+                    </li>
                     @if (auth()->user() && auth()->user()->is_admin == '1')
-                        <li class="{{ Request::is('purchaseTransfers*') ? 'active' : '' }}">
-                            <a href="{{ route('purchaseTransfers.index') }}"><i class="fa fa-exchange"></i>
-                                BROKER TRANSFERS
-                            </a>
-                        </li>
                         <li class="{{ Request::is('purchaseDealerPayments*') ? 'active' : '' }}">
                             <a href="{{ route('purchaseDealerPayments.index') }}"><i class="fa fa-exchange"></i>
                                 PURCHASE DEALER PAYMENTS

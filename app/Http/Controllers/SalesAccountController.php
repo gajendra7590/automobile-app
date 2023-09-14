@@ -68,7 +68,8 @@ class SalesAccountController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('id', $search_string)
+                        $query->where(function($query) use ($search_string) {
+                            $query->where('id', $search_string)
                             ->orWhere('created_at', $search_string)
                             ->orWhereHas('sale.branch', function ($q) use ($search_string) {
                                 $q->where('branch_name', 'LIKE', '%' . $search_string . '%');
@@ -95,6 +96,7 @@ class SalesAccountController extends Controller
                                 $q->where('hsn_number', 'LIKE', '%' . $search_string . '%');
                             })
                             ->orwhere('sales_total_amount', $search_string);
+                        });
                     }
                 })
                 ->addIndexColumn()

@@ -68,7 +68,8 @@ class SaleController extends Controller
             return DataTables::of($data)
                 ->filter(function ($query) use ($search_string) {
                     if ($search_string != "") {
-                        $query->where('id', $search_string)
+                        $query->where(function($query) use ($search_string) {
+                           $query->where('id', $search_string)
                             ->orWhere('customer_name', 'LIKE', '%' . $search_string . '%')
                             ->orWhereHas('purchase', function ($q) use ($search_string) {
                                 $q->where('vin_number', 'LIKE', '%' . $search_string . '%');
@@ -87,6 +88,7 @@ class SaleController extends Controller
                             })
                             ->orwhereDate('created_at', $search_string)
                             ->orwhere('total_amount', 'LIKE', '%' . $search_string . '%');
+                        });
                     }
                 })
                 ->addIndexColumn()
