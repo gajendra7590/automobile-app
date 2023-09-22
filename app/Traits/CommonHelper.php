@@ -622,7 +622,7 @@ trait CommonHelper
         $model = [];
         //Filter by branch
         if (!empty(self::getCurrentUserBranch())) {
-            $model = BankAccounts::where('id', self::getCurrentUserBranch())->get();
+            $model = BankAccounts::where(['branch_id' => self::getCurrentUserBranch()])->get();
         } else {
             $model = BankAccounts::get();
         }
