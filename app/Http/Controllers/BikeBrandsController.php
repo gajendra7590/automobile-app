@@ -76,7 +76,7 @@ class BikeBrandsController extends Controller
             $postData = $request->all();
             $validator = Validator::make($postData, [
                 'name' => "required|unique:bike_brands,name",
-                'baranch_id' => "required|branches,id",
+                'branch_id' => "required|exists:branches,id",
                 'active_status'      => 'required|in:0,1'
             ]);
 
@@ -90,7 +90,7 @@ class BikeBrandsController extends Controller
                 ]);
             }
 
-            BikeBrand::create($request->only('name', 'description', 'code', 'active_status'));
+            BikeBrand::create($request->only('name', 'branch_id', 'description', 'code', 'active_status'));
             DB::commit();
             return response()->json([
                 'status'     => true,
@@ -149,10 +149,10 @@ class BikeBrandsController extends Controller
     {
         try {
             DB::beginTransaction();
-            $postData = $request->only('name', 'code', 'description', 'active_status');
+            $postData = $request->only('name', 'branch_id', 'code', 'description', 'active_status');
             $validator = Validator::make($postData, [
                 'name' => "required|unique:bike_brands,name," . $id,
-                'baranch_id' => "required|branches,id",
+                'branch_id' => "required|exists:branches,id",
                 'active_status'      => 'required|in:0,1'
             ]);
             if ($validator->fails()) {

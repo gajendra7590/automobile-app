@@ -27,7 +27,7 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label>Brand Code</label>
-                <input type="text" class="form-control autoCapitalized" placeholder="Code" name="BRAND CODE"
+                <input type="text" class="form-control autoCapitalized" placeholder="Code" name="code"
                     value='{{ isset($data) && $data ? $data->code : '' }}' />
             </div>
             <div class="form-group col-md-6">
