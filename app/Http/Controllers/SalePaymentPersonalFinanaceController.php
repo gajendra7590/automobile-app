@@ -692,8 +692,8 @@ class SalePaymentPersonalFinanaceController extends Controller
                 'sale' => function ($account) {
                     $account->select('id', 'customer_name', 'status');
                 }
-            ])->first();
-
+            ])->first(); 
+           
             $data['data'] = $installModel;
             $data['totalDueCounts']   = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
             $data['depositeSources']  = depositeSources();
@@ -713,7 +713,7 @@ class SalePaymentPersonalFinanaceController extends Controller
      * Function for pay saved
      */
     public function payStore(Request $request, $id)
-    {
+    { 
         if (!$request->ajax()) {
             return redirect()->route('saleAccounts.index');
         } else {
@@ -730,6 +730,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'next_due_Date'             => 'nullable|date|after:today',
                     'collected_by_salesman_id'  => 'nullable|exists:salesmans,id',
                     'received_in_bank'          => 'nullable|exists:bank_accounts,id',
+                    'pay_date'                  => 'required|date'
                 ]);
                 //If Validation failed
                 if ($validator->fails()) {
@@ -757,7 +758,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                     //Mark As Paid
                     $instModel->update([
                         'amount_paid'               => floatval($instModel->amount_paid + $pay_amount),
-                        'amount_paid_date'          => date('Y-m-d'),
+                        'amount_paid_date'          => isset($postData['pay_date']) ? date('Y-m-d',strtotime($postData['pay_date'])) : date('Y-m-d'),
                         'amount_paid_source'        => $postData['pay_method'],
                         'amount_paid_note'          => $postData['pay_method_note'],
                         'pay_due'                   => 0.00,
@@ -774,7 +775,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'transaction_amount'            => $pay_amount,
                         'transaction_paid_source'       => $postData['pay_method'],
                         'transaction_paid_source_note'  => $postData['pay_method_note'],
-                        'transaction_paid_date'         => date('Y-m-d'),
+                        'transaction_paid_date'         => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                         'trans_type'                    => SalePaymentAccounts::TRANS_TYPE_DEBIT,
                         'status'                        => SalePaymentAccounts::STATUS_PAID,
                         'reference_id'                  => $instModel->id
@@ -783,10 +784,10 @@ class SalePaymentPersonalFinanaceController extends Controller
                 //If Customer Pay Less That Due | CASE - 2
                 else if ($due_amount > $pay_amount) {
                     //PAY FOR CURRENT EMI
-                    $p1_due = floatval(($due_amount - $pay_amount));
+                    $p1_due = floatval(($due_amount - $pay_amount)); 
                     $instModel->update([
                         'amount_paid'                => floatval($instModel->amount_paid + $pay_amount),
-                        'amount_paid_date'           => date('Y-m-d'),
+                        'amount_paid_date'           => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                         'amount_paid_source'         => $postData['pay_method'],
                         'amount_paid_note'           => $postData['pay_method_note'],
                         'status'                     => SalePaymentAccounts::STATUS_PAID,
@@ -801,7 +802,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'transaction_amount'            => $pay_amount,
                         'transaction_paid_source'       => $postData['pay_method'],
                         'transaction_paid_source_note'  => $postData['pay_method_note'],
-                        'transaction_paid_date'         => date('Y-m-d'),
+                        'transaction_paid_date'         => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                         'trans_type'                    => SalePaymentAccounts::TRANS_TYPE_DEBIT,
                         'status'                        => SalePaymentAccounts::STATUS_PAID,
                         'reference_id'                  => $instModel->id
@@ -813,20 +814,20 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'status' => '0', 'sale_payment_account_id'  => $instModel->sale_payment_account_id
                     ])->whereNotIn('id', $whereNotIn)->first();
                     //Create New EMI
-                    if (empty($nextEMIModel)) {
+                    if (empty($nextEMIModel)) { 
+
+                        //OLD RETOTAL
+                        $old_total = $instModel->emi_total_amount;
+                        $old_principal = $instModel->emi_principal_amount; 
+                        $principal_per = round( ( ($old_principal / $old_total) * 100), 2); 
+                        ///////OLD RETOTAL 
 
                         $emi_due_amount    = $p1_due;
-                        $emi_due_principal = 0.00;
-                        $emi_due_intrest   = 0.00;
+                        $emi_due_principal = round((($principal_per / 100) * $emi_due_amount), 2); 
+                        $emi_due_intrest   = round( ($emi_due_amount - $emi_due_principal), 2); 
                         $emi_due_date      = null;
-                        $accountModel = SalePaymentAccounts::find($instModel->sale_payment_account_id);
-
-                        $emi_due_principal = $p1_due;
-                        $months = emiTermsMonths($accountModel->finance_terms);
-                        $roi   = $accountModel->rate_of_interest;
-                        $emi_due_intrest = ($emi_due_principal * $roi * ($months / 12)) / 100;
-                        $emi_due_amount = ($emi_due_principal + $emi_due_intrest);
-                        $emi_due_date = date('Y-m-d', strtotime("+ $months months"));
+                        //$accountModel = SalePaymentAccounts::find($instModel->sale_payment_account_id); 
+                        $emi_due_date = date('Y-m-d', strtotime($postData['next_due_Date']));  
                         SalePaymentPersonalFinanace::create([
                             'sale_id'                   => $instModel->sale_id,
                             'sale_payment_account_id'   => $instModel->sale_payment_account_id,
@@ -836,7 +837,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                             'emi_intrest_amount'        => $emi_due_intrest,
                             'emi_due_date'              => $emi_due_date,
                             'adjust_amount'             => - ($pay_amount),
-                            'adjust_date'               => date('Y-m-d'),
+                            'adjust_date'               => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'adjust_note'               => "Adjust last EMI pending balance.",
                             'emi_due_revised_amount'    => $emi_due_amount,
                             'emi_due_revised_note'      => "Revised Due After (-" . $pay_amount . ") added.",
@@ -847,7 +848,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                     else {
                         $nextEMIModel->update([
                             'adjust_amount'             => - ($p1_due),
-                            'adjust_date'               => date('Y-m-d'),
+                            'adjust_date'               =>  date('Y-m-d', strtotime($postData['pay_date'])),
                             'adjust_note'               => "#" . $id . "Last Emi Due Adjusted.",
                             'emi_due_revised_amount'    => floatval($nextEMIModel->emi_due_revised_amount + $p1_due),
                             'emi_due_revised_note'      => "Revised Due After (-" . $p1_due . ") added.",
@@ -889,7 +890,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                         //MARK PAID CURRENT EMI
                         $instModel->update([
                             'amount_paid'        => floatval($instModel->amount_paid + $pay_amount),
-                            'amount_paid_date'   => date('Y-m-d'),
+                            'amount_paid_date'   =>  isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'amount_paid_source' => $postData['pay_method'],
                             'amount_paid_note'   => $postData['pay_method_note'],
                             'status'             => SalePaymentAccounts::PAY_STATUS_PAID,
@@ -905,7 +906,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                             'transaction_amount'            => $pay_amount,
                             'transaction_paid_source'       => $postData['pay_method'],
                             'transaction_paid_source_note'  => $postData['pay_method_note'],
-                            'transaction_paid_date'         => date('Y-m-d'),
+                            'transaction_paid_date'         => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'trans_type'                    => SalePaymentAccounts::TRANS_TYPE_DEBIT,
                             'status'                        => SalePaymentAccounts::STATUS_PAID,
                             'reference_id'                  => $instModel->id
@@ -915,11 +916,11 @@ class SalePaymentPersonalFinanaceController extends Controller
                         $p1_status = ($nextEMITotal == $advance_pay) ? SalePaymentAccounts::STATUS_PAID : SalePaymentAccounts::STATUS_DUE;
                         $nextEMIModel->update([
                             'amount_paid'                => floatval($nextEMIModel->amount_paid + $advance_pay),
-                            'amount_paid_date'           => date('Y-m-d'),
+                            'amount_paid_date'           => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'amount_paid_source'         => $postData['pay_method'],
                             'amount_paid_note'           => "Advance Payment Ref #Inst-" . $instModel->id,
                             'adjust_amount'              => ($p1_status == 1) ? 0 : ($advance_pay),
-                            'adjust_date'                => date('Y-m-d'),
+                            'adjust_date'                => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'adjust_note'                => "Advance Payment.#EMI-" . $instModel->id,
                             'emi_due_revised_amount'     => ($p1_status == 1) ? 0 : ($nextEMITotal - $advance_pay),
                             'emi_due_revised_note'       => ($p1_status == 1) ? "" : "After Advance Payment Adjusment Remianing Balance.",
@@ -936,7 +937,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                             'transaction_amount'            => $advance_pay,
                             'transaction_paid_source'       => $postData['pay_method'],
                             'transaction_paid_source_note'  => $postData['pay_method_note'],
-                            'transaction_paid_date'         => date('Y-m-d'),
+                            'transaction_paid_date'         => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
                             'trans_type'                    => SalePaymentAccounts::TRANS_TYPE_DEBIT,
                             'status'                        => SalePaymentAccounts::STATUS_PAID,
                             'reference_id'                  => $instModel->id

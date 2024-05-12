@@ -36,18 +36,22 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>PAYMENT OPTION</label>
                 <select class="form-control" name="pay_option">
                     <option value="full">Full Payment</option>
                     <option value="partial">Partial Payment</option>
                 </select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>PAYABLE AMOUNT</label>
                 <input name="pay_amount" type="text" class="form-control"
                     value="{{ isset($data['emi_due_revised_amount']) ? $data['emi_due_revised_amount'] : '' }}"
                     placeholder="₹ 0.00" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label>PAYMENT DATE</label>
+                <input name="pay_date" type="date" class="form-control" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" placeholder="dd-mm-yyyy">
             </div>
         </div>
         <div class="row">
