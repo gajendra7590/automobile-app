@@ -328,7 +328,7 @@ class PurchaseController extends Controller
         }
         $data = [];
         $data['branches'] = self::_getBranchById($bpModel->bike_branch);
-        $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);
+        $data['dealers'] = self::_getDealers(false, $bpModel->bike_branch);
         $data['brands'] = self::_getbrands(false, $bpModel->bike_branch);
         $data['models'] = self::_getmodels($bpModel->bike_brand);
         $data['variants'] = self::_getVaraints($bpModel->bike_model);

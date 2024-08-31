@@ -89,7 +89,7 @@ trait CommonHelper
     /**
      * Get All Dealers
      */
-    public static function _getDealers($select_all = false)
+    public static function _getDealers($select_all = false, $branch_id = null)
     {
         $model = BikeDealer::where('active_status', '1');
         //Select Specific
@@ -100,6 +100,8 @@ trait CommonHelper
         //Filter by branch
         if (self::getCurrentUserBranch() != '0') {
             $model = $model->where('branch_id', self::getCurrentUserBranch());
+        } else if(!empty($branch_id)) {
+            $model = $model->where('branch_id', $branch_id);
         }
         return $model->get();
     }
