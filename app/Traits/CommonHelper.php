@@ -127,9 +127,22 @@ trait CommonHelper
         if ($select_all == false) {
             $model = $model->select('id', 'name');
         }
+
         //Filter by branch
         if (self::getCurrentUserBranch() != '0') {
-            $model = $model->where('branch_id', self::getCurrentUserBranch());
+            $mapping_brand_id = Branch::where('id',self::getCurrentUserBranch())->value('mapping_brand_id');
+            $where = ['branch_id' => self::getCurrentUserBranch()];
+            if(!empty($mapping_brand_id)) {
+                $where = ['id' => $mapping_brand_id];
+            }
+            $model = $model->where($where);
+        } else if($branch_id > 0) {
+            $mapping_brand_id = Branch::where('id',$branch_id)->value('mapping_brand_id');
+            $where = ['branch_id' => $branch_id];
+            if(!empty($mapping_brand_id)) {
+                $where = ['id' => $mapping_brand_id];
+            }
+            $model = $model->where($where);
         }
         return $model->get();
     }
@@ -145,7 +158,13 @@ trait CommonHelper
         } else {
             $model =  BikeBrand::select('*');
         }
-        return $model->where('branch_id', $branch_id)->get();
+
+        $mapping_brand_id = Branch::where('id',$branch_id)->value('mapping_brand_id');
+        $where = ['branch_id' => $branch_id];
+        if(!empty($mapping_brand_id)) {
+            $where = ['id' => $mapping_brand_id];
+        }
+        return $model->where($where)->get();
     }
 
     /**

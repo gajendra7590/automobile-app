@@ -29,7 +29,9 @@ class Branch extends Model
         'bank_name',
         'bank_branch',
         'branch_logo',
-        'active_status'
+        'active_status',
+        'is_editable',
+        'mapping_brand_id'
     ];
 
     protected  $hidden = [];
@@ -49,6 +51,14 @@ class Branch extends Model
         });
     }
 
+
+    public function mappedBrand() {
+        return $this->belongsTo(BikeBrand::class,'mapping_brand_id');
+    }
+
+    public function brand() {
+        return $this->hasOne(BikeBrand::class,'branch_id','id');
+    }
 
     /**
      * Function for assesor

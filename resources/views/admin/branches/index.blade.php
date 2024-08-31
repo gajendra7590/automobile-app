@@ -38,6 +38,7 @@
                                         <th>Branch Email</th>
                                         <th>Branch Phone</th>
                                         <th>GST Number</th>
+                                        <th>Map with brand</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

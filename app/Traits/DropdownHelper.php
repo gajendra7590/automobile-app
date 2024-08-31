@@ -101,8 +101,15 @@ trait DropdownHelper
     public static function getDealers($data)
     {
         $branch_id = isset($data['id']) ? $data['id'] : 0;
-        $dealers = BikeDealer::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'company_name')->get();
-        $brands = BikeBrand::where('active_status', '1')->where('branch_id', $branch_id)->select('id', 'name')->get();
+        $mapping_brand_id = Branch::where('id',$branch_id)->value('mapping_brand_id');
+        $dealers = BikeDealer::where('active_status', '1')->select('id', 'company_name')->where('branch_id', $branch_id)->get();
+
+        $brands = BikeBrand::where('active_status', '1')->select('id', 'name')
+        ->where('branch_id', $branch_id)
+        ->when((!empty($mapping_brand_id)), function($where) use ($mapping_brand_id) {
+             $where->orWhere('branch_id', $mapping_brand_id);
+        })->get();
+
         $responseData = array(
             'dep_dd_name' => isset($data['dep_dd_name']) ? $data['dep_dd_name'] : '',
             'dep_dd_html' => view('admin.ajaxDropDowns.selectOptions', ['data' => $dealers, 'type' => 'dealers'])->render(),
@@ -127,9 +134,16 @@ trait DropdownHelper
 
     public static function getBrands($data)
     {
-        $where = array();
+        $where = array(); $orWhere = [];
         if (isset($data['id']) && (intval($data['id']) > 0)) {
             $where['branch_id'] = $data['id'];
+
+            //MAPPED BRAND
+            $mapping_brand_id = Branch::where('id',$data['id'])->value('mapping_brand_id');
+            if(!empty($mapping_brand_id)) {
+                $where['id'] = $mapping_brand_id;
+                unset($where['branch_id']);
+            }
         }
 
         $brands = BikeBrand::where('active_status', '1')->where($where)->get();

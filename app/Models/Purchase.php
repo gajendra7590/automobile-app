@@ -51,6 +51,8 @@ class Purchase extends Model
         'ex_showroom_price',
         'discount_price',
         'grand_total',
+        'discount_with_gst',
+        'other_charges',
         'bike_description',
         'status',
         'created_by',

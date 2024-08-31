@@ -41,9 +41,21 @@ $(document).ready(function () {
         let gst_amount2 = parseFloat((pre_gst_amount * rate) / 100);
         $("#gst_rate_percent").val(rate);
         $('input[name="gst_amount"]').val(gst_amount);
+
         let ex_showroom_total =
             parseFloat(gst_amount2) + parseFloat(pre_gst_amount);
         let total = parseFloat(gst_amount) + parseFloat(pre_gst_re_total);
+
+        //2 NEW KEYS ADDED
+        let other_charges = parseFloat($('input[name="other_charges"]').val());
+        other_charges = !isNaN(other_charges) ? other_charges : 0.0;
+
+        let discount_with_gst = parseFloat($('input[name="discount_with_gst"]').val());
+        discount_with_gst = !isNaN(discount_with_gst) ? discount_with_gst : 0.0;
+
+        total = total + other_charges - discount_with_gst;
+        ////
+
         $('input[name="ex_showroom_price"]').val(ex_showroom_total);
         $('input[name="grand_total"]').val(total);
     }

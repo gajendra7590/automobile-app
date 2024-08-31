@@ -219,6 +219,8 @@ class PurchaseController extends Controller
                 'ex_showroom_price'         => 'required|numeric',
                 'discount_price'            => 'nullable|numeric',
                 'grand_total'               => 'required|numeric',
+                'other_charges'             => 'nullable|numeric',
+                'discount_with_gst'         => 'nullable|numeric',
                 'bike_description'          => "nullable|string",
             ]);
 
@@ -327,7 +329,7 @@ class PurchaseController extends Controller
         $data = [];
         $data['branches'] = self::_getBranchById($bpModel->bike_branch);
         $data['dealers'] = self::_getDealerById($bpModel->bike_dealer);
-        $data['brands'] = self::_getbrands();
+        $data['brands'] = self::_getbrands(false, $bpModel->bike_branch);
         $data['models'] = self::_getmodels($bpModel->bike_brand);
         $data['variants'] = self::_getVaraints($bpModel->bike_model);
         $data['colors'] = self::_getColors($bpModel->bike_model_variant);
@@ -400,6 +402,8 @@ class PurchaseController extends Controller
                 'ex_showroom_price'         => 'required|numeric',
                 'discount_price'            => 'nullable|numeric',
                 'grand_total'               => 'required|numeric',
+                'other_charges'             => 'nullable|numeric',
+                'discount_with_gst'         => 'nullable|numeric',
                 'bike_description'          => "nullable",
             ]);
 

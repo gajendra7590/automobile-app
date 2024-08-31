@@ -38,16 +38,14 @@
         <td>{{ isset($data['bike_type']) ? $data['bike_type'] : '--' }}</td>
         <th>FUEL TYPE</th>
         <td>{{ isset($data['bike_fuel_type']) ? $data['bike_fuel_type'] : '--' }}</td>
-        {{-- <th>BREAK TYPE</th>
-        <td>{{ isset($data['break_type']) ? $data['break_type'] : '--' }}</td> --}}
+        <th></th><td></td>
     </tr>
     <tr>
-        {{-- <th>BIKE TYPE</th>
-        <td>{{ isset($data['wheel_type']) ? $data['wheel_type'] : '--' }}</td> --}}
         <th>DC NUMBER</th>
         <td>{{ isset($data['dc_number']) ? $data['dc_number'] : '--' }}</td>
         <th>DC DATE</th>
         <td>{{ isset($data['dc_date']) ? $data['dc_date'] : '--' }}</td>
+        <th></th><td></td>
     </tr>
     <tr>
         <th>VIN NUMBER</th>
@@ -80,7 +78,6 @@
         <th>TYRE FRONT NUMBER</th>
         <td>{{ isset($data['tyre_front_number']) ? $data['tyre_front_number'] : '--' }}</td>
     </tr>
-
     <tr>
         <th>TYRE REAR NUMBER</th>
         <td>{{ isset($data['tyre_rear_number']) ? $data['tyre_rear_number'] : '--' }}</td>
@@ -89,7 +86,6 @@
         <th>BATTERY NUMBER</th>
         <td>{{ isset($data['battery_number']) ? $data['battery_number'] : '--' }}</td>
     </tr>
-
     <tr>
         <th>GST RATE</th>
         <td>{{ isset($data['gst_rate_percent']) ? $data['gst_rate_percent'] . '%' : '--' }}</td>
@@ -103,8 +99,16 @@
         <td>{{ isset($data['ex_showroom_price']) ? priceFormate($data['ex_showroom_price']) : '--' }}</td>
         <th>DISCOUNT PRICE</th>
         <td>{{ isset($data['discount_price']) ? priceFormate($data['discount_price']) : '--' }}</td>
+        <th>OTHER CHARGES</th>
+        <td>{{ isset($data['other_charges']) ? priceFormate($data['other_charges']) : '--' }}</td>
+    </tr>
+    <tr>
+        <th>DISCOUNT WITH GST</th>
+        <td>{{ isset($data['discount_with_gst']) ? priceFormate($data['discount_with_gst']) : '--' }}</td>
         <th>GRAND TOTAL</th>
         <td>{{ isset($data['grand_total']) ? priceFormate($data['grand_total']) : '--' }}</td>
+        <th></th>
+        <td></td>
     </tr>
     <tr>
         <th colspan="2">DESCRIPTION</th>

@@ -54,7 +54,7 @@ class BikeBrandsController extends Controller
      */
     public function create()
     {
-        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
+        $branches = Branch::where('active_status', '1')->whereNull('mapping_brand_id')->select('id', 'branch_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
@@ -128,8 +128,15 @@ class BikeBrandsController extends Controller
      */
     public function edit($id)
     {
-        $branches = Branch::where('active_status', '1')->select('id', 'branch_name')->get();
         $bikeBrand = BikeBrand::find($id);
+
+        //CHECK IF BRAND MAPPED THEN REMOVE FROM LIST
+        $branches = Branch::where('active_status', '1')
+        ->whereNull('mapping_brand_id')
+        ->where('id',$bikeBrand->branch_id)
+        ->select('id', 'branch_name')
+        ->get();
+
         return response()->json([
             'status'     => true,
             'statusCode' => 200,

@@ -355,7 +355,7 @@
                                     value="{{ isset($data->dc_date) ? $data->dc_date : date('Y-m-d') }}" />
                             </div>
 
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <label class="required">GST RATE</label>
                                 <select name="gst_rate" id="gst_rate" class="form-control" {{ $isSoldOut }}>
                                     @if (isset($gst_rates))
@@ -370,7 +370,7 @@
                                 <input type="hidden" name="gst_rate_percent" id="gst_rate_percent"
                                     value="{{ isset($data->gst_rate_percent) ? $data->gst_rate_percent : 0 }}">
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="required">ACTUAL PRICE(PRE GST)</label>
                                 <input type="number" class="form-control totalAmountCal totalAmountCal2"
                                     placeholder="Pre GST Amount" name="pre_gst_amount" id="pre_gst_amount"
@@ -386,18 +386,38 @@
                                     value="{{ isset($data->discount_price) ? $data->discount_price : 0.0 }}"
                                     {{ $isSoldOut }} />
                             </div>
+
+                            <div class="form-group col-md-3">
+                                <label>OTHER CHARGES(+)</label>
+                                <input type="number" class="form-control totalAmountCal" placeholder="Other Charges"
+                                    name="other_charges"
+                                    value="{{ isset($data->other_charges) ? $data->other_charges : 0.0 }}"
+                                    {{ $isSoldOut }} />
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label>DISCOUNT WITH GST(-)</label>
+                                <input type="number" class="form-control totalAmountCal" placeholder="Discount With GST"
+                                    name="discount_with_gst"
+                                    value="{{ isset($data->discount_with_gst) ? $data->discount_with_gst : 0.0 }}"
+                                    {{ $isSoldOut }} />
+                            </div>
+
+
                             <div class="form-group col-md-3">
                                 <label class="required">GST AMOUNT</label>
                                 <input type="number" class="form-control totalAmountCal totalAmountCal2"
                                     placeholder="GST Amount" name="gst_amount" readonly
                                     value="{{ isset($data->gst_amount) ? $data->gst_amount : 0.0 }}" />
                             </div>
+
                             <div class="form-group col-md-3">
                                 <label class="required">EX SHOWROOM PRICE(+GST)</label>
                                 <input type="number" class="form-control " readonly placeholder="Ex Showroom Price"
                                     name="ex_showroom_price"
                                     value="{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : 0.0 }}" />
                             </div>
+
                             <div class="form-group col-md-3">
                                 <label class="required">GRAND TOTAL</label>
                                 <input type="number" class="form-control" {{ $isSoldOut }}

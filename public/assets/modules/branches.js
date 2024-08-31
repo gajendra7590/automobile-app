@@ -38,6 +38,10 @@ $(document).ready(function () {
                     name: "gstin_number",
                 },
                 {
+                    data: "map_with_brand",
+                    name: "map_with_brand",
+                },
+                {
                     data: "active_status",
                     name: "active_status",
                 },

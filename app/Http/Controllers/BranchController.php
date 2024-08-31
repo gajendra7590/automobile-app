@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BikeBrand;
 use App\Models\Branch;
 use App\Models\City;
 use App\Models\District;
+use App\Models\Purchase;
+use App\Models\Quotation;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +25,7 @@ class BranchController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Branch::select('*');
+            $data = Branch::with('mappedBrand:id,name')->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('active_status', function ($row) {
@@ -32,11 +35,14 @@ class BranchController extends Controller
                         return "<label class='switch'><input type='checkbox' value='$row->id' data-type='branch' class='active_status'><span class='slider round'></span></label>";
                     }
                 })
+                ->addColumn('map_with_brand', function ($row) {
+                    return $row->mappedBrand->name ?? "---";
+                })
                 ->addColumn('action', function ($row) {
                     $btn = $this->getActions($row['id']);
                     return $btn;
                 })
-                ->rawColumns(['action', 'active_status'])
+                ->rawColumns(['action', 'active_status' ,'map_with_brand'])
                 ->make(true);
         } else {
             $formDetails = [
@@ -53,12 +59,19 @@ class BranchController extends Controller
      */
     public function create()
     {
+        $brands = BikeBrand::select('id','name')->where('active_status','1')->get();
         $states = State::where('active_status', '1')->select('id', 'state_name')->get();
         return response()->json([
             'status'     => true,
             'statusCode' => 200,
             'message'    => trans('messages.ajax_model_loaded'),
-            'data'       => view('admin.branches.ajaxModal', ['action' => route('branches.store'), 'method' => 'POST', 'states' => $states])->render()
+            'data'       => view('admin.branches.ajaxModal', [
+                'action' => route('branches.store'),
+                'method' => 'POST',
+                'states' => $states,
+                'brands' => $brands,
+                'disabledMapping' => false
+            ])->render()
         ]);
     }
 
@@ -85,12 +98,13 @@ class BranchController extends Controller
                 'branch_county' => 'nullable|string',
                 'branch_pincode' => 'nullable|string',
                 'gstin_number' => 'nullable|string',
-                'branch_more_detail' => 'nullable|string',
+                'active_status'      => 'required|in:0,1',
+                'mapping_brand_id' => 'nullable|exists:bike_brands,id',
                 'account_number' => 'nullable|string',
                 'ifsc_code' => 'nullable|string',
                 'bank_name' => 'nullable|string',
                 'bank_branch' => 'nullable|string',
-                'active_status'      => 'required|in:0,1'
+                'branch_more_detail' => 'nullable|string',
             ]);
 
             //If Validation failed
@@ -120,7 +134,8 @@ class BranchController extends Controller
                 'ifsc_code',
                 'bank_name',
                 'bank_branch',
-                'active_status'
+                'active_status',
+                'mapping_brand_id'
             ]);
 
             Branch::create($createData);
@@ -162,7 +177,23 @@ class BranchController extends Controller
     public function edit($id)
     {
         $branch = Branch::find($id);
-        // dd($branch->toArray());
+        $branchesId = Branch::where('active_status','1')->has('brand')->pluck('id')->toArray();
+        $brands = [];
+        if(!in_array($branch->id,$branchesId)) {
+            $brands = BikeBrand::where('active_status','1')->select('id','name')->get();
+        }
+
+        //CHECK MAPPED DETAIL
+        $disabledMapping = false;
+        if(isset($branch->mapping_brand_id) && (intval($branch->mapping_brand_id) > 0)) {
+            $countQuotation = Quotation::where(['branch_id' => $branch->id,'bike_brand' => $branch->mapping_brand_id])->count();
+            $countPurchases = Purchase::where(['bike_branch' => $branch->id,'bike_brand' => $branch->mapping_brand_id])->count();
+            if( ($countQuotation > 0) || ($countPurchases > 0) ) {
+                $disabledMapping = true;
+            }
+        }
+
+
         $data = array(
             'data' => $branch,
             'action' => route('branches.update', ['branch' => $id]),
@@ -170,6 +201,8 @@ class BranchController extends Controller
             'states' => State::where('active_status', '1')->select('id', 'state_name')->get(),
             'districts' => District::where('active_status', '1')->where('state_id', $branch->branch_state)->select('id', 'district_name')->get(),
             'cities' => City::where('active_status', '1')->where('district_id', $branch->branch_district)->select('id', 'city_name')->get(),
+            'brands' => $brands,
+            'disabledMapping' => $disabledMapping
         );
         return response()->json([
             'status'     => true,
@@ -209,7 +242,8 @@ class BranchController extends Controller
                 'bank_name' => 'nullable|string',
                 'bank_branch' => 'nullable|string',
                 'active_status'         => 'required|in:0,1',
-                'branch_logo_image'     => 'nullable|mimes:jpg,jpeg,png'
+                'branch_logo_image'     => 'nullable|mimes:jpg,jpeg,png',
+                'mapping_brand_id' => 'nullable|exists:bike_brands,id'
             ]);
             if ($validator->fails()) {
                 return response()->json(['status' => false, 'statusCode' => 419, 'message' => $validator->errors()->first(), 'errors' => $validator->errors()]);
@@ -237,7 +271,8 @@ class BranchController extends Controller
                 'ifsc_code',
                 'bank_name',
                 'bank_branch',
-                'active_status'
+                'active_status',
+                'mapping_brand_id'
             ]);
 
             //UPLOAD LOGO

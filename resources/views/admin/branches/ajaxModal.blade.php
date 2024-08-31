@@ -89,24 +89,29 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Branch GST Number</label>
             <input type='text' class="form-control" placeholder="Branch GST Number" name="gstin_number"
                 value="{{ isset($data) && $data->gstin_number ? $data->gstin_number : '' }}" />
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Status : </label>
             <select class="form-control" name="active_status">
-                <option value="1"
-                    {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>
-                    Active
-                </option>
-                <option value="0"
-                    {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>
-                    In
-                    Active
-                </option>
+                <option value="1" {{ isset($data['active_status']) && $data['active_status'] == '1' ? 'selected="selected"' : '' }}>Active</option>
+                <option value="0" {{ isset($data['active_status']) && $data['active_status'] == '0' ? 'selected="selected"' : '' }}>In Active</option>
             </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Mapping With Existing Brand : </label>
+            <select class="form-control" name="mapping_brand_id" {{ (isset($disabledMapping) && ($disabledMapping == true) ) ? 'disabled="disabled";' : ''  }}>
+                <option value="">---SELECT BRAND NAME---</option>
+                @if (isset($brands))
+                    @foreach ($brands as $brand)
+                        <option value="{{ ($brand->id ?? 0) }}"  {{ isset($data['mapping_brand_id']) && $data['mapping_brand_id'] == ($brand->id ?? 0) ? 'selected="selected"' : '' }}>{{ $brand->name ?? "" }}</option>
+                    @endforeach
+                @endif
+            </select>
+            <small class="text-muted text-danger">*Branch has no brand & use existing one.</small>
         </div>
     </div>
     <div class="row">

@@ -327,7 +327,9 @@ class QuotationController extends Controller
         $formData['cities'] = self::_getCitiesByDistrictId($quotModel->customer_district);
 
         $formData['branches'] = self::_getBranchById($quotModel->branch_id);
+
         $formData['brands'] = self::_getBrandByBranch($quotModel->branch_id);
+
         $formData['models'] = self::_getModelByBrand($quotModel->bike_brand);
         $formData['variants'] = self::_getVaraints($quotModel->bike_model);
         $formData['colors'] = self::_getColors($quotModel->bike_model_variant);
