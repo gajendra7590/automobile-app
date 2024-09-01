@@ -86,7 +86,8 @@ class SalePaymentPersonalFinanaceController extends Controller
                     'grand_finance_amount'  => "required|numeric|min:1",
                     'processing_fees'       => "nullable|numeric|min:0",
                     'financier_id'          => 'required|exists:bank_financers,id',
-                    'finance_due_date'      => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
+                    // 'finance_due_date'      => 'required|date|after_or_equal:' . now()->format('Y-m-d'),
+                    'finance_due_date'      => 'required|date',
                     'finance_terms'         => 'required|numeric|in:1,2,3,4,5,6',
                     'no_of_emis'            => 'required|numeric|integer',
                     'rate_of_interest'      => 'required|numeric'
@@ -692,8 +693,8 @@ class SalePaymentPersonalFinanaceController extends Controller
                 'sale' => function ($account) {
                     $account->select('id', 'customer_name', 'status');
                 }
-            ])->first(); 
-           
+            ])->first();
+
             $data['data'] = $installModel;
             $data['totalDueCounts']   = SalePaymentPersonalFinanace::where(['sale_payment_account_id' => $installModel->sale_payment_account_id, 'status' => '0'])->count();
             $data['depositeSources']  = depositeSources();
@@ -713,7 +714,7 @@ class SalePaymentPersonalFinanaceController extends Controller
      * Function for pay saved
      */
     public function payStore(Request $request, $id)
-    { 
+    {
         if (!$request->ajax()) {
             return redirect()->route('saleAccounts.index');
         } else {
@@ -784,7 +785,7 @@ class SalePaymentPersonalFinanaceController extends Controller
                 //If Customer Pay Less That Due | CASE - 2
                 else if ($due_amount > $pay_amount) {
                     //PAY FOR CURRENT EMI
-                    $p1_due = floatval(($due_amount - $pay_amount)); 
+                    $p1_due = floatval(($due_amount - $pay_amount));
                     $instModel->update([
                         'amount_paid'                => floatval($instModel->amount_paid + $pay_amount),
                         'amount_paid_date'           => isset($postData['pay_date']) ? date('Y-m-d', strtotime($postData['pay_date'])) : date('Y-m-d'),
@@ -814,20 +815,20 @@ class SalePaymentPersonalFinanaceController extends Controller
                         'status' => '0', 'sale_payment_account_id'  => $instModel->sale_payment_account_id
                     ])->whereNotIn('id', $whereNotIn)->first();
                     //Create New EMI
-                    if (empty($nextEMIModel)) { 
+                    if (empty($nextEMIModel)) {
 
                         //OLD RETOTAL
                         $old_total = $instModel->emi_total_amount;
-                        $old_principal = $instModel->emi_principal_amount; 
-                        $principal_per = round( ( ($old_principal / $old_total) * 100), 2); 
-                        ///////OLD RETOTAL 
+                        $old_principal = $instModel->emi_principal_amount;
+                        $principal_per = round( ( ($old_principal / $old_total) * 100), 2);
+                        ///////OLD RETOTAL
 
                         $emi_due_amount    = $p1_due;
-                        $emi_due_principal = round((($principal_per / 100) * $emi_due_amount), 2); 
-                        $emi_due_intrest   = round( ($emi_due_amount - $emi_due_principal), 2); 
+                        $emi_due_principal = round((($principal_per / 100) * $emi_due_amount), 2);
+                        $emi_due_intrest   = round( ($emi_due_amount - $emi_due_principal), 2);
                         $emi_due_date      = null;
-                        //$accountModel = SalePaymentAccounts::find($instModel->sale_payment_account_id); 
-                        $emi_due_date = date('Y-m-d', strtotime($postData['next_due_Date']));  
+                        //$accountModel = SalePaymentAccounts::find($instModel->sale_payment_account_id);
+                        $emi_due_date = date('Y-m-d', strtotime($postData['next_due_Date']));
                         SalePaymentPersonalFinanace::create([
                             'sale_id'                   => $instModel->sale_id,
                             'sale_payment_account_id'   => $instModel->sale_payment_account_id,

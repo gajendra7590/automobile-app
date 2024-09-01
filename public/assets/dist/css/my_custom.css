@@ -84,7 +84,7 @@ input.error {
     border-color: red;
 }
 
-.ajaxFormSubmit .form-group label,
+ .form-group label,
 .ajaxForm .form-group label {
     text-transform: uppercase !important;
 }

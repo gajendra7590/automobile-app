@@ -2,13 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Models\LoginAccessCode;
 use App\Models\RtoRegistration;
 use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
+use App\Traits\EmailTrait;
 use Illuminate\Console\Command;
 
 class Test extends Command
 {
+    use EmailTrait;
     /**
      * The name and signature of the console command.
      *
@@ -42,7 +45,11 @@ class Test extends Command
     {
         // $this->updateDuesOrPaidBal();
         // $this->updateChasisNumberInRtoRegistration();
-        $this->updateCustomerBalance();
+        //$this->updateCustomerBalance();
+        //$code = LoginAccessCode::createAccessToken('admin.user@yopmail.com');
+        //$code = LoginAccessCode::verifyAccessToken('admin.user@yopmail.com', '392681');
+        //dd($code);
+        self::sendLoginOtp(1);
     }
 
     /**

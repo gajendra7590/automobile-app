@@ -7,9 +7,10 @@
     <div class="box-body">
 
         <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label>SKU Code</label>
                 <select class="form-control" name="model_color_id">
+                    <option value="">---SELECT SKU CODE---</option>
                     @isset($sku_codes)
                         @foreach ($sku_codes as $sku_code)
                             <option value="{{ $sku_code->id }}">
@@ -21,12 +22,12 @@
                     @endisset
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>EX SHOWROOM PRICE</label>
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="ex_showroom_price"
                     value='{{ isset($data->ex_showroom_price) ? $data->ex_showroom_price : '' }}' />
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>REGISTRATION AMOUNT</label>
                 <input type="text" class="form-control skuSalesPrice" placeholder="₹0.00" name="registration_amount"
                     value='{{ isset($data->registration_amount) ? $data->registration_amount : '' }}' />

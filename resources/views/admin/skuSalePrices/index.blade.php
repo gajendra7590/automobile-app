@@ -22,10 +22,18 @@
                         <div class="box-header">
                             <h3 class="box-title">SKU SALES PRICES LIST</h3>
                             <div class="pull-right">
+
                                 <a href="{{ route('skuSalesPrice.create') }}" class="btn btn-sm btn-primary ajaxModalPopup"
                                     data-modal_title="CREATE NEW SKU SALES PRICE" data-modal_size="modal-lg">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i> CREATE
                                 </a>
+                                <a href="{{ route('salesPriceCsvDownload') }}" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-download" aria-hidden="true"></i> DOWNLOAD CSV</a>
+
+                                <a href="{{ route('getCsvUploadModel') }}" class="btn btn-sm btn-success ajaxModalPopup"
+                                    data-modal_title="BULK CREATE / UPDATE SKU SALES PRICE" data-modal_size="modal-lg">
+                                    <i class="fa fa-upload" aria-hidden="true"></i> UPLOAD CSV
+                                </a>
+
                             </div>
                         </div>
                         <!-- /.box-header -->

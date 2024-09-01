@@ -145,6 +145,25 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on("submit", ".loginAjaxForm", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("action");
+        var method = $(this).attr("method");
+        var data = new FormData($(this)[0]);
+        CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
+            if (typeof result.status != "undefined" && result.status == true) {
+                $('#loginSessionId').val(result.loginSessionId);
+                let loginEmail = $('#loginEmail').val();
+                $('#verifyTokenEmail').val(loginEmail);
+                $('#loginScreen').hide();
+                $('#verifyOtpScreen').show();
+            } else {
+                $('#loginScreen').show();
+                $('#verifyOtpScreen').hide();
+            }
+        });
+    });
+
     $(document).on("click", ".ajaxModalPopup", function (e) {
         e.preventDefault();
         var url = $(this).attr("href");
@@ -352,6 +371,10 @@ $(document).on("change", ".skuDescriptionBuilder", function (e) {
     $('input[name="sku_description"]').val(skuDescription);
 });
 
-$(".commonSelect2").select2({
-    placeholder: "Select an option",
-});
+if(!$('.login-page').length) {
+    $(".commonSelect2").select2({
+        placeholder: "Select an option",
+    });
+}
+
+

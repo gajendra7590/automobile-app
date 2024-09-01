@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'AuthController@index')->name('authIndex');
 Route::get('login', 'AuthController@loginGet')->name('loginGet');
 Route::post('login', 'AuthController@loginPost')->name('loginPost');
+Route::post('verifyOtp', 'AuthController@verifyOtp')->name('verifyOtp');
 
 Route::get('forgotPassword', 'AuthController@forgotPasswordGet')->name('forgotPasswordGet');
 Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgotPasswordPost');
@@ -84,6 +85,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::resource('batteryBrands', 'BatteryBrandController');
 
     //SKU SALE PRICE
+    Route::get('skuSalesPrice/csvDownload', 'SkuSalePriceController@csvDownload')->name('salesPriceCsvDownload');
+    Route::get('skuSalesPrice/getCsvUploadModel', 'SkuSalePriceController@getCsvUploadModel')->name('getCsvUploadModel');
+    Route::post('skuSalesPrice/csvUpload', 'SkuSalePriceController@csvUpload')->name('SkuSalesPriceCsvUpload');
+
     Route::resource('skuSalesPrice', 'SkuSalePriceController');
 
     //Purchases

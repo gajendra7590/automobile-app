@@ -55,4 +55,9 @@ class BikeColor extends Model
     {
         return $this->hasOne(SkuSalePrice::class, 'model_color_id', 'id');
     }
+
+    public function sku_price()
+    {
+        return $this->hasOne(SkuSalePrice::class, 'sku_code', 'sku_code');
+    }
 }

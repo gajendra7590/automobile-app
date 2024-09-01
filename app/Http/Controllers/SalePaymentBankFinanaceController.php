@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccounts;
+use App\Models\BankFinancer;
+use App\Models\RtoRegistration;
 use App\Models\Sale;
 use App\Models\SalePaymentAccounts;
 use App\Models\SalePaymentBankFinanace;
@@ -189,6 +191,13 @@ class SalePaymentBankFinanaceController extends Controller
 
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $salesAccountModel->sale_id)->update(['account_hyp_financer' => $postData['financier_id'], 'account_payment_type' => '2']);
+
+                ////UPDATE INTO RTO
+                $financier_name = BankFinancer::where('id', $postData['financier_id'])->value('bank_name');
+                if($financier_name) {
+                    RtoRegistration::where(['sale_id' => $salesAccountModel->sale_id])->update(['financer_id' => $postData['financier_id'],'financer_name' => $financier_name]);
+                }
+
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -468,6 +477,13 @@ class SalePaymentBankFinanaceController extends Controller
 
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $bankFinanceModel->sale_id)->update(['account_hyp_financer' => $postData['financier_id'], 'account_payment_type' => '2']);
+
+                ////UPDATE INTO RTO
+                $financier_name = BankFinancer::where('id', $postData['financier_id'])->value('bank_name');
+                if($financier_name) {
+                    RtoRegistration::where(['sale_id' => $bankFinanceModel->sale_id])->update(['financer_id' => $postData['financier_id'],'financer_name' => $financier_name]);
+                }
+
                 DB::commit();
                 return response()->json([
                     'status'     => true,
@@ -575,6 +591,9 @@ class SalePaymentBankFinanaceController extends Controller
 
                 //Sale Update Self Pay In Sales Model
                 Sale::where('id', $CashModel->sale_id)->update(['account_hyp_financer' => null, 'account_payment_type' => '1']);
+
+                //UPDATE INTO RTO
+                RtoRegistration::where(['sale_id' => $CashModel->sale_id])->update(['financer_id' => 0,'financer_name' => ""]);
 
                 DB::commit();
                 return response()->json([
