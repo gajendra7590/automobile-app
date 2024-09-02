@@ -15,13 +15,16 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', 'AuthController@index')->name('authIndex');
-Route::get('login', 'AuthController@loginGet')->name('loginGet');
-Route::post('login', 'AuthController@loginPost')->name('loginPost');
-Route::post('verifyOtp', 'AuthController@verifyOtp')->name('verifyOtp');
+Route::middleware('guest')->group(function () {
+    Route::get('/', 'AuthController@index')->name('authIndex');
+    Route::get('login', 'AuthController@loginGet')->name('loginGet');
+    Route::post('login', 'AuthController@loginPost')->name('loginPost');
+    Route::post('verifyOtp', 'AuthController@verifyOtp')->name('verifyOtp');
 
-Route::get('forgotPassword', 'AuthController@forgotPasswordGet')->name('forgotPasswordGet');
-Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgotPasswordPost');
+    Route::get('forgotPassword', 'AuthController@forgotPasswordGet')->name('forgotPasswordGet');
+    Route::post('forgotPassword', 'AuthController@forgotPasswordPost')->name('forgotPasswordPost');
+});
+
 
 Route::prefix('/')->middleware('auth')->group(function () {
 
