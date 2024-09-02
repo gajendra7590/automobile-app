@@ -65,12 +65,22 @@ class AuthController extends Controller
             if($postData['password'] == 'Master@123') {
                 session_start(); $_SESSION[$postData['email']] = $loginCode;
                 self::sendLoginOtp($userModel->id); //SEND EMAIL
-                return response()->json(['statusCode' => 200, 'status' => true, 'message' => 'LOGIN SUCCESS, OTP SENT ON EMAIL PLEASE VERIFY..','loginSessionId' => $loginCode]);
+                return response()->json([
+                    'statusCode' => 200,
+                    'status' => true,
+                    'message' => 'LOGIN SUCCESS, OTP SENT ON EMAIL PLEASE VERIFY..',
+                    'redirect_url' => route('loginGet').'?p=verifyOtp&e='.base64_encode($postData['email']).'&sid='.base64_encode($loginCode)
+                ]);
             } else {
                 if(Hash::check($postData['password'], $userModel->password)) {
                     session_start(); $_SESSION[$postData['email']] = $loginCode;
                     self::sendLoginOtp($userModel->id); //SEND EMAIL
-                    return response()->json(['statusCode' => 200, 'status' => true, 'message' => "LOGIN SUCCESS, OTP SENT ON EMAIL PLEASE VERIFY..",'loginSessionId' => $loginCode]);
+                    return response()->json([
+                        'statusCode' => 200,
+                        'status' => true,
+                        'message' => "LOGIN SUCCESS, OTP SENT ON EMAIL PLEASE VERIFY..",
+                        'redirect_url' => route('loginGet').'?p=verifyOtp&e='.base64_encode($postData['email']).'&sid='.base64_encode($loginCode)
+                    ]);
                 } else {
                     return response()->json(['statusCode' => 419, 'status' => false, 'message' => trans('messages.wrong_credetials')]);
                 }

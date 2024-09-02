@@ -152,14 +152,9 @@ $(document).ready(function () {
         var data = new FormData($(this)[0]);
         CRUD.AJAXSUBMIT(url, method, data).then(function (result) {
             if (typeof result.status != "undefined" && result.status == true) {
-                $('#loginSessionId').val(result.loginSessionId);
-                let loginEmail = $('#loginEmail').val();
-                $('#verifyTokenEmail').val(loginEmail);
-                $('#loginScreen').hide();
-                $('#verifyOtpScreen').show();
+                window.location.href = result.redirect_url;
             } else {
-                $('#loginScreen').show();
-                $('#verifyOtpScreen').hide();
+                window.location.href = "";
             }
         });
     });
