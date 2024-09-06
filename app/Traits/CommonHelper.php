@@ -201,9 +201,11 @@ trait CommonHelper
 
         //Filter by branch
         if (self::getCurrentUserBranch() != '0') {
-            $model = $model->whereHas('bike_brand', function ($bb) {
-                $bb->where('branch_id', self::getCurrentUserBranch());
-            });
+            if($brand_id == 0) {
+                $model = $model->whereHas('bike_brand', function ($bb) {
+                    $bb->where('branch_id', self::getCurrentUserBranch());
+                });
+            }
         }
         return $model->get();
     }
